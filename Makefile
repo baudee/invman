@@ -3,13 +3,13 @@ PROJECT_NAME := invman
 
 # Server
 server/build:
-	cd $(PROJECT_NAME)_server && serverpod generate --experimental-features inheritance
+	cd $(PROJECT_NAME)_server && serverpod generate
 
 server/migration:
-	cd $(PROJECT_NAME)_server && serverpod create-migration --experimental-features inheritance
+	cd $(PROJECT_NAME)_server && serverpod create-migration
 
 server/migration-force:
-	cd $(PROJECT_NAME)_server && serverpod create-migration --force --experimental-features inheritance
+	cd $(PROJECT_NAME)_server && serverpod create-migration --force
 
 server/migrate:
 	cd $(PROJECT_NAME)_server && dart bin/main.dart --role maintenance --apply-migrations

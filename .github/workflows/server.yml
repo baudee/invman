@@ -1,0 +1,65 @@
+name: Server Workflow
+
+permissions:
+  contents: write  # Aligns with reusable workflow requirements
+
+on:
+  push:
+    paths:
+      - 'invman_server/**'  
+  pull_request:
+    paths:
+      - 'invman_server/**'
+
+jobs:
+  unit_tests_and_coverage:
+    if: github.event.pull_request.draft == false
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: invman_server
+
+    steps:
+      - name: 🛠️ Checkout code
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true 
+
+      - name: ⚙️ Install Dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: 👁️ Check Dart version
+        run: dart --version
+
+      - name: 🔧 Install dependencies
+        run: |
+          dart pub get
+          dart pub global activate serverpod_cli
+      
+      - name: ✨ Serverpod generate
+        run: |
+          serverpod generate
+
+      - name: ▶️ Run tests with coverage
+        run: |
+          dart test -x integration --coverage=coverage
+          dart pub global activate coverage
+          dart pub global run coverage:format_coverage \
+            --lcov \
+            --in=coverage \
+            --out=coverage/lcov.info \
+            --packages=.dart_tool/package_config.json
+
+      - name: 📄 Report code coverage
+        uses: romeovs/lcov-reporter-action@v0.3.1
+        with:
+          lcov-file: coverage/lcov.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          title: 'Backend Coverage Report'
+

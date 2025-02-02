@@ -5,10 +5,9 @@ Mobile application using Flutter and Serverpod to manage his investments.
 ```mermaid
 classDiagram
 %% Relationships
-User "1" *-- "1" Userinfo
-User "n" o-- "1" WithdrawalRule
+Userinfo "n" o-- "1" WithdrawalRule
 WithdrawalRule "1" *-- "n" Subtraction
-User "1" *-- "n" Investment
+Userinfo "1" *-- "n" Investment
 Investment "n" o-- "1" Action
 
 
@@ -16,11 +15,6 @@ Investment "n" o-- "1" Action
 class Userinfo {
     int id
     String mail
-}
-
-class User {
-    int id
-    String currency
 }
 
 class Investment {
@@ -31,6 +25,8 @@ class Investment {
 
 class Action {
     int id
+    String symbol
+    String name
     double value
     String currency
 }

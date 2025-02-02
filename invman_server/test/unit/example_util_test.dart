@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:invman_server/src/example_util.dart';
+import 'package:invman_server/src/core/example_util.dart';
 
 void main() {
   test(

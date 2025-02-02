@@ -10,6 +10,11 @@
 //
 // import 'package:PROJECTNAME_flutter/main.dart';
 
+import 'package:flutter_test/flutter_test.dart';
+
 void main() {
-  // Add your app tests here
+  // add fake test
+  test('fake test', () {
+    expect(1, 1);
+  });
 }
