@@ -1,0 +1,132 @@
+name: App Workflow
+
+permissions:
+  contents: write # Aligns with reusable workflow requirements
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    paths:
+      - "invman_flutter/**"
+      - "invman_server/**"
+  pull_request:
+    paths:
+      - "invman_flutter/**"
+      - "invman_server/**"
+
+jobs:
+  unit_tests_and_coverage:
+    if: github.event.pull_request.draft == false
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: invman_flutter
+
+    steps:
+      - name: 🛠️ Checkout code
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - name: 👁️ Check Flutter version
+        run: flutter --version
+
+      - name: ⚙️ Install LCOV
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install lcov
+
+      - name: ▶️ Run tests with coverage
+        run: |
+          flutter pub get
+          dart run build_runner build --delete-conflicting-outputs
+          dart run intl_utils:generate
+          flutter test --coverage
+
+      - name: 📄 Report code coverage
+        uses: romeovs/lcov-reporter-action@v0.3.1
+        with:
+          lcov-file: invman_flutter/coverage/lcov.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          title: "Frontend Coverage Report"
+
+  build:
+    if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    needs: unit_tests_and_coverage
+    runs-on: macos-latest 
+
+    defaults:
+      run:
+        working-directory: invman_flutter
+
+    env:
+      BASE_URL: ${{ vars.BASE_URL_STAGING }} 
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set Up Java
+        uses: actions/setup-java@v3.12.0
+        with:
+          distribution: 'oracle'
+          java-version: '17'
+
+      - name: ⚙️ Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - name: Install Dependencies
+        run: |
+          flutter pub get
+          dart run build_runner build --delete-conflicting-outputs
+          dart run intl_utils:generate
+
+      - name: Create .env File
+        run: |
+          echo "BASE_URL=${{ env.BASE_URL }}" > .env
+
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystore.jks
+          
+      - name: Create key.properties
+        run: |
+          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > android/key.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=upload" >> android/key.properties
+          echo "storeFile=keystore.jks" >> android/key.properties
+        
+      - name: Build APK
+        run: flutter build apk --release --dart-define-from-file .env
+
+      - name: Build appBundle
+        run: flutter build appbundle --dart-define-from-file .env
+ 
+      - name: Build IPA
+        run: flutter build ipa --no-codesign --dart-define-from-file .env
+
+      - name: Compress Archives and IPAs
+        run: |
+          tar -czf build/ios_build.tar.gz build/ios
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Releases
+          path: |
+            invman_flutter/build/app/outputs/flutter-apk/app-release.apk
+            invman_flutter/build/app/outputs/bundle/release/app.aab 
+            invman_flutter/build/ios_build.tar.gz
+          if-no-files-found: error

@@ -1,4 +1,5 @@
 lib/generated/
+.env
 
 # Miscellaneous
 *.class
