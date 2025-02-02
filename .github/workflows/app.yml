@@ -9,10 +9,16 @@ concurrency:
 
 on:
   push:
+    branches-ignore:
+      - main
+      - staging
     paths:
       - "invman_flutter/**"
       - "invman_server/**"
   pull_request:
+    branches:
+      - main
+      - staging
     paths:
       - "invman_flutter/**"
       - "invman_server/**"

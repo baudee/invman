@@ -5,9 +5,15 @@ permissions:
 
 on:
   push:
+    branches-ignore:
+      - main
+      - staging
     paths:
       - 'invman_server/**'  
   pull_request:
+    branches:
+      - main
+      - staging
     paths:
       - 'invman_server/**'
 
