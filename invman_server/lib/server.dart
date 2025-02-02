@@ -32,14 +32,6 @@ void run(List<String> args) async {
   //initDependencyInjection();
 
   // AUTH
-  // TODO: make use different env
-  //final emailService = EmailService(
-  //  domain: 'sandboxa915fac63272402b8099709825a89bd7.mailgun.org',
-  //  apiKey: '1c7397a85b39e177e68d0c9c2f77c0ea-2b91eb47-0623c554',
-  //  fromName: "Yalu Guy",
-  //  fromAddress: 'noreply@sandboxa915fac63272402b8099709825a89bd7.mailgun.org',
-  //);
-
   auth.AuthConfig.set(
     auth.AuthConfig(
       sendValidationEmail: (session, email, validationCode) async {
