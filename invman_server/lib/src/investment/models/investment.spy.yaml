@@ -1,0 +1,13 @@
+class: Investment
+
+table: investment
+
+fields:
+  userInfo: module:auth:UserInfo?, relation(onDelete=Cascade)
+  quantity: double
+  amount: int
+  action: Action?, relation(name=action_investments)
+
+indexes:
+  item_user_info_idx:
+    fields: userInfoId

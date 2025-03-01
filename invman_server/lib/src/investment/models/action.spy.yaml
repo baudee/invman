@@ -1,0 +1,9 @@
+class: Action
+
+table: action
+
+fields:
+  name: String
+  symbole: String
+  value: int
+  currency: String

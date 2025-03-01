@@ -122,6 +122,6 @@ jobs:
           name: Releases
           path: |
             invman_flutter/build/app/outputs/flutter-apk/app-release.apk
-            invman_flutter/build/app/outputs/bundle/release/app.aab 
+            invman_flutter/build/app/outputs/bundle/release/app-release.aab 
             invman_flutter/build/ios_build.tar.gz
           if-no-files-found: error
