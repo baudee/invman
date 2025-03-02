@@ -1,6 +1,3 @@
-lib/generated/
-.env
-
 # Miscellaneous
 *.class
 *.log

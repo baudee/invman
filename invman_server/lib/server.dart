@@ -1,7 +1,10 @@
 import 'package:serverpod/serverpod.dart';
-import 'package:serverpod_auth_server/serverpod_auth_server.dart' as auth;
+
 import 'package:invman_server/src/web/routes/root.dart';
-import 'package:serverpod_auth_server/serverpod_auth_server.dart';
+
+import 'src/generated/protocol.dart';
+import 'src/generated/endpoints.dart';
+import 'package:serverpod_auth_server/serverpod_auth_server.dart' as auth;
 
 // This is the starting point of your Serverpod server. In most cases, you will
 // only need to make additions to this file if you add future calls,  are
@@ -28,9 +31,6 @@ void run(List<String> args) async {
     '/*',
   );
 
-  // DEPENDENCY INJECTION
-  //initDependencyInjection();
-
   // AUTH
   auth.AuthConfig.set(
     auth.AuthConfig(
@@ -45,7 +45,7 @@ void run(List<String> args) async {
           return false;
         }
 
-        final message = "Here is your verification code: $validationCode";
+        //final message = "Here is your verification code: $validationCode";
         //emailService.sendEmail(
         //  toEmail: user.email!,
         //  subject: "Reset Your Password",

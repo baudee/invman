@@ -41,3 +41,8 @@ final class AuthStatePasswordResetCodeRequired extends AuthState {
 final class AuthStateSuccess extends AuthState {
   const AuthStateSuccess();
 }
+
+final class AuthStateError extends AuthState {
+  final String error;
+  const AuthStateError({required this.error});
+}

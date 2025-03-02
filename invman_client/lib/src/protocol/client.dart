@@ -29,20 +29,6 @@ class EndpointAuth extends _i1.EndpointRef {
       );
 }
 
-/// {@category Endpoint}
-class EndpointExample extends _i1.EndpointRef {
-  EndpointExample(_i1.EndpointCaller caller) : super(caller);
-
-  @override
-  String get name => 'example';
-
-  _i2.Future<String> hello(String name) => caller.callServerEndpoint<String>(
-        'example',
-        'hello',
-        {'name': name},
-      );
-}
-
 class Modules {
   Modules(Client client) {
     auth = _i3.Caller(client);
@@ -78,21 +64,15 @@ class Client extends _i1.ServerpodClientShared {
               disconnectStreamsOnLostInternetConnection,
         ) {
     auth = EndpointAuth(this);
-    example = EndpointExample(this);
     modules = Modules(this);
   }
 
   late final EndpointAuth auth;
 
-  late final EndpointExample example;
-
   late final Modules modules;
 
   @override
-  Map<String, _i1.EndpointRef> get endpointRefLookup => {
-        'auth': auth,
-        'example': example,
-      };
+  Map<String, _i1.EndpointRef> get endpointRefLookup => {'auth': auth};
 
   @override
   Map<String, _i1.ModuleEndpointCaller> get moduleLookup =>

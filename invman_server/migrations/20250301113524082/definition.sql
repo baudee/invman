@@ -241,9 +241,9 @@ ALTER TABLE ONLY "serverpod_query_log"
 -- MIGRATION VERSION FOR invman
 --
 INSERT INTO "serverpod_migrations" ("module", "version", "timestamp")
-    VALUES ('invman', '20250129191742371', now())
+    VALUES ('invman', '20250301113524082', now())
     ON CONFLICT ("module")
-    DO UPDATE SET "version" = '20250129191742371', "timestamp" = now();
+    DO UPDATE SET "version" = '20250301113524082', "timestamp" = now();
 
 --
 -- MIGRATION VERSION FOR serverpod

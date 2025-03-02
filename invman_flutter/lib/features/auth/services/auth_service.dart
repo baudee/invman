@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:serverpod_auth_shared_flutter/serverpod_auth_shared_flutter.dart';
 import 'package:serverpod_auth_client/serverpod_auth_client.dart';
+import 'package:serverpod_auth_shared_flutter/serverpod_auth_shared_flutter.dart';
 import 'package:invman_client/invman_client.dart';
 
 class AuthService {

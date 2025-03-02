@@ -1,4 +1,4 @@
-import 'package:invman_server/src/auth/auth.dart';
+import 'package:invman_server/src/auth/business/auth_controller.dart';
 import 'package:serverpod/serverpod.dart';
 
 class AuthEndpoint extends Endpoint {
