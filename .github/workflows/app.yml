@@ -12,6 +12,9 @@ on:
     paths:
       - "invman_flutter/**"
 
+env:
+  WORK_DIR: invman_flutter
+
 jobs:
   unit_tests_and_coverage:
     if: github.event.pull_request.draft == false
@@ -20,7 +23,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: invman_flutter
+        working-directory: ${{env.WORK_DIR}}
 
     steps:
       - name: 🛠️ Checkout code
@@ -55,16 +58,16 @@ jobs:
           title: "Frontend Coverage Report"
 
   build:
-    if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     needs: unit_tests_and_coverage
     runs-on: macos-latest 
 
     defaults:
       run:
-        working-directory: invman_flutter
+        working-directory: ${{env.WORK_DIR}}
 
     env:
-      BASE_URL: ${{ vars.BASE_URL_STAGING }} 
+      BASE_URL: ${{ vars.BASE_URL }} 
 
     steps:
       - name: Checkout Repository

@@ -1,3 +1,7 @@
+# Generated files
+**.g.dart
+lib/generated/
+
 # Miscellaneous
 *.class
 *.log

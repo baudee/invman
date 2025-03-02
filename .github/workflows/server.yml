@@ -11,6 +11,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  WORK_DIR: invman_server
 
 jobs:
   unit_tests_and_coverage:
@@ -18,7 +19,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: invman_server
+        working-directory: ${{env.WORK_DIR}}
 
     steps:
       - name: 🛠️ Checkout code
@@ -29,7 +30,7 @@ jobs:
         uses: timheuer/base64-to-file@v1.2
         with:
           fileName: 'passwords.yaml'
-          fileDir: 'config/'
+          fileDir: ${{env.WORK_DIR}}/config/
           encodedString: ${{ secrets.PASSWORDS_BASE64 }}
 
       - name: ⚙️ Install Flutter
@@ -77,7 +78,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: invman_server
+        working-directory: ${{env.WORK_DIR}}
 
     permissions:
       contents: read
@@ -92,7 +93,7 @@ jobs:
         uses: timheuer/base64-to-file@v1.2
         with:
           fileName: 'passwords.yaml'
-          fileDir: 'config/'
+          fileDir: ${{env.WORK_DIR}}/config/
           encodedString: ${{ secrets.PASSWORDS_BASE64 }}
 
       - name: Log in to the Container registry

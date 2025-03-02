@@ -16,3 +16,6 @@ config/firebase_service_account_key.json
 
 # coverage directory
 coverage/
+
+# generated directory
+lib/src/generated/
