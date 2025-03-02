@@ -1,0 +1,19 @@
+{
+  "moduleName": "invman",
+  "tables": [],
+  "installedModules": [
+    {
+      "module": "serverpod",
+      "version": "20240516151843329"
+    },
+    {
+      "module": "serverpod_auth",
+      "version": "20240520102713718"
+    },
+    {
+      "module": "invman",
+      "version": "20250301113524082"
+    }
+  ],
+  "migrationApiVersion": 1
+}

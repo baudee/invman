@@ -1,5 +1,3 @@
-import 'package:flutter/services.dart';
-
 enum Flavor {
   develop,
   staging,
@@ -7,11 +5,17 @@ enum Flavor {
 }
 
 class Env {
+  static final Env _instance = Env._internal();
+
   late final Flavor flavor;
   late final String baseUrl;
 
-  Env() {
-    switch (appFlavor) {
+  factory Env() {
+    return _instance;
+  }
+
+  Env._internal() {
+    switch (const String.fromEnvironment("APP_FLAVOR")) {
       case 'develop':
         flavor = Flavor.develop;
         break;

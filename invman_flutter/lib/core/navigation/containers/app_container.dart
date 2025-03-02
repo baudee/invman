@@ -16,8 +16,7 @@ class AppContainer extends StatelessWidget {
         },
         destinations: [
           NavigationDestination(icon: Icon(Icons.star), label: "Home"),
-          NavigationDestination(icon: Icon(Icons.star), label: "Entries"),
-          NavigationDestination(icon: Icon(Icons.star), label: "Menu"),
+          NavigationDestination(icon: Icon(Icons.star), label: "Home"),
         ],
       ),
     );

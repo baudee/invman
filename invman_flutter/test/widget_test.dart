@@ -13,7 +13,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  // add fake test
   test('fake test', () {
     expect(1, 1);
   });

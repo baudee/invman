@@ -14,8 +14,11 @@ class Bootstrap extends _$Bootstrap {
 
   Future<void> bootstrapApp() async {
     await ref.read(authProvider.notifier).init();
-    await ref.read(clientProvider).openStreamingConnection();
     await ref.read(storageProvider).init();
+
+    final r =
+        await ref.read(clientProvider).auth.isEmailAvailable(email: "test");
+    print(r);
 
     state = false;
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:invman_flutter/features/account/account.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
@@ -8,8 +9,8 @@ import 'package:invman_flutter/core/navigation/navigation.dart';
 part 'app_router.g.dart';
 
 @Riverpod(keepAlive: true)
-GoRouter router(Ref ref, bool sellerMode) {
-  final initialRoute = "home";
+GoRouter router(Ref ref) {
+  final initialRoute = AccountScreen.route();
   String destination = initialRoute;
   final rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -27,6 +28,7 @@ GoRouter router(Ref ref, bool sellerMode) {
       ),
       StatefulShellRoute.indexedStack(
         branches: [
+          AccountRoutes.branch,
         ],
         builder: (context, state, navigationShell) {
           return AppContainer(navigationShell: navigationShell);
