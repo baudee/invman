@@ -33,6 +33,12 @@ jobs:
           fileDir: ${{env.WORK_DIR}}/config/
           encodedString: ${{ secrets.PASSWORDS_BASE64 }}
 
+      - name: ⚙️ Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true 
+
       - name: ⚙️ Install Dart
         uses: dart-lang/setup-dart@v1
 
