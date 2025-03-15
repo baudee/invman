@@ -48,7 +48,7 @@ jobs:
       - name: 🔧 Install dependencies
         run: |
           dart pub get
-          dart pub global activate serverpod_cli
+          dart pub global activate serverpod_cli 2.3.1
       
       - name: ✨ Serverpod generate
         run: |
@@ -86,6 +86,21 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: ⚙️ Install Dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: 👁️ Check Dart version
+        run: dart --version
+
+      - name: 🔧 Install dependencies
+        run: |
+          dart pub get
+          dart pub global activate serverpod_cli 2.3.1
+      
+      - name: ✨ Serverpod generate
+        run: |
+          serverpod generate
 
       - name: Write password file
         id: write_file
