@@ -39,9 +39,7 @@ class MyApp extends ConsumerWidget {
       );
     }
 
-    final sellerMode = ref.watch(userPreferencesProvider).sellerMode;
-
-    final router = ref.read(routerProvider(sellerMode));
+    final router = ref.read(routerProvider);
 
     return MaterialApp.router(
       title: appName,

@@ -1,5 +1,6 @@
+# Generated files
+**.g.dart
 lib/generated/
-.env
 
 # Miscellaneous
 *.class

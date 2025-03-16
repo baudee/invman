@@ -13,25 +13,24 @@ class Auth extends _$Auth {
   }
 
   Future<void> init() async {
-    final sessionManager = ref.read(sessionManagerProvider);
-    await sessionManager.initialize();
-    sessionManager.addListener(() {
-      if (sessionManager.isSignedIn == false) {
-        state = AuthStateGuest();
-      }
-    });
+    await ref.read(sessionManagerProvider).initialize();
+    await refreshMe();
+  }
 
+  Future<void> refreshMe() async {
     final userInfoResult = ref.read(authServiceProvider).currentUser();
 
     userInfoResult.fold((error) {
-      state = AuthStateGuest(error: error);
+      state = AuthStateError(error: error);
     }, (userInfo) async {
-      if (userInfo != null) {
-        state = AuthStateSuccess();
-      } else {
+      if (userInfo == null) {
         state = AuthStateGuest();
       }
     });
+  }
+
+  Future<void> replaceMe() async {
+    state = AuthStateSuccess();
   }
 
   Future<void> loginWithEmail({
@@ -40,7 +39,9 @@ class Auth extends _$Auth {
   }) async {
     state = AuthStateGuest(isLoading: true);
 
-    final result = await ref.read(authServiceProvider).loginWithEmail(email: email, password: password);
+    final result = await ref
+        .read(authServiceProvider)
+        .loginWithEmail(email: email, password: password);
 
     result.fold((error) {
       state = AuthStateGuest(error: error);
@@ -68,7 +69,8 @@ class Auth extends _$Auth {
     result.fold((error) {
       state = AuthStateGuest(error: error);
     }, (_) async {
-      state = AuthStateVerificationCodeRequired(email: email, password: password);
+      state =
+          AuthStateVerificationCodeRequired(email: email, password: password);
     });
   }
 
@@ -77,7 +79,8 @@ class Auth extends _$Auth {
     required String password,
     required String verificationCode,
   }) async {
-    state = AuthStateVerificationCodeRequired(email: email, password: password, isLoading: true);
+    state = AuthStateVerificationCodeRequired(
+        email: email, password: password, isLoading: true);
 
     final result = await ref.read(authServiceProvider).confirmEmailRegister(
           email: email,
@@ -86,7 +89,8 @@ class Auth extends _$Auth {
         );
 
     result.fold((error) {
-      state = AuthStateVerificationCodeRequired(email: email, password: password, error: error);
+      state = AuthStateVerificationCodeRequired(
+          email: email, password: password, error: error);
     }, (_) async {
       state = AuthStateSuccess();
     });
@@ -95,7 +99,8 @@ class Auth extends _$Auth {
   Future<void> initiatePasswordReset(String email) async {
     state = AuthStateGuest(isLoading: true);
 
-    final result = await ref.read(authServiceProvider).initiatePasswordReset(email);
+    final result =
+        await ref.read(authServiceProvider).initiatePasswordReset(email);
 
     result.fold((error) {
       state = AuthStateGuest(error: error);
@@ -104,10 +109,13 @@ class Auth extends _$Auth {
     });
   }
 
-  Future<void> completePasswordReset(String verificationCode, String newPassword, String email) async {
+  Future<void> completePasswordReset(
+      String verificationCode, String newPassword, String email) async {
     state = AuthStatePasswordResetCodeRequired(email: email, isLoading: true);
 
-    final result = await ref.read(authServiceProvider).completePasswordReset(verificationCode, newPassword, email);
+    final result = await ref
+        .read(authServiceProvider)
+        .completePasswordReset(verificationCode, newPassword, email);
 
     result.fold((error) {
       state = AuthStatePasswordResetCodeRequired(email: email, error: error);
@@ -127,7 +135,8 @@ class Auth extends _$Auth {
   }
 
   Future<bool> checkEmail(String email) async {
-    final emailAvailable = await ref.read(authServiceProvider).emailIsAvailable(email);
+    final emailAvailable =
+        await ref.read(authServiceProvider).emailIsAvailable(email);
     if (!emailAvailable) {
       state = AuthStateGuest(error: "Email not available!");
     }

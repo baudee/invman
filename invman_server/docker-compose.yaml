@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: invman
-      POSTGRES_PASSWORD: "Y4GyHRjocV88WlQS7im-d3Not4SbYzYO"
+      POSTGRES_PASSWORD: "HczNr6JoV84Blu2WQJ-3XoeldHmri3dq"
     volumes:
       - invman_data:/var/lib/postgresql/data
     profiles:
@@ -17,7 +17,7 @@ services:
     image: redis:6.2.6
     ports:
       - '8091:6379'
-    command: redis-server --requirepass "VV769UOang3HxTR0uBP2pb_wCIW_hojj"
+    command: redis-server --requirepass "gQ1_tzMyEET2IngHE_47Xr4dtXNWiKAm"
     environment:
       - REDIS_REPLICATION_MODE=master
     profiles:
@@ -32,7 +32,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: invman_test
-      POSTGRES_PASSWORD: "L_LaCiEKSfscImXIBV9Wnolzkdf-0M-T"
+      POSTGRES_PASSWORD: "SMdRtEmh8CznvfyrD5x4BgYqhPyNqCPt"
     volumes:
       - invman_test_data:/var/lib/postgresql/data
     profiles:
@@ -42,7 +42,7 @@ services:
     image: redis:6.2.6
     ports:
       - '9091:6379'
-    command: redis-server --requirepass "DTqK9HSovMXC82lAp1e6X4kk5wV52WAa"
+    command: redis-server --requirepass "lWi0u_zZyAvuszwyPTb-GvQkSy3LIkg3"
     environment:
       - REDIS_REPLICATION_MODE=master
     profiles:

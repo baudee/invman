@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:invman_flutter/core/core.dart';
-import 'package:invman_flutter/features/auth/auth.dart';
 
 part 'user_preferences_provider.g.dart';
 
@@ -13,9 +12,8 @@ class UserPreferences extends _$UserPreferences {
   UserPreferencesState build() {
     final locale = _initLocale();
     final theme = _initTheme();
-    final sellerMode = _initSellerMode();
 
-    return UserPreferencesState(locale: locale, theme: theme, sellerMode: sellerMode);
+    return UserPreferencesState(locale: locale, theme: theme);
   }
 
   Locale _initLocale() {
@@ -36,7 +34,7 @@ class UserPreferences extends _$UserPreferences {
       languageCode = localeName.split('_').first.toLowerCase();
       ref.read(storageProvider).setString(StorageClient.languageKey, languageCode);
     }
-    if (!['en', 'es'].contains(languageCode)) {
+    if (!SupportedLanguage.values.map((e) => e.languageName).toList().contains(languageCode)) {
       languageCode = "en";
     }
 
@@ -51,29 +49,6 @@ class UserPreferences extends _$UserPreferences {
     return AppThemeEnum.system;
   }
 
-  bool _initSellerMode() {
-    ref.listen(
-      authProvider,
-      (previous, next) {
-        if (previous is AuthStateSuccess && next is! AuthStateSuccess) {
-          // Deconnexion case
-          setSellerMode(false);
-        } else if (previous is! AuthStateSuccess && next is AuthStateSuccess) {
-          // Connection case
-          final savedSellerMode = ref.read(storageProvider).getBool(StorageClient.sellerModeKey);
-          setSellerMode(savedSellerMode ?? false);
-        }
-      },
-    );
-
-    final authState = ref.read(authProvider);
-    if (authState is! AuthStateSuccess) {
-      return false;
-    }
-    final savedSellerMode = ref.read(storageProvider).getBool(StorageClient.sellerModeKey);
-    return savedSellerMode ?? false;
-  }
-
   void setLocale(Locale locale) {
     state = state.copyWith(locale: locale);
 
@@ -84,10 +59,5 @@ class UserPreferences extends _$UserPreferences {
   void setTheme(AppThemeEnum theme) {
     state = state.copyWith(theme: theme);
     ref.read(storageProvider).setString(StorageClient.themeKey, theme.value);
-  }
-
-  void setSellerMode(bool sellerMode) {
-    state = state.copyWith(sellerMode: sellerMode);
-    ref.read(storageProvider).setBool(StorageClient.sellerModeKey, sellerMode);
   }
 }

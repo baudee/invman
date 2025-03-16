@@ -81,8 +81,8 @@ staging_autoscaling_desired_capacity = 1
 
 # The deployment bucket name needs to be unique and can only contain lower case
 # letters and dashes (no underscored allowed).
-deployment_bucket_name              = "invman-deployment-2429723"
-public_storage_bucket_name          = "invman-public-storage-2429723"
-private_storage_bucket_name         = "invman-private-storage-2429723"
-public_storage_bucket_name_staging  = "invman-public-storage-staging-2429723"
-private_storage_bucket_name_staging = "invman-private-storage-staging-2429723"
+deployment_bucket_name              = "invman-deployment-2192088"
+public_storage_bucket_name          = "invman-public-storage-2192088"
+private_storage_bucket_name         = "invman-private-storage-2192088"
+public_storage_bucket_name_staging  = "invman-public-storage-staging-2192088"
+private_storage_bucket_name_staging = "invman-private-storage-staging-2192088"
