@@ -48,7 +48,7 @@ jobs:
       - name: 🔧 Install dependencies
         run: |
           dart pub get
-          dart pub global activate serverpod_cli
+          dart pub global activate serverpod_cli 2.3.1
       
       - name: ✨ Serverpod generate
         run: |
@@ -73,6 +73,7 @@ jobs:
 
   build-and-push-image:
     if: github.ref == 'refs/heads/main'
+    needs: unit_tests_and_coverage
 
     runs-on: ubuntu-latest
 
@@ -87,6 +88,27 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: ⚙️ Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true 
+
+      - name: ⚙️ Install Dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: 👁️ Check Dart version
+        run: dart --version
+
+      - name: 🔧 Install dependencies
+        run: |
+          dart pub get
+          dart pub global activate serverpod_cli 2.3.1
+      
+      - name: ✨ Serverpod generate
+        run: |
+          serverpod generate
 
       - name: Write password file
         id: write_file
@@ -112,7 +134,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
-          context: .
+          context: ${{env.WORK_DIR}}
           push: true
           tags:
             ghcr.io/baudee/invman:latest
