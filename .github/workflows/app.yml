@@ -17,8 +17,6 @@ env:
 
 jobs:
   unit_tests_and_coverage:
-    if: github.event.pull_request.draft == false
-
     runs-on: ubuntu-latest
 
     defaults:
