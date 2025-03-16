@@ -6,21 +6,21 @@
 
 # Configuration for the main API server.
 apiServer:
-  port: 8080
+  port: 8090
   publicHost: api-invman.valentinbaudin.ch
   publicPort: 443
   publicScheme: https
 
 # Configuration for the Insights server.
 insightsServer:
-  port: 8081
+  port: 8091
   publicHost: insights-invman.valentinbaudin.ch
   publicPort: 443
   publicScheme: https
 
 # Configuration for the web server.
 webServer:
-  port: 8082
+  port: 8092
   publicHost: app-invman.valentinbaudin.ch
   publicPort: 443
   publicScheme: https
@@ -31,7 +31,7 @@ webServer:
 # connect on the public IP of the database e.g. database.examplepod.com.
 database:
   host: postgres-invman.valentinbaudin.ch
-  port: 8090
+  port: 8093
   name: serverpod
   user: postgres
   requireSsl: true
@@ -43,4 +43,4 @@ database:
 redis:
   enabled: false
   host: redis-invman.valentinbaudin.ch
-  port: 8091
+  port: 8094

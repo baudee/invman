@@ -3,6 +3,10 @@ name: Server Workflow
 permissions:
   contents: write  # Aligns with reusable workflow requirements
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
 on:
   push:
     paths:
@@ -12,6 +16,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   WORK_DIR: invman_server
+  SERVERPOD_VERSION: 2.3.1
 
 jobs:
   unit_tests_and_coverage:
@@ -48,7 +53,7 @@ jobs:
       - name: 🔧 Install dependencies
         run: |
           dart pub get
-          dart pub global activate serverpod_cli 2.3.1
+          dart pub global activate serverpod_cli ${{ env.SERVERPOD_VERSION }}
       
       - name: ✨ Serverpod generate
         run: |
@@ -104,7 +109,7 @@ jobs:
       - name: 🔧 Install dependencies
         run: |
           dart pub get
-          dart pub global activate serverpod_cli 2.3.1
+          dart pub global activate serverpod_cli ${{ env.SERVERPOD_VERSION }}
       
       - name: ✨ Serverpod generate
         run: |
