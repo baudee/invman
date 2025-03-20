@@ -64,9 +64,6 @@ jobs:
       run:
         working-directory: ${{env.WORK_DIR}}
 
-    env:
-      BASE_URL: ${{ vars.BASE_URL }} 
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -91,7 +88,8 @@ jobs:
 
       - name: Create .env File
         run: |
-          echo "BASE_URL=${{ env.BASE_URL }}" > .env
+          echo "BASE_URL=${{ vars.BASE_URL }}" > .env
+          echo "APP_FLAVOR=production" >> .env
 
       - name: Decode Keystore
         run: |
