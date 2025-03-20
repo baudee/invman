@@ -31,7 +31,7 @@ webServer:
 # connect on the public IP of the database e.g. database.examplepod.com.
 database:
   host: postgresql-invman
-  port: 8093
+  port: 5432
   name: serverpod
   user: postgres
 
@@ -42,4 +42,4 @@ database:
 redis:
   enabled: true
   host: redis-invman
-  port: 8094
+  port: 6379
