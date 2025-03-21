@@ -16,10 +16,6 @@ class Bootstrap extends _$Bootstrap {
     await ref.read(authProvider.notifier).init();
     await ref.read(storageProvider).init();
 
-    final r =
-        await ref.read(clientProvider).auth.isEmailAvailable(email: "test");
-    print(r);
-
     state = false;
   }
 }

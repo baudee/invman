@@ -124,3 +124,17 @@ jobs:
             invman_flutter/build/app/outputs/bundle/release/app.aab 
             invman_flutter/build/ios_build.tar.gz
           if-no-files-found: error
+
+      - name: 📧 Send Email with APK
+        uses: dawidd6/action-send-mail@v3
+        with:
+          secure: true
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "New InvMan App Release"
+          body: "The latest build of the app is ready. Find the APK attached."
+          to: ${{ vars.EMAIL_RECIPIENT }}
+          from: "InvMan App"
+          attachments: invman_flutter/build/app/outputs/flutter-apk/app-release.apk

@@ -56,6 +56,11 @@ class AccountComponent extends ConsumerWidget {
             ),
           ),
           ListTile(
+            title: Text(S.of(context).currency),
+            subtitle: Text(ref.read(userPreferencesProvider).currency),
+            leading: Icon(Icons.attach_money_rounded),
+          ),
+          ListTile(
             title: Text(
               S.of(context).logOut,
               style: TextStyle(color: Colors.red),

@@ -7,8 +7,8 @@ classDiagram
 %% Relationships
 Userinfo "n" o-- "1" WithdrawalRule
 WithdrawalRule "1" *-- "n" Subtraction
-Userinfo "1" *-- "n" Investment
-Investment "n" o-- "1" Action
+Userinfo "1" *-- "n" Transaction
+Transaction "n" o-- "1" Stock
 
 
 %% Classes
@@ -17,13 +17,13 @@ class Userinfo {
     String mail
 }
 
-class Investment {
+class Transaction {
     int id
     double quantity
     double amount
 }
 
-class Action {
+class Stock {
     int id
     String symbol
     String name

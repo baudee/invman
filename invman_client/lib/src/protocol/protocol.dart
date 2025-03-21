@@ -10,7 +10,11 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i2;
+import 'stock/models/stock.dart' as _i2;
+import 'stock/models/stock_list.dart' as _i3;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i4;
+export 'stock/models/stock.dart';
+export 'stock/models/stock_list.dart';
 export 'client.dart';
 
 class Protocol extends _i1.SerializationManager {
@@ -26,8 +30,24 @@ class Protocol extends _i1.SerializationManager {
     Type? t,
   ]) {
     t ??= T;
+    if (t == _i2.Stock) {
+      return _i2.Stock.fromJson(data) as T;
+    }
+    if (t == _i3.StockList) {
+      return _i3.StockList.fromJson(data) as T;
+    }
+    if (t == _i1.getType<_i2.Stock?>()) {
+      return (data != null ? _i2.Stock.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i3.StockList?>()) {
+      return (data != null ? _i3.StockList.fromJson(data) : null) as T;
+    }
+    if (t == List<_i2.Stock>) {
+      return (data as List).map((e) => deserialize<_i2.Stock>(e)).toList()
+          as dynamic;
+    }
     try {
-      return _i2.Protocol().deserialize<T>(data, t);
+      return _i4.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -36,7 +56,13 @@ class Protocol extends _i1.SerializationManager {
   String? getClassNameForObject(Object? data) {
     String? className = super.getClassNameForObject(data);
     if (className != null) return className;
-    className = _i2.Protocol().getClassNameForObject(data);
+    if (data is _i2.Stock) {
+      return 'Stock';
+    }
+    if (data is _i3.StockList) {
+      return 'StockList';
+    }
+    className = _i4.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth.$className';
     }
@@ -49,9 +75,15 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName is! String) {
       return super.deserializeByClassName(data);
     }
+    if (dataClassName == 'Stock') {
+      return deserialize<_i2.Stock>(data['data']);
+    }
+    if (dataClassName == 'StockList') {
+      return deserialize<_i3.StockList>(data['data']);
+    }
     if (dataClassName.startsWith('serverpod_auth.')) {
       data['className'] = dataClassName.substring(15);
-      return _i2.Protocol().deserializeByClassName(data);
+      return _i4.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/features/account/account.dart';
+import 'package:invman_flutter/features/stock/stock.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
@@ -28,6 +29,7 @@ GoRouter router(Ref ref) {
       ),
       StatefulShellRoute.indexedStack(
         branches: [
+          StockRoutes.branch,
           AccountRoutes.branch,
         ],
         builder: (context, state, navigationShell) {

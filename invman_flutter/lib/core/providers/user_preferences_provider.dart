@@ -12,8 +12,13 @@ class UserPreferences extends _$UserPreferences {
   UserPreferencesState build() {
     final locale = _initLocale();
     final theme = _initTheme();
+    final currency = _initCurrency();
 
-    return UserPreferencesState(locale: locale, theme: theme);
+    return UserPreferencesState(
+      locale: locale,
+      theme: theme,
+      currency: currency,
+    );
   }
 
   Locale _initLocale() {
@@ -41,6 +46,13 @@ class UserPreferences extends _$UserPreferences {
     return Locale.fromSubtags(languageCode: languageCode);
   }
 
+  void setLocale(Locale locale) {
+    state = state.copyWith(locale: locale);
+
+    String languageCode = locale.languageCode.split('_').first.toLowerCase();
+    ref.read(storageProvider).setString(StorageClient.languageKey, languageCode);
+  }
+
   AppThemeEnum _initTheme() {
     final savedTheme = ref.read(storageProvider).getString(StorageClient.themeKey);
     if (savedTheme != null) {
@@ -49,15 +61,12 @@ class UserPreferences extends _$UserPreferences {
     return AppThemeEnum.system;
   }
 
-  void setLocale(Locale locale) {
-    state = state.copyWith(locale: locale);
-
-    String languageCode = locale.languageCode.split('_').first.toLowerCase();
-    ref.read(storageProvider).setString(StorageClient.languageKey, languageCode);
-  }
-
   void setTheme(AppThemeEnum theme) {
     state = state.copyWith(theme: theme);
     ref.read(storageProvider).setString(StorageClient.themeKey, theme.value);
+  }
+
+  String _initCurrency() {
+    return "CHF";
   }
 }
