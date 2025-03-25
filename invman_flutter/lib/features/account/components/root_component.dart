@@ -5,8 +5,8 @@ import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/generated/l10n.dart';
 
-class AccountComponent extends ConsumerWidget {
-  const AccountComponent({super.key});
+class AccountRootComponent extends ConsumerWidget {
+  const AccountRootComponent({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

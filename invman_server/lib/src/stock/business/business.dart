@@ -1,1 +1,1 @@
-export 'stock_controller.dart';
+export 'stock_service.dart';

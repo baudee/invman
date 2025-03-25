@@ -11,7 +11,7 @@ part 'app_router.g.dart';
 
 @Riverpod(keepAlive: true)
 GoRouter router(Ref ref) {
-  final initialRoute = AccountScreen.route();
+  final initialRoute = AccountRootScreen.route();
   String destination = initialRoute;
   final rootNavigatorKey = GlobalKey<NavigatorState>();
 

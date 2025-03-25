@@ -5,5 +5,5 @@ table: stock
 fields:
   symbol: String,
   name: String,
-  value: double,
+  value: double?,
   currency: String

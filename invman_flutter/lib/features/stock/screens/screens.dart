@@ -1,1 +1,2 @@
-export 'stock_screen.dart';
+export 'root_screen.dart';
+export 'search_screen.dart';

@@ -16,7 +16,7 @@ abstract class Stock implements _i1.SerializableModel {
     this.id,
     required this.symbol,
     required this.name,
-    required this.value,
+    this.value,
     required this.currency,
   });
 
@@ -24,7 +24,7 @@ abstract class Stock implements _i1.SerializableModel {
     int? id,
     required String symbol,
     required String name,
-    required double value,
+    double? value,
     required String currency,
   }) = _StockImpl;
 
@@ -33,7 +33,7 @@ abstract class Stock implements _i1.SerializableModel {
       id: jsonSerialization['id'] as int?,
       symbol: jsonSerialization['symbol'] as String,
       name: jsonSerialization['name'] as String,
-      value: (jsonSerialization['value'] as num).toDouble(),
+      value: (jsonSerialization['value'] as num?)?.toDouble(),
       currency: jsonSerialization['currency'] as String,
     );
   }
@@ -47,7 +47,7 @@ abstract class Stock implements _i1.SerializableModel {
 
   String name;
 
-  double value;
+  double? value;
 
   String currency;
 
@@ -64,7 +64,7 @@ abstract class Stock implements _i1.SerializableModel {
       if (id != null) 'id': id,
       'symbol': symbol,
       'name': name,
-      'value': value,
+      if (value != null) 'value': value,
       'currency': currency,
     };
   }
@@ -82,7 +82,7 @@ class _StockImpl extends Stock {
     int? id,
     required String symbol,
     required String name,
-    required double value,
+    double? value,
     required String currency,
   }) : super._(
           id: id,
@@ -97,14 +97,14 @@ class _StockImpl extends Stock {
     Object? id = _Undefined,
     String? symbol,
     String? name,
-    double? value,
+    Object? value = _Undefined,
     String? currency,
   }) {
     return Stock(
       id: id is int? ? id : this.id,
       symbol: symbol ?? this.symbol,
       name: name ?? this.name,
-      value: value ?? this.value,
+      value: value is double? ? value : this.value,
       currency: currency ?? this.currency,
     );
   }

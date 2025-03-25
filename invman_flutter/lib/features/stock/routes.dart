@@ -10,8 +10,12 @@ class StockRoutes {
     navigatorKey: shellNavigatorKey,
     routes: [
       GoRoute(
-        path: StockScreen.route(),
-        builder: (_, __) => StockScreen(),
+        path: StockRootScreen.route(),
+        builder: (_, __) => StockRootScreen(),
+      ),
+      GoRoute(
+        path: StockSearchScreen.route(),
+        builder: (_, __) => StockSearchScreen(),
       ),
     ],
   );

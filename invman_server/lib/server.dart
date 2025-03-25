@@ -1,3 +1,4 @@
+import 'package:invman_server/src/dependency_injection.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:invman_server/src/web/routes/root.dart';
 import 'src/generated/protocol.dart';
@@ -21,6 +22,9 @@ void run(List<String> args) async {
     RouteStaticDirectory(serverDirectory: 'static', basePath: '/'),
     '/*',
   );
+
+  // DEPENDENCY INJECTION
+  initDependencyInjection();
 
   // AUTH
   auth.AuthConfig.set(

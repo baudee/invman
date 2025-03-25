@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:invman_flutter/features/account/account.dart';
 import 'package:invman_flutter/generated/l10n.dart';
 
-class AccountScreen extends StatelessWidget {
-  const AccountScreen({super.key});
+class AccountRootScreen extends StatelessWidget {
+  const AccountRootScreen({super.key});
 
   static String route() => AccountRoutes.namespace;
 
@@ -13,7 +13,7 @@ class AccountScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(S.of(context).menuTitle),
       ),
-      body: AccountComponent(),
+      body: AccountRootComponent(),
     );
   }
 }

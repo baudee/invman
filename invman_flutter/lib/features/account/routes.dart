@@ -10,8 +10,8 @@ class AccountRoutes {
     navigatorKey: shellNavigatorKey,
     routes: [
       GoRoute(
-        path: AccountScreen.route(),
-        builder: (_, __) => AccountScreen(),
+        path: AccountRootScreen.route(),
+        builder: (_, __) => AccountRootScreen(),
       ),
     ],
   );

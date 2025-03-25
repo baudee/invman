@@ -49,6 +49,13 @@ class EndpointStock extends _i1.EndpointRef {
           'page': page,
         },
       );
+
+  _i2.Future<_i3.StockList> search({required String query}) =>
+      caller.callServerEndpoint<_i3.StockList>(
+        'stock',
+        'search',
+        {'query': query},
+      );
 }
 
 class Modules {
