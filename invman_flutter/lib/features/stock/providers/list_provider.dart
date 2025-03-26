@@ -44,7 +44,7 @@ class StockList extends _$StockList {
           pagingController.itemList = [];
           return;
         }
-        result = await ref.read(stockServiceProvider).search(query: query);
+        result = await ref.read(stockServiceProvider).search(query: query, limit: limit);
         result.fold((error) {}, (data) {
           pagingController
             ..itemList = data.results

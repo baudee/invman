@@ -9,7 +9,7 @@ void initDependencyInjection() {
   getIt.registerSingleton<Env>(Env());
 
   // Data
-  getIt.registerSingleton<StockApi>(StockApiImpl(apiKey: getIt<Env>().twelvedataApiKey));
+  getIt.registerSingleton<StockApi>(StockApiImpl(apiKey: getIt<Env>().fmpApiKey));
 
   // Services
   getIt.registerSingleton<StockService>(StockService(stockApi: getIt<StockApi>()));

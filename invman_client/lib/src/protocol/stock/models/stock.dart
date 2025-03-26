@@ -16,9 +16,11 @@ abstract class Stock implements _i1.SerializableModel {
     this.id,
     required this.symbol,
     required this.name,
-    this.value,
+    double? value,
     required this.currency,
-  });
+    required this.stockExchange,
+    required this.exchangeShortName,
+  }) : value = value ?? 0.0;
 
   factory Stock({
     int? id,
@@ -26,6 +28,8 @@ abstract class Stock implements _i1.SerializableModel {
     required String name,
     double? value,
     required String currency,
+    required String stockExchange,
+    required String exchangeShortName,
   }) = _StockImpl;
 
   factory Stock.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -33,8 +37,10 @@ abstract class Stock implements _i1.SerializableModel {
       id: jsonSerialization['id'] as int?,
       symbol: jsonSerialization['symbol'] as String,
       name: jsonSerialization['name'] as String,
-      value: (jsonSerialization['value'] as num?)?.toDouble(),
+      value: (jsonSerialization['value'] as num).toDouble(),
       currency: jsonSerialization['currency'] as String,
+      stockExchange: jsonSerialization['stockExchange'] as String,
+      exchangeShortName: jsonSerialization['exchangeShortName'] as String,
     );
   }
 
@@ -47,9 +53,13 @@ abstract class Stock implements _i1.SerializableModel {
 
   String name;
 
-  double? value;
+  double value;
 
   String currency;
+
+  String stockExchange;
+
+  String exchangeShortName;
 
   Stock copyWith({
     int? id,
@@ -57,6 +67,8 @@ abstract class Stock implements _i1.SerializableModel {
     String? name,
     double? value,
     String? currency,
+    String? stockExchange,
+    String? exchangeShortName,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -64,8 +76,10 @@ abstract class Stock implements _i1.SerializableModel {
       if (id != null) 'id': id,
       'symbol': symbol,
       'name': name,
-      if (value != null) 'value': value,
+      'value': value,
       'currency': currency,
+      'stockExchange': stockExchange,
+      'exchangeShortName': exchangeShortName,
     };
   }
 
@@ -84,12 +98,16 @@ class _StockImpl extends Stock {
     required String name,
     double? value,
     required String currency,
+    required String stockExchange,
+    required String exchangeShortName,
   }) : super._(
           id: id,
           symbol: symbol,
           name: name,
           value: value,
           currency: currency,
+          stockExchange: stockExchange,
+          exchangeShortName: exchangeShortName,
         );
 
   @override
@@ -97,15 +115,19 @@ class _StockImpl extends Stock {
     Object? id = _Undefined,
     String? symbol,
     String? name,
-    Object? value = _Undefined,
+    double? value,
     String? currency,
+    String? stockExchange,
+    String? exchangeShortName,
   }) {
     return Stock(
       id: id is int? ? id : this.id,
       symbol: symbol ?? this.symbol,
       name: name ?? this.name,
-      value: value is double? ? value : this.value,
+      value: value ?? this.value,
       currency: currency ?? this.currency,
+      stockExchange: stockExchange ?? this.stockExchange,
+      exchangeShortName: exchangeShortName ?? this.exchangeShortName,
     );
   }
 }

@@ -5,5 +5,12 @@ table: stock
 fields:
   symbol: String,
   name: String,
-  value: double?,
-  currency: String
+  value: double, default=0.0
+  currency: String,
+  stockExchange: String,
+  exchangeShortName: String
+
+indexes:
+  stock_symbol_idx:
+    fields: symbol
+    unique: true

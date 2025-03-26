@@ -11,7 +11,11 @@ class StockEndpoint extends Endpoint {
     return getIt<StockService>().list(session, limit: limit, page: page);
   }
 
-  Future<StockList> search(Session session, {required String query}) async {
-    return getIt<StockService>().search(session, query: query);
+  Future<StockList> search(Session session, {required String query, int limit = 10}) async {
+    return getIt<StockService>().search(session, query: query, limit: limit);
+  }
+
+  Future<Stock> save(Session session, Stock stock) async {
+    return getIt<StockService>().save(session, stock);
   }
 }

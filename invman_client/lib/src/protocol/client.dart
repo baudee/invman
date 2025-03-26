@@ -12,8 +12,9 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
 import 'package:invman_client/src/protocol/stock/models/stock_list.dart' as _i3;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i4;
-import 'protocol.dart' as _i5;
+import 'package:invman_client/src/protocol/stock/models/stock.dart' as _i4;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i5;
+import 'protocol.dart' as _i6;
 
 /// {@category Endpoint}
 class EndpointAuth extends _i1.EndpointRef {
@@ -50,20 +51,33 @@ class EndpointStock extends _i1.EndpointRef {
         },
       );
 
-  _i2.Future<_i3.StockList> search({required String query}) =>
+  _i2.Future<_i3.StockList> search({
+    required String query,
+    required int limit,
+  }) =>
       caller.callServerEndpoint<_i3.StockList>(
         'stock',
         'search',
-        {'query': query},
+        {
+          'query': query,
+          'limit': limit,
+        },
+      );
+
+  _i2.Future<_i4.Stock> save(_i4.Stock stock) =>
+      caller.callServerEndpoint<_i4.Stock>(
+        'stock',
+        'save',
+        {'stock': stock},
       );
 }
 
 class Modules {
   Modules(Client client) {
-    auth = _i4.Caller(client);
+    auth = _i5.Caller(client);
   }
 
-  late final _i4.Caller auth;
+  late final _i5.Caller auth;
 }
 
 class Client extends _i1.ServerpodClientShared {
@@ -82,7 +96,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i5.Protocol(),
+          _i6.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,

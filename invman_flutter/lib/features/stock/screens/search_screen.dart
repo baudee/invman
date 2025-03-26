@@ -10,10 +10,7 @@ class StockSearchScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SafeArea(child: StockSearchComponent()),
-      ),
+      body: SafeArea(child: StockSearchComponent()),
     );
   }
 }

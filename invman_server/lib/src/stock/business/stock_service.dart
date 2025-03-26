@@ -26,8 +26,8 @@ class StockService {
     );
   }
 
-  Future<StockList> search(Session session, {required String query}) async {
-    final results = await stockApi.search(query: query);
+  Future<StockList> search(Session session, {required String query, int limit = 10}) async {
+    final results = await stockApi.search(query: query, limit: limit);
     final count = results.length;
     return StockList(
       count: count,
@@ -37,5 +37,19 @@ class StockService {
       numPages: 1,
       canLoadMore: false,
     );
+  }
+
+  Future<Stock> save(Session session, Stock stock) async {
+    return session.db.transaction((transaction) async {
+      final existingStock = await Stock.db.findFirstRow(
+        session,
+        where: (e) => e.symbol.equals(stock.symbol),
+        transaction: transaction,
+      );
+      if (existingStock != null) {
+        throw AlreadyExistsException(message: 'Stock with symbol ${stock.symbol} already exists.');
+      }
+      return Stock.db.insertRow(session, stock, transaction: transaction);
+    });
   }
 }

@@ -9,8 +9,13 @@ class HttpClientService {
     Map<String, String>? headers,
   }) async {
     try {
+      final split = url.split('/');
+      if (split.length > 1) {
+        url = split[0];
+        split.removeAt(0);
+        path = '${split.join('/')}/$path';
+      }
       final uri = Uri.https(url, path, queryParameters);
-      print(uri);
       final response = await http.get(uri, headers: headers);
       if (response.statusCode == 200) {
         return json.decode(response.body);

@@ -2,13 +2,19 @@ import 'package:dotenv/dotenv.dart';
 
 class Env {
   late final DotEnv env;
-  late final String twelvedataApiKey;
+  late final String fmpApiKey;
 
   Env() {
     env = DotEnv(includePlatformEnvironment: true)..load();
-    if (env['TWELVEDATA_API_KEY'] == null) {
-      throw Exception("TWELVEDATA_API_KEY not set in environment.");
+
+    // FMP API KEY
+    fmpApiKey = getVarFromKey('FMP_API_KEY');
+  }
+
+  String getVarFromKey(String key) {
+    if (env[key] == null) {
+      throw Exception("$key not set in environment.");
     }
-    twelvedataApiKey = env['TWELVEDATA_API_KEY']!;
+    return env[key]!;
   }
 }

@@ -16,6 +16,7 @@ import 'package:serverpod/serverpod.dart' as _i2;
 import 'dart:async' as _i3;
 import 'package:invman_server/src/generated/stock/models/stock_list.dart'
     as _i4;
+import 'package:invman_server/src/generated/stock/models/stock.dart' as _i5;
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:invman_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -205,6 +206,7 @@ class _StockEndpoint {
   _i3.Future<_i4.StockList> search(
     _i1.TestSessionBuilder sessionBuilder, {
     required String query,
+    required int limit,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -217,13 +219,45 @@ class _StockEndpoint {
           createSessionCallback: (_) => _localUniqueSession,
           endpointPath: 'stock',
           methodName: 'search',
-          parameters: _i1.testObjectToJson({'query': query}),
+          parameters: _i1.testObjectToJson({
+            'query': query,
+            'limit': limit,
+          }),
           serializationManager: _serializationManager,
         );
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
         ) as _i3.Future<_i4.StockList>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i5.Stock> save(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i5.Stock stock,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'stock',
+        method: 'save',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'stock',
+          methodName: 'save',
+          parameters: _i1.testObjectToJson({'stock': stock}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i5.Stock>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

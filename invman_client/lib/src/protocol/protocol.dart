@@ -10,9 +10,13 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'stock/models/stock.dart' as _i2;
-import 'stock/models/stock_list.dart' as _i3;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i4;
+import 'core/exceptions/already_exists_exception.dart' as _i2;
+import 'stock/data/models/fmp_stock_info.dart' as _i3;
+import 'stock/models/stock.dart' as _i4;
+import 'stock/models/stock_list.dart' as _i5;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i6;
+export 'core/exceptions/already_exists_exception.dart';
+export 'stock/data/models/fmp_stock_info.dart';
 export 'stock/models/stock.dart';
 export 'stock/models/stock_list.dart';
 export 'client.dart';
@@ -30,24 +34,37 @@ class Protocol extends _i1.SerializationManager {
     Type? t,
   ]) {
     t ??= T;
-    if (t == _i2.Stock) {
-      return _i2.Stock.fromJson(data) as T;
+    if (t == _i2.AlreadyExistsException) {
+      return _i2.AlreadyExistsException.fromJson(data) as T;
     }
-    if (t == _i3.StockList) {
-      return _i3.StockList.fromJson(data) as T;
+    if (t == _i3.FmpStockInfo) {
+      return _i3.FmpStockInfo.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i2.Stock?>()) {
-      return (data != null ? _i2.Stock.fromJson(data) : null) as T;
+    if (t == _i4.Stock) {
+      return _i4.Stock.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i3.StockList?>()) {
-      return (data != null ? _i3.StockList.fromJson(data) : null) as T;
+    if (t == _i5.StockList) {
+      return _i5.StockList.fromJson(data) as T;
     }
-    if (t == List<_i2.Stock>) {
-      return (data as List).map((e) => deserialize<_i2.Stock>(e)).toList()
+    if (t == _i1.getType<_i2.AlreadyExistsException?>()) {
+      return (data != null ? _i2.AlreadyExistsException.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i3.FmpStockInfo?>()) {
+      return (data != null ? _i3.FmpStockInfo.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i4.Stock?>()) {
+      return (data != null ? _i4.Stock.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i5.StockList?>()) {
+      return (data != null ? _i5.StockList.fromJson(data) : null) as T;
+    }
+    if (t == List<_i4.Stock>) {
+      return (data as List).map((e) => deserialize<_i4.Stock>(e)).toList()
           as dynamic;
     }
     try {
-      return _i4.Protocol().deserialize<T>(data, t);
+      return _i6.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -56,13 +73,19 @@ class Protocol extends _i1.SerializationManager {
   String? getClassNameForObject(Object? data) {
     String? className = super.getClassNameForObject(data);
     if (className != null) return className;
-    if (data is _i2.Stock) {
+    if (data is _i2.AlreadyExistsException) {
+      return 'AlreadyExistsException';
+    }
+    if (data is _i3.FmpStockInfo) {
+      return 'FmpStockInfo';
+    }
+    if (data is _i4.Stock) {
       return 'Stock';
     }
-    if (data is _i3.StockList) {
+    if (data is _i5.StockList) {
       return 'StockList';
     }
-    className = _i4.Protocol().getClassNameForObject(data);
+    className = _i6.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth.$className';
     }
@@ -75,15 +98,21 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName is! String) {
       return super.deserializeByClassName(data);
     }
+    if (dataClassName == 'AlreadyExistsException') {
+      return deserialize<_i2.AlreadyExistsException>(data['data']);
+    }
+    if (dataClassName == 'FmpStockInfo') {
+      return deserialize<_i3.FmpStockInfo>(data['data']);
+    }
     if (dataClassName == 'Stock') {
-      return deserialize<_i2.Stock>(data['data']);
+      return deserialize<_i4.Stock>(data['data']);
     }
     if (dataClassName == 'StockList') {
-      return deserialize<_i3.StockList>(data['data']);
+      return deserialize<_i5.StockList>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth.')) {
       data['className'] = dataClassName.substring(15);
-      return _i4.Protocol().deserializeByClassName(data);
+      return _i6.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }
