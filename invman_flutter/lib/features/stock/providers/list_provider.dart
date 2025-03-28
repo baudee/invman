@@ -45,7 +45,9 @@ class StockList extends _$StockList {
           return;
         }
         result = await ref.read(stockServiceProvider).search(query: query, limit: limit);
-        result.fold((error) {}, (data) {
+        result.fold((error) {
+          pagingController.error = error;
+        }, (data) {
           pagingController
             ..itemList = data.results
             ..nextPageKey = null;
@@ -56,7 +58,9 @@ class StockList extends _$StockList {
         break;
     }
 
-    result.fold((error) {}, (data) {
+    result.fold((error) {
+      pagingController.error = error;
+    }, (data) {
       if (data.canLoadMore) {
         pagingController.appendPage(data.results, data.page + 1);
       } else {

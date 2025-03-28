@@ -30,6 +30,19 @@ class InfiniteListComponent<T> extends StatelessWidget {
       pagingController: pagingController,
       builderDelegate: PagedChildBuilderDelegate<T>(
         itemBuilder: itemBuilder,
+        firstPageErrorIndicatorBuilder: (context) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(S.of(context).error_code(pagingController.error)),
+              const SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: () => handleRefresh(),
+                child: Text(S.of(context).error_tryAgain),
+              ),
+            ],
+          );
+        },
         noItemsFoundIndicatorBuilder: (context) {
           return Center(child: Text(noItemsFoundMessage ?? S.of(context).core_noItemsFound));
         },

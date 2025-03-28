@@ -8,36 +8,20 @@ class StockService {
   const StockService(this.client);
 
   Future<Either<String, StockList>> search({required String query, int limit = 30}) async {
-    try {
-      final result = await client.stock.search(query: query, limit: limit);
-      return right(result);
-    } catch (e, st) {
-      print(e);
-      print(st);
-      return left(e.toString());
-    }
+    return safeCall(() async {
+      return right(await client.stock.search(query: query, limit: limit));
+    });
   }
 
   Future<Either<String, StockList>> list({required int page, required int limit}) async {
-    try {
-      final result = await client.stock.list(limit: limit, page: page);
-      return right(result);
-    } catch (e, st) {
-      print(e);
-      print(st);
-      return left(e.toString());
-    }
+    return safeCall(() async {
+      return right(await client.stock.list(limit: limit, page: page));
+    });
   }
 
   Future<Either<String, Stock>> save(Stock stock) async {
-    try {
-      final result = await client.stock.save(stock);
-      return right(result);
-    } on ServerException catch (e) {
-      return left(e.errorCode.message);
-    } catch (e, st) {
-      // TODO Log to sentry
-      return left(e.toString());
-    }
+    return safeCall(() async {
+      return right(await client.stock.save(stock));
+    });
   }
 }

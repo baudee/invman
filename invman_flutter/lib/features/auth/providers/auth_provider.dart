@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_manual_providers_as_generated_provider_dependency
+import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:invman_flutter/core/providers/session_manager_provider.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
@@ -39,9 +39,7 @@ class Auth extends _$Auth {
   }) async {
     state = AuthStateGuest(isLoading: true);
 
-    final result = await ref
-        .read(authServiceProvider)
-        .loginWithEmail(email: email, password: password);
+    final result = await ref.read(authServiceProvider).loginWithEmail(email: email, password: password);
 
     result.fold((error) {
       state = AuthStateGuest(error: error);
@@ -69,8 +67,7 @@ class Auth extends _$Auth {
     result.fold((error) {
       state = AuthStateGuest(error: error);
     }, (_) async {
-      state =
-          AuthStateVerificationCodeRequired(email: email, password: password);
+      state = AuthStateVerificationCodeRequired(email: email, password: password);
     });
   }
 
@@ -79,8 +76,7 @@ class Auth extends _$Auth {
     required String password,
     required String verificationCode,
   }) async {
-    state = AuthStateVerificationCodeRequired(
-        email: email, password: password, isLoading: true);
+    state = AuthStateVerificationCodeRequired(email: email, password: password, isLoading: true);
 
     final result = await ref.read(authServiceProvider).confirmEmailRegister(
           email: email,
@@ -89,8 +85,7 @@ class Auth extends _$Auth {
         );
 
     result.fold((error) {
-      state = AuthStateVerificationCodeRequired(
-          email: email, password: password, error: error);
+      state = AuthStateVerificationCodeRequired(email: email, password: password, error: error);
     }, (_) async {
       state = AuthStateSuccess();
     });
@@ -99,8 +94,7 @@ class Auth extends _$Auth {
   Future<void> initiatePasswordReset(String email) async {
     state = AuthStateGuest(isLoading: true);
 
-    final result =
-        await ref.read(authServiceProvider).initiatePasswordReset(email);
+    final result = await ref.read(authServiceProvider).initiatePasswordReset(email);
 
     result.fold((error) {
       state = AuthStateGuest(error: error);
@@ -109,13 +103,10 @@ class Auth extends _$Auth {
     });
   }
 
-  Future<void> completePasswordReset(
-      String verificationCode, String newPassword, String email) async {
+  Future<void> completePasswordReset(String verificationCode, String newPassword, String email) async {
     state = AuthStatePasswordResetCodeRequired(email: email, isLoading: true);
 
-    final result = await ref
-        .read(authServiceProvider)
-        .completePasswordReset(verificationCode, newPassword, email);
+    final result = await ref.read(authServiceProvider).completePasswordReset(verificationCode, newPassword, email);
 
     result.fold((error) {
       state = AuthStatePasswordResetCodeRequired(email: email, error: error);
@@ -135,12 +126,16 @@ class Auth extends _$Auth {
   }
 
   Future<bool> checkEmail(String email) async {
-    final emailAvailable =
-        await ref.read(authServiceProvider).emailIsAvailable(email);
-    if (!emailAvailable) {
-      state = AuthStateGuest(error: "Email not available!");
-    }
-    return emailAvailable;
+    final result = await ref.read(authServiceProvider).emailIsAvailable(email);
+    return result.fold((error) {
+      state = AuthStateGuest(error: error);
+      return false;
+    }, (emailAvailable) {
+      if (!emailAvailable) {
+        state = AuthStateGuest(error: S.current.error_emailNotAvailable);
+      }
+      return emailAvailable;
+    });
   }
 
   Future<void> clearError() async {

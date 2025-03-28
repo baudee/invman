@@ -10,37 +10,45 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i2;
+import '../../stock/models/stock.dart' as _i3;
 
 abstract class Transfer implements _i1.SerializableModel {
   Transfer._({
     this.id,
-    required this.symbol,
-    required this.name,
-    double? value,
-    required this.currency,
-    required this.stockExchange,
-    required this.exchangeShortName,
-  }) : value = value ?? 0.0;
+    required this.userId,
+    this.user,
+    required this.stockId,
+    this.stock,
+    required this.quantity,
+    required this.amount,
+  });
 
   factory Transfer({
     int? id,
-    required String symbol,
-    required String name,
-    double? value,
-    required String currency,
-    required String stockExchange,
-    required String exchangeShortName,
+    required int userId,
+    _i2.UserInfo? user,
+    required int stockId,
+    _i3.Stock? stock,
+    required double quantity,
+    required int amount,
   }) = _TransferImpl;
 
   factory Transfer.fromJson(Map<String, dynamic> jsonSerialization) {
     return Transfer(
       id: jsonSerialization['id'] as int?,
-      symbol: jsonSerialization['symbol'] as String,
-      name: jsonSerialization['name'] as String,
-      value: (jsonSerialization['value'] as num).toDouble(),
-      currency: jsonSerialization['currency'] as String,
-      stockExchange: jsonSerialization['stockExchange'] as String,
-      exchangeShortName: jsonSerialization['exchangeShortName'] as String,
+      userId: jsonSerialization['userId'] as int,
+      user: jsonSerialization['user'] == null
+          ? null
+          : _i2.UserInfo.fromJson(
+              (jsonSerialization['user'] as Map<String, dynamic>)),
+      stockId: jsonSerialization['stockId'] as int,
+      stock: jsonSerialization['stock'] == null
+          ? null
+          : _i3.Stock.fromJson(
+              (jsonSerialization['stock'] as Map<String, dynamic>)),
+      quantity: (jsonSerialization['quantity'] as num).toDouble(),
+      amount: jsonSerialization['amount'] as int,
     );
   }
 
@@ -49,37 +57,37 @@ abstract class Transfer implements _i1.SerializableModel {
   /// the id will be null.
   int? id;
 
-  String symbol;
+  int userId;
 
-  String name;
+  _i2.UserInfo? user;
 
-  double value;
+  int stockId;
 
-  String currency;
+  _i3.Stock? stock;
 
-  String stockExchange;
+  double quantity;
 
-  String exchangeShortName;
+  int amount;
 
   Transfer copyWith({
     int? id,
-    String? symbol,
-    String? name,
-    double? value,
-    String? currency,
-    String? stockExchange,
-    String? exchangeShortName,
+    int? userId,
+    _i2.UserInfo? user,
+    int? stockId,
+    _i3.Stock? stock,
+    double? quantity,
+    int? amount,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       if (id != null) 'id': id,
-      'symbol': symbol,
-      'name': name,
-      'value': value,
-      'currency': currency,
-      'stockExchange': stockExchange,
-      'exchangeShortName': exchangeShortName,
+      'userId': userId,
+      if (user != null) 'user': user?.toJson(),
+      'stockId': stockId,
+      if (stock != null) 'stock': stock?.toJson(),
+      'quantity': quantity,
+      'amount': amount,
     };
   }
 
@@ -94,40 +102,40 @@ class _Undefined {}
 class _TransferImpl extends Transfer {
   _TransferImpl({
     int? id,
-    required String symbol,
-    required String name,
-    double? value,
-    required String currency,
-    required String stockExchange,
-    required String exchangeShortName,
+    required int userId,
+    _i2.UserInfo? user,
+    required int stockId,
+    _i3.Stock? stock,
+    required double quantity,
+    required int amount,
   }) : super._(
           id: id,
-          symbol: symbol,
-          name: name,
-          value: value,
-          currency: currency,
-          stockExchange: stockExchange,
-          exchangeShortName: exchangeShortName,
+          userId: userId,
+          user: user,
+          stockId: stockId,
+          stock: stock,
+          quantity: quantity,
+          amount: amount,
         );
 
   @override
   Transfer copyWith({
     Object? id = _Undefined,
-    String? symbol,
-    String? name,
-    double? value,
-    String? currency,
-    String? stockExchange,
-    String? exchangeShortName,
+    int? userId,
+    Object? user = _Undefined,
+    int? stockId,
+    Object? stock = _Undefined,
+    double? quantity,
+    int? amount,
   }) {
     return Transfer(
       id: id is int? ? id : this.id,
-      symbol: symbol ?? this.symbol,
-      name: name ?? this.name,
-      value: value ?? this.value,
-      currency: currency ?? this.currency,
-      stockExchange: stockExchange ?? this.stockExchange,
-      exchangeShortName: exchangeShortName ?? this.exchangeShortName,
+      userId: userId ?? this.userId,
+      user: user is _i2.UserInfo? ? user : this.user?.copyWith(),
+      stockId: stockId ?? this.stockId,
+      stock: stock is _i3.Stock? ? stock : this.stock?.copyWith(),
+      quantity: quantity ?? this.quantity,
+      amount: amount ?? this.amount,
     );
   }
 }

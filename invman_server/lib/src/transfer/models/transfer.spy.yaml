@@ -3,10 +3,8 @@ class: Transfer
 table: transfer
 
 fields:
-  symbol: String,
-  name: String,
-  value: double, default=0.0
-  currency: String,
-  stockExchange: String,
-  exchangeShortName: String
+  user: module:auth:UserInfo?, relation(onDelete=Cascade)
+  stock: Stock?, relation
+  quantity: double,
+  amount: int
 

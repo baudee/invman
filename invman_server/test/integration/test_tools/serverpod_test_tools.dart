@@ -103,7 +103,7 @@ class TestEndpoints {
 
   late final _StockEndpoint stock;
 
-  late final _TransactionEndpoint transaction;
+  late final _TransferEndpoint transfer;
 }
 
 class _InternalTestEndpoints extends TestEndpoints
@@ -121,7 +121,7 @@ class _InternalTestEndpoints extends TestEndpoints
       endpoints,
       serializationManager,
     );
-    transaction = _TransactionEndpoint(
+    transfer = _TransferEndpoint(
       endpoints,
       serializationManager,
     );
@@ -274,8 +274,8 @@ class _StockEndpoint {
   }
 }
 
-class _TransactionEndpoint {
-  _TransactionEndpoint(
+class _TransferEndpoint {
+  _TransferEndpoint(
     this._endpointDispatch,
     this._serializationManager,
   );
@@ -292,13 +292,13 @@ class _TransactionEndpoint {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
           (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'transaction',
+        endpoint: 'transfer',
         method: 'list',
       );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
-          endpointPath: 'transaction',
+          endpointPath: 'transfer',
           methodName: 'list',
           parameters: _i1.testObjectToJson({
             'limit': limit,

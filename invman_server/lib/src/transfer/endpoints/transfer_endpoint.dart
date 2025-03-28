@@ -3,7 +3,7 @@ import 'package:invman_server/src/generated/protocol.dart';
 import 'package:invman_server/src/transfer/transfer.dart';
 import 'package:serverpod/serverpod.dart';
 
-class TransactionEndpoint extends Endpoint {
+class TransferEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
 

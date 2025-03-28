@@ -75,18 +75,18 @@ class EndpointStock extends _i1.EndpointRef {
 }
 
 /// {@category Endpoint}
-class EndpointTransaction extends _i1.EndpointRef {
-  EndpointTransaction(_i1.EndpointCaller caller) : super(caller);
+class EndpointTransfer extends _i1.EndpointRef {
+  EndpointTransfer(_i1.EndpointCaller caller) : super(caller);
 
   @override
-  String get name => 'transaction';
+  String get name => 'transfer';
 
   _i2.Future<_i5.TransferList> list({
     required int limit,
     required int page,
   }) =>
       caller.callServerEndpoint<_i5.TransferList>(
-        'transaction',
+        'transfer',
         'list',
         {
           'limit': limit,
@@ -131,7 +131,7 @@ class Client extends _i1.ServerpodClientShared {
         ) {
     auth = EndpointAuth(this);
     stock = EndpointStock(this);
-    transaction = EndpointTransaction(this);
+    transfer = EndpointTransfer(this);
     modules = Modules(this);
   }
 
@@ -139,7 +139,7 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointStock stock;
 
-  late final EndpointTransaction transaction;
+  late final EndpointTransfer transfer;
 
   late final Modules modules;
 
@@ -147,7 +147,7 @@ class Client extends _i1.ServerpodClientShared {
   Map<String, _i1.EndpointRef> get endpointRefLookup => {
         'auth': auth,
         'stock': stock,
-        'transaction': transaction,
+        'transfer': transfer,
       };
 
   @override
