@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:invman_client/invman_client.dart';
+import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/utils/toast_utils.dart';
 import 'package:invman_flutter/features/stock/providers/list_provider.dart';
 import 'package:invman_flutter/features/stock/providers/service_provider.dart';
@@ -29,7 +30,7 @@ class StockTileComponent extends ConsumerWidget {
                     ToastUtils.message(context, error);
                   },
                   (data) {
-                    ToastUtils.message(context, "Stock added successfully !");
+                    ToastUtils.message(context, S.of(context).stock_added);
                     context.pop();
                   },
                 );

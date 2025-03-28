@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/components/components.dart';
 import 'package:invman_flutter/core/utils/utils.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
@@ -52,7 +53,7 @@ class _RegisterFormComponentState extends ConsumerState<RegisterFormComponent> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Check your email for a verification code!"),
+              Text(S.of(context).auth_checkEmailCode),
               if (authState.error != null)
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -64,9 +65,9 @@ class _RegisterFormComponentState extends ConsumerState<RegisterFormComponent> {
                 ),
               TextFormField(
                 controller: verificationCodeController,
-                validator: (value) => ValidationUtils.formValidatorNotEmpty(value, "Verification Code"),
+                validator: (value) => ValidationUtils.formValidatorNotEmpty(value, S.of(context).auth_verificationCode),
                 decoration: InputDecoration(
-                  label: Text("Verification Code"),
+                  label: Text(S.of(context).auth_verificationCode),
                 ),
                 autofocus: true,
               ),
@@ -82,7 +83,7 @@ class _RegisterFormComponentState extends ConsumerState<RegisterFormComponent> {
                         verificationCode: verificationCodeController.text,
                       );
                 },
-                child: Text("Submit"),
+                child: Text(S.of(context).core_submit),
               )
             ],
           ),
@@ -99,7 +100,7 @@ class _RegisterFormComponentState extends ConsumerState<RegisterFormComponent> {
             controller: emailController,
             validator: ValidationUtils.formValidatorEmail,
             decoration: InputDecoration(
-              label: Text("Email Address"),
+              label: Text(S.of(context).auth_email),
             ),
             autofocus: true,
           ),
@@ -107,7 +108,7 @@ class _RegisterFormComponentState extends ConsumerState<RegisterFormComponent> {
             controller: passwordController,
             validator: ValidationUtils.formValidatorPassword,
             decoration: InputDecoration(
-              label: Text("Password"),
+              label: Text(S.of(context).auth_password),
             ),
             obscureText: true,
           ),
@@ -134,17 +135,17 @@ class _RegisterFormComponentState extends ConsumerState<RegisterFormComponent> {
                     password: password,
                   );
             },
-            child: Text("Register"),
+            child: Text(S.of(context).auth_signUp),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Already have an account? "),
+              Text(S.of(context).auth_alreadyHaveAnAccount),
               TextButton(
                 onPressed: () {
                   context.go(LoginScreen.route());
                 },
-                child: Text("Login"),
+                child: Text(S.of(context).auth_logIn),
               ),
             ],
           ),

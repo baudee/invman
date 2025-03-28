@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:invman_flutter/core/models/app_theme_enum.dart';
 
 class UserPreferencesState {
   final Locale locale;
-  final AppThemeEnum theme;
+  final ThemeMode theme;
   final String currency;
 
   const UserPreferencesState({
@@ -12,7 +11,7 @@ class UserPreferencesState {
     required this.currency,
   });
 
-  UserPreferencesState copyWith({Locale? locale, AppThemeEnum? theme, String? currency}) {
+  UserPreferencesState copyWith({Locale? locale, ThemeMode? theme, String? currency}) {
     return UserPreferencesState(
       locale: locale ?? this.locale,
       theme: theme ?? this.theme,

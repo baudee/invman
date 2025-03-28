@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
-import 'package:invman_flutter/theme/themes.dart';
-import 'package:invman_flutter/generated/l10n.dart';
+import 'package:invman_flutter/config/theme/themes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 late final SharedPreferences prefs;
@@ -24,7 +24,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final booting = ref.watch(bootstrapProvider);
 
-    final appName = 'InvMan';
+    final appName = "InvMan";
 
     if (booting) {
       return MaterialApp(
@@ -45,7 +45,7 @@ class MyApp extends ConsumerWidget {
       title: appName,
       theme: AppTheme.light().themeData,
       darkTheme: AppTheme.dark().themeData,
-      themeMode: ref.watch(userPreferencesProvider.select((value) => value.theme)).mode,
+      themeMode: ref.watch(userPreferencesProvider.select((value) => value.theme)),
       locale: ref.watch(userPreferencesProvider.select((value) => value.locale)),
       localizationsDelegates: const [
         S.delegate,

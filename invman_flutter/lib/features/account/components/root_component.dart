@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
-import 'package:invman_flutter/generated/l10n.dart';
 
 class AccountRootComponent extends ConsumerWidget {
   const AccountRootComponent({super.key});
@@ -14,7 +14,7 @@ class AccountRootComponent extends ConsumerWidget {
       child: Column(
         children: [
           ListTile(
-            title: Text(S.of(context).language),
+            title: Text(S.of(context).account_language),
             subtitle: Text(ref.watch(userPreferencesProvider.select((v) => v.locale)).toLanguageTag()),
             leading: Icon(Icons.language),
             trailing: DropdownButton<Locale>(
@@ -28,17 +28,17 @@ class AccountRootComponent extends ConsumerWidget {
                 ...SupportedLanguage.values.map(
                   (e) => DropdownMenuItem(
                     value: Locale.fromSubtags(languageCode: e.languageCode),
-                    child: Text(e.languageName),
+                    child: Text(S.of(context).core_language(e.languageName)),
                   ),
                 ),
               ],
             ),
           ),
           ListTile(
-            title: Text(S.of(context).theme),
-            subtitle: Text(ref.watch(userPreferencesProvider.select((v) => v.theme)).label),
+            title: Text(S.of(context).account_theme),
+            subtitle: Text(S.of(context).core_theme(ref.watch(userPreferencesProvider.select((v) => v.theme)).name)),
             leading: Icon(Icons.color_lens),
-            trailing: DropdownButton<AppThemeEnum>(
+            trailing: DropdownButton<ThemeMode>(
               value: ref.watch(userPreferencesProvider.select((v) => v.theme)),
               onChanged: (value) {
                 if (value != null) {
@@ -46,23 +46,23 @@ class AccountRootComponent extends ConsumerWidget {
                 }
               },
               items: [
-                ...AppThemeEnum.values.map(
+                ...ThemeMode.values.map(
                   (e) => DropdownMenuItem(
                     value: e,
-                    child: Text(e.label),
+                    child: Text(S.of(context).core_theme(e.name)),
                   ),
                 ),
               ],
             ),
           ),
           ListTile(
-            title: Text(S.of(context).currency),
+            title: Text(S.of(context).account_currency),
             subtitle: Text(ref.read(userPreferencesProvider).currency),
             leading: Icon(Icons.attach_money_rounded),
           ),
           ListTile(
             title: Text(
-              S.of(context).logOut,
+              S.of(context).auth_logOut,
               style: TextStyle(color: Colors.red),
             ),
             leading: Icon(Icons.logout, color: Colors.red),

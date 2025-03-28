@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invman_client/invman_client.dart';
+import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/components/components.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
 
@@ -19,7 +20,7 @@ class StockListComponent extends ConsumerWidget {
       pagingController: pagingController,
       useRefreshIndicator: useRefreshIndicator,
       handleRefresh: provider.refresh,
-      noItemsFoundMessage: "No stock found.",
+      noItemsFoundMessage: S.of(context).core_noItemsFound,
       itemBuilder: (context, stock, index) {
         return StockTileComponent(stock: stock, addable: addable);
       },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/components/components.dart';
 import 'package:invman_flutter/core/utils/utils.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
@@ -44,7 +45,7 @@ class _LoginFormComponentState extends ConsumerState<LoginFormComponent> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Check your email for a verification code!"),
+              Text(S.of(context).auth_checkEmailCode),
               if (authState.error != null)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
@@ -55,17 +56,17 @@ class _LoginFormComponentState extends ConsumerState<LoginFormComponent> {
                 ),
               TextFormField(
                 controller: passwordResetCodeController,
-                validator: (value) => ValidationUtils.formValidatorNotEmpty(value, "Verification Code"),
+                validator: (value) => ValidationUtils.formValidatorNotEmpty(value, S.of(context).auth_verificationCode),
                 decoration: InputDecoration(
-                  label: Text("Verification Code"),
+                  label: Text(S.of(context).auth_verificationCode),
                 ),
                 autofocus: true,
               ),
               TextFormField(
                 controller: passwordResetNewPasswordController,
-                validator: (value) => ValidationUtils.formValidatorNotEmpty(value, "New Password"),
+                validator: (value) => ValidationUtils.formValidatorNotEmpty(value, S.of(context).auth_newPassword),
                 decoration: InputDecoration(
-                  label: Text("New Password"),
+                  label: Text(S.of(context).auth_newPassword),
                 ),
                 obscureText: true,
               ),
@@ -81,7 +82,7 @@ class _LoginFormComponentState extends ConsumerState<LoginFormComponent> {
                         authState.email,
                       );
                 },
-                child: Text("Submit"),
+                child: Text(S.of(context).core_submit),
               )
             ],
           ),
@@ -106,15 +107,15 @@ class _LoginFormComponentState extends ConsumerState<LoginFormComponent> {
             controller: emailController,
             validator: ValidationUtils.formValidatorEmail,
             decoration: InputDecoration(
-              label: Text("Email Address"),
+              label: Text(S.of(context).auth_email),
             ),
             autofocus: true,
           ),
           TextFormField(
             controller: passwordController,
-            validator: (value) => ValidationUtils.formValidatorNotEmpty(value, "Password"),
+            validator: (value) => ValidationUtils.formValidatorNotEmpty(value, S.of(context).auth_password),
             decoration: InputDecoration(
-              label: Text("Password"),
+              label: Text(S.of(context).auth_password),
             ),
             obscureText: true,
           ),
@@ -125,10 +126,10 @@ class _LoginFormComponentState extends ConsumerState<LoginFormComponent> {
                   onPressed: () async {
                     final email = await PromptDialog.show(
                       context: context,
-                      title: "Email",
-                      labelText: "Your Email Address",
+                      title: S.of(context).auth_email,
+                      labelText: S.of(context).auth_yourEmail,
                       initialValue: emailController.text,
-                      confirmText: "Reset Password",
+                      confirmText: S.of(context).auth_resetPassword,
                       validator: ValidationUtils.formValidatorEmail,
                     );
 
@@ -136,7 +137,7 @@ class _LoginFormComponentState extends ConsumerState<LoginFormComponent> {
                       await ref.read(authProvider.notifier).initiatePasswordReset(email);
                     }
                   },
-                  child: Text("Forgot Password?")),
+                  child: Text(S.of(context).auth_forgotPassword)),
               ElevatedButton(
                 onPressed: () {
                   if (!formKey.currentState!.validate()) {
@@ -148,19 +149,19 @@ class _LoginFormComponentState extends ConsumerState<LoginFormComponent> {
                         password: passwordController.text,
                       );
                 },
-                child: Text("Login"),
+                child: Text(S.of(context).auth_logIn),
               ),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Don't have an account?"),
+              Text(S.of(context).auth_dontHaveAnAccount),
               TextButton(
                 onPressed: () {
                   context.go(RegisterScreen.route());
                 },
-                child: Text("Register"),
+                child: Text(S.of(context).auth_signUp),
               ),
             ],
           ),

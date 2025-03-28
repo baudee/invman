@@ -53,17 +53,17 @@ class UserPreferences extends _$UserPreferences {
     ref.read(storageProvider).setString(StorageClient.languageKey, languageCode);
   }
 
-  AppThemeEnum _initTheme() {
+  ThemeMode _initTheme() {
     final savedTheme = ref.read(storageProvider).getString(StorageClient.themeKey);
     if (savedTheme != null) {
-      return AppThemeEnum.values.firstWhere((e) => e.value == savedTheme, orElse: () => AppThemeEnum.system);
+      return ThemeMode.values.firstWhere((e) => e.name == savedTheme, orElse: () => ThemeMode.system);
     }
-    return AppThemeEnum.system;
+    return ThemeMode.system;
   }
 
-  void setTheme(AppThemeEnum theme) {
+  void setTheme(ThemeMode theme) {
     state = state.copyWith(theme: theme);
-    ref.read(storageProvider).setString(StorageClient.themeKey, theme.value);
+    ref.read(storageProvider).setString(StorageClient.themeKey, theme.name);
   }
 
   String _initCurrency() {

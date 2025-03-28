@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/components/components.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
 
@@ -16,7 +17,7 @@ class StockSearchComponent extends ConsumerWidget {
             IconButton(onPressed: () => context.pop(), icon: Icon(Icons.arrow_back)),
             Expanded(
               child: DebouncingSearchBar(
-                hintText: "Search for a stock...",
+                hintText: S.of(context).stock_searchHint,
                 text: ref.read(stockSearchProvider),
                 autoFocus: true,
                 onChanged: (v) {

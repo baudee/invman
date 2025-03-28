@@ -17,6 +17,8 @@ import 'dart:async' as _i3;
 import 'package:invman_server/src/generated/stock/models/stock_list.dart'
     as _i4;
 import 'package:invman_server/src/generated/stock/models/stock.dart' as _i5;
+import 'package:invman_server/src/generated/transfer/models/transfer_list.dart'
+    as _i6;
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:invman_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -100,6 +102,8 @@ class TestEndpoints {
   late final _AuthEndpoint auth;
 
   late final _StockEndpoint stock;
+
+  late final _TransactionEndpoint transaction;
 }
 
 class _InternalTestEndpoints extends TestEndpoints
@@ -114,6 +118,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     stock = _StockEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    transaction = _TransactionEndpoint(
       endpoints,
       serializationManager,
     );
@@ -258,6 +266,50 @@ class _StockEndpoint {
           _localUniqueSession,
           _localCallContext.arguments,
         ) as _i3.Future<_i5.Stock>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _TransactionEndpoint {
+  _TransactionEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<_i6.TransferList> list(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required int limit,
+    required int page,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'transaction',
+        method: 'list',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'transaction',
+          methodName: 'list',
+          parameters: _i1.testObjectToJson({
+            'limit': limit,
+            'page': page,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i6.TransferList>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

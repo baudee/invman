@@ -1,3 +1,0 @@
-exception: AlreadyExistsException
-fields:
-  message: String

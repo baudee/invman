@@ -47,7 +47,7 @@ class StockService {
         transaction: transaction,
       );
       if (existingStock != null) {
-        throw AlreadyExistsException(message: 'Stock with symbol ${stock.symbol} already exists.');
+        throw ServerException(errorCode: ErrorCode.alreadyExists);
       }
       return Stock.db.insertRow(session, stock, transaction: transaction);
     });

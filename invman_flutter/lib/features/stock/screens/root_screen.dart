@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
 
 class StockRootScreen extends StatelessWidget {
@@ -11,7 +12,7 @@ class StockRootScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Stock"),
+        title: Text(S.of(context).stock_title),
       ),
       body: StockListComponent(
         type: StockListType.all,
