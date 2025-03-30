@@ -7,9 +7,10 @@ import 'package:invman_flutter/features/stock/stock.dart';
 
 class StockListComponent extends ConsumerWidget {
   final StockListType type;
-  final bool addable;
   final bool useRefreshIndicator;
-  const StockListComponent({super.key, required this.type, this.addable = false, this.useRefreshIndicator = true});
+  final Widget? trailing;
+  final Function(Stock stock)? onTap;
+  const StockListComponent({super.key, required this.type, this.trailing, this.onTap, this.useRefreshIndicator = true});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,7 +23,11 @@ class StockListComponent extends ConsumerWidget {
       handleRefresh: provider.refresh,
       noItemsFoundMessage: S.of(context).core_noItemsFound,
       itemBuilder: (context, stock, index) {
-        return StockTileComponent(stock: stock, addable: addable);
+        return StockTileComponent(
+          stock: stock,
+          trailing: trailing,
+          onTap: onTap,
+        );
       },
     );
   }

@@ -17,7 +17,7 @@ class TransferRootScreen extends StatelessWidget {
       body: TransferListComponent(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //context.push(StockSearchScreen.route());
+          context.push(TransferEditScreen.route(0));
         },
         child: Icon(Icons.add),
       ),

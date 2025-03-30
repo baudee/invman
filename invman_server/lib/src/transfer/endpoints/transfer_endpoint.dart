@@ -10,4 +10,12 @@ class TransferEndpoint extends Endpoint {
   Future<TransferList> list(Session session, {int limit = 10, int page = 1}) async {
     return getIt<TransferService>().list(session, limit: limit, page: page);
   }
+
+  Future<Transfer> retrieve(Session session, int id) async {
+    return getIt<TransferService>().retrieve(session, id);
+  }
+
+  Future<Transfer> save(Session session, Transfer transfer) async {
+    return getIt<TransferService>().save(session, transfer);
+  }
 }

@@ -5,3 +5,5 @@ values:
  - notFound
  - alreadyExists
  - invalidCredentials
+ - forbidden 
+ - badRequest

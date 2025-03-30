@@ -13,6 +13,14 @@ class TransferRoutes {
         path: TransferRootScreen.route(),
         builder: (_, __) => TransferRootScreen(),
       ),
+      GoRoute(
+        path: TransferEditScreen.route(),
+        builder: (_, state) => TransferEditScreen(id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0),
+      ),
+      GoRoute(
+        path: TransferDetailScreen.route(),
+        builder: (_, state) => TransferDetailScreen(id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0),
+      ),
     ],
   );
 }

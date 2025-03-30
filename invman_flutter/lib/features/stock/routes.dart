@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:invman_flutter/features/stock/screens/select_screen.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
 
 class StockRoutes {
@@ -16,6 +17,10 @@ class StockRoutes {
       GoRoute(
         path: StockSearchScreen.route(),
         builder: (_, __) => StockSearchScreen(),
+      ),
+      GoRoute(
+        path: StockSelectScreen.route(),
+        builder: (_, __) => StockSelectScreen(),
       ),
     ],
   );

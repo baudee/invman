@@ -15,7 +15,9 @@ enum ErrorCode implements _i1.SerializableModel {
   unknown,
   notFound,
   alreadyExists,
-  invalidCredentials;
+  invalidCredentials,
+  forbidden,
+  badRequest;
 
   static ErrorCode fromJson(String name) {
     switch (name) {
@@ -27,6 +29,10 @@ enum ErrorCode implements _i1.SerializableModel {
         return alreadyExists;
       case 'invalidCredentials':
         return invalidCredentials;
+      case 'forbidden':
+        return forbidden;
+      case 'badRequest':
+        return badRequest;
       default:
         throw ArgumentError('Value "$name" cannot be converted to "ErrorCode"');
     }

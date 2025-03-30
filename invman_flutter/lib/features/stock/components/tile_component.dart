@@ -1,42 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:invman_client/invman_client.dart';
-import 'package:invman_flutter/config/generated/l10n.dart';
-import 'package:invman_flutter/core/utils/toast_utils.dart';
-import 'package:invman_flutter/features/stock/providers/list_provider.dart';
-import 'package:invman_flutter/features/stock/providers/service_provider.dart';
 
 class StockTileComponent extends ConsumerWidget {
   final Stock stock;
-  final bool addable;
+  final Widget? trailing;
+  final EdgeInsetsGeometry? contentPadding;
+  final Function(Stock stock)? onTap;
 
-  const StockTileComponent({super.key, required this.stock, this.addable = false});
+  const StockTileComponent({super.key, required this.stock, this.trailing, this.onTap, this.contentPadding});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
+      contentPadding: contentPadding,
       title: Text(stock.name),
-      subtitle: addable ? Text("${stock.symbol} - ${stock.currency} - ${stock.stockExchange}") : Text(stock.symbol),
-      trailing: addable ? Icon(Icons.add) : Text("${stock.value} ${stock.currency}"),
-      onTap: addable
-          ? () async {
-              final result = await ref.read(stockServiceProvider).save(stock);
-              ref.read(stockListProvider(StockListType.all).notifier).refresh();
-
-              if (context.mounted) {
-                result.fold(
-                  (error) {
-                    ToastUtils.message(context, error);
-                  },
-                  (data) {
-                    ToastUtils.message(context, S.of(context).stock_added);
-                    context.pop();
-                  },
-                );
-              }
-            }
-          : null,
+      subtitle: Text("${stock.symbol} - ${stock.stockExchange} - ${stock.value} ${stock.currency}"),
+      trailing: trailing,
+      onTap: () {
+        if (onTap != null) {
+          onTap!(stock);
+        }
+      },
     );
   }
 }

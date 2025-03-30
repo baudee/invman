@@ -15,8 +15,10 @@ import 'package:invman_client/src/protocol/stock/models/stock_list.dart' as _i3;
 import 'package:invman_client/src/protocol/stock/models/stock.dart' as _i4;
 import 'package:invman_client/src/protocol/transfer/models/transfer_list.dart'
     as _i5;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i6;
-import 'protocol.dart' as _i7;
+import 'package:invman_client/src/protocol/transfer/models/transfer.dart'
+    as _i6;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i7;
+import 'protocol.dart' as _i8;
 
 /// {@category Endpoint}
 class EndpointAuth extends _i1.EndpointRef {
@@ -93,14 +95,28 @@ class EndpointTransfer extends _i1.EndpointRef {
           'page': page,
         },
       );
+
+  _i2.Future<_i6.Transfer> retrieve(int id) =>
+      caller.callServerEndpoint<_i6.Transfer>(
+        'transfer',
+        'retrieve',
+        {'id': id},
+      );
+
+  _i2.Future<_i6.Transfer> save(_i6.Transfer transfer) =>
+      caller.callServerEndpoint<_i6.Transfer>(
+        'transfer',
+        'save',
+        {'transfer': transfer},
+      );
 }
 
 class Modules {
   Modules(Client client) {
-    auth = _i6.Caller(client);
+    auth = _i7.Caller(client);
   }
 
-  late final _i6.Caller auth;
+  late final _i7.Caller auth;
 }
 
 class Client extends _i1.ServerpodClientShared {
@@ -119,7 +135,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i7.Protocol(),
+          _i8.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,

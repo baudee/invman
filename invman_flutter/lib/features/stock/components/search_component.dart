@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/components/components.dart';
+import 'package:invman_flutter/core/utils/utils.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
 
 class StockSearchComponent extends ConsumerWidget {
@@ -30,8 +31,24 @@ class StockSearchComponent extends ConsumerWidget {
         Expanded(
           child: StockListComponent(
             type: StockListType.search,
-            addable: true,
             useRefreshIndicator: false,
+            trailing: Icon(Icons.add),
+            onTap: (stock) async {
+              final result = await ref.read(stockServiceProvider).save(stock);
+              ref.read(stockListProvider(StockListType.all).notifier).refresh();
+
+              if (context.mounted) {
+                result.fold(
+                  (error) {
+                    ToastUtils.message(context, error);
+                  },
+                  (data) {
+                    ToastUtils.message(context, S.of(context).stock_added);
+                    context.pop();
+                  },
+                );
+              }
+            },
           ),
         ),
       ],
