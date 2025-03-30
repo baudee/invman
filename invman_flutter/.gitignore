@@ -1,5 +1,6 @@
 # Generated files
 **.g.dart
+lib/config/generated/
 lib/generated/
 
 # Miscellaneous

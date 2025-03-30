@@ -20,16 +20,5 @@ server/run:
 # Flutter app
 app/build:
 	cd $(PROJECT_NAME)_flutter && dart run build_runner build --delete-conflicting-outputs
-	cd $(PROJECT_NAME)_flutter && flutter pub get
-	
-app/run:
-	cd $(PROJECT_NAME)_flutter && flutter run -d macos --target lib/main_development.dart
-
-app/gen:
-	cd $(PROJECT_NAME)_flutter && flutter pub run build_runner build --delete-conflicting-outputs
-
-app/gen_watch:
-	cd $(PROJECT_NAME)_flutter && flutter pub run build_runner watch --delete-conflicting-outputs
-
-app/gen_l10n:
 	cd $(PROJECT_NAME)_flutter && dart run intl_utils:generate
+	cd $(PROJECT_NAME)_flutter && flutter pub get

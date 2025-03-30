@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -10,7 +11,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Login"),
+        title: Text(S.of(context).auth_logIn),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

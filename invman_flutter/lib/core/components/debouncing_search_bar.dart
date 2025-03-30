@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class DebouncingSearchBar extends StatefulWidget {
   final bool autoFocus;
   final String? hintText;
+  final String? text;
   final int debounceMs;
   final Function(String) onChanged;
 
@@ -13,6 +14,7 @@ class DebouncingSearchBar extends StatefulWidget {
     this.autoFocus = false,
     this.hintText,
     this.debounceMs = 250,
+    this.text,
   });
 
   @override
@@ -25,6 +27,7 @@ class _DebouncingSearchBarState extends State<DebouncingSearchBar> {
   @override
   Widget build(BuildContext context) {
     return SearchBar(
+      controller: TextEditingController(text: widget.text),
       autoFocus: widget.autoFocus,
       hintText: widget.hintText,
       onChanged: (value) {

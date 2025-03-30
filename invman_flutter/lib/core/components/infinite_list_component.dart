@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:invman_flutter/config/generated/l10n.dart';
+import 'package:invman_flutter/core/components/components.dart';
 
 class InfiniteListComponent<T> extends StatelessWidget {
   final PagingController<int, T> pagingController;
@@ -29,8 +31,14 @@ class InfiniteListComponent<T> extends StatelessWidget {
       pagingController: pagingController,
       builderDelegate: PagedChildBuilderDelegate<T>(
         itemBuilder: itemBuilder,
+        firstPageErrorIndicatorBuilder: (context) {
+          return ErrorComponent(
+            error: S.of(context).error_code(pagingController.error),
+            handleRefresh: handleRefresh,
+          );
+        },
         noItemsFoundIndicatorBuilder: (context) {
-          return Center(child: Text(noItemsFoundMessage ?? "No results found."));
+          return Center(child: Text(noItemsFoundMessage ?? S.of(context).core_noItemsFound));
         },
       ),
     );

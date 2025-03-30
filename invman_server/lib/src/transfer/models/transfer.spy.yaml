@@ -1,0 +1,10 @@
+class: Transfer
+
+table: transfer
+
+fields:
+  user: module:auth:UserInfo?, relation(onDelete=Cascade)
+  stock: Stock?, relation
+  quantity: double,
+  amount: int
+

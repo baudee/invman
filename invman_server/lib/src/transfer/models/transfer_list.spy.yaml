@@ -1,0 +1,9 @@
+class: TransferList
+
+fields:
+    count: int
+    results: List<Transfer>
+    page: int
+    limit: int
+    numPages: int
+    canLoadMore: bool

@@ -1,0 +1,105 @@
+{
+  "actions": [
+    {
+      "type": "deleteTable",
+      "deleteTable": "stock"
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "stock",
+        "dartName": "Stock",
+        "module": "invman",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "nextval('stock_id_seq'::regclass)",
+            "dartType": "int?"
+          },
+          {
+            "name": "symbol",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "name",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "value",
+            "columnType": 3,
+            "isNullable": true,
+            "dartType": "double?"
+          },
+          {
+            "name": "currency",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "exchangeShortName",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          }
+        ],
+        "foreignKeys": [],
+        "indexes": [
+          {
+            "indexName": "stock_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          },
+          {
+            "indexName": "stock_symbol_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "symbol"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": false
+          }
+        ],
+        "managed": true
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "uniqueIndexCreated",
+      "message": "Unique index \"stock_symbol_idx\" is added to table \"stock\". If there are existing rows with duplicate values, this migration will fail.",
+      "table": "stock",
+      "columns": [
+        "symbol"
+      ],
+      "destrucive": false
+    },
+    {
+      "type": "tableDropped",
+      "message": "One or more columns are added to table \"stock\" which cannot be added in a table migration. The complete table will be deleted and recreated.",
+      "table": "stock",
+      "columns": [
+        "exchangeShortName"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

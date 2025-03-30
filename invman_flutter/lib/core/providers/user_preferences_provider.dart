@@ -12,8 +12,13 @@ class UserPreferences extends _$UserPreferences {
   UserPreferencesState build() {
     final locale = _initLocale();
     final theme = _initTheme();
+    final currency = _initCurrency();
 
-    return UserPreferencesState(locale: locale, theme: theme);
+    return UserPreferencesState(
+      locale: locale,
+      theme: theme,
+      currency: currency,
+    );
   }
 
   Locale _initLocale() {
@@ -41,14 +46,6 @@ class UserPreferences extends _$UserPreferences {
     return Locale.fromSubtags(languageCode: languageCode);
   }
 
-  AppThemeEnum _initTheme() {
-    final savedTheme = ref.read(storageProvider).getString(StorageClient.themeKey);
-    if (savedTheme != null) {
-      return AppThemeEnum.values.firstWhere((e) => e.value == savedTheme, orElse: () => AppThemeEnum.system);
-    }
-    return AppThemeEnum.system;
-  }
-
   void setLocale(Locale locale) {
     state = state.copyWith(locale: locale);
 
@@ -56,8 +53,20 @@ class UserPreferences extends _$UserPreferences {
     ref.read(storageProvider).setString(StorageClient.languageKey, languageCode);
   }
 
-  void setTheme(AppThemeEnum theme) {
+  ThemeMode _initTheme() {
+    final savedTheme = ref.read(storageProvider).getString(StorageClient.themeKey);
+    if (savedTheme != null) {
+      return ThemeMode.values.firstWhere((e) => e.name == savedTheme, orElse: () => ThemeMode.system);
+    }
+    return ThemeMode.system;
+  }
+
+  void setTheme(ThemeMode theme) {
     state = state.copyWith(theme: theme);
-    ref.read(storageProvider).setString(StorageClient.themeKey, theme.value);
+    ref.read(storageProvider).setString(StorageClient.themeKey, theme.name);
+  }
+
+  String _initCurrency() {
+    return "CHF";
   }
 }

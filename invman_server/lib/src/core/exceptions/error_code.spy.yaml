@@ -1,0 +1,9 @@
+enum: ErrorCode
+serialized: byName
+values:
+ - unknown
+ - notFound
+ - alreadyExists
+ - invalidCredentials
+ - forbidden 
+ - badRequest

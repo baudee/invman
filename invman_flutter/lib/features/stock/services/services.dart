@@ -1,0 +1,1 @@
+export 'stock_service.dart';

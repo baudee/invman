@@ -1,0 +1,3 @@
+exception: ServerException
+fields:
+  errorCode: ErrorCode
