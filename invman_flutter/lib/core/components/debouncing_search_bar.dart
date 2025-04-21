@@ -6,6 +6,7 @@ class DebouncingSearchBar extends StatefulWidget {
   final String? hintText;
   final String? text;
   final int debounceMs;
+  final TextEditingController? controller;
   final Function(String) onChanged;
 
   const DebouncingSearchBar({
@@ -15,6 +16,7 @@ class DebouncingSearchBar extends StatefulWidget {
     this.hintText,
     this.debounceMs = 250,
     this.text,
+    this.controller,
   });
 
   @override
@@ -27,7 +29,7 @@ class _DebouncingSearchBarState extends State<DebouncingSearchBar> {
   @override
   Widget build(BuildContext context) {
     return SearchBar(
-      controller: TextEditingController(text: widget.text),
+      controller: widget.controller,
       autoFocus: widget.autoFocus,
       hintText: widget.hintText,
       onChanged: (value) {

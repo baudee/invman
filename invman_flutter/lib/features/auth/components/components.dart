@@ -1,2 +1,3 @@
-export 'login_form_component.dart';
-export 'register_form_component.dart';
+export 'login/login.dart';
+export 'register/register.dart';
+export 'logged_in_component.dart';

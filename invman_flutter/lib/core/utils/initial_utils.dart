@@ -7,8 +7,7 @@ class InitialUtils {
       name: '',
       symbol: '',
       currency: '',
-      stockExchange: '',
-      exchangeShortName: '',
+      quoteType: '',
     );
   }
 

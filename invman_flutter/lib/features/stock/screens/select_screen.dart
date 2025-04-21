@@ -17,7 +17,6 @@ class StockSelectScreen extends ConsumerWidget {
       ),
       body: StockListComponent(
         useRefreshIndicator: false,
-        type: StockListType.all,
         trailing: Icon(Icons.arrow_forward_ios),
         onTap: (stock) {
           context.pop(stock);

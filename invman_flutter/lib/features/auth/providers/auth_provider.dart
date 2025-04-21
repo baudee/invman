@@ -13,19 +13,31 @@ class Auth extends _$Auth {
   }
 
   Future<void> init() async {
-    await ref.read(sessionManagerProvider).initialize();
+    final provider = ref.read(sessionManagerProvider);
+    await provider.initialize();
+
+    provider.addListener(() {
+      if (!provider.isSignedIn) {
+        state = AuthStateGuest();
+      }
+    });
+
     await refreshMe();
   }
 
-  Future<void> refreshMe() async {
+  Future<String?> refreshMe() async {
     final userInfoResult = ref.read(authServiceProvider).currentUser();
 
-    userInfoResult.fold((error) {
-      state = AuthStateError(error: error);
+    return userInfoResult.fold((error) {
+      state = AuthStateGuest();
+      return error;
     }, (userInfo) async {
       if (userInfo == null) {
         state = AuthStateGuest();
+      } else {
+        state = AuthStateSuccess();
       }
+      return null;
     });
   }
 
@@ -33,30 +45,33 @@ class Auth extends _$Auth {
     state = AuthStateSuccess();
   }
 
-  Future<void> loginWithEmail({
+  Future<String?> loginWithEmail({
     required String email,
     required String password,
   }) async {
-    state = AuthStateGuest(isLoading: true);
+    state = AuthStateLoading();
 
     final result = await ref.read(authServiceProvider).loginWithEmail(email: email, password: password);
 
-    result.fold((error) {
-      state = AuthStateGuest(error: error);
+    return result.fold((error) {
+      state = AuthStateGuest(email: email, password: password);
+      return error;
     }, (userInfo) async {
       state = AuthStateSuccess();
+      return null;
     });
   }
 
-  Future<void> registerWithEmail({
+  Future<String?> registerWithEmail({
     required String email,
     required String password,
   }) async {
-    state = AuthStateGuest(isLoading: true);
+    state = AuthStateLoading();
 
-    final isEmailValid = await checkEmail(email);
+    final (isEmailValid, message) = await checkEmail(email);
     if (!isEmailValid) {
-      return;
+      state = AuthStateGuest(email: email, password: password);
+      return message;
     }
 
     final result = await ref.read(authServiceProvider).registerWithEmail(
@@ -64,19 +79,21 @@ class Auth extends _$Auth {
           password: password,
         );
 
-    result.fold((error) {
-      state = AuthStateGuest(error: error);
+    return result.fold((error) {
+      state = AuthStateGuest(email: email, password: password);
+      return error;
     }, (_) async {
       state = AuthStateVerificationCodeRequired(email: email, password: password);
+      return null;
     });
   }
 
-  Future<void> confirmEmailRegister({
+  Future<String?> confirmEmailRegister({
     required String email,
     required String password,
     required String verificationCode,
   }) async {
-    state = AuthStateVerificationCodeRequired(email: email, password: password, isLoading: true);
+    state = AuthStateLoading();
 
     final result = await ref.read(authServiceProvider).confirmEmailRegister(
           email: email,
@@ -84,63 +101,75 @@ class Auth extends _$Auth {
           verificationCode: verificationCode,
         );
 
-    result.fold((error) {
-      state = AuthStateVerificationCodeRequired(email: email, password: password, error: error);
+    return result.fold((error) {
+      state = AuthStateVerificationCodeRequired(email: email, password: password);
+      return error;
     }, (_) async {
       state = AuthStateSuccess();
+      return null;
     });
   }
 
-  Future<void> initiatePasswordReset(String email) async {
-    state = AuthStateGuest(isLoading: true);
+  Future<String?> initiatePasswordReset(String email) async {
+    state = AuthStateLoading();
 
     final result = await ref.read(authServiceProvider).initiatePasswordReset(email);
 
-    result.fold((error) {
-      state = AuthStateGuest(error: error);
+    return result.fold((error) {
+      state = AuthStateGuest(email: email);
+      return error;
     }, (_) {
       state = AuthStatePasswordResetCodeRequired(email: email);
+      return null;
     });
   }
 
-  Future<void> completePasswordReset(String verificationCode, String newPassword, String email) async {
-    state = AuthStatePasswordResetCodeRequired(email: email, isLoading: true);
+  Future<String?> completePasswordReset(String verificationCode, String newPassword, String email) async {
+    state = AuthStateLoading();
 
     final result = await ref.read(authServiceProvider).completePasswordReset(verificationCode, newPassword, email);
 
-    result.fold((error) {
-      state = AuthStatePasswordResetCodeRequired(email: email, error: error);
+    return result.fold((error) {
+      state = AuthStatePasswordResetCodeRequired(email: email);
+      return error;
     }, (_) async {
       state = AuthStateSuccess();
+      return null;
     });
   }
 
-  Future<void> logout() async {
+  Future<String?> logout() async {
+    if (state is! AuthStateSuccess) {
+      return S.current.error_invalidState;
+    }
+
+    state = AuthStateLoading();
+
     final result = await ref.read(authServiceProvider).logout();
 
-    result.fold((error) {
-      state = AuthStateGuest(error: error);
+    return result.fold((error) {
+      state = AuthStateSuccess();
+      return error;
     }, (_) {
       state = AuthStateGuest();
+      return null;
     });
   }
 
-  Future<bool> checkEmail(String email) async {
+  Future<(bool, String?)> checkEmail(String email) async {
     final result = await ref.read(authServiceProvider).emailIsAvailable(email);
     return result.fold((error) {
-      state = AuthStateGuest(error: error);
-      return false;
+      return (false, error);
     }, (emailAvailable) {
-      if (!emailAvailable) {
-        state = AuthStateGuest(error: S.current.error_emailNotAvailable);
-      }
-      return emailAvailable;
+      String? message = emailAvailable ? null : S.current.error_emailNotAvailable;
+      return (emailAvailable, message);
     });
   }
 
-  Future<void> clearError() async {
-    if (state is AuthStateGuest) {
-      state = AuthStateGuest();
-    }
+  void setCredentialsInState(String email, String password) {
+    state = AuthStateGuest(
+      email: email,
+      password: password,
+    );
   }
 }

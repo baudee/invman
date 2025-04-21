@@ -3,11 +3,10 @@ import 'package:invman_server/src/generated/protocol.dart';
 import 'package:invman_server/src/stock/stock.dart';
 
 class StockApiImpl implements StockApi {
-  final String _baseUrl = "financialmodelingprep.com/api/v3";
-  final String apiKey;
+  final String baseUrl;
   Map<String, String>? headers;
 
-  StockApiImpl({required this.apiKey}) {
+  StockApiImpl({required this.baseUrl}) {
     headers = {
       "Content-Type": "application/json",
     };
@@ -16,17 +15,34 @@ class StockApiImpl implements StockApi {
   @override
   Future<List<Stock>> search({required String query, int limit = 10}) async {
     final jsonResponse = await HttpClientService.get(
-      url: _baseUrl,
-      path: "search",
+      url: baseUrl,
+      path: "ticker/search",
       headers: headers,
       queryParameters: {
-        "query": query,
-        "apikey": apiKey,
+        "symbol": query,
         "limit": limit.toString(),
       },
     ) as List<dynamic>;
 
-    final List<FmpStockInfo> fmpStocks = jsonResponse.map((e) => FmpStockInfo.fromJson(e)).toList();
-    return fmpStocks.map((e) => e.toEntity()).whereType<Stock>().toList();
+    final List<YFinLightStock> yfinStocks = jsonResponse.map((e) => YFinLightStock.fromJson(e)).toList();
+    return yfinStocks.map((e) => e.toEntity()).whereType<Stock>().toList();
+  }
+
+  @override
+  Future<int> currencyChange({required String from, required String to}) {
+    // TODO: implement currencyChange
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Stock> get({required String symbol}) async {
+    final jsonResponse = await HttpClientService.get(
+      url: baseUrl,
+      path: "ticker/$symbol",
+      headers: headers,
+    );
+
+    final YFinStock yfinStock = YFinStock.fromJson(jsonResponse);
+    return yfinStock.toEntity();
   }
 }

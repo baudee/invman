@@ -1,0 +1,6 @@
+class: Investment
+
+fields:
+  stock: Stock
+  investAmount: int
+  withdrawAmount: int

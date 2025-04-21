@@ -14,6 +14,7 @@ on:
 
 env:
   WORK_DIR: invman_flutter
+  FLUTTER_VERSION: 3.29.x
 
 jobs:
   unit_tests_and_coverage:
@@ -31,6 +32,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
 
       - name: 👁️ Check Flutter version
@@ -78,6 +80,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
 
       - name: Install Dependencies
@@ -128,7 +131,7 @@ jobs:
       - name: 📧 Send Email with APK
         uses: dawidd6/action-send-mail@v3
         with:
-          secure: true
+          secure: false
           server_address: ${{ secrets.SMTP_SERVER }}
           server_port: ${{ secrets.SMTP_PORT }}
           username: ${{ secrets.SMTP_USERNAME }}

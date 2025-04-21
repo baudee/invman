@@ -7,7 +7,7 @@ class StockService {
 
   const StockService(this.client);
 
-  Future<Either<String, StockList>> search({required String query, int limit = 30}) async {
+  Future<Either<String, List<Stock>>> search({required String query, int limit = 30}) async {
     return safeCall(() async {
       return right(await client.stock.search(query: query, limit: limit));
     });
@@ -19,9 +19,21 @@ class StockService {
     });
   }
 
+  Future<Either<String, Stock>> retrieve(int id) async {
+    return safeCall(() async {
+      return right(await client.stock.retrieve(id));
+    });
+  }
+
   Future<Either<String, Stock>> save(Stock stock) async {
     return safeCall(() async {
-      return right(await client.stock.save(stock));
+      return right(await client.stock.save(stock.symbol));
+    });
+  }
+
+  Future<Either<String, Stock>> delete(int id) async {
+    return safeCall(() async {
+      return right(await client.stock.delete(id));
     });
   }
 }

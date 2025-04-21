@@ -14,8 +14,8 @@ class StockTileComponent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
       contentPadding: contentPadding,
-      title: Text(stock.name),
-      subtitle: Text("${stock.symbol} - ${stock.stockExchange} - ${stock.value} ${stock.currency}"),
+      title: Text(stock.name, overflow: TextOverflow.ellipsis),
+      subtitle: Text("${stock.symbol} - ${stock.quoteType} - ${stock.value} ${stock.currency}"),
       trailing: trailing,
       onTap: () {
         if (onTap != null) {

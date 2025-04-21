@@ -26,30 +26,49 @@ class StockService {
     );
   }
 
-  Future<StockList> search(Session session, {required String query, int limit = 10}) async {
-    final results = await stockApi.search(query: query, limit: limit);
-    final count = results.length;
-    return StockList(
-      count: count,
-      limit: count,
-      page: 1,
-      results: results,
-      numPages: 1,
-      canLoadMore: false,
+  Future<Stock> retrieve(Session session, int id) async {
+    final stock = await Stock.db.findById(
+      session,
+      id,
     );
+
+    if (stock == null) {
+      throw ServerException(errorCode: ErrorCode.notFound);
+    }
+
+    return stock;
   }
 
-  Future<Stock> save(Session session, Stock stock) async {
+  Future<List<Stock>> search(Session session, {required String query, int limit = 10}) async {
+    return stockApi.search(query: query, limit: limit);
+  }
+
+  Future<Stock> save(Session session, String symbol) async {
     return session.db.transaction((transaction) async {
       final existingStock = await Stock.db.findFirstRow(
         session,
-        where: (e) => e.symbol.equals(stock.symbol),
+        where: (e) => e.symbol.equals(symbol),
         transaction: transaction,
       );
       if (existingStock != null) {
-        throw ServerException(errorCode: ErrorCode.alreadyExists);
+        throw ServerException(errorCode: ErrorCode.conflict);
       }
+      final stock = await stockApi.get(symbol: symbol);
       return Stock.db.insertRow(session, stock, transaction: transaction);
+    });
+  }
+
+  Future<Stock> delete(Session session, int id) async {
+    return session.db.transaction((transaction) async {
+      final stock = await Stock.db.findById(
+        session,
+        id,
+        transaction: transaction,
+      );
+      if (stock == null) {
+        throw ServerException(errorCode: ErrorCode.notFound);
+      }
+      return Stock.db.deleteRow(session, stock, transaction: transaction);
     });
   }
 }

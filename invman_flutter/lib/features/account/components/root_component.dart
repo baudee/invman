@@ -67,10 +67,14 @@ class AccountRootComponent extends ConsumerWidget {
             ),
             leading: Icon(Icons.logout, color: Colors.red),
             onTap: () async {
-              await ref.read(authProvider.notifier).logout();
+              final errorMessage = await ref.read(authProvider.notifier).logout();
 
               if (context.mounted) {
-                StatefulNavigationShell.of(context).goBranch(0, initialLocation: true);
+                if (errorMessage == null) {
+                  StatefulNavigationShell.of(context).goBranch(0, initialLocation: true);
+                } else {
+                  ToastUtils.message(context, errorMessage, success: false);
+                }
               }
             },
           ),

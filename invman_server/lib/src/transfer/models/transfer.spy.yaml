@@ -4,7 +4,12 @@ table: transfer
 
 fields:
   user: module:auth:UserInfo?, relation(onDelete=Cascade)
-  stock: Stock?, relation
+  stock: Stock?, relation(name=stock_transfers)
   quantity: double,
   amount: int
 
+indexes:
+  transfer_user_idx:
+    fields: userId
+  transfer_stock_idx:
+    fields: stockId

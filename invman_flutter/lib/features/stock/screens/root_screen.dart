@@ -15,7 +15,7 @@ class StockRootScreen extends StatelessWidget {
         title: Text(S.of(context).stock_title),
       ),
       body: StockListComponent(
-        type: StockListType.all,
+        onTap: (stock) => context.push(StockDetailScreen.route(stock.id)),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

@@ -11,9 +11,9 @@ part 'form_provider.g.dart';
 @Riverpod(keepAlive: true)
 class TransferForm extends _$TransferForm {
   @override
-  ModelFormState<Transfer> build(int id) {
-    Future.microtask(() => _load(id));
-    return ModelFormState.initial(InitialUtils.getTransfer());
+  ModelState<Transfer> build(int id) {
+    Future.microtask(() => _load());
+    return Loading();
   }
 
   final formKey = GlobalKey<FormState>();
@@ -22,22 +22,27 @@ class TransferForm extends _$TransferForm {
   final quantityController = TextEditingController();
 
   void _refreshControllers() {
-    quantityController.text = state.object.quantity.toString();
-    amountController.text = (state.object.amount / 100).toStringAsFixed(0);
+    if (state case Success<Transfer>(data: final transfer)) {
+      quantityController.text = transfer.quantity.toString();
+      amountController.text = (transfer.amount / 100).toStringAsFixed(0);
+    }
   }
 
   void setStock(Stock stock) {
-    state = state.update(
-      state.object.copyWith(
-        stock: stock,
-      ),
-    );
+    if (state case Success<Transfer>(data: final transfer)) {
+      state = Success(
+        transfer.copyWith(
+          stock: stock,
+        ),
+      );
+    }
   }
 
-  Future<void> _load(int id) async {
-    state = state.loading();
+  Future<void> _load() async {
+    state = Loading();
+
     if (id == 0) {
-      state = state.success(InitialUtils.getTransfer());
+      state = Success(InitialUtils.getTransfer());
       _refreshControllers();
       return;
     }
@@ -45,54 +50,53 @@ class TransferForm extends _$TransferForm {
     final result = await ref.read(transferServiceProvider).retrieve(id);
 
     result.fold((error) {
-      state = state.failure(error);
+      state = Failure(error);
     }, (transfer) {
-      state = state.success(transfer);
+      state = Success(transfer);
       _refreshControllers();
     });
   }
 
-  Future<bool> submit() async {
-    if (!formKey.currentState!.validate()) {
-      state = state.failure(S.current.error_fixToContinue);
-      return false;
-    }
-
-    if (state.object.stock == null || state.object.stock?.id == null) {
-      state = state.failure(S.current.transfer_selectStock);
-      return false;
-    }
-
-    if (double.tryParse(quantityController.text.trim()) == null) {
-      state = state.failure(S.current.transfer_selectValidQuantity);
-      return false;
-    }
-
-    if (int.tryParse(amountController.text.trim()) == null) {
-      state = state.failure(S.current.transfer_selectValidAmount);
-      return false;
-    }
-
-    final transfer = state.object.copyWith(
-      quantity: double.parse(quantityController.text.trim()),
-      amount: int.parse(amountController.text.trim()) * 100,
-      stockId: state.object.stock!.id!,
-    );
-
-    state = state.loading();
-
-    final result = await ref.read(transferServiceProvider).save(transfer);
-
-    return result.fold((error) {
-      state = state.failure(error);
-      return false;
-    }, (t) {
-      state = state.success(t);
-      ref.read(transferListProvider.notifier).refresh();
-      if (t.id != null) {
-        ref.invalidate(transferDetailProvider(t.id!));
+  Future<(bool, String?)> submit() async {
+    if (state case Success<Transfer>(data: final transfer)) {
+      if (!formKey.currentState!.validate()) {
+        return (false, S.current.error_fixToContinue);
       }
-      return true;
-    });
+
+      if (transfer.stock == null || transfer.stock?.id == null) {
+        return (false, S.current.transfer_selectStock);
+      }
+
+      if (double.tryParse(quantityController.text.trim()) == null) {
+        return (false, S.current.transfer_selectValidQuantity);
+      }
+
+      if (int.tryParse(amountController.text.trim()) == null) {
+        return (false, S.current.transfer_selectValidAmount);
+      }
+
+      final transferToSave = transfer.copyWith(
+        quantity: double.parse(quantityController.text.trim()),
+        amount: int.parse(amountController.text.trim()) * 100,
+        stockId: transfer.stock!.id!,
+      );
+
+      state = Loading();
+
+      final result = await ref.read(transferServiceProvider).save(transferToSave);
+
+      return result.fold((error) {
+        state = Success(transferToSave);
+        return (false, error);
+      }, (t) {
+        state = Success(t);
+        ref.read(transferListProvider.notifier).refresh();
+        if (t.id != null) {
+          ref.invalidate(transferDetailProvider(t.id!));
+        }
+        return (true, S.current.core_itemSaved);
+      });
+    }
+    return (false, S.current.error_invalidState);
   }
 }

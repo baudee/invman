@@ -14,8 +14,8 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 enum ErrorCode implements _i1.SerializableModel {
   unknown,
   notFound,
-  alreadyExists,
-  invalidCredentials,
+  conflict,
+  unauthorized,
   forbidden,
   badRequest;
 
@@ -25,10 +25,10 @@ enum ErrorCode implements _i1.SerializableModel {
         return unknown;
       case 'notFound':
         return notFound;
-      case 'alreadyExists':
-        return alreadyExists;
-      case 'invalidCredentials':
-        return invalidCredentials;
+      case 'conflict':
+        return conflict;
+      case 'unauthorized':
+        return unauthorized;
       case 'forbidden':
         return forbidden;
       case 'badRequest':

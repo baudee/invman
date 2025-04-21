@@ -10,21 +10,17 @@ class TransferDetailComponent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(transferDetailProvider(id));
-    return switch (state) {
-      Initial() || Loading() => const Center(child: CircularProgressIndicator()),
-      Success() => Column(
-          children: [
-            Text(state.data.amount.toStringPrice(ref.read(userPreferencesProvider).currency)),
-            Divider(),
-            Text(state.data.quantity.toString()),
-            Divider(),
-            if (state.data.stock != null) StockTileComponent(stock: state.data.stock!),
-          ],
-        ),
-      Failure() => ErrorComponent(
-          error: state.error,
-          handleRefresh: () => ref.read(transferDetailProvider(id).notifier).load(id),
-        ),
-    };
+    return BaseStateComponent(
+      state: state,
+      successBuilder: (data) => Column(
+        children: [
+          Text(data.amount.toStringPrice(ref.read(userPreferencesProvider).currency)),
+          Divider(),
+          Text(data.quantity.toString()),
+          Divider(),
+          if (data.stock != null) StockTileComponent(stock: data.stock!),
+        ],
+      ),
+    );
   }
 }

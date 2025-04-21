@@ -17,6 +17,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
   WORK_DIR: invman_server
   SERVERPOD_VERSION: 2.3.1
+  FLUTTER_VERSION: 3.29.x
 
 jobs:
   unit_tests_and_coverage:
@@ -42,13 +43,8 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true 
-
-      - name: ⚙️ Install Dart
-        uses: dart-lang/setup-dart@v1
-
-      - name: 👁️ Check Dart version
-        run: dart --version
 
       - name: 🔧 Install dependencies
         run: |
@@ -98,13 +94,8 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true 
-
-      - name: ⚙️ Install Dart
-        uses: dart-lang/setup-dart@v1
-
-      - name: 👁️ Check Dart version
-        run: dart --version
 
       - name: 🔧 Install dependencies
         run: |

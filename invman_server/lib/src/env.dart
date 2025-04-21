@@ -2,13 +2,13 @@ import 'package:dotenv/dotenv.dart';
 
 class Env {
   late final DotEnv env;
-  late final String fmpApiKey;
+  late final String yfinBaseUrl;
 
   Env() {
     env = DotEnv(includePlatformEnvironment: true)..load();
 
-    // FMP API KEY
-    fmpApiKey = getVarFromKey('FMP_API_KEY');
+    // Fast Finance Base URL
+    yfinBaseUrl = getVarFromKey('YFIN_BASE_URL');
   }
 
   String getVarFromKey(String key) {

@@ -7,4 +7,11 @@ class IncludeHelpers {
       stock: Stock.include(),
     );
   }
+
+  // Stock
+  static StockInclude stockInclude() {
+    return Stock.include(
+      transfers: Transfer.includeList(),
+    );
+  }
 }

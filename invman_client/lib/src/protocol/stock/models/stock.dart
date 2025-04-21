@@ -10,6 +10,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
+import '../../transfer/models/transfer.dart' as _i2;
 
 abstract class Stock implements _i1.SerializableModel {
   Stock._({
@@ -18,8 +19,8 @@ abstract class Stock implements _i1.SerializableModel {
     required this.name,
     double? value,
     required this.currency,
-    required this.stockExchange,
-    required this.exchangeShortName,
+    required this.quoteType,
+    this.transfers,
   }) : value = value ?? 0.0;
 
   factory Stock({
@@ -28,8 +29,8 @@ abstract class Stock implements _i1.SerializableModel {
     required String name,
     double? value,
     required String currency,
-    required String stockExchange,
-    required String exchangeShortName,
+    required String quoteType,
+    List<_i2.Transfer>? transfers,
   }) = _StockImpl;
 
   factory Stock.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -39,8 +40,10 @@ abstract class Stock implements _i1.SerializableModel {
       name: jsonSerialization['name'] as String,
       value: (jsonSerialization['value'] as num).toDouble(),
       currency: jsonSerialization['currency'] as String,
-      stockExchange: jsonSerialization['stockExchange'] as String,
-      exchangeShortName: jsonSerialization['exchangeShortName'] as String,
+      quoteType: jsonSerialization['quoteType'] as String,
+      transfers: (jsonSerialization['transfers'] as List?)
+          ?.map((e) => _i2.Transfer.fromJson((e as Map<String, dynamic>)))
+          .toList(),
     );
   }
 
@@ -57,9 +60,9 @@ abstract class Stock implements _i1.SerializableModel {
 
   String currency;
 
-  String stockExchange;
+  String quoteType;
 
-  String exchangeShortName;
+  List<_i2.Transfer>? transfers;
 
   Stock copyWith({
     int? id,
@@ -67,8 +70,8 @@ abstract class Stock implements _i1.SerializableModel {
     String? name,
     double? value,
     String? currency,
-    String? stockExchange,
-    String? exchangeShortName,
+    String? quoteType,
+    List<_i2.Transfer>? transfers,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -78,8 +81,9 @@ abstract class Stock implements _i1.SerializableModel {
       'name': name,
       'value': value,
       'currency': currency,
-      'stockExchange': stockExchange,
-      'exchangeShortName': exchangeShortName,
+      'quoteType': quoteType,
+      if (transfers != null)
+        'transfers': transfers?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -98,16 +102,16 @@ class _StockImpl extends Stock {
     required String name,
     double? value,
     required String currency,
-    required String stockExchange,
-    required String exchangeShortName,
+    required String quoteType,
+    List<_i2.Transfer>? transfers,
   }) : super._(
           id: id,
           symbol: symbol,
           name: name,
           value: value,
           currency: currency,
-          stockExchange: stockExchange,
-          exchangeShortName: exchangeShortName,
+          quoteType: quoteType,
+          transfers: transfers,
         );
 
   @override
@@ -117,8 +121,8 @@ class _StockImpl extends Stock {
     String? name,
     double? value,
     String? currency,
-    String? stockExchange,
-    String? exchangeShortName,
+    String? quoteType,
+    Object? transfers = _Undefined,
   }) {
     return Stock(
       id: id is int? ? id : this.id,
@@ -126,8 +130,10 @@ class _StockImpl extends Stock {
       name: name ?? this.name,
       value: value ?? this.value,
       currency: currency ?? this.currency,
-      stockExchange: stockExchange ?? this.stockExchange,
-      exchangeShortName: exchangeShortName ?? this.exchangeShortName,
+      quoteType: quoteType ?? this.quoteType,
+      transfers: transfers is List<_i2.Transfer>?
+          ? transfers
+          : this.transfers?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }

@@ -29,7 +29,7 @@ class AuthService {
       final result = await client.modules.auth.email.authenticate(email, password);
 
       if (!result.success) {
-        return left(ErrorCode.invalidCredentials.message);
+        return left(ErrorCode.unauthorized.message);
       }
 
       if (result.userInfo == null || result.keyId == null || result.key == null) {

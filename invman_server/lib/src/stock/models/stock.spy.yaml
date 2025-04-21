@@ -7,8 +7,8 @@ fields:
   name: String,
   value: double, default=0.0
   currency: String,
-  stockExchange: String,
-  exchangeShortName: String
+  quoteType: String
+  transfers: List<Transfer>?, relation(name=stock_transfers)
 
 indexes:
   stock_symbol_idx:
