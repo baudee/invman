@@ -12,7 +12,7 @@ part 'form_provider.g.dart';
 class TransferForm extends _$TransferForm {
   @override
   ModelState<Transfer> build(int id) {
-    Future.microtask(() => _load());
+    Future.microtask(() => load());
     return Loading();
   }
 
@@ -38,7 +38,7 @@ class TransferForm extends _$TransferForm {
     }
   }
 
-  Future<void> _load() async {
+  Future<void> load() async {
     state = Loading();
 
     if (id == 0) {

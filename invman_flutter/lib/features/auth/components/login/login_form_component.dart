@@ -74,8 +74,8 @@ class _LoginFormComponentState extends ConsumerState<LoginFormComponent> {
 
                     if (email != null && email.isNotEmpty) {
                       final errorMessage = await provider.initiatePasswordReset(email);
-                      if (errorMessage != null && context.mounted) {
-                        ToastUtils.message(context, errorMessage, success: false);
+                      if (errorMessage != null) {
+                        ToastUtils.message(errorMessage, success: false);
                       }
                     }
                   },
@@ -91,9 +91,7 @@ class _LoginFormComponentState extends ConsumerState<LoginFormComponent> {
                     password: passwordController.text,
                   );
 
-                  if (errorMessage != null && context.mounted) {
-                    ToastUtils.message(context, errorMessage, success: false);
-                  }
+                  ToastUtils.message(errorMessage, success: false);
                 },
                 child: Text(S.of(context).auth_logIn),
               ),

@@ -12,6 +12,7 @@ class TransferDetailComponent extends ConsumerWidget {
     final state = ref.watch(transferDetailProvider(id));
     return BaseStateComponent(
       state: state,
+      onRefresh: () => ref.read(transferDetailProvider(id).notifier).load(),
       successBuilder: (data) => Column(
         children: [
           Text(data.amount.toStringPrice(ref.read(userPreferencesProvider).currency)),

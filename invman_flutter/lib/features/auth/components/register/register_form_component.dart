@@ -71,8 +71,8 @@ class _RegisterFormComponentState extends ConsumerState<RegisterFormComponent> {
                 password: password,
               );
 
-              if (errorMessage != null && context.mounted) {
-                ToastUtils.message(context, errorMessage, success: false);
+              if (errorMessage != null) {
+                ToastUtils.message(errorMessage, success: false);
               }
             },
             child: Text(S.of(context).auth_signUp),

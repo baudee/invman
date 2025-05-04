@@ -6,7 +6,7 @@ import 'package:invman_flutter/core/models/models.dart';
 class BaseStateComponent<T> extends ConsumerWidget {
   final Widget Function(T data) successBuilder;
   final ModelState<T> state;
-  final Function()? onRefresh;
+  final Function? onRefresh;
 
   const BaseStateComponent({
     super.key,
@@ -22,9 +22,8 @@ class BaseStateComponent<T> extends ConsumerWidget {
       Success(:final data) => successBuilder(data),
       Failure(:final error) => ErrorComponent(
           error: error,
-          handleRefresh: () {
-            onRefresh?.call();
-          }),
+          handleRefresh: onRefresh,
+        ),
     };
   }
 }

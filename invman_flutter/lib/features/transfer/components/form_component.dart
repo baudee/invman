@@ -20,6 +20,7 @@ class TransferFormComponent extends ConsumerWidget {
 
     return BaseStateComponent(
       state: state,
+      onRefresh: () => provider.load(),
       successBuilder: (data) => Form(
         key: provider.formKey,
         child: SingleChildScrollView(
@@ -70,11 +71,9 @@ class TransferFormComponent extends ConsumerWidget {
               ElevatedButton(
                 onPressed: () async {
                   final (success, message) = await provider.submit();
-                  if (context.mounted) {
-                    ToastUtils.message(context, message, success: success);
-                    if (success) {
-                      context.pop();
-                    }
+                  ToastUtils.message(message, success: success);
+                  if (success) {
+                    context.pop();
                   }
                 },
                 child: Text(S.of(context).core_save),

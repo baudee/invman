@@ -13,6 +13,7 @@ class StockDetailComponent extends ConsumerWidget {
     final provider = ref.read(stockDetailProvider(id).notifier);
     return BaseStateComponent(
       state: state,
+      onRefresh: () => provider.load(),
       successBuilder: (data) => Column(
         children: [
           Text(data.name),
@@ -26,11 +27,9 @@ class StockDetailComponent extends ConsumerWidget {
           ElevatedButton.icon(
               onPressed: () async {
                 final (success, message) = await provider.delete();
-                if (context.mounted) {
-                  ToastUtils.message(context, message, success: success);
-                  if (success) {
-                    context.pop();
-                  }
+                ToastUtils.message(message, success: success);
+                if (success) {
+                  context.pop();
                 }
               },
               label: Icon(Icons.delete)),

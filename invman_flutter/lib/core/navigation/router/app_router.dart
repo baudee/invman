@@ -11,11 +11,12 @@ import 'package:invman_flutter/core/navigation/navigation.dart';
 
 part 'app_router.g.dart';
 
+final rootNavigatorKey = GlobalKey<NavigatorState>();
+
 @Riverpod(keepAlive: true)
 GoRouter router(Ref ref) {
   final initialRoute = InvestmentRootScreen.route();
   String destination = initialRoute;
-  final rootNavigatorKey = GlobalKey<NavigatorState>();
 
   return GoRouter(
     initialLocation: initialRoute,

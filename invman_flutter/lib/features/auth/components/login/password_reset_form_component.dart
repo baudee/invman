@@ -27,6 +27,7 @@ class _PasswordResetFormComponentState extends ConsumerState<PasswordResetFormCo
 
   @override
   Widget build(BuildContext context) {
+    final provider = ref.read(authProvider.notifier);
     return Form(
       key: formKey,
       child: Column(
@@ -55,16 +56,20 @@ class _PasswordResetFormComponentState extends ConsumerState<PasswordResetFormCo
                 return;
               }
 
-              final errorMessage = await ref.read(authProvider.notifier).completePasswordReset(
-                    codeController.text,
-                    newPasswordController.text,
-                    widget.email,
-                  );
-              if (errorMessage != null && context.mounted) {
-                ToastUtils.message(context, errorMessage, success: false);
+              final errorMessage = await provider.completePasswordReset(
+                codeController.text,
+                newPasswordController.text,
+                widget.email,
+              );
+              if (errorMessage != null) {
+                ToastUtils.message(errorMessage, success: false);
               }
             },
             child: Text(S.of(context).core_submit),
+          ),
+          FilledButton(
+            onPressed: () => provider.resetState(),
+            child: Text(S.of(context).core_cancel),
           )
         ],
       ),

@@ -1,4 +1,6 @@
 import 'package:invman_flutter/config/generated/l10n.dart';
+import 'package:invman_flutter/core/providers/providers.dart';
+import 'package:invman_flutter/core/services/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:invman_flutter/core/providers/session_manager_provider.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
@@ -18,7 +20,7 @@ class Auth extends _$Auth {
 
     provider.addListener(() {
       if (!provider.isSignedIn) {
-        state = AuthStateGuest();
+        resetState();
       }
     });
 
@@ -29,11 +31,11 @@ class Auth extends _$Auth {
     final userInfoResult = ref.read(authServiceProvider).currentUser();
 
     return userInfoResult.fold((error) {
-      state = AuthStateGuest();
+      resetState();
       return error;
     }, (userInfo) async {
       if (userInfo == null) {
-        state = AuthStateGuest();
+        resetState();
       } else {
         state = AuthStateSuccess();
       }
@@ -57,6 +59,7 @@ class Auth extends _$Auth {
       state = AuthStateGuest(email: email, password: password);
       return error;
     }, (userInfo) async {
+      saveEmail(email);
       state = AuthStateSuccess();
       return null;
     });
@@ -105,6 +108,7 @@ class Auth extends _$Auth {
       state = AuthStateVerificationCodeRequired(email: email, password: password);
       return error;
     }, (_) async {
+      saveEmail(email);
       state = AuthStateSuccess();
       return null;
     });
@@ -151,7 +155,7 @@ class Auth extends _$Auth {
       state = AuthStateSuccess();
       return error;
     }, (_) {
-      state = AuthStateGuest();
+      resetState();
       return null;
     });
   }
@@ -171,5 +175,16 @@ class Auth extends _$Auth {
       email: email,
       password: password,
     );
+  }
+
+  void resetState() {
+    final email = ref.read(storageProvider).getString(StorageClient.emailKey);
+    state = AuthStateGuest(
+      email: email,
+    );
+  }
+
+  void saveEmail(String email) {
+    ref.read(storageProvider).setString(StorageClient.emailKey, email);
   }
 }

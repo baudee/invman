@@ -5,6 +5,7 @@
     "@CORE---------------------------------------------------------------": {},
     "core_noItemsFound": "No item found.",
     "core_submit": "Submit",
+    "core_cancel": "Cancel",
     "core_language": "{language, select, english{English} other{{language}}}",
     "core_theme": "{theme, select, light{Light} dark{Dark} system{System} other{{theme}}}",
     "core_noName": "No name",

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/components/components.dart';
+import 'package:invman_flutter/core/navigation/router/app_router.dart';
 import 'package:invman_flutter/core/utils/utils.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
 
@@ -49,11 +50,9 @@ class StockSearchComponent extends ConsumerWidget {
                   onTap: (stock) async {
                     final (success, message) = await provider.save(stock);
 
-                    if (context.mounted) {
-                      ToastUtils.message(context, message, success: success);
-                      if (success) {
-                        context.pop();
-                      }
+                    ToastUtils.message(message, success: success);
+                    if (success) {
+                      rootNavigatorKey.currentContext?.pop();
                     }
                   },
                 );

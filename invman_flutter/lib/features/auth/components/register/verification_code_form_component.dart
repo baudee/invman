@@ -25,6 +25,7 @@ class _VerificationCodeFormComponentState extends ConsumerState<VerificationCode
 
   @override
   Widget build(BuildContext context) {
+    final provider = ref.read(authProvider.notifier);
     return Form(
       key: formKey,
       child: Column(
@@ -45,17 +46,21 @@ class _VerificationCodeFormComponentState extends ConsumerState<VerificationCode
                 return;
               }
 
-              final errorMessage = await ref.read(authProvider.notifier).confirmEmailRegister(
-                    email: widget.email,
-                    password: widget.password,
-                    verificationCode: codeController.text,
-                  );
+              final errorMessage = await provider.confirmEmailRegister(
+                email: widget.email,
+                password: widget.password,
+                verificationCode: codeController.text,
+              );
 
-              if (errorMessage != null && context.mounted) {
-                ToastUtils.message(context, errorMessage, success: false);
+              if (errorMessage != null) {
+                ToastUtils.message(errorMessage, success: false);
               }
             },
             child: Text(S.of(context).core_submit),
+          ),
+          FilledButton(
+            onPressed: () => provider.resetState(),
+            child: Text(S.of(context).core_cancel),
           )
         ],
       ),
