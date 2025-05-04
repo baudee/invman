@@ -1,3 +1,4 @@
+import 'package:invman_server/src/core/helpers/helpers.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:invman_server/src/stock/data/data.dart';
 import 'package:serverpod/serverpod.dart';
@@ -26,10 +27,11 @@ class StockService {
     );
   }
 
-  Future<Stock> retrieve(Session session, int id) async {
+  Future<Stock> retrieve(Session session, int id, {bool? useInclude, Transaction? transaction}) async {
     final stock = await Stock.db.findById(
       session,
       id,
+      include: useInclude == true ? IncludeHelpers.stockInclude() : null,
     );
 
     if (stock == null) {
@@ -60,13 +62,9 @@ class StockService {
 
   Future<Stock> delete(Session session, int id) async {
     return session.db.transaction((transaction) async {
-      final stock = await Stock.db.findById(
-        session,
-        id,
-        transaction: transaction,
-      );
-      if (stock == null) {
-        throw ServerException(errorCode: ErrorCode.notFound);
+      final stock = await retrieve(session, id, useInclude: true, transaction: transaction);
+      if (stock.transfers != null && stock.transfers!.isNotEmpty) {
+        throw ServerException(errorCode: ErrorCode.conflict);
       }
       return Stock.db.deleteRow(session, stock, transaction: transaction);
     });

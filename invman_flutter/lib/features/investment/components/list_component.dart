@@ -14,7 +14,7 @@ class InvestmentListComponent extends ConsumerWidget {
 
     return SliverInfiniteListComponent<Investment>(
       pagingController: pagingController,
-      useRefreshIndicator: false,
+      useRefreshIndicator: true,
       itemBuilder: (context, investment, index) {
         return InvestmentTileComponent(investment: investment);
       },
