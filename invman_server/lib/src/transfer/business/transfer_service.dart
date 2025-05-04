@@ -6,10 +6,12 @@ class TransferService {
   TransferService();
 
   Future<TransferList> list(Session session, {int limit = 10, int page = 1}) async {
-    final count = await Transfer.db.count(session);
+    final sessionUserId = (await session.authenticated)!.userId;
+    final count = await Transfer.db.count(session, where: (e) => e.userId.equals(sessionUserId));
 
     final results = await Transfer.db.find(
       session,
+      where: (e) => e.userId.equals(sessionUserId),
       limit: limit,
       offset: (page * limit) - limit,
       include: IncludeHelpers.transferInclude(),
@@ -50,7 +52,7 @@ class TransferService {
       throw ServerException(errorCode: ErrorCode.forbidden);
     }
 
-    if (transfer.quantity <= 0 || transfer.amount < 0 || transfer.stockId <= 0 || transfer.id == null) {
+    if (transfer.stockId <= 0 || transfer.id == null) {
       throw ServerException(errorCode: ErrorCode.badRequest);
     }
 
@@ -72,5 +74,10 @@ class TransferService {
         stock: stock,
       );
     });
+  }
+
+  Future<Transfer> delete(Session session, int id) async {
+    final transfer = await retrieve(session, id);
+    return Transfer.db.deleteRow(session, transfer);
   }
 }

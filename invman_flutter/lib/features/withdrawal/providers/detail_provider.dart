@@ -1,15 +1,15 @@
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/models/models.dart';
-import 'package:invman_flutter/features/transfer/transfer.dart';
+import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'detail_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class TransferDetail extends _$TransferDetail {
+class WithdrawalDetail extends _$WithdrawalDetail {
   @override
-  ModelState<Transfer> build(int id) {
+  ModelState<Withdrawal> build(int id) {
     load();
     return Initial();
   }
@@ -17,12 +17,12 @@ class TransferDetail extends _$TransferDetail {
   Future<void> load() async {
     state = Loading();
 
-    final result = await ref.read(transferServiceProvider).retrieve(id);
+    final result = await ref.read(withdrawalServiceProvider).retrieve(id);
 
     result.fold((error) {
       state = Failure(error);
-    }, (transfer) {
-      state = Success(transfer);
+    }, (withdrawal) {
+      state = Success(withdrawal);
     });
   }
 
@@ -31,18 +31,18 @@ class TransferDetail extends _$TransferDetail {
       return (false, S.current.error_invalidState);
     }
 
-    final transferToDelete = (state as Success).data;
+    final withdrawalToDelete = (state as Success).data;
 
     state = Loading();
 
-    final result = await ref.read(transferServiceProvider).delete(id);
+    final result = await ref.read(withdrawalServiceProvider).delete(id);
 
     return result.fold((error) {
-      state = Success(transferToDelete);
+      state = Success(withdrawalToDelete);
       return (false, error);
-    }, (deletedTransfer) {
-      state = Success(deletedTransfer);
-      ref.read(transferListProvider.notifier).refresh();
+    }, (deletedWithdrawal) {
+      state = Success(deletedWithdrawal);
+      ref.read(withdrawalListProvider.notifier).refresh();
       return (true, S.current.core_itemDeleted);
     });
   }

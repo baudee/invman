@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/components/components.dart';
 import 'package:invman_flutter/core/providers/providers.dart';
 import 'package:invman_flutter/core/utils/utils.dart';
-import 'package:invman_flutter/features/stock/stock.dart';
-import 'package:invman_flutter/features/transfer/transfer.dart';
+import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
-class TransferFormComponent extends ConsumerWidget {
+class WithdrawalFormComponent extends ConsumerWidget {
   final int id;
-  const TransferFormComponent({super.key, required this.id});
+  const WithdrawalFormComponent({super.key, required this.id});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(transferFormProvider(id));
-    final provider = ref.read(transferFormProvider(id).notifier);
+    final state = ref.watch(withdrawalFormProvider(id));
+    final provider = ref.read(withdrawalFormProvider(id).notifier);
 
     return BaseStateComponent(
       state: state,
@@ -28,43 +26,27 @@ class TransferFormComponent extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
-                controller: provider.amountController,
+                controller: provider.percentController,
                 validator: (value) => ValidationUtils.formValidatorDouble(value),
-                decoration: InputDecoration(
-                    label: Text(S.of(context).transfer_amount), suffixText: ref.read(userPreferencesProvider).currency),
+                decoration: InputDecoration(label: Text(S.of(context).withdrawal_percentage), suffixText: "%"),
                 keyboardType: TextInputType.number,
               ),
               TextFormField(
-                controller: provider.quantityController,
+                controller: provider.fixedController,
                 validator: (value) => ValidationUtils.formValidatorDouble(value),
                 decoration: InputDecoration(
-                    label: Text(S.of(context).transfer_quantity),
+                    label: Text(S.of(context).withdrawal_fixed),
                     suffixText: ref.read(userPreferencesProvider).currency),
                 keyboardType: TextInputType.number,
               ),
-              data.stock?.name == null
-                  ? ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(S.of(context).transfer_addStock),
-                      trailing: Icon(Icons.arrow_forward_ios),
-                      onTap: () async {
-                        final stock = await context.push(StockSelectScreen.route());
-                        if (stock is Stock) {
-                          provider.setStock(stock);
-                        }
-                      },
-                    )
-                  : StockTileComponent(
-                      contentPadding: EdgeInsets.zero,
-                      stock: data.stock!,
-                      trailing: Icon(Icons.arrow_forward_ios),
-                      onTap: (stock) async {
-                        final stock = await context.push(StockSelectScreen.route());
-                        if (stock is Stock) {
-                          provider.setStock(stock);
-                        }
-                      },
-                    ),
+              TextFormField(
+                controller: provider.minimumController,
+                validator: (value) => ValidationUtils.formValidatorDouble(value),
+                decoration: InputDecoration(
+                    label: Text(S.of(context).withdrawal_minimum),
+                    suffixText: ref.read(userPreferencesProvider).currency),
+                keyboardType: TextInputType.number,
+              ),
               SizedBox(
                 height: 16,
               ),

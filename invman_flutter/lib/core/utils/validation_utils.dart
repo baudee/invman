@@ -44,7 +44,7 @@ class ValidationUtils {
     return null;
   }
 
-  static String? formValidatorAmount(String? value) {
+  static String? formValidatorDouble(String? value) {
     if (value == null || value.isEmpty) {
       return S.current.error_amountRequired;
     }

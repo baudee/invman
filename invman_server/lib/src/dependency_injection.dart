@@ -4,6 +4,7 @@ import 'package:invman_server/src/env.dart';
 import 'package:invman_server/src/investment/investment.dart';
 import 'package:invman_server/src/stock/stock.dart';
 import 'package:invman_server/src/transfer/transfer.dart';
+import 'package:invman_server/src/withdrawal/withdrawal.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -19,4 +20,5 @@ void initDependencyInjection() {
   getIt.registerSingleton<StockService>(StockService(stockApi: getIt<StockApi>()));
   getIt.registerSingleton<TransferService>(TransferService());
   getIt.registerSingleton<InvestmentService>(InvestmentService());
+  getIt.registerSingleton<WithdrawalService>(WithdrawalService());
 }

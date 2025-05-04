@@ -19,8 +19,12 @@ import 'package:invman_client/src/protocol/transfer/models/transfer_list.dart'
     as _i6;
 import 'package:invman_client/src/protocol/transfer/models/transfer.dart'
     as _i7;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i8;
-import 'protocol.dart' as _i9;
+import 'package:invman_client/src/protocol/withdrawal/models/withdrawal_list.dart'
+    as _i8;
+import 'package:invman_client/src/protocol/withdrawal/models/withdrawal.dart'
+    as _i9;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i10;
+import 'protocol.dart' as _i11;
 
 /// {@category Endpoint}
 class EndpointAuth extends _i1.EndpointRef {
@@ -145,14 +149,63 @@ class EndpointTransfer extends _i1.EndpointRef {
         'save',
         {'transfer': transfer},
       );
+
+  _i2.Future<_i7.Transfer> delete(int id) =>
+      caller.callServerEndpoint<_i7.Transfer>(
+        'transfer',
+        'delete',
+        {'id': id},
+      );
+}
+
+/// {@category Endpoint}
+class EndpointWithdrawal extends _i1.EndpointRef {
+  EndpointWithdrawal(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'withdrawal';
+
+  _i2.Future<_i8.WithdrawalList> list({
+    required int limit,
+    required int page,
+  }) =>
+      caller.callServerEndpoint<_i8.WithdrawalList>(
+        'withdrawal',
+        'list',
+        {
+          'limit': limit,
+          'page': page,
+        },
+      );
+
+  _i2.Future<_i9.Withdrawal> retrieve(int id) =>
+      caller.callServerEndpoint<_i9.Withdrawal>(
+        'withdrawal',
+        'retrieve',
+        {'id': id},
+      );
+
+  _i2.Future<_i9.Withdrawal> save(_i9.Withdrawal transfer) =>
+      caller.callServerEndpoint<_i9.Withdrawal>(
+        'withdrawal',
+        'save',
+        {'transfer': transfer},
+      );
+
+  _i2.Future<_i9.Withdrawal> delete(int id) =>
+      caller.callServerEndpoint<_i9.Withdrawal>(
+        'withdrawal',
+        'delete',
+        {'id': id},
+      );
 }
 
 class Modules {
   Modules(Client client) {
-    auth = _i8.Caller(client);
+    auth = _i10.Caller(client);
   }
 
-  late final _i8.Caller auth;
+  late final _i10.Caller auth;
 }
 
 class Client extends _i1.ServerpodClientShared {
@@ -171,7 +224,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i9.Protocol(),
+          _i11.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,
@@ -185,6 +238,7 @@ class Client extends _i1.ServerpodClientShared {
     investment = EndpointInvestment(this);
     stock = EndpointStock(this);
     transfer = EndpointTransfer(this);
+    withdrawal = EndpointWithdrawal(this);
     modules = Modules(this);
   }
 
@@ -196,6 +250,8 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointTransfer transfer;
 
+  late final EndpointWithdrawal withdrawal;
+
   late final Modules modules;
 
   @override
@@ -204,6 +260,7 @@ class Client extends _i1.ServerpodClientShared {
         'investment': investment,
         'stock': stock,
         'transfer': transfer,
+        'withdrawal': withdrawal,
       };
 
   @override

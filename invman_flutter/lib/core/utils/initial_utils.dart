@@ -20,4 +20,11 @@ class InitialUtils {
       amount: 0,
     );
   }
+
+  static Withdrawal getWithdrawal() {
+    return Withdrawal(
+      id: 0,
+      userId: 0,
+    );
+  }
 }

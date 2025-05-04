@@ -2,27 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/core/core.dart';
-import 'package:invman_flutter/features/stock/stock.dart';
-import 'package:invman_flutter/features/transfer/transfer.dart';
+import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
-class TransferDetailComponent extends ConsumerWidget {
+class WithdrawalDetailComponent extends ConsumerWidget {
   final int id;
-  const TransferDetailComponent({super.key, required this.id});
+  const WithdrawalDetailComponent({super.key, required this.id});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(transferDetailProvider(id));
-    final provider = ref.read(transferDetailProvider(id).notifier);
+    final state = ref.watch(withdrawalDetailProvider(id));
+    final provider = ref.read(withdrawalDetailProvider(id).notifier);
     return BaseStateComponent(
       state: state,
-      onRefresh: () => ref.read(transferDetailProvider(id).notifier).load(),
+      onRefresh: () => ref.read(withdrawalDetailProvider(id).notifier).load(),
       successBuilder: (data) => Column(
         children: [
-          Text(data.amount.toStringPrice(ref.read(userPreferencesProvider).currency)),
+          Text("${data.percent} %"),
           Divider(),
-          Text(data.quantity.toString()),
+          Text(data.fixed.toStringPrice(ref.read(userPreferencesProvider).currency)),
           Divider(),
-          if (data.stock != null) StockTileComponent(stock: data.stock!),
+          Text(data.minimum.toStringPrice(ref.read(userPreferencesProvider).currency)),
           Divider(),
           ElevatedButton.icon(
             onPressed: () async {

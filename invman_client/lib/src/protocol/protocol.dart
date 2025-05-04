@@ -18,8 +18,10 @@ import 'stock/models/stock.dart' as _i6;
 import 'stock/models/stock_list.dart' as _i7;
 import 'transfer/models/transfer.dart' as _i8;
 import 'transfer/models/transfer_list.dart' as _i9;
-import 'package:invman_client/src/protocol/stock/models/stock.dart' as _i10;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i11;
+import 'withdrawal/models/withdrawal.dart' as _i10;
+import 'withdrawal/models/withdrawal_list.dart' as _i11;
+import 'package:invman_client/src/protocol/stock/models/stock.dart' as _i12;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i13;
 export 'core/exceptions/error_code.dart';
 export 'core/exceptions/server_exception.dart';
 export 'investment/models/investment.dart';
@@ -28,6 +30,8 @@ export 'stock/models/stock.dart';
 export 'stock/models/stock_list.dart';
 export 'transfer/models/transfer.dart';
 export 'transfer/models/transfer_list.dart';
+export 'withdrawal/models/withdrawal.dart';
+export 'withdrawal/models/withdrawal_list.dart';
 export 'client.dart';
 
 class Protocol extends _i1.SerializationManager {
@@ -67,6 +71,12 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i9.TransferList) {
       return _i9.TransferList.fromJson(data) as T;
     }
+    if (t == _i10.Withdrawal) {
+      return _i10.Withdrawal.fromJson(data) as T;
+    }
+    if (t == _i11.WithdrawalList) {
+      return _i11.WithdrawalList.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i2.ErrorCode?>()) {
       return (data != null ? _i2.ErrorCode.fromJson(data) : null) as T;
     }
@@ -91,6 +101,12 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i9.TransferList?>()) {
       return (data != null ? _i9.TransferList.fromJson(data) : null) as T;
     }
+    if (t == _i1.getType<_i10.Withdrawal?>()) {
+      return (data != null ? _i10.Withdrawal.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i11.WithdrawalList?>()) {
+      return (data != null ? _i11.WithdrawalList.fromJson(data) : null) as T;
+    }
     if (t == List<_i4.Investment>) {
       return (data as List).map((e) => deserialize<_i4.Investment>(e)).toList()
           as dynamic;
@@ -108,12 +124,16 @@ class Protocol extends _i1.SerializationManager {
       return (data as List).map((e) => deserialize<_i8.Transfer>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i10.Stock>) {
-      return (data as List).map((e) => deserialize<_i10.Stock>(e)).toList()
+    if (t == List<_i10.Withdrawal>) {
+      return (data as List).map((e) => deserialize<_i10.Withdrawal>(e)).toList()
+          as dynamic;
+    }
+    if (t == List<_i12.Stock>) {
+      return (data as List).map((e) => deserialize<_i12.Stock>(e)).toList()
           as dynamic;
     }
     try {
-      return _i11.Protocol().deserialize<T>(data, t);
+      return _i13.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -146,7 +166,13 @@ class Protocol extends _i1.SerializationManager {
     if (data is _i9.TransferList) {
       return 'TransferList';
     }
-    className = _i11.Protocol().getClassNameForObject(data);
+    if (data is _i10.Withdrawal) {
+      return 'Withdrawal';
+    }
+    if (data is _i11.WithdrawalList) {
+      return 'WithdrawalList';
+    }
+    className = _i13.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth.$className';
     }
@@ -183,9 +209,15 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'TransferList') {
       return deserialize<_i9.TransferList>(data['data']);
     }
+    if (dataClassName == 'Withdrawal') {
+      return deserialize<_i10.Withdrawal>(data['data']);
+    }
+    if (dataClassName == 'WithdrawalList') {
+      return deserialize<_i11.WithdrawalList>(data['data']);
+    }
     if (dataClassName.startsWith('serverpod_auth.')) {
       data['className'] = dataClassName.substring(15);
-      return _i11.Protocol().deserializeByClassName(data);
+      return _i13.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }

@@ -59,6 +59,16 @@
     "transfer_amount": "Amount of the transfer",
     "transfer_quantity": "Stock quantity",
     "transfer_addStock": "Add stock",
+    "@WITHDRAWAL---------------------------------------------------------------": {},
+    "withdrawal_title": "Withdrawal rules",
+    "withdrawal_create": "Create withdrawal rule",
+    "withdrawal_edit": "Edit withdrawal rule",
+    "withdrawal_selectValidPercentage": "Please select a valid percentage",
+    "withdrawal_selectValidFixed": "Please select a valid fixed amount",
+    "withdrawal_selectValidMinimum": "Please select a valid minimum amount",
+    "withdrawal_minimum": "Minimum amount",
+    "withdrawal_fixed": "Fixed amount",
+    "withdrawal_percentage": "Percentage",
     "@INVESMENT---------------------------------------------------------------": {},
     "investment_title": "Investments"
 }

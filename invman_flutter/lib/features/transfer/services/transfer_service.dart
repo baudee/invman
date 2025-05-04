@@ -24,4 +24,10 @@ class TransferService {
       return right(await client.transfer.save(transfer));
     });
   }
+
+  Future<Either<String, Transfer>> delete(int id) async {
+    return safeCall(() async {
+      return right(await client.transfer.delete(id));
+    });
+  }
 }

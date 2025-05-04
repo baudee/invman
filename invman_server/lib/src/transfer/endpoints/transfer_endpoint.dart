@@ -19,4 +19,8 @@ class TransferEndpoint extends Endpoint with EndpointMiddleware {
   Future<Transfer> save(Session session, Transfer transfer) async {
     return withMiddleware(session, () => getIt<TransferService>().save(session, transfer));
   }
+
+  Future<Transfer> delete(Session session, int id) async {
+    return withMiddleware(session, () => getIt<TransferService>().delete(session, id));
+  }
 }

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
+import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
 class AccountRootComponent extends ConsumerWidget {
   const AccountRootComponent({super.key});
@@ -54,6 +55,11 @@ class AccountRootComponent extends ConsumerWidget {
                 ),
               ],
             ),
+          ),
+          ListTile(
+            title: Text(S.of(context).withdrawal_title),
+            leading: Icon(Icons.list_alt_rounded),
+            onTap: () => context.push(WithdrawalRootScreen.absoluteRoute()),
           ),
           ListTile(
             title: Text(S.of(context).account_currency),
