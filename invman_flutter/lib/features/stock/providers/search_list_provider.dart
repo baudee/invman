@@ -29,25 +29,4 @@ class StockSearchList extends _$StockSearchList {
   void clear() async {
     state = Success([]);
   }
-
-  Future<(bool, String?)> save(Stock stock) async {
-    if (state is! Success) {
-      return (false, S.current.error_invalidState);
-    }
-
-    final oldStocks = (state as Success).data;
-
-    state = Loading();
-
-    final result = await ref.read(stockServiceProvider).save(stock);
-
-    return result.fold((error) {
-      state = Success(oldStocks);
-      return (false, error);
-    }, (deletedStock) {
-      state = Success(oldStocks);
-      ref.read(stockListProvider.notifier).refresh();
-      return (true, S.current.core_itemAdded);
-    });
-  }
 }

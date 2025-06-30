@@ -59,7 +59,7 @@ class AccountRootComponent extends ConsumerWidget {
           ListTile(
             title: Text(S.of(context).withdrawal_title),
             leading: Icon(Icons.list_alt_rounded),
-            onTap: () => context.push(WithdrawalRootScreen.absoluteRoute()),
+            onTap: () => context.pushRelative(WithdrawalRuleRootScreen.route()),
           ),
           ListTile(
             title: Text(S.of(context).account_currency),

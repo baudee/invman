@@ -1,6 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:invman_client/invman_client.dart' as c;
+import 'package:invman_flutter/core/providers/providers.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -23,8 +24,9 @@ class InvestmentList extends _$InvestmentList {
   }
 
   Future<void> fetchPage(int page, {int limit = 10}) async {
+    final String currency = ref.read(userPreferencesProvider).currency;
     final Either<String, c.InvestmentList> result =
-        await ref.read(investmentServiceProvider).list(page: page, limit: limit);
+        await ref.read(investmentServiceProvider).list(currency: currency, page: page, limit: limit);
 
     result.fold((error) {
       pagingController.error = error;

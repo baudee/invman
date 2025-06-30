@@ -13,12 +13,13 @@ void initDependencyInjection() {
   getIt.registerSingleton<Env>(Env());
 
   // Data
-  getIt.registerSingleton<StockApi>(StockApiImpl(baseUrl: getIt<Env>().yfinBaseUrl));
+  getIt.registerSingleton<StockClient>(StockClientImpl(baseUrl: getIt<Env>().yfinBaseUrl));
 
-  // Services
+  // Business
   getIt.registerSingleton<AuthService>(AuthService());
-  getIt.registerSingleton<StockService>(StockService(stockApi: getIt<StockApi>()));
+  getIt.registerSingleton<StockService>(StockService(stockClient: getIt<StockClient>()));
   getIt.registerSingleton<TransferService>(TransferService());
-  getIt.registerSingleton<InvestmentService>(InvestmentService());
-  getIt.registerSingleton<WithdrawalService>(WithdrawalService());
+  getIt.registerSingleton<InvestmentService>(InvestmentService(stockClient: getIt<StockClient>()));
+  getIt.registerSingleton<WithdrawalRuleService>(WithdrawalRuleService());
+  getIt.registerSingleton<WithdrawalFeeService>(WithdrawalFeeService(ruleService: getIt<WithdrawalRuleService>()));
 }

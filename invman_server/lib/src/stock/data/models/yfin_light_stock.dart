@@ -19,6 +19,7 @@ class YFinLightStock {
       symbol: symbol,
       currency: '',
       name: longName,
+      value: -1.0,
     );
   }
 

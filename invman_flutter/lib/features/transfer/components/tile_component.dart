@@ -15,7 +15,7 @@ class TransferTileComponent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currency = ref.read(userPreferencesProvider).currency;
     return ListTile(
-      title: Text(transfer.stock?.name ?? S.of(context).core_noName, overflow: TextOverflow.ellipsis),
+      title: Text(transfer.investment?.stockSymbol ?? S.of(context).core_noName, overflow: TextOverflow.ellipsis),
       subtitle: Text(transfer.quantity.toString()),
       trailing: Text(transfer.amount.toStringPrice(currency)),
       onTap: () => context.push(TransferDetailScreen.route(transfer.id)),

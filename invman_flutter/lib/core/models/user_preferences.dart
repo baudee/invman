@@ -11,7 +11,8 @@ class UserPreferencesState {
     required this.currency,
   });
 
-  UserPreferencesState copyWith({Locale? locale, ThemeMode? theme, String? currency}) {
+  UserPreferencesState copyWith(
+      {Locale? locale, ThemeMode? theme, String? currency, double? percentageCurrencyChangeFee}) {
     return UserPreferencesState(
       locale: locale ?? this.locale,
       theme: theme ?? this.theme,

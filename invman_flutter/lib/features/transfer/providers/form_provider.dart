@@ -28,11 +28,11 @@ class TransferForm extends _$TransferForm {
     }
   }
 
-  void setStock(Stock stock) {
+  void setInvestment(Investment investment) {
     if (state case Success<Transfer>(data: final transfer)) {
       state = Success(
         transfer.copyWith(
-          stock: stock,
+          investment: investment,
         ),
       );
     }
@@ -63,8 +63,8 @@ class TransferForm extends _$TransferForm {
         return (false, S.current.error_fixToContinue);
       }
 
-      if (transfer.stock == null || transfer.stock?.id == null) {
-        return (false, S.current.transfer_selectStock);
+      if (transfer.investment == null || transfer.investment?.id == null) {
+        return (false, S.current.transfer_selectInvestment);
       }
 
       if (double.tryParse(quantityController.text.trim()) == null) {
@@ -78,7 +78,7 @@ class TransferForm extends _$TransferForm {
       final transferToSave = transfer.copyWith(
         quantity: double.parse(quantityController.text.trim()),
         amount: int.parse(amountController.text.trim()) * 100,
-        stockId: transfer.stock!.id!,
+        investmentId: transfer.investment!.id!,
       );
 
       state = Loading();

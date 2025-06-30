@@ -14,18 +14,7 @@ class AccountRoutes {
         path: AccountRootScreen.route(),
         builder: (_, __) => AccountRootScreen(),
         routes: [
-          GoRoute(
-            path: WithdrawalRootScreen.route(),
-            builder: (_, __) => WithdrawalRootScreen(),
-          ),
-          GoRoute(
-            path: WithdrawalEditScreen.route(),
-            builder: (_, state) => WithdrawalEditScreen(id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0),
-          ),
-          GoRoute(
-            path: WithdrawalDetailScreen.route(),
-            builder: (_, state) => WithdrawalDetailScreen(id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0),
-          ),
+          ...WithdrawalRoutes.routes,
         ],
       ),
     ],

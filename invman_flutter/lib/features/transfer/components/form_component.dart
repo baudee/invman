@@ -6,6 +6,7 @@ import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/components/components.dart';
 import 'package:invman_flutter/core/providers/providers.dart';
 import 'package:invman_flutter/core/utils/utils.dart';
+import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
 import 'package:invman_flutter/features/transfer/transfer.dart';
 
@@ -42,26 +43,26 @@ class TransferFormComponent extends ConsumerWidget {
                     suffixText: ref.read(userPreferencesProvider).currency),
                 keyboardType: TextInputType.number,
               ),
-              data.stock?.name == null
+              data.investment?.stockSymbol == null
                   ? ListTile(
                       contentPadding: EdgeInsets.zero,
                       title: Text(S.of(context).transfer_addStock),
                       trailing: Icon(Icons.arrow_forward_ios),
                       onTap: () async {
-                        final stock = await context.push(StockSelectScreen.route());
-                        if (stock is Stock) {
-                          provider.setStock(stock);
+                        final investment = await context.push(InvestmentSelectScreen.route());
+                        if (investment is Investment) {
+                          provider.setInvestment(investment);
                         }
                       },
                     )
-                  : StockTileComponent(
+                  : InvestmentTileComponent(
                       contentPadding: EdgeInsets.zero,
-                      stock: data.stock!,
+                      investment: data.investment!,
                       trailing: Icon(Icons.arrow_forward_ios),
-                      onTap: (stock) async {
-                        final stock = await context.push(StockSelectScreen.route());
-                        if (stock is Stock) {
-                          provider.setStock(stock);
+                      onTap: (_) async {
+                        final investment = await context.push(InvestmentSelectScreen.route());
+                        if (investment is Investment) {
+                          provider.setInvestment(investment);
                         }
                       },
                     ),

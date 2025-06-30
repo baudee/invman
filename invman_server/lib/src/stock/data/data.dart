@@ -1,3 +1,3 @@
-export 'stock_api.dart';
-export 'stock_api_impl.dart';
+export 'stock_client.dart';
+export 'stock_client_impl.dart';
 export 'models/models.dart';

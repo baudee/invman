@@ -1,9 +1,0 @@
-class: WithdrawalList
-
-fields:
-    count: int
-    results: List<Withdrawal>
-    page: int
-    limit: int
-    numPages: int
-    canLoadMore: bool

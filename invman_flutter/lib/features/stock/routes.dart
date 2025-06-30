@@ -10,10 +10,6 @@ class StockRoutes {
     navigatorKey: shellNavigatorKey,
     routes: [
       GoRoute(
-        path: StockRootScreen.route(),
-        builder: (_, __) => StockRootScreen(),
-      ),
-      GoRoute(
         path: StockSearchScreen.route(),
         builder: (_, __) => StockSearchScreen(),
       ),
@@ -23,7 +19,7 @@ class StockRoutes {
       ),
       GoRoute(
         path: StockDetailScreen.route(),
-        builder: (_, state) => StockDetailScreen(id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0),
+        builder: (_, state) => StockDetailScreen(symbol: state.pathParameters['symbol'] ?? ''),
       ),
     ],
   );

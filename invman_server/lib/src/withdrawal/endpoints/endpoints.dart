@@ -1,1 +1,1 @@
-export 'withdrawal_endpoint.dart';
+export 'withdrawal_rule_endpoint.dart';

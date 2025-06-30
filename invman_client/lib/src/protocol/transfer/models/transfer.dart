@@ -10,26 +10,21 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i2;
-import '../../stock/models/stock.dart' as _i3;
+import '../../investment/models/investment.dart' as _i2;
 
 abstract class Transfer implements _i1.SerializableModel {
   Transfer._({
     this.id,
-    required this.userId,
-    this.user,
-    required this.stockId,
-    this.stock,
+    required this.investmentId,
+    this.investment,
     required this.quantity,
     required this.amount,
   });
 
   factory Transfer({
     int? id,
-    required int userId,
-    _i2.UserInfo? user,
-    required int stockId,
-    _i3.Stock? stock,
+    required int investmentId,
+    _i2.Investment? investment,
     required double quantity,
     required int amount,
   }) = _TransferImpl;
@@ -37,16 +32,11 @@ abstract class Transfer implements _i1.SerializableModel {
   factory Transfer.fromJson(Map<String, dynamic> jsonSerialization) {
     return Transfer(
       id: jsonSerialization['id'] as int?,
-      userId: jsonSerialization['userId'] as int,
-      user: jsonSerialization['user'] == null
+      investmentId: jsonSerialization['investmentId'] as int,
+      investment: jsonSerialization['investment'] == null
           ? null
-          : _i2.UserInfo.fromJson(
-              (jsonSerialization['user'] as Map<String, dynamic>)),
-      stockId: jsonSerialization['stockId'] as int,
-      stock: jsonSerialization['stock'] == null
-          ? null
-          : _i3.Stock.fromJson(
-              (jsonSerialization['stock'] as Map<String, dynamic>)),
+          : _i2.Investment.fromJson(
+              (jsonSerialization['investment'] as Map<String, dynamic>)),
       quantity: (jsonSerialization['quantity'] as num).toDouble(),
       amount: jsonSerialization['amount'] as int,
     );
@@ -57,13 +47,9 @@ abstract class Transfer implements _i1.SerializableModel {
   /// the id will be null.
   int? id;
 
-  int userId;
+  int investmentId;
 
-  _i2.UserInfo? user;
-
-  int stockId;
-
-  _i3.Stock? stock;
+  _i2.Investment? investment;
 
   double quantity;
 
@@ -71,10 +57,8 @@ abstract class Transfer implements _i1.SerializableModel {
 
   Transfer copyWith({
     int? id,
-    int? userId,
-    _i2.UserInfo? user,
-    int? stockId,
-    _i3.Stock? stock,
+    int? investmentId,
+    _i2.Investment? investment,
     double? quantity,
     int? amount,
   });
@@ -82,10 +66,8 @@ abstract class Transfer implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       if (id != null) 'id': id,
-      'userId': userId,
-      if (user != null) 'user': user?.toJson(),
-      'stockId': stockId,
-      if (stock != null) 'stock': stock?.toJson(),
+      'investmentId': investmentId,
+      if (investment != null) 'investment': investment?.toJson(),
       'quantity': quantity,
       'amount': amount,
     };
@@ -102,18 +84,14 @@ class _Undefined {}
 class _TransferImpl extends Transfer {
   _TransferImpl({
     int? id,
-    required int userId,
-    _i2.UserInfo? user,
-    required int stockId,
-    _i3.Stock? stock,
+    required int investmentId,
+    _i2.Investment? investment,
     required double quantity,
     required int amount,
   }) : super._(
           id: id,
-          userId: userId,
-          user: user,
-          stockId: stockId,
-          stock: stock,
+          investmentId: investmentId,
+          investment: investment,
           quantity: quantity,
           amount: amount,
         );
@@ -121,19 +99,17 @@ class _TransferImpl extends Transfer {
   @override
   Transfer copyWith({
     Object? id = _Undefined,
-    int? userId,
-    Object? user = _Undefined,
-    int? stockId,
-    Object? stock = _Undefined,
+    int? investmentId,
+    Object? investment = _Undefined,
     double? quantity,
     int? amount,
   }) {
     return Transfer(
       id: id is int? ? id : this.id,
-      userId: userId ?? this.userId,
-      user: user is _i2.UserInfo? ? user : this.user?.copyWith(),
-      stockId: stockId ?? this.stockId,
-      stock: stock is _i3.Stock? ? stock : this.stock?.copyWith(),
+      investmentId: investmentId ?? this.investmentId,
+      investment: investment is _i2.Investment?
+          ? investment
+          : this.investment?.copyWith(),
       quantity: quantity ?? this.quantity,
       amount: amount ?? this.amount,
     );

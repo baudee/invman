@@ -1,6 +1,16 @@
 class: Investment
 
+table: investment
+
 fields:
-  stock: Stock
-  investAmount: int
-  withdrawAmount: int
+  user: module:auth:UserInfo?, relation(onDelete=Cascade)
+  transfers: List<Transfer>?, relation
+  withdrawalRule : WithdrawalRule?, relation
+  stockSymbol: String
+  stock: Stock, !persist 
+  investAmount: int, !persist 
+  withdrawAmount: int, !persist 
+
+indexes:
+  investment_user_idx:
+    fields: userId

@@ -13,18 +13,21 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
 import 'package:invman_client/src/protocol/investment/models/investment_list.dart'
     as _i3;
-import 'package:invman_client/src/protocol/stock/models/stock_list.dart' as _i4;
+import 'package:invman_client/src/protocol/investment/models/investment.dart'
+    as _i4;
 import 'package:invman_client/src/protocol/stock/models/stock.dart' as _i5;
 import 'package:invman_client/src/protocol/transfer/models/transfer_list.dart'
     as _i6;
 import 'package:invman_client/src/protocol/transfer/models/transfer.dart'
     as _i7;
-import 'package:invman_client/src/protocol/withdrawal/models/withdrawal_list.dart'
+import 'package:invman_client/src/protocol/withdrawal/models/withdrawal_fee.dart'
     as _i8;
-import 'package:invman_client/src/protocol/withdrawal/models/withdrawal.dart'
+import 'package:invman_client/src/protocol/withdrawal/models/withdrawal_rule_list.dart'
     as _i9;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i10;
-import 'protocol.dart' as _i11;
+import 'package:invman_client/src/protocol/withdrawal/models/withdrawal_rule.dart'
+    as _i10;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i11;
+import 'protocol.dart' as _i12;
 
 /// {@category Endpoint}
 class EndpointAuth extends _i1.EndpointRef {
@@ -49,6 +52,7 @@ class EndpointInvestment extends _i1.EndpointRef {
   String get name => 'investment';
 
   _i2.Future<_i3.InvestmentList> list({
+    required String currency,
     required int limit,
     required int page,
   }) =>
@@ -56,8 +60,22 @@ class EndpointInvestment extends _i1.EndpointRef {
         'investment',
         'list',
         {
+          'currency': currency,
           'limit': limit,
           'page': page,
+        },
+      );
+
+  _i2.Future<_i4.Investment> total({
+    required String currency,
+    required double percentageCurrencyChangeFee,
+  }) =>
+      caller.callServerEndpoint<_i4.Investment>(
+        'investment',
+        'total',
+        {
+          'currency': currency,
+          'percentageCurrencyChangeFee': percentageCurrencyChangeFee,
         },
       );
 }
@@ -69,24 +87,11 @@ class EndpointStock extends _i1.EndpointRef {
   @override
   String get name => 'stock';
 
-  _i2.Future<_i4.StockList> list({
-    required int limit,
-    required int page,
-  }) =>
-      caller.callServerEndpoint<_i4.StockList>(
-        'stock',
-        'list',
-        {
-          'limit': limit,
-          'page': page,
-        },
-      );
-
-  _i2.Future<_i5.Stock> retrieve(int id) =>
+  _i2.Future<_i5.Stock> retrieve(String symbol) =>
       caller.callServerEndpoint<_i5.Stock>(
         'stock',
         'retrieve',
-        {'id': id},
+        {'symbol': symbol},
       );
 
   _i2.Future<List<_i5.Stock>> search({
@@ -100,19 +105,6 @@ class EndpointStock extends _i1.EndpointRef {
           'query': query,
           'limit': limit,
         },
-      );
-
-  _i2.Future<_i5.Stock> save(String symbol) =>
-      caller.callServerEndpoint<_i5.Stock>(
-        'stock',
-        'save',
-        {'symbol': symbol},
-      );
-
-  _i2.Future<_i5.Stock> delete(int id) => caller.callServerEndpoint<_i5.Stock>(
-        'stock',
-        'delete',
-        {'id': id},
       );
 }
 
@@ -159,18 +151,47 @@ class EndpointTransfer extends _i1.EndpointRef {
 }
 
 /// {@category Endpoint}
-class EndpointWithdrawal extends _i1.EndpointRef {
-  EndpointWithdrawal(_i1.EndpointCaller caller) : super(caller);
+class EndpointWithdrawalFee extends _i1.EndpointRef {
+  EndpointWithdrawalFee(_i1.EndpointCaller caller) : super(caller);
 
   @override
-  String get name => 'withdrawal';
+  String get name => 'withdrawalFee';
 
-  _i2.Future<_i8.WithdrawalList> list({
+  _i2.Future<_i8.WithdrawalFee> retrieve(int id) =>
+      caller.callServerEndpoint<_i8.WithdrawalFee>(
+        'withdrawalFee',
+        'retrieve',
+        {'id': id},
+      );
+
+  _i2.Future<_i8.WithdrawalFee> save(_i8.WithdrawalFee fee) =>
+      caller.callServerEndpoint<_i8.WithdrawalFee>(
+        'withdrawalFee',
+        'save',
+        {'fee': fee},
+      );
+
+  _i2.Future<_i8.WithdrawalFee> delete(int id) =>
+      caller.callServerEndpoint<_i8.WithdrawalFee>(
+        'withdrawalFee',
+        'delete',
+        {'id': id},
+      );
+}
+
+/// {@category Endpoint}
+class EndpointWithdrawalRule extends _i1.EndpointRef {
+  EndpointWithdrawalRule(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'withdrawalRule';
+
+  _i2.Future<_i9.WithdrawalRuleList> list({
     required int limit,
     required int page,
   }) =>
-      caller.callServerEndpoint<_i8.WithdrawalList>(
-        'withdrawal',
+      caller.callServerEndpoint<_i9.WithdrawalRuleList>(
+        'withdrawalRule',
         'list',
         {
           'limit': limit,
@@ -178,23 +199,23 @@ class EndpointWithdrawal extends _i1.EndpointRef {
         },
       );
 
-  _i2.Future<_i9.Withdrawal> retrieve(int id) =>
-      caller.callServerEndpoint<_i9.Withdrawal>(
-        'withdrawal',
+  _i2.Future<_i10.WithdrawalRule> retrieve(int id) =>
+      caller.callServerEndpoint<_i10.WithdrawalRule>(
+        'withdrawalRule',
         'retrieve',
         {'id': id},
       );
 
-  _i2.Future<_i9.Withdrawal> save(_i9.Withdrawal transfer) =>
-      caller.callServerEndpoint<_i9.Withdrawal>(
-        'withdrawal',
+  _i2.Future<_i10.WithdrawalRule> save(_i10.WithdrawalRule transfer) =>
+      caller.callServerEndpoint<_i10.WithdrawalRule>(
+        'withdrawalRule',
         'save',
         {'transfer': transfer},
       );
 
-  _i2.Future<_i9.Withdrawal> delete(int id) =>
-      caller.callServerEndpoint<_i9.Withdrawal>(
-        'withdrawal',
+  _i2.Future<_i10.WithdrawalRule> delete(int id) =>
+      caller.callServerEndpoint<_i10.WithdrawalRule>(
+        'withdrawalRule',
         'delete',
         {'id': id},
       );
@@ -202,10 +223,10 @@ class EndpointWithdrawal extends _i1.EndpointRef {
 
 class Modules {
   Modules(Client client) {
-    auth = _i10.Caller(client);
+    auth = _i11.Caller(client);
   }
 
-  late final _i10.Caller auth;
+  late final _i11.Caller auth;
 }
 
 class Client extends _i1.ServerpodClientShared {
@@ -224,7 +245,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i11.Protocol(),
+          _i12.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,
@@ -238,7 +259,8 @@ class Client extends _i1.ServerpodClientShared {
     investment = EndpointInvestment(this);
     stock = EndpointStock(this);
     transfer = EndpointTransfer(this);
-    withdrawal = EndpointWithdrawal(this);
+    withdrawalFee = EndpointWithdrawalFee(this);
+    withdrawalRule = EndpointWithdrawalRule(this);
     modules = Modules(this);
   }
 
@@ -250,7 +272,9 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointTransfer transfer;
 
-  late final EndpointWithdrawal withdrawal;
+  late final EndpointWithdrawalFee withdrawalFee;
+
+  late final EndpointWithdrawalRule withdrawalRule;
 
   late final Modules modules;
 
@@ -260,7 +284,8 @@ class Client extends _i1.ServerpodClientShared {
         'investment': investment,
         'stock': stock,
         'transfer': transfer,
-        'withdrawal': withdrawal,
+        'withdrawalFee': withdrawalFee,
+        'withdrawalRule': withdrawalRule,
       };
 
   @override

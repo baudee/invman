@@ -9,7 +9,7 @@ part 'detail_provider.g.dart';
 @riverpod
 class StockDetail extends _$StockDetail {
   @override
-  ModelState<Stock> build(int id) {
+  ModelState<Stock> build(String symbol) {
     load();
     return Initial();
   }
@@ -17,33 +17,12 @@ class StockDetail extends _$StockDetail {
   Future<void> load() async {
     state = Loading();
 
-    final result = await ref.read(stockServiceProvider).retrieve(id);
+    final result = await ref.read(stockServiceProvider).retrieve(symbol);
 
     result.fold((error) {
       state = Failure(error);
     }, (stock) {
       state = Success(stock);
-    });
-  }
-
-  Future<(bool, String?)> delete() async {
-    if (state is! Success) {
-      return (false, S.current.error_invalidState);
-    }
-
-    final stockToDelete = (state as Success).data;
-
-    state = Loading();
-
-    final result = await ref.read(stockServiceProvider).delete(id);
-
-    return result.fold((error) {
-      state = Success(stockToDelete);
-      return (false, error);
-    }, (deletedStock) {
-      state = Success(deletedStock);
-      ref.read(stockListProvider.notifier).refresh();
-      return (true, S.current.core_itemDeleted);
     });
   }
 }

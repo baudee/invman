@@ -11,7 +11,7 @@ class InvestmentRootScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).transfer_title),
+        title: Text(S.of(context).investment_title),
       ),
       body: InvestmentListComponent(),
     );

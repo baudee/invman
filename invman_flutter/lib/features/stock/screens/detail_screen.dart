@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
 
 class StockDetailScreen extends StatelessWidget {
-  final int id;
-  const StockDetailScreen({super.key, required this.id});
-  static String route([int? id]) => "${StockRoutes.namespace}/${id ?? ':id'}";
+  final String symbol;
+  const StockDetailScreen({super.key, required this.symbol});
+  static String route([String? symbol]) => "${StockRoutes.namespace}/${symbol ?? ':symbol'}";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: StockDetailComponent(id: id),
+      body: StockDetailComponent(symbol: symbol),
     );
   }
 }

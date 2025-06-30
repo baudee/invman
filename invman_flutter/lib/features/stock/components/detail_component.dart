@@ -5,12 +5,12 @@ import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
 
 class StockDetailComponent extends ConsumerWidget {
-  final int id;
-  const StockDetailComponent({super.key, required this.id});
+  final String symbol;
+  const StockDetailComponent({super.key, required this.symbol});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(stockDetailProvider(id));
-    final provider = ref.read(stockDetailProvider(id).notifier);
+    final state = ref.watch(stockDetailProvider(symbol));
+    final provider = ref.read(stockDetailProvider(symbol).notifier);
     return BaseStateComponent(
       state: state,
       onRefresh: () => provider.load(),
@@ -23,16 +23,6 @@ class StockDetailComponent extends ConsumerWidget {
           Text(data.quoteType),
           Divider(),
           Text(data.value.toStringPrice(data.currency)),
-          Divider(),
-          ElevatedButton.icon(
-              onPressed: () async {
-                final (success, message) = await provider.delete();
-                ToastUtils.message(message, success: success);
-                if (success) {
-                  context.pop();
-                }
-              },
-              label: Icon(Icons.delete)),
         ],
       ),
     );

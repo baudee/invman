@@ -3,13 +3,10 @@ class: Transfer
 table: transfer
 
 fields:
-  user: module:auth:UserInfo?, relation(onDelete=Cascade)
-  stock: Stock?, relation(name=stock_transfers)
+  investment: Investment?, relation(onDelete=Cascade)
   quantity: double,
   amount: int
 
 indexes:
-  transfer_user_idx:
-    fields: userId
-  transfer_stock_idx:
-    fields: stockId
+  investment_idx:
+    fields: investmentId

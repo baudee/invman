@@ -4,14 +4,28 @@ class IncludeHelpers {
   // Transfer
   static TransferInclude transferInclude() {
     return Transfer.include(
-      stock: Stock.include(),
+      investment: Investment.include(),
     );
   }
 
-  // Stock
-  static StockInclude stockInclude() {
-    return Stock.include(
+  // Withdrawal
+  static WithdrawalRuleInclude withdrawalInclude() {
+    return WithdrawalRule.include(
+      rules: WithdrawalFee.includeList(),
+    );
+  }
+
+  static WithdrawalFeeInclude withdrawalFeeInclude() {
+    return WithdrawalFee.include(
+      rule: WithdrawalRule.include(),
+    );
+  }
+
+  // Investment
+  static InvestmentInclude investmentInclude() {
+    return Investment.include(
       transfers: Transfer.includeList(),
+      withdrawalRule: WithdrawalRule.include(),
     );
   }
 }
