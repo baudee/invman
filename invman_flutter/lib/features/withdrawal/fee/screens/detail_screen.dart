@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
 class WithdrawalFeeDetailScreen extends StatelessWidget {
@@ -13,7 +14,7 @@ class WithdrawalFeeDetailScreen extends StatelessWidget {
       appBar: AppBar(
         actions: [
           EditIconButton(
-            onPressed: () => context.pushRelative(WithdrawalFeeEditScreen.route()),
+            onPressed: () => router.pushRelative(WithdrawalFeeEditScreen.route()),
           ),
         ],
       ),

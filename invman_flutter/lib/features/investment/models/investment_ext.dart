@@ -3,7 +3,10 @@ import 'package:invman_client/invman_client.dart';
 
 extension InvestmentExtension on Investment {
   double get percent {
-    final percent = (withdrawAmount - investAmount) / investAmount;
+    if (investAmount == null || withdrawAmount == null) {
+      return double.nan;
+    }
+    final percent = (withdrawAmount! - investAmount!) / investAmount!;
     return percent * 100;
   }
 

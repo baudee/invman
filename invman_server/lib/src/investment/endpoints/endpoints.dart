@@ -1,1 +1,1 @@
-export 'invest_endpoint.dart';
+export 'investment_endpoint.dart';

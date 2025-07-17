@@ -39,4 +39,18 @@ class InitialUtils {
       ruleId: ruleId,
     );
   }
+
+  // Investment
+  static Investment getInvestment() {
+    return Investment(
+      id: 0,
+      userId: 0,
+      name: '',
+      withdrawalRuleId: 0,
+      stockSymbol: '',
+      stock: InitialUtils.getStock(),
+      investAmount: 0,
+      withdrawAmount: 0,
+    );
+  }
 }

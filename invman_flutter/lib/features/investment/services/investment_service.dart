@@ -17,15 +17,27 @@ class InvestmentService {
     });
   }
 
-  Future<Either<String, Investment>> total({
-    required String currency,
-    required double percentageCurrencyChangeFee,
-    required int page,
-    required int limit,
-  }) async {
+  Future<Either<String, Investment>> total({required String currency}) async {
     return safeCall(() async {
-      return right(
-          await client.investment.total(currency: currency, percentageCurrencyChangeFee: percentageCurrencyChangeFee));
+      return right(await client.investment.total(currency: currency));
+    });
+  }
+
+  Future<Either<String, Investment>> save(Investment investment, {required String currency}) async {
+    return safeCall(() async {
+      return right(await client.investment.save(investment, currency: currency));
+    });
+  }
+
+  Future<Either<String, Investment>> delete(int id) async {
+    return safeCall(() async {
+      return right(await client.investment.delete(id));
+    });
+  }
+
+  Future<Either<String, Investment>> retrieve(int id, {required String currency}) async {
+    return safeCall(() async {
+      return right(await client.investment.retrieve(id, currency: currency));
     });
   }
 }

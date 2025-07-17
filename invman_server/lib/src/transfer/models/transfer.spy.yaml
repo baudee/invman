@@ -3,9 +3,9 @@ class: Transfer
 table: transfer
 
 fields:
-  investment: Investment?, relation(onDelete=Cascade)
-  quantity: double,
-  amount: int
+  investment: Investment?, relation(onDelete=Cascade, name=investment_transfers)
+  quantity: double
+  amount: double
 
 indexes:
   investment_idx:

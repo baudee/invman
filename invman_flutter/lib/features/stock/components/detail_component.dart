@@ -13,7 +13,7 @@ class StockDetailComponent extends ConsumerWidget {
     final provider = ref.read(stockDetailProvider(symbol).notifier);
     return BaseStateComponent(
       state: state,
-      onRefresh: () => provider.load(),
+      onErrorRefresh: () => provider.load(),
       successBuilder: (data) => Column(
         children: [
           Text(data.name),

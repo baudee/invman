@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'detail_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class WithdrawalRuleDetail extends _$WithdrawalRuleDetail {
   @override
   ModelState<WithdrawalRule> build(int id) {

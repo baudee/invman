@@ -11,7 +11,7 @@ class IncludeHelpers {
   // Withdrawal
   static WithdrawalRuleInclude withdrawalInclude() {
     return WithdrawalRule.include(
-      rules: WithdrawalFee.includeList(),
+      fees: WithdrawalFee.includeList(),
     );
   }
 
@@ -25,7 +25,7 @@ class IncludeHelpers {
   static InvestmentInclude investmentInclude() {
     return Investment.include(
       transfers: Transfer.includeList(),
-      withdrawalRule: WithdrawalRule.include(),
+      withdrawalRule: withdrawalInclude(),
     );
   }
 }

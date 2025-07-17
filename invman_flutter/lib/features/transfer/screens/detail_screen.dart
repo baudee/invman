@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
+import 'package:invman_flutter/core/utils/utils.dart';
+import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/transfer/transfer.dart';
 
 class TransferDetailScreen extends StatelessWidget {
   final int id;
   const TransferDetailScreen({super.key, required this.id});
-  static String route([int? id]) => "${TransferRoutes.namespace}/${id ?? ':id'}";
+  static const String idKey = 'transferId';
+  static String route([int? id]) => "${InvestmentRoutes.namespaceTransfer}/${id ?? ':$idKey'}";
+
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +18,7 @@ class TransferDetailScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
-            onPressed: () => context.push(TransferEditScreen.route(id)),
+            onPressed: () => router.pushRelative(TransferEditScreen.route()),
           ),
         ],
       ),

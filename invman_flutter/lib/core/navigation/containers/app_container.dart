@@ -17,7 +17,6 @@ class AppContainer extends StatelessWidget {
         },
         destinations: [
           NavigationDestination(icon: Icon(Icons.home), label: S.of(context).investment_title),
-          NavigationDestination(icon: Icon(Icons.sync_alt_rounded), label: S.of(context).transfer_title),
           NavigationDestination(icon: Icon(Icons.my_library_books_outlined), label: S.of(context).stock_title),
           NavigationDestination(icon: Icon(Icons.menu), label: S.of(context).account_title),
         ],

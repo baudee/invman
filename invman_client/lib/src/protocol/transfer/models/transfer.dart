@@ -26,7 +26,7 @@ abstract class Transfer implements _i1.SerializableModel {
     required int investmentId,
     _i2.Investment? investment,
     required double quantity,
-    required int amount,
+    required double amount,
   }) = _TransferImpl;
 
   factory Transfer.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -38,7 +38,7 @@ abstract class Transfer implements _i1.SerializableModel {
           : _i2.Investment.fromJson(
               (jsonSerialization['investment'] as Map<String, dynamic>)),
       quantity: (jsonSerialization['quantity'] as num).toDouble(),
-      amount: jsonSerialization['amount'] as int,
+      amount: (jsonSerialization['amount'] as num).toDouble(),
     );
   }
 
@@ -53,14 +53,14 @@ abstract class Transfer implements _i1.SerializableModel {
 
   double quantity;
 
-  int amount;
+  double amount;
 
   Transfer copyWith({
     int? id,
     int? investmentId,
     _i2.Investment? investment,
     double? quantity,
-    int? amount,
+    double? amount,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -87,7 +87,7 @@ class _TransferImpl extends Transfer {
     required int investmentId,
     _i2.Investment? investment,
     required double quantity,
-    required int amount,
+    required double amount,
   }) : super._(
           id: id,
           investmentId: investmentId,
@@ -102,7 +102,7 @@ class _TransferImpl extends Transfer {
     int? investmentId,
     Object? investment = _Undefined,
     double? quantity,
-    int? amount,
+    double? amount,
   }) {
     return Transfer(
       id: id is int? ? id : this.id,

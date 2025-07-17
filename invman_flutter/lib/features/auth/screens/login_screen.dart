@@ -15,7 +15,7 @@ class LoginScreen extends StatelessWidget {
         title: Text(S.of(context).auth_logIn),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(UIConstants.appPadding),
+        padding: const EdgeInsets.all(UIConstants.appVerticalPadding),
         child: Center(child: LoginComponent()),
       ),
     );

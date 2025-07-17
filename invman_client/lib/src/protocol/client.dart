@@ -66,16 +66,43 @@ class EndpointInvestment extends _i1.EndpointRef {
         },
       );
 
-  _i2.Future<_i4.Investment> total({
-    required String currency,
-    required double percentageCurrencyChangeFee,
-  }) =>
+  _i2.Future<_i4.Investment> total({required String currency}) =>
       caller.callServerEndpoint<_i4.Investment>(
         'investment',
         'total',
+        {'currency': currency},
+      );
+
+  _i2.Future<_i4.Investment> save(
+    _i4.Investment investment, {
+    required String currency,
+  }) =>
+      caller.callServerEndpoint<_i4.Investment>(
+        'investment',
+        'save',
         {
+          'investment': investment,
           'currency': currency,
-          'percentageCurrencyChangeFee': percentageCurrencyChangeFee,
+        },
+      );
+
+  _i2.Future<_i4.Investment> delete(int id) =>
+      caller.callServerEndpoint<_i4.Investment>(
+        'investment',
+        'delete',
+        {'id': id},
+      );
+
+  _i2.Future<_i4.Investment> retrieve(
+    int id, {
+    required String currency,
+  }) =>
+      caller.callServerEndpoint<_i4.Investment>(
+        'investment',
+        'retrieve',
+        {
+          'id': id,
+          'currency': currency,
         },
       );
 }

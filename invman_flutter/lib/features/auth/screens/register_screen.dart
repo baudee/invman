@@ -15,7 +15,7 @@ class RegisterScreen extends StatelessWidget {
         title: Text(S.of(context).auth_signUp),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(UIConstants.appPadding),
+        padding: const EdgeInsets.all(UIConstants.appVerticalPadding),
         child: Center(child: RegisterComponent()),
       ),
     );

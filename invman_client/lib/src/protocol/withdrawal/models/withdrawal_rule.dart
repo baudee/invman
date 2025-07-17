@@ -20,7 +20,7 @@ abstract class WithdrawalRule implements _i1.SerializableModel {
     this.user,
     required this.name,
     required this.currencyChangePercentage,
-    this.rules,
+    this.fees,
   });
 
   factory WithdrawalRule({
@@ -29,7 +29,7 @@ abstract class WithdrawalRule implements _i1.SerializableModel {
     _i2.UserInfo? user,
     required String name,
     required double currencyChangePercentage,
-    List<_i3.WithdrawalFee>? rules,
+    List<_i3.WithdrawalFee>? fees,
   }) = _WithdrawalRuleImpl;
 
   factory WithdrawalRule.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -43,7 +43,7 @@ abstract class WithdrawalRule implements _i1.SerializableModel {
       name: jsonSerialization['name'] as String,
       currencyChangePercentage:
           (jsonSerialization['currencyChangePercentage'] as num).toDouble(),
-      rules: (jsonSerialization['rules'] as List?)
+      fees: (jsonSerialization['fees'] as List?)
           ?.map((e) => _i3.WithdrawalFee.fromJson((e as Map<String, dynamic>)))
           .toList(),
     );
@@ -62,7 +62,7 @@ abstract class WithdrawalRule implements _i1.SerializableModel {
 
   double currencyChangePercentage;
 
-  List<_i3.WithdrawalFee>? rules;
+  List<_i3.WithdrawalFee>? fees;
 
   WithdrawalRule copyWith({
     int? id,
@@ -70,7 +70,7 @@ abstract class WithdrawalRule implements _i1.SerializableModel {
     _i2.UserInfo? user,
     String? name,
     double? currencyChangePercentage,
-    List<_i3.WithdrawalFee>? rules,
+    List<_i3.WithdrawalFee>? fees,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -80,7 +80,7 @@ abstract class WithdrawalRule implements _i1.SerializableModel {
       if (user != null) 'user': user?.toJson(),
       'name': name,
       'currencyChangePercentage': currencyChangePercentage,
-      if (rules != null) 'rules': rules?.toJson(valueToJson: (v) => v.toJson()),
+      if (fees != null) 'fees': fees?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -99,14 +99,14 @@ class _WithdrawalRuleImpl extends WithdrawalRule {
     _i2.UserInfo? user,
     required String name,
     required double currencyChangePercentage,
-    List<_i3.WithdrawalFee>? rules,
+    List<_i3.WithdrawalFee>? fees,
   }) : super._(
           id: id,
           userId: userId,
           user: user,
           name: name,
           currencyChangePercentage: currencyChangePercentage,
-          rules: rules,
+          fees: fees,
         );
 
   @override
@@ -116,7 +116,7 @@ class _WithdrawalRuleImpl extends WithdrawalRule {
     Object? user = _Undefined,
     String? name,
     double? currencyChangePercentage,
-    Object? rules = _Undefined,
+    Object? fees = _Undefined,
   }) {
     return WithdrawalRule(
       id: id is int? ? id : this.id,
@@ -125,9 +125,9 @@ class _WithdrawalRuleImpl extends WithdrawalRule {
       name: name ?? this.name,
       currencyChangePercentage:
           currencyChangePercentage ?? this.currencyChangePercentage,
-      rules: rules is List<_i3.WithdrawalFee>?
-          ? rules
-          : this.rules?.map((e0) => e0.copyWith()).toList(),
+      fees: fees is List<_i3.WithdrawalFee>?
+          ? fees
+          : this.fees?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }

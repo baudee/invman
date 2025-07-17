@@ -10,7 +10,10 @@ class StockSearchScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      body: SafeArea(child: StockSearchComponent()),
+      appBar: AppBar(
+        title: StockSearchComponent(),
+      ),
+      body: SafeArea(child: StockListComponent()),
     );
   }
 }

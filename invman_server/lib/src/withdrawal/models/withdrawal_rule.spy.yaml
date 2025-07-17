@@ -6,8 +6,4 @@ fields:
   user: module:auth:UserInfo?, relation(onDelete=Cascade)
   name: String
   currencyChangePercentage: double
-  rules: List<WithdrawalFee>?, relation(name=rule_fees)
-
-indexes:
-  withdrawal_user_idx:
-    fields: userId
+  fees: List<WithdrawalFee>?, relation(name=rule_fees)

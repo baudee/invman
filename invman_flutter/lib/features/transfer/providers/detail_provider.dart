@@ -25,25 +25,4 @@ class TransferDetail extends _$TransferDetail {
       state = Success(transfer);
     });
   }
-
-  Future<(bool, String?)> delete() async {
-    if (state is! Success) {
-      return (false, S.current.error_invalidState);
-    }
-
-    final transferToDelete = (state as Success).data;
-
-    state = Loading();
-
-    final result = await ref.read(transferServiceProvider).delete(id);
-
-    return result.fold((error) {
-      state = Success(transferToDelete);
-      return (false, error);
-    }, (deletedTransfer) {
-      state = Success(deletedTransfer);
-      ref.read(transferListProvider.notifier).refresh();
-      return (true, S.current.core_itemDeleted);
-    });
-  }
 }

@@ -4,12 +4,13 @@ table: investment
 
 fields:
   user: module:auth:UserInfo?, relation(onDelete=Cascade)
-  transfers: List<Transfer>?, relation
+  name: String
+  transfers: List<Transfer>?, relation(optional, name=investment_transfers)
   withdrawalRule : WithdrawalRule?, relation
   stockSymbol: String
-  stock: Stock, !persist 
-  investAmount: int, !persist 
-  withdrawAmount: int, !persist 
+  stock: Stock?, !persist 
+  investAmount: double?, !persist 
+  withdrawAmount: double?, !persist 
 
 indexes:
   investment_user_idx:

@@ -25,8 +25,8 @@ class WithdrawalFeeForm extends _$WithdrawalFeeForm {
   void _refreshControllers() {
     if (state case Success<WithdrawalFee>(data: final fee)) {
       percentController.text = fee.percent.toString();
-      fixedController.text = (fee.fixed / 100).toStringAsFixed(0);
-      minimumController.text = (fee.minimum / 100).toStringAsFixed(0);
+      fixedController.text = fee.fixed.toStringAsFixed(2);
+      minimumController.text = fee.minimum.toStringAsFixed(2);
     }
   }
 
@@ -69,8 +69,8 @@ class WithdrawalFeeForm extends _$WithdrawalFeeForm {
 
       final ruleToSave = withdrawal.copyWith(
         percent: double.parse(percentController.text.trim()),
-        fixed: int.parse(fixedController.text.trim()) * 100,
-        minimum: int.parse(minimumController.text.trim()) * 100,
+        fixed: double.parse(fixedController.text.trim()),
+        minimum: double.parse(minimumController.text.trim()),
       );
 
       state = Loading();

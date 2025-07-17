@@ -14,7 +14,6 @@ class TransferService {
       where: (e) => e.investment.userId.equals(sessionUserId),
       limit: limit,
       offset: (page * limit) - limit,
-      include: IncludeHelpers.transferInclude(),
     );
 
     return TransferList(
@@ -43,30 +42,19 @@ class TransferService {
       throw ServerException(errorCode: ErrorCode.forbidden);
     }
 
-    return transfer;
+    return transfer.copyWith(investment: null);
   }
 
   Future<Transfer> save(Session session, Transfer transfer) async {
-    final sessionUser = await session.authenticated;
-    if (transfer.id != 0 && transfer.investment?.userId != sessionUser!.userId) {
-      throw ServerException(errorCode: ErrorCode.forbidden);
-    }
-
     return session.db.transaction((transaction) async {
-      final investment = await Investment.db.findById(session, transfer.investmentId, transaction: transaction);
-      if (investment == null) {
-        throw ServerException(errorCode: ErrorCode.badRequest);
-      }
-
       final Transfer savedTransfer;
       if (transfer.id == 0 || transfer.id == null) {
         savedTransfer = await Transfer.db.insertRow(session, transfer, transaction: transaction);
       } else {
+        await retrieve(session, transfer.id!);
         savedTransfer = await Transfer.db.updateRow(session, transfer, transaction: transaction);
       }
-      return savedTransfer.copyWith(
-        investment: investment,
-      );
+      return savedTransfer.copyWith();
     });
   }
 

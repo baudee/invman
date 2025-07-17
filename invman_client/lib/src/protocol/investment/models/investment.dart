@@ -20,26 +20,28 @@ abstract class Investment implements _i1.SerializableModel {
     this.id,
     required this.userId,
     this.user,
+    required this.name,
     this.transfers,
     required this.withdrawalRuleId,
     this.withdrawalRule,
     required this.stockSymbol,
-    required this.stock,
-    required this.investAmount,
-    required this.withdrawAmount,
+    this.stock,
+    this.investAmount,
+    this.withdrawAmount,
   });
 
   factory Investment({
     int? id,
     required int userId,
     _i2.UserInfo? user,
+    required String name,
     List<_i3.Transfer>? transfers,
     required int withdrawalRuleId,
     _i4.WithdrawalRule? withdrawalRule,
     required String stockSymbol,
-    required _i5.Stock stock,
-    required int investAmount,
-    required int withdrawAmount,
+    _i5.Stock? stock,
+    double? investAmount,
+    double? withdrawAmount,
   }) = _InvestmentImpl;
 
   factory Investment.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -50,6 +52,7 @@ abstract class Investment implements _i1.SerializableModel {
           ? null
           : _i2.UserInfo.fromJson(
               (jsonSerialization['user'] as Map<String, dynamic>)),
+      name: jsonSerialization['name'] as String,
       transfers: (jsonSerialization['transfers'] as List?)
           ?.map((e) => _i3.Transfer.fromJson((e as Map<String, dynamic>)))
           .toList(),
@@ -59,10 +62,12 @@ abstract class Investment implements _i1.SerializableModel {
           : _i4.WithdrawalRule.fromJson(
               (jsonSerialization['withdrawalRule'] as Map<String, dynamic>)),
       stockSymbol: jsonSerialization['stockSymbol'] as String,
-      stock: _i5.Stock.fromJson(
-          (jsonSerialization['stock'] as Map<String, dynamic>)),
-      investAmount: jsonSerialization['investAmount'] as int,
-      withdrawAmount: jsonSerialization['withdrawAmount'] as int,
+      stock: jsonSerialization['stock'] == null
+          ? null
+          : _i5.Stock.fromJson(
+              (jsonSerialization['stock'] as Map<String, dynamic>)),
+      investAmount: (jsonSerialization['investAmount'] as num?)?.toDouble(),
+      withdrawAmount: (jsonSerialization['withdrawAmount'] as num?)?.toDouble(),
     );
   }
 
@@ -75,6 +80,8 @@ abstract class Investment implements _i1.SerializableModel {
 
   _i2.UserInfo? user;
 
+  String name;
+
   List<_i3.Transfer>? transfers;
 
   int withdrawalRuleId;
@@ -83,23 +90,24 @@ abstract class Investment implements _i1.SerializableModel {
 
   String stockSymbol;
 
-  _i5.Stock stock;
+  _i5.Stock? stock;
 
-  int investAmount;
+  double? investAmount;
 
-  int withdrawAmount;
+  double? withdrawAmount;
 
   Investment copyWith({
     int? id,
     int? userId,
     _i2.UserInfo? user,
+    String? name,
     List<_i3.Transfer>? transfers,
     int? withdrawalRuleId,
     _i4.WithdrawalRule? withdrawalRule,
     String? stockSymbol,
     _i5.Stock? stock,
-    int? investAmount,
-    int? withdrawAmount,
+    double? investAmount,
+    double? withdrawAmount,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -107,14 +115,15 @@ abstract class Investment implements _i1.SerializableModel {
       if (id != null) 'id': id,
       'userId': userId,
       if (user != null) 'user': user?.toJson(),
+      'name': name,
       if (transfers != null)
         'transfers': transfers?.toJson(valueToJson: (v) => v.toJson()),
       'withdrawalRuleId': withdrawalRuleId,
       if (withdrawalRule != null) 'withdrawalRule': withdrawalRule?.toJson(),
       'stockSymbol': stockSymbol,
-      'stock': stock.toJson(),
-      'investAmount': investAmount,
-      'withdrawAmount': withdrawAmount,
+      if (stock != null) 'stock': stock?.toJson(),
+      if (investAmount != null) 'investAmount': investAmount,
+      if (withdrawAmount != null) 'withdrawAmount': withdrawAmount,
     };
   }
 
@@ -131,17 +140,19 @@ class _InvestmentImpl extends Investment {
     int? id,
     required int userId,
     _i2.UserInfo? user,
+    required String name,
     List<_i3.Transfer>? transfers,
     required int withdrawalRuleId,
     _i4.WithdrawalRule? withdrawalRule,
     required String stockSymbol,
-    required _i5.Stock stock,
-    required int investAmount,
-    required int withdrawAmount,
+    _i5.Stock? stock,
+    double? investAmount,
+    double? withdrawAmount,
   }) : super._(
           id: id,
           userId: userId,
           user: user,
+          name: name,
           transfers: transfers,
           withdrawalRuleId: withdrawalRuleId,
           withdrawalRule: withdrawalRule,
@@ -156,18 +167,20 @@ class _InvestmentImpl extends Investment {
     Object? id = _Undefined,
     int? userId,
     Object? user = _Undefined,
+    String? name,
     Object? transfers = _Undefined,
     int? withdrawalRuleId,
     Object? withdrawalRule = _Undefined,
     String? stockSymbol,
-    _i5.Stock? stock,
-    int? investAmount,
-    int? withdrawAmount,
+    Object? stock = _Undefined,
+    Object? investAmount = _Undefined,
+    Object? withdrawAmount = _Undefined,
   }) {
     return Investment(
       id: id is int? ? id : this.id,
       userId: userId ?? this.userId,
       user: user is _i2.UserInfo? ? user : this.user?.copyWith(),
+      name: name ?? this.name,
       transfers: transfers is List<_i3.Transfer>?
           ? transfers
           : this.transfers?.map((e0) => e0.copyWith()).toList(),
@@ -176,9 +189,10 @@ class _InvestmentImpl extends Investment {
           ? withdrawalRule
           : this.withdrawalRule?.copyWith(),
       stockSymbol: stockSymbol ?? this.stockSymbol,
-      stock: stock ?? this.stock.copyWith(),
-      investAmount: investAmount ?? this.investAmount,
-      withdrawAmount: withdrawAmount ?? this.withdrawAmount,
+      stock: stock is _i5.Stock? ? stock : this.stock?.copyWith(),
+      investAmount: investAmount is double? ? investAmount : this.investAmount,
+      withdrawAmount:
+          withdrawAmount is double? ? withdrawAmount : this.withdrawAmount,
     );
   }
 }

@@ -6,13 +6,13 @@ import 'package:invman_flutter/core/models/models.dart';
 class BaseStateComponent<T> extends ConsumerWidget {
   final Widget Function(T data) successBuilder;
   final ModelState<T> state;
-  final Function? onRefresh;
+  final Future<void> Function()? onErrorRefresh;
 
   const BaseStateComponent({
     super.key,
     required this.state,
     required this.successBuilder,
-    this.onRefresh,
+    this.onErrorRefresh,
   });
 
   @override
@@ -22,7 +22,7 @@ class BaseStateComponent<T> extends ConsumerWidget {
       Success(:final data) => successBuilder(data),
       Failure(:final error) => ErrorComponent(
           error: error,
-          handleRefresh: onRefresh,
+          handleRefresh: onErrorRefresh,
         ),
     };
   }

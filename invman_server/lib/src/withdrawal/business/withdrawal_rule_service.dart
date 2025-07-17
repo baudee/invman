@@ -26,11 +26,12 @@ class WithdrawalRuleService {
     );
   }
 
-  Future<WithdrawalRule> retrieve(Session session, int id) async {
+  Future<WithdrawalRule> retrieve(Session session, int id, {Transaction? transaction}) async {
     final withdrawal = await WithdrawalRule.db.findById(
       session,
       id,
       include: IncludeHelpers.withdrawalInclude(),
+      transaction: transaction,
     );
 
     if (withdrawal == null) {
@@ -46,16 +47,12 @@ class WithdrawalRuleService {
   }
 
   Future<WithdrawalRule> save(Session session, WithdrawalRule withdrawal) async {
-    final sessionUser = await session.authenticated;
-    if (withdrawal.id != 0 && withdrawal.userId != sessionUser!.userId) {
-      throw ServerException(errorCode: ErrorCode.forbidden);
-    }
-
-    withdrawal.userId = sessionUser!.userId;
-
-    if (withdrawal.id == 0) {
+    if (withdrawal.id == 0 || withdrawal.id == null) {
+      final sessionUserId = (await session.authenticated)!.userId;
+      withdrawal = withdrawal.copyWith(userId: sessionUserId);
       return WithdrawalRule.db.insertRow(session, withdrawal);
     } else {
+      await retrieve(session, withdrawal.id!);
       return WithdrawalRule.db.updateRow(session, withdrawal);
     }
   }

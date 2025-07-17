@@ -8,7 +8,7 @@ class WithdrawalFeeEditScreen extends StatelessWidget {
   final int id;
   const WithdrawalFeeEditScreen({super.key, required this.ruleId, required this.id});
 
- static String route([int? id]) => id == null ? "/edit" : "${WithdrawalRoutes.namespaceFee}/$id/edit";
+  static String route([int? id]) => id == null ? "/edit" : "${WithdrawalRoutes.namespaceFee}/$id/edit";
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class WithdrawalFeeEditScreen extends StatelessWidget {
         title: Text(id == 0 ? S.of(context).withdrawal_fee_create : S.of(context).withdrawal_fee_edit),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(UIConstants.appPadding),
+        padding: const EdgeInsets.all(UIConstants.appVerticalPadding),
         child: WithdrawalFeeFormComponent(ruleId: ruleId, id: id),
       ),
     );

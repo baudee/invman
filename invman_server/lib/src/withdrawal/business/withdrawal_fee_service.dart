@@ -27,15 +27,9 @@ class WithdrawalFeeService {
   }
 
   Future<WithdrawalFee> save(Session session, WithdrawalFee fee) async {
-    final sessionUser = await session.authenticated;
-
     return session.db.transaction(
       (transaction) async {
-        final rule = await ruleService.retrieve(session, fee.ruleId);
-
-        if (fee.id != 0 && rule.userId != sessionUser!.userId) {
-          throw ServerException(errorCode: ErrorCode.forbidden);
-        }
+        await ruleService.retrieve(session, fee.ruleId);
 
         if (fee.id == 0) {
           return WithdrawalFee.db.insertRow(session, fee);

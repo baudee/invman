@@ -8,12 +8,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'form_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class WithdrawalRuleForm extends _$WithdrawalRuleForm {
   @override
   ModelState<WithdrawalRule> build(int id) {
     Future.microtask(() => load());
-    return Loading();
+    return Initial();
   }
 
   final formKey = GlobalKey<FormState>();
@@ -30,7 +30,6 @@ class WithdrawalRuleForm extends _$WithdrawalRuleForm {
 
   Future<void> load() async {
     state = Loading();
-
     if (id == 0) {
       state = Success(InitialUtils.getWithdrawalRule());
       _refreshControllers();
@@ -82,23 +81,26 @@ class WithdrawalRuleForm extends _$WithdrawalRuleForm {
   }
 
   Future<(bool, String?)> delete() async {
-    if (state is! Success) {
-      return (false, S.current.error_invalidState);
+    final currentState = state;
+
+    if (currentState case Success<WithdrawalRule>(:final data)) {
+      state = const Loading();
+
+      final result = await ref.read(withdrawalRuleServiceProvider).delete(data.id ?? 0);
+
+      return result.fold(
+        (error) {
+          state = Success(data);
+          return (false, error);
+        },
+        (deletedWithdrawalRule) {
+          state = Success(deletedWithdrawalRule);
+          ref.read(withdrawalRuleListProvider.notifier).refresh();
+          return (true, S.current.core_itemDeleted);
+        },
+      );
     }
 
-    final ruleToDelete = (state as Success).data;
-
-    state = Loading();
-
-    final result = await ref.read(withdrawalRuleServiceProvider).delete(id);
-
-    return result.fold((error) {
-      state = Success(ruleToDelete);
-      return (false, error);
-    }, (deletedWithdrawalRule) {
-      state = Success(deletedWithdrawalRule);
-      ref.read(withdrawalRuleListProvider.notifier).refresh();
-      return (true, S.current.core_itemDeleted);
-    });
+    return (false, S.current.error_invalidState);
   }
 }

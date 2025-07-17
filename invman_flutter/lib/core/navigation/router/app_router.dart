@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/features/account/account.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
-import 'package:invman_flutter/features/transfer/transfer.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
@@ -12,9 +11,10 @@ import 'package:invman_flutter/core/navigation/navigation.dart';
 part 'app_router.g.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
+late final GoRouter router;
 
 @Riverpod(keepAlive: true)
-GoRouter router(Ref ref) {
+GoRouter appRouter(Ref ref) {
   final initialRoute = InvestmentRootScreen.route();
   String destination = initialRoute;
 
@@ -33,7 +33,6 @@ GoRouter router(Ref ref) {
       StatefulShellRoute.indexedStack(
         branches: [
           InvestmentRoutes.branch,
-          TransferRoutes.branch,
           StockRoutes.branch,
           AccountRoutes.branch,
         ],

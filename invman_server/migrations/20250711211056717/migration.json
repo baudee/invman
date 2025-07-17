@@ -1,0 +1,107 @@
+{
+  "actions": [
+    {
+      "type": "deleteTable",
+      "deleteTable": "transfer"
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "transfer",
+        "dartName": "Transfer",
+        "module": "invman",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "nextval('transfer_id_seq'::regclass)",
+            "dartType": "int?"
+          },
+          {
+            "name": "investmentId",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "quantity",
+            "columnType": 3,
+            "isNullable": false,
+            "dartType": "double"
+          },
+          {
+            "name": "amount",
+            "columnType": 3,
+            "isNullable": false,
+            "dartType": "double"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "constraintName": "transfer_fk_0",
+            "columns": [
+              "investmentId"
+            ],
+            "referenceTable": "investment",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 4
+          }
+        ],
+        "indexes": [
+          {
+            "indexName": "transfer_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          },
+          {
+            "indexName": "investment_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "investmentId"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          }
+        ],
+        "managed": true
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "columnDropped",
+      "message": "Column amount of table transfer is modified in a way that it must be deleted and recreated.",
+      "table": "transfer",
+      "columns": [
+        "amount"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "tableDropped",
+      "message": "One or more columns are added to table \"transfer\" which cannot be added in a table migration. The complete table will be deleted and recreated.",
+      "table": "transfer",
+      "columns": [
+        "amount"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

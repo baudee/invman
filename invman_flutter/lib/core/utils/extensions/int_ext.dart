@@ -1,6 +1,9 @@
-extension IntExtension on int {
+extension IntExtension on int? {
   String toStringPrice(String currency) {
-    final doublePrice = this / 100;
+    if (this == null) {
+      return "- $currency";
+    }
+    final doublePrice = this! / 100;
     return "${doublePrice.toStringAsFixed(2)} $currency";
   }
 }

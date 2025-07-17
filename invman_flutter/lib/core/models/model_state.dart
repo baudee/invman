@@ -19,3 +19,4 @@ class Failure<T> extends ModelState<T> {
   final String error;
   const Failure(this.error);
 }
+ 

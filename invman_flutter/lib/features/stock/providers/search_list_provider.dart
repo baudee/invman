@@ -1,5 +1,4 @@
 import 'package:invman_client/invman_client.dart';
-import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/features/stock/providers/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

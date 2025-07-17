@@ -3,15 +3,16 @@ import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/models/models.dart';
 import 'package:invman_flutter/core/utils/initial_utils.dart';
+import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/transfer/transfer.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'form_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod()
 class TransferForm extends _$TransferForm {
   @override
-  ModelState<Transfer> build(int id) {
+  ModelState<Transfer> build(int investmentId, int id) {
     Future.microtask(() => load());
     return Loading();
   }
@@ -25,16 +26,6 @@ class TransferForm extends _$TransferForm {
     if (state case Success<Transfer>(data: final transfer)) {
       quantityController.text = transfer.quantity.toString();
       amountController.text = (transfer.amount / 100).toStringAsFixed(0);
-    }
-  }
-
-  void setInvestment(Investment investment) {
-    if (state case Success<Transfer>(data: final transfer)) {
-      state = Success(
-        transfer.copyWith(
-          investment: investment,
-        ),
-      );
     }
   }
 
@@ -63,22 +54,18 @@ class TransferForm extends _$TransferForm {
         return (false, S.current.error_fixToContinue);
       }
 
-      if (transfer.investment == null || transfer.investment?.id == null) {
-        return (false, S.current.transfer_selectInvestment);
-      }
-
       if (double.tryParse(quantityController.text.trim()) == null) {
         return (false, S.current.transfer_selectValidQuantity);
       }
 
-      if (int.tryParse(amountController.text.trim()) == null) {
+      if (double.tryParse(amountController.text.trim()) == null) {
         return (false, S.current.transfer_selectValidAmount);
       }
 
       final transferToSave = transfer.copyWith(
         quantity: double.parse(quantityController.text.trim()),
-        amount: int.parse(amountController.text.trim()) * 100,
-        investmentId: transfer.investment!.id!,
+        amount: double.parse(amountController.text.trim()),
+        investmentId: investmentId,
       );
 
       state = Loading();
@@ -90,13 +77,34 @@ class TransferForm extends _$TransferForm {
         return (false, error);
       }, (t) {
         state = Success(t);
-        ref.read(transferListProvider.notifier).refresh();
-        if (t.id != null) {
+        ref.invalidate(investmentDetailProvider(t.investmentId));
+        if (t.id != null || transfer.id == 0) {
           ref.invalidate(transferDetailProvider(t.id!));
         }
         return (true, S.current.core_itemSaved);
       });
     }
     return (false, S.current.error_invalidState);
+  }
+
+  Future<(bool, String?)> delete() async {
+    if (state is! Success) {
+      return (false, S.current.error_invalidState);
+    }
+
+    final transferToDelete = (state as Success).data;
+
+    state = Loading();
+
+    final result = await ref.read(transferServiceProvider).delete(id);
+
+    return result.fold((error) {
+      state = Success(transferToDelete);
+      return (false, error);
+    }, (deletedTransfer) {
+      state = Success(deletedTransfer);
+      ref.invalidate(investmentDetailProvider(deletedTransfer.investmentId));
+      return (true, S.current.core_itemDeleted);
+    });
   }
 }

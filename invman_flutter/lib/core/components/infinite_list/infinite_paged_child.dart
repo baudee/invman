@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
-import 'package:invman_flutter/core/components/error_component.dart';
-import 'package:invman_flutter/core/components/loading_component.dart';
+import 'package:invman_flutter/core/components/base/error_component.dart';
+import 'package:invman_flutter/core/components/base/loading_component.dart';
 
 PagedChildBuilderDelegate<T> pagedChildBuilderDelegate<T>({
   required Widget Function(BuildContext context, T item, int index) itemBuilder,

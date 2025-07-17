@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
+import 'package:invman_flutter/main.dart';
 
 class AccountRootComponent extends ConsumerWidget {
   const AccountRootComponent({super.key});
@@ -59,7 +61,7 @@ class AccountRootComponent extends ConsumerWidget {
           ListTile(
             title: Text(S.of(context).withdrawal_title),
             leading: Icon(Icons.list_alt_rounded),
-            onTap: () => context.pushRelative(WithdrawalRuleRootScreen.route()),
+            onTap: () => router.pushRelative(WithdrawalRuleRootScreen.route()),
           ),
           ListTile(
             title: Text(S.of(context).account_currency),

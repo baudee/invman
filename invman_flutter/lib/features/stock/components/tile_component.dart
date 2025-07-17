@@ -6,7 +6,7 @@ class StockTileComponent extends ConsumerWidget {
   final Stock stock;
   final Widget? trailing;
   final EdgeInsetsGeometry? contentPadding;
-  final Function(Stock stock)? onTap;
+  final void Function(Stock stock)? onTap;
 
   const StockTileComponent({super.key, required this.stock, this.trailing, this.onTap, this.contentPadding});
 

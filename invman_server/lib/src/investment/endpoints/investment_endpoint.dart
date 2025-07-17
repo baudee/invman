@@ -28,15 +28,25 @@ class InvestmentEndpoint extends Endpoint with EndpointMiddleware {
   Future<Investment> total(
     Session session, {
     required String currency,
-    required double percentageCurrencyChangeFee,
   }) async {
     return withMiddleware(
       session,
       () => getIt<InvestmentService>().total(
         session,
         currency: currency.toUpperCase(),
-        percentageCurrencyChangeFee: percentageCurrencyChangeFee,
       ),
     );
+  }
+
+  Future<Investment> save(Session session, Investment investment, {required String currency}) async {
+    return withMiddleware(session, () => getIt<InvestmentService>().save(session, investment, currency: currency));
+  }
+
+  Future<Investment> delete(Session session, int id) async {
+    return withMiddleware(session, () => getIt<InvestmentService>().delete(session, id));
+  }
+
+  Future<Investment> retrieve(Session session, int id, {required String currency}) async {
+    return withMiddleware(session, () => getIt<InvestmentService>().retrieve(session, id, currency: currency));
   }
 }

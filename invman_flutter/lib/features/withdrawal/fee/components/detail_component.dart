@@ -12,7 +12,7 @@ class WithdrawalFeeDetailComponent extends ConsumerWidget {
     final state = ref.watch(withdrawalFeeDetailProvider(id));
     return BaseStateComponent(
       state: state,
-      onRefresh: () => ref.read(withdrawalFeeDetailProvider(id).notifier).load(),
+      onErrorRefresh: () => ref.read(withdrawalFeeDetailProvider(id).notifier).load(),
       successBuilder: (data) => Column(
         children: [
           Text("${data.percent} %"),
