@@ -6,7 +6,6 @@ import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
-import 'package:invman_flutter/main.dart';
 
 class AccountRootComponent extends ConsumerWidget {
   const AccountRootComponent({super.key});
