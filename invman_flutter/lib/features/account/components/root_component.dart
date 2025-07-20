@@ -12,9 +12,7 @@ class AccountRootComponent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
+    final tiles = [
           ListTile(
             title: Text(S.of(context).account_language),
             subtitle: Text(ref.watch(userPreferencesProvider.select((v) => v.locale)).toLanguageTag()),
@@ -83,7 +81,16 @@ class AccountRootComponent extends ConsumerWidget {
               }
             },
           ),
-        ],
+    ];
+
+    return SingleChildScrollView(
+      child: Column(
+        children: tiles
+            .map((tile) => Padding(
+                  padding: const EdgeInsets.only(bottom: UIConstants.spacingXs),
+                  child: tile,
+                ))
+            .toList(),
       ),
     );
   }

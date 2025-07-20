@@ -8,10 +8,11 @@ fields:
   transfers: List<Transfer>?, relation(optional, name=investment_transfers)
   withdrawalRule : WithdrawalRule?, relation
   stockSymbol: String
+  updatedAt: DateTime, default=now
   stock: Stock?, !persist 
   investAmount: double?, !persist 
   withdrawAmount: double?, !persist 
 
 indexes:
   investment_user_idx:
-    fields: userId
+    fields: userId, updatedAt

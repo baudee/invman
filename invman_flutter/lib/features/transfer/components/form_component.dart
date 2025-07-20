@@ -53,6 +53,7 @@ class TransferFormComponent extends ConsumerWidget {
                   }
                 },
               ),
+              const SizedBox(height: UIConstants.spacingXs),
               DeleteButton(
                 onPressed: () async {
                   final (success, message) = await provider.delete();

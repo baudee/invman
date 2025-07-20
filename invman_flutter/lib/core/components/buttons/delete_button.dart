@@ -8,6 +8,9 @@ class DeleteButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton.icon(
       onPressed: onPressed,
+      style: FilledButton.styleFrom(
+        minimumSize: const Size(double.infinity, 0),
+      ),
       label: Icon(Icons.delete),
     );
   }

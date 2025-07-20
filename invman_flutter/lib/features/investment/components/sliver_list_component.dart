@@ -13,18 +13,24 @@ class InvestmentSliverListComponent extends ConsumerWidget {
     final pagingController = provider.pagingController;
 
     final state = ref.watch(investmentTotalProvider);
-    return BaseStateComponent(
-      state: state,
-      onErrorRefresh: () async {
-        pagingController.refresh();
-        ref.read(investmentTotalProvider.notifier).load();
-      },
-      successBuilder: (data) => SliverInfiniteListComponent<Investment>(
-        pagingController: pagingController,
-        itemBuilder: (context, investment, index) {
-          return InvestmentTileComponent(investment: investment);
-        },
-        header: InvestmentSliverHeaderComponent(invesment: data),
+
+    onRefresh() async {
+      pagingController.refresh();
+      ref.read(investmentTotalProvider.notifier).load();
+    }
+
+    return RefreshIndicator(
+      onRefresh: onRefresh,
+      child: BaseStateComponent(
+        state: state,
+        onErrorRefresh: onRefresh,
+        successBuilder: (data) => SliverInfiniteListComponent<Investment>(
+          pagingController: pagingController,
+          itemBuilder: (context, investment, index) {
+            return InvestmentTileComponent(investment: investment);
+          },
+          header: InvestmentSliverHeaderComponent(invesment: data),
+        ),
       ),
     );
   }

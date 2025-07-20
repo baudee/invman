@@ -83,5 +83,17 @@
     "@INVESMENT---------------------------------------------------------------": {},
     "investment_title": "Investments",
     "investment_create": "Create investment",
-    "investment_edit": "Edit investment"
+    "investment_edit": "Edit investment",
+    "investment_currentValue": "Current Value",
+    "investment_invested": "Invested",
+    "investment_return": "Return",
+    "investment_quantity": "Quantity",
+    "investment_type": "Type",
+    "investment_deposit": "Deposit",
+    "investment_withdrawal": "Withdrawal",
+    "investment_transactionId": "Transaction ID",
+    "investment_symbol": "Symbol",
+    "investment_currency": "Currency",
+    "investment_quoteType": "Quote Type",
+    "investment_value": "Value"
 }

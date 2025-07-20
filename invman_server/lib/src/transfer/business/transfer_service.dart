@@ -1,30 +1,12 @@
 import 'package:invman_server/src/core/helpers/helpers.dart';
 import 'package:invman_server/src/generated/protocol.dart';
+import 'package:invman_server/src/investment/investment.dart';
 import 'package:serverpod/serverpod.dart';
 
 class TransferService {
-  TransferService();
+  TransferService({required this.investmentService});
 
-  Future<TransferList> list(Session session, {int limit = 10, int page = 1}) async {
-    final sessionUserId = (await session.authenticated)!.userId;
-    final count = await Transfer.db.count(session, where: (e) => e.investment.userId.equals(sessionUserId));
-
-    final results = await Transfer.db.find(
-      session,
-      where: (e) => e.investment.userId.equals(sessionUserId),
-      limit: limit,
-      offset: (page * limit) - limit,
-    );
-
-    return TransferList(
-      count: count,
-      limit: limit,
-      page: page,
-      results: results,
-      numPages: (count / limit).ceil(),
-      canLoadMore: page * limit < count,
-    );
-  }
+  final InvestmentService investmentService;
 
   Future<Transfer> retrieve(Session session, int id) async {
     final transfer = await Transfer.db.findById(
@@ -46,16 +28,25 @@ class TransferService {
   }
 
   Future<Transfer> save(Session session, Transfer transfer) async {
-    return session.db.transaction((transaction) async {
-      final Transfer savedTransfer;
-      if (transfer.id == 0 || transfer.id == null) {
-        savedTransfer = await Transfer.db.insertRow(session, transfer, transaction: transaction);
-      } else {
-        await retrieve(session, transfer.id!);
-        savedTransfer = await Transfer.db.updateRow(session, transfer, transaction: transaction);
-      }
-      return savedTransfer.copyWith();
-    });
+    return session.db.transaction(
+      (transaction) async {
+        final investment = await Investment.db.findById(session, transfer.investmentId);
+        await investmentService.retrieveChecks(session, investment: investment);
+
+        final Transfer savedTransfer;
+        if (transfer.id == 0 || transfer.id == null) {
+          savedTransfer = await Transfer.db.insertRow(session, transfer, transaction: transaction);
+        } else {
+          await retrieve(session, transfer.id!);
+          savedTransfer = await Transfer.db.updateRow(session, transfer, transaction: transaction);
+        }
+
+        await Investment.db.updateRow(session, investment!.copyWith(updatedAt: DateTime.now()));
+
+        return savedTransfer;
+      },
+      settings: TransactionSettings(isolationLevel: IsolationLevel.serializable),
+    );
   }
 
   Future<Transfer> delete(Session session, int id) async {

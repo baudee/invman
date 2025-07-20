@@ -19,7 +19,8 @@ abstract class Transfer implements _i1.SerializableModel {
     this.investment,
     required this.quantity,
     required this.amount,
-  });
+    DateTime? createdAt,
+  }) : createdAt = createdAt ?? DateTime.now();
 
   factory Transfer({
     int? id,
@@ -27,6 +28,7 @@ abstract class Transfer implements _i1.SerializableModel {
     _i2.Investment? investment,
     required double quantity,
     required double amount,
+    DateTime? createdAt,
   }) = _TransferImpl;
 
   factory Transfer.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -39,6 +41,8 @@ abstract class Transfer implements _i1.SerializableModel {
               (jsonSerialization['investment'] as Map<String, dynamic>)),
       quantity: (jsonSerialization['quantity'] as num).toDouble(),
       amount: (jsonSerialization['amount'] as num).toDouble(),
+      createdAt:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
     );
   }
 
@@ -55,12 +59,15 @@ abstract class Transfer implements _i1.SerializableModel {
 
   double amount;
 
+  DateTime createdAt;
+
   Transfer copyWith({
     int? id,
     int? investmentId,
     _i2.Investment? investment,
     double? quantity,
     double? amount,
+    DateTime? createdAt,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -70,6 +77,7 @@ abstract class Transfer implements _i1.SerializableModel {
       if (investment != null) 'investment': investment?.toJson(),
       'quantity': quantity,
       'amount': amount,
+      'createdAt': createdAt.toJson(),
     };
   }
 
@@ -88,12 +96,14 @@ class _TransferImpl extends Transfer {
     _i2.Investment? investment,
     required double quantity,
     required double amount,
+    DateTime? createdAt,
   }) : super._(
           id: id,
           investmentId: investmentId,
           investment: investment,
           quantity: quantity,
           amount: amount,
+          createdAt: createdAt,
         );
 
   @override
@@ -103,6 +113,7 @@ class _TransferImpl extends Transfer {
     Object? investment = _Undefined,
     double? quantity,
     double? amount,
+    DateTime? createdAt,
   }) {
     return Transfer(
       id: id is int? ? id : this.id,
@@ -112,6 +123,7 @@ class _TransferImpl extends Transfer {
           : this.investment?.copyWith(),
       quantity: quantity ?? this.quantity,
       amount: amount ?? this.amount,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 }

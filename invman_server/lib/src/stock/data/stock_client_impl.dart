@@ -29,9 +29,17 @@ class StockClientImpl implements StockClient {
   }
 
   @override
-  Future<int> currencyChange({required String from, required String to}) {
-    // TODO: implement currencyChange
-    throw UnimplementedError();
+  Future<double> currencyChange({required String from, required String to}) async {
+    final jsonResponse = await HttpClientService.get(
+      url: baseUrl,
+      path: "currency/$from/$to",
+      headers: headers,
+    );
+    if (jsonResponse is! num) {
+      throw ServerException(errorCode: ErrorCode.unknown);
+    }
+
+    return jsonResponse as double;
   }
 
   @override

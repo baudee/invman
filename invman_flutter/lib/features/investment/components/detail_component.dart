@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:invman_client/invman_client.dart';
+import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/stock/components/tile_component.dart';
 import 'package:invman_flutter/features/transfer/transfer.dart';
@@ -24,21 +25,15 @@ class InvestmentDetailComponent extends StatelessWidget {
           Divider(),
           if (investment.stock != null) StockTileComponent(stock: investment.stock!),
           Divider(),
-          Builder(
-            builder: (context) {
-              final List<TransferTileComponent> tiles = [];
+          ListView.separated(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: investment.transfers?.length ?? 0,
+            itemBuilder: (context, index) {
               final transfers = investment.transfers ?? [];
-              for (final transfer in transfers) {
-                tiles.add(
-                  TransferTileComponent(
-                    transfer: transfer,
-                  ),
-                );
-              }
-              return Column(
-                children: tiles,
-              );
+              return TransferTileComponent(transfer: transfers[index]);
             },
+            separatorBuilder: (context, index) => const SizedBox(height: UIConstants.spacingXs),
           ),
         ],
       ),

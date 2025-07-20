@@ -14,9 +14,7 @@ class TransferDetailScreen extends BaseScreen<Transfer> {
 
   @override
   AppBar? appBar(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(transferDetailProvider(id));
     return AppBar(
-      title: state is Success<Transfer> ? Text('${state.data.quantity} ${state.data.amount}') : null,
       actions: [
         EditIconButton(
           onPressed: () => router.pushRelative(TransferEditScreen.route()),

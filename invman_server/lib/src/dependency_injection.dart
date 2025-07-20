@@ -18,7 +18,6 @@ void initDependencyInjection() {
   // Business
   getIt.registerSingleton<AuthService>(AuthService());
   getIt.registerSingleton<StockService>(StockService(stockClient: getIt<StockClient>()));
-  getIt.registerSingleton<TransferService>(TransferService());
   getIt.registerSingleton<WithdrawalRuleService>(WithdrawalRuleService());
   getIt.registerSingleton<InvestmentService>(
     InvestmentService(
@@ -26,5 +25,6 @@ void initDependencyInjection() {
       stockClient: getIt<StockClient>(),
     ),
   );
+  getIt.registerSingleton<TransferService>(TransferService(investmentService: getIt<InvestmentService>()));
   getIt.registerSingleton<WithdrawalFeeService>(WithdrawalFeeService(ruleService: getIt<WithdrawalRuleService>()));
 }

@@ -37,6 +37,13 @@
           "columnType": 0,
           "isNullable": false,
           "dartType": "String"
+        },
+        {
+          "name": "updatedAt",
+          "columnType": 4,
+          "isNullable": false,
+          "columnDefault": "CURRENT_TIMESTAMP",
+          "dartType": "DateTime"
         }
       ],
       "foreignKeys": [
@@ -86,6 +93,10 @@
             {
               "type": 0,
               "definition": "userId"
+            },
+            {
+              "type": 0,
+              "definition": "updatedAt"
             }
           ],
           "type": "btree",
@@ -122,9 +133,16 @@
         },
         {
           "name": "amount",
-          "columnType": 6,
+          "columnType": 3,
           "isNullable": false,
-          "dartType": "int"
+          "dartType": "double"
+        },
+        {
+          "name": "createdAt",
+          "columnType": 4,
+          "isNullable": false,
+          "columnDefault": "CURRENT_TIMESTAMP",
+          "dartType": "DateTime"
         }
       ],
       "foreignKeys": [
@@ -161,6 +179,10 @@
             {
               "type": 0,
               "definition": "investmentId"
+            },
+            {
+              "type": 0,
+              "definition": "createdAt"
             }
           ],
           "type": "btree",
@@ -1998,7 +2020,7 @@
   "installedModules": [
     {
       "module": "invman",
-      "version": "20250711205229741"
+      "version": "20250720192007418"
     },
     {
       "module": "serverpod",

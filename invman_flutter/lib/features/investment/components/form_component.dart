@@ -31,11 +31,11 @@ class InvestmentFormComponent extends ConsumerWidget {
                 validator: (value) => ValidationUtils.formValidatorNotEmpty(value, S.of(context).core_name),
                 decoration: InputDecoration(label: Text(S.of(context).core_name)),
               ),
+              SizedBox(height: UIConstants.spacingXs),
               WithdrawalRuleSelectTileComponent(rule: data.withdrawalRule),
+              SizedBox(height: UIConstants.spacingXs),
               StockSelectTileComponent(stock: data.stock, investmentId: data.id ?? 0),
-              SizedBox(
-                height: 16,
-              ),
+              SizedBox(height: UIConstants.spacingMd),
               SaveButton(
                 onPressed: () async {
                   final (success, message) = await provider.submit();
@@ -45,7 +45,8 @@ class InvestmentFormComponent extends ConsumerWidget {
                   }
                 },
               ),
-              if (id != 0)
+              if (id != 0) ...[
+                const SizedBox(height: UIConstants.spacingXs),
                 DeleteButton(
                   onPressed: () async {
                     final (success, message) = await provider.delete();
@@ -55,6 +56,7 @@ class InvestmentFormComponent extends ConsumerWidget {
                     }
                   },
                 ),
+              ]
             ],
           ),
         ),

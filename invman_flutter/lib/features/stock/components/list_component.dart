@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invman_client/invman_client.dart';
-import 'package:invman_flutter/core/components/components.dart';
+import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
 
 class StockListComponent extends ConsumerWidget {
@@ -12,8 +12,9 @@ class StockListComponent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return BaseStateComponent<List<Stock>>(
       state: ref.watch(stockSearchListProvider),
-      successBuilder: (data) => ListView.builder(
+      successBuilder: (data) => ListView.separated(
         itemCount: data.length,
+        separatorBuilder: (context, index) => const SizedBox(height: UIConstants.spacingXs),
         itemBuilder: (context, index) {
           final stock = data[index];
           return StockTileComponent(stock: stock, onTap: onTileTap);

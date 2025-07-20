@@ -9,6 +9,9 @@ class SaveButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size(double.infinity, 0),
+      ),
       child: Text(S.of(context).core_save),
     );
   }

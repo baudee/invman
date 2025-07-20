@@ -8,10 +8,6 @@ class TransferEndpoint extends Endpoint with EndpointMiddleware {
   @override
   bool get requireLogin => true;
 
-  Future<TransferList> list(Session session, {int limit = 10, int page = 1}) async {
-    return withMiddleware(session, () => getIt<TransferService>().list(session, limit: limit, page: page));
-  }
-
   Future<Transfer> retrieve(Session session, int id) async {
     return withMiddleware(session, () => getIt<TransferService>().retrieve(session, id));
   }

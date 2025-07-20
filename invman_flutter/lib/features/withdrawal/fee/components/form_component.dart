@@ -60,7 +60,8 @@ class WithdrawalFeeFormComponent extends ConsumerWidget {
                   }
                 },
               ),
-              if (id != 0)
+              if (id != 0) ...[
+                const SizedBox(height: UIConstants.spacingXs),
                 DeleteButton(
                   onPressed: () async {
                     final (success, message) = await provider.delete();
@@ -69,7 +70,8 @@ class WithdrawalFeeFormComponent extends ConsumerWidget {
                       router.pop();
                     }
                   },
-                )
+                ),
+              ]
             ],
           ),
         ),

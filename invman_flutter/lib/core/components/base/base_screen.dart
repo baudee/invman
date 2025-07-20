@@ -3,9 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invman_flutter/core/utils/utils.dart';
 
 abstract class BaseScreen<T> extends ConsumerWidget {
-  const BaseScreen({
-    super.key,
-  });
+  const BaseScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -17,20 +15,21 @@ abstract class BaseScreen<T> extends ConsumerWidget {
       },
       floatingActionButton: floatingActionButton(context, ref),
       bottomNavigationBar: bottomNavigationBar(context, ref),
-      body: Builder(
-        builder: (bodyContext) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: UIConstants.appHorizontalPadding,
-              vertical: UIConstants.appVerticalPadding,
-            ),
-            child: switch (ScreenUtils.size(context)) {
-              ScreenSize.sm => body(context, ref),
-              ScreenSize.md => bodyMd(context, ref),
-              ScreenSize.lg => bodyLg(context, ref),
-            },
-          );
-        },
+      body: SafeArea(
+        child: Builder(
+          builder: (bodyContext) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: UIConstants.appHorizontalPadding,
+              ),
+              child: switch (ScreenUtils.size(context)) {
+                ScreenSize.sm => body(context, ref),
+                ScreenSize.md => bodyMd(context, ref),
+                ScreenSize.lg => bodyLg(context, ref),
+              },
+            );
+          },
+        ),
       ),
     );
   }

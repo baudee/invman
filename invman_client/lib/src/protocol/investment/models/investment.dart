@@ -25,10 +25,11 @@ abstract class Investment implements _i1.SerializableModel {
     required this.withdrawalRuleId,
     this.withdrawalRule,
     required this.stockSymbol,
+    DateTime? updatedAt,
     this.stock,
     this.investAmount,
     this.withdrawAmount,
-  });
+  }) : updatedAt = updatedAt ?? DateTime.now();
 
   factory Investment({
     int? id,
@@ -39,6 +40,7 @@ abstract class Investment implements _i1.SerializableModel {
     required int withdrawalRuleId,
     _i4.WithdrawalRule? withdrawalRule,
     required String stockSymbol,
+    DateTime? updatedAt,
     _i5.Stock? stock,
     double? investAmount,
     double? withdrawAmount,
@@ -62,6 +64,8 @@ abstract class Investment implements _i1.SerializableModel {
           : _i4.WithdrawalRule.fromJson(
               (jsonSerialization['withdrawalRule'] as Map<String, dynamic>)),
       stockSymbol: jsonSerialization['stockSymbol'] as String,
+      updatedAt:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
       stock: jsonSerialization['stock'] == null
           ? null
           : _i5.Stock.fromJson(
@@ -90,6 +94,8 @@ abstract class Investment implements _i1.SerializableModel {
 
   String stockSymbol;
 
+  DateTime updatedAt;
+
   _i5.Stock? stock;
 
   double? investAmount;
@@ -105,6 +111,7 @@ abstract class Investment implements _i1.SerializableModel {
     int? withdrawalRuleId,
     _i4.WithdrawalRule? withdrawalRule,
     String? stockSymbol,
+    DateTime? updatedAt,
     _i5.Stock? stock,
     double? investAmount,
     double? withdrawAmount,
@@ -121,6 +128,7 @@ abstract class Investment implements _i1.SerializableModel {
       'withdrawalRuleId': withdrawalRuleId,
       if (withdrawalRule != null) 'withdrawalRule': withdrawalRule?.toJson(),
       'stockSymbol': stockSymbol,
+      'updatedAt': updatedAt.toJson(),
       if (stock != null) 'stock': stock?.toJson(),
       if (investAmount != null) 'investAmount': investAmount,
       if (withdrawAmount != null) 'withdrawAmount': withdrawAmount,
@@ -145,6 +153,7 @@ class _InvestmentImpl extends Investment {
     required int withdrawalRuleId,
     _i4.WithdrawalRule? withdrawalRule,
     required String stockSymbol,
+    DateTime? updatedAt,
     _i5.Stock? stock,
     double? investAmount,
     double? withdrawAmount,
@@ -157,6 +166,7 @@ class _InvestmentImpl extends Investment {
           withdrawalRuleId: withdrawalRuleId,
           withdrawalRule: withdrawalRule,
           stockSymbol: stockSymbol,
+          updatedAt: updatedAt,
           stock: stock,
           investAmount: investAmount,
           withdrawAmount: withdrawAmount,
@@ -172,6 +182,7 @@ class _InvestmentImpl extends Investment {
     int? withdrawalRuleId,
     Object? withdrawalRule = _Undefined,
     String? stockSymbol,
+    DateTime? updatedAt,
     Object? stock = _Undefined,
     Object? investAmount = _Undefined,
     Object? withdrawAmount = _Undefined,
@@ -189,6 +200,7 @@ class _InvestmentImpl extends Investment {
           ? withdrawalRule
           : this.withdrawalRule?.copyWith(),
       stockSymbol: stockSymbol ?? this.stockSymbol,
+      updatedAt: updatedAt ?? this.updatedAt,
       stock: stock is _i5.Stock? ? stock : this.stock?.copyWith(),
       investAmount: investAmount is double? ? investAmount : this.investAmount,
       withdrawAmount:

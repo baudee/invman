@@ -6,7 +6,8 @@ fields:
   investment: Investment?, relation(onDelete=Cascade, name=investment_transfers)
   quantity: double
   amount: double
+  createdAt: DateTime, default=now
 
 indexes:
   investment_idx:
-    fields: investmentId
+    fields: investmentId, createdAt

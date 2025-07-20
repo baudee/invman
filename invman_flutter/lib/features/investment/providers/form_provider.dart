@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'form_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class InvestmentForm extends _$InvestmentForm {
   @override
   ModelState<Investment> build(int id) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:invman_flutter/core/components/components.dart';
+import 'package:invman_flutter/core/core.dart';
 
 class SliverInfiniteListComponent<T> extends StatelessWidget {
   final PagingController<int, T> pagingController;
@@ -21,8 +21,9 @@ class SliverInfiniteListComponent<T> extends StatelessWidget {
     return CustomScrollView(
       slivers: [
         header,
-        PagedSliverList(
+        PagedSliverList.separated(
           pagingController: pagingController,
+          separatorBuilder: (context, index) => const SizedBox(height: UIConstants.spacingXs),
           builderDelegate: pagedChildBuilderDelegate<T>(
             itemBuilder: itemBuilder,
             pagingController: pagingController,

@@ -35,10 +35,9 @@ class InvestmentService {
     double actualAmount = amountBeforeFees - totalFees;
 
     if (currency != stock.currency) {
-      // TODO
-      // Get conversion rate
-      // add percentage fee
-      // convert
+      double change = await stockClient.currencyChange(from: stock.currency, to: currency);
+      change = change + (withdrawalRule?.currencyChangePercentage ?? 0) / 100;
+      actualAmount *= change;
     }
 
     investment = investment.copyWith(
@@ -64,6 +63,8 @@ class InvestmentService {
       limit: limit,
       offset: (page * limit) - limit,
       where: (e) => e.userId.equals(sessionUser!.userId),
+      orderBy: (e) => e.updatedAt,
+      orderDescending: true,
       include: IncludeHelpers.investmentInclude(),
     );
 

@@ -24,7 +24,10 @@ class IncludeHelpers {
   // Investment
   static InvestmentInclude investmentInclude() {
     return Investment.include(
-      transfers: Transfer.includeList(),
+      transfers: Transfer.includeList(
+        orderBy: (e) => e.createdAt,
+        orderDescending: true,
+      ),
       withdrawalRule: withdrawalInclude(),
     );
   }

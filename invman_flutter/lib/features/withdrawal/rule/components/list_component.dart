@@ -14,6 +14,7 @@ class WithdrawalRuleListComponent extends BaseComponent {
     final provider = ref.read(withdrawalRuleListProvider.notifier);
     final pagingController = provider.pagingController;
     return InfiniteListComponent<WithdrawalRule>(
+      onRefresh: provider.refresh,
       pagingController: pagingController,
       itemBuilder: (context, rule, index) {
         return WithdrawalRuleTileComponent(
