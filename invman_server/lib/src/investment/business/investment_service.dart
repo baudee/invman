@@ -36,7 +36,7 @@ class InvestmentService {
 
     if (currency != stock.currency) {
       double change = await stockClient.currencyChange(from: stock.currency, to: currency);
-      change = change + (withdrawalRule?.currencyChangePercentage ?? 0) / 100;
+      change = change - (withdrawalRule?.currencyChangePercentage ?? 0) / 100;
       actualAmount *= change;
     }
 

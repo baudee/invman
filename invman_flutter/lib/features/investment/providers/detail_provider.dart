@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'detail_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class InvestmentDetail extends _$InvestmentDetail {
   @override
   ModelState<Investment> build(int id) {

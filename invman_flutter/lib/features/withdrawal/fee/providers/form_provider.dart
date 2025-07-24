@@ -59,11 +59,11 @@ class WithdrawalFeeForm extends _$WithdrawalFeeForm {
         return (false, S.current.withdrawal_selectValidPercentage);
       }
 
-      if (int.tryParse(fixedController.text.trim()) == null) {
+      if (double.tryParse(fixedController.text.trim()) == null) {
         return (false, S.current.withdrawal_selectValidFixed);
       }
 
-      if (int.tryParse(minimumController.text.trim()) == null) {
+      if (double.tryParse(minimumController.text.trim()) == null) {
         return (false, S.current.withdrawal_selectValidMinimum);
       }
 

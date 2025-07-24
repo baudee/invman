@@ -25,7 +25,7 @@ class TransferForm extends _$TransferForm {
   void _refreshControllers() {
     if (state case Success<Transfer>(data: final transfer)) {
       quantityController.text = transfer.quantity.toString();
-      amountController.text = (transfer.amount / 100).toStringAsFixed(0);
+      amountController.text = transfer.amount.toStringAsFixed(2);
     }
   }
 

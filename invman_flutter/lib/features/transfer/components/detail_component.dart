@@ -10,7 +10,6 @@ class TransferDetailComponent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final currency = ref.read(userPreferencesProvider).currency;
     final isPositive = transfer.amount > 0;
 
