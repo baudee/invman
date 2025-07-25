@@ -18,6 +18,7 @@ COPY --from=build /app/bin/server server
 COPY --from=build /app/confi[g]/ config/
 COPY --from=build /app/we[b]/ web/
 COPY --from=build /app/migration[s]/ migrations/
+COPY --from=build /app/.env .env
 
 
 EXPOSE 8080
