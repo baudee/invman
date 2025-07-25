@@ -7,7 +7,6 @@ final routerNotifierProvider = Provider<RouterNotifier>((ref) {
 });
 
 class RouterNotifier extends ChangeNotifier {
-  // constructor
   RouterNotifier(this.ref) {
     ref.listen(authProvider, (previous, next) {
       final isPreviousSuccess = previous is AuthStateSuccess;

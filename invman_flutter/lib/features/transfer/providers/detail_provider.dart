@@ -8,12 +8,12 @@ part 'detail_provider.g.dart';
 @Riverpod(keepAlive: true)
 class TransferDetail extends _$TransferDetail {
   @override
-  ModelDetailState<Transfer> build(int id) {
-    load(id);
+  ModelState<Transfer> build(int id) {
+    load();
     return Initial();
   }
 
-  Future<void> load(int id) async {
+  Future<void> load() async {
     state = Loading();
 
     final result = await ref.read(transferServiceProvider).retrieve(id);

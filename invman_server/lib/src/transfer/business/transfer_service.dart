@@ -1,29 +1,12 @@
 import 'package:invman_server/src/core/helpers/helpers.dart';
 import 'package:invman_server/src/generated/protocol.dart';
+import 'package:invman_server/src/investment/investment.dart';
 import 'package:serverpod/serverpod.dart';
 
 class TransferService {
-  TransferService();
+  TransferService({required this.investmentService});
 
-  Future<TransferList> list(Session session, {int limit = 10, int page = 1}) async {
-    final count = await Transfer.db.count(session);
-
-    final results = await Transfer.db.find(
-      session,
-      limit: limit,
-      offset: (page * limit) - limit,
-      include: IncludeHelpers.transferInclude(),
-    );
-
-    return TransferList(
-      count: count,
-      limit: limit,
-      page: page,
-      results: results,
-      numPages: (count / limit).ceil(),
-      canLoadMore: page * limit < count,
-    );
-  }
+  final InvestmentService investmentService;
 
   Future<Transfer> retrieve(Session session, int id) async {
     final transfer = await Transfer.db.findById(
@@ -37,40 +20,37 @@ class TransferService {
     }
 
     final sessionUser = await session.authenticated;
-    if (transfer.userId != sessionUser!.userId) {
+    if (transfer.investment?.userId != sessionUser!.userId) {
       throw ServerException(errorCode: ErrorCode.forbidden);
     }
 
-    return transfer;
+    return transfer.copyWith(investment: null);
   }
 
   Future<Transfer> save(Session session, Transfer transfer) async {
-    final sessionUser = await session.authenticated;
-    if (transfer.id != 0 && transfer.userId != sessionUser!.userId) {
-      throw ServerException(errorCode: ErrorCode.forbidden);
-    }
+    return session.db.transaction(
+      (transaction) async {
+        final investment = await Investment.db.findById(session, transfer.investmentId);
+        await investmentService.retrieveChecks(session, investment: investment);
 
-    if (transfer.quantity <= 0 || transfer.amount < 0 || transfer.stockId <= 0 || transfer.id == null) {
-      throw ServerException(errorCode: ErrorCode.badRequest);
-    }
+        final Transfer savedTransfer;
+        if (transfer.id == 0 || transfer.id == null) {
+          savedTransfer = await Transfer.db.insertRow(session, transfer, transaction: transaction);
+        } else {
+          await retrieve(session, transfer.id!);
+          savedTransfer = await Transfer.db.updateRow(session, transfer, transaction: transaction);
+        }
 
-    transfer.userId = sessionUser!.userId;
+        await Investment.db.updateRow(session, investment!.copyWith(updatedAt: DateTime.now()));
 
-    return session.db.transaction((transaction) async {
-      final stock = await Stock.db.findById(session, transfer.stockId, transaction: transaction);
-      if (stock == null) {
-        throw ServerException(errorCode: ErrorCode.badRequest);
-      }
+        return savedTransfer;
+      },
+      settings: TransactionSettings(isolationLevel: IsolationLevel.serializable),
+    );
+  }
 
-      final Transfer savedTransfer;
-      if (transfer.id == 0) {
-        savedTransfer = await Transfer.db.insertRow(session, transfer, transaction: transaction);
-      } else {
-        savedTransfer = await Transfer.db.updateRow(session, transfer, transaction: transaction);
-      }
-      return savedTransfer.copyWith(
-        stock: stock,
-      );
-    });
+  Future<Transfer> delete(Session session, int id) async {
+    final transfer = await retrieve(session, id);
+    return Transfer.db.deleteRow(session, transfer);
   }
 }

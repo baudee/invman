@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:invman_client/invman_client.dart';
-import 'package:invman_flutter/core/extensions/extensions.dart';
+import 'package:invman_flutter/core/utils/extensions/extensions.dart';
 
 Future<Either<String, T>> safeCall<T>(Future<Either<String, T>> Function() action) async {
   try {

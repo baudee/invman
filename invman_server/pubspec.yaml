@@ -4,7 +4,7 @@ description: Starting point for a Serverpod server.
 # homepage: https://www.example.com
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'
+  sdk: '>=3.4.0 <4.0.0'
 
 dependencies:
   dotenv: 4.2.0
@@ -15,7 +15,7 @@ dependencies:
   serverpod_shared: 2.3.1
 
 dev_dependencies:
-  lints: '>=3.0.0 <6.0.0'
-  test: '>=1.24.2'
+  lints: 5.0.0
+  test: ^1.25.15
   serverpod_test: 2.3.1
 

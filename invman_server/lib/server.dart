@@ -30,23 +30,18 @@ void run(List<String> args) async {
   auth.AuthConfig.set(
     auth.AuthConfig(
       sendValidationEmail: (session, email, validationCode) async {
+        // TODO Send mail
         print("CODE: $validationCode");
         return true;
       },
       sendPasswordResetEmail: (session, user, validationCode) async {
+        // TODO Send mail
         print("CODE: $validationCode");
 
         if (user.email == null) {
           return false;
         }
 
-        //final message = "Here is your verification code: $validationCode";
-        //emailService.sendEmail(
-        //  toEmail: user.email!,
-        //  subject: "Reset Your Password",
-        //  text: message,
-        //  html: "<p>$message</p>",
-        //);
         return true;
       },
       importUserImagesFromGoogleSignIn: true,

@@ -3,16 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
+import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
 class AccountRootComponent extends ConsumerWidget {
   const AccountRootComponent({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
+    final tiles = [
           ListTile(
             title: Text(S.of(context).account_language),
             subtitle: Text(ref.watch(userPreferencesProvider.select((v) => v.locale)).toLanguageTag()),
@@ -56,6 +56,11 @@ class AccountRootComponent extends ConsumerWidget {
             ),
           ),
           ListTile(
+            title: Text(S.of(context).withdrawal_title),
+            leading: Icon(Icons.list_alt_rounded),
+            onTap: () => router.pushRelative(WithdrawalRuleRootScreen.route()),
+          ),
+          ListTile(
             title: Text(S.of(context).account_currency),
             subtitle: Text(ref.read(userPreferencesProvider).currency),
             leading: Icon(Icons.attach_money_rounded),
@@ -67,14 +72,25 @@ class AccountRootComponent extends ConsumerWidget {
             ),
             leading: Icon(Icons.logout, color: Colors.red),
             onTap: () async {
-              await ref.read(authProvider.notifier).logout();
+              final errorMessage = await ref.read(authProvider.notifier).logout();
 
-              if (context.mounted) {
+              if (errorMessage == null && context.mounted) {
                 StatefulNavigationShell.of(context).goBranch(0, initialLocation: true);
+              } else {
+                ToastUtils.message(errorMessage, success: false);
               }
             },
           ),
-        ],
+    ];
+
+    return SingleChildScrollView(
+      child: Column(
+        children: tiles
+            .map((tile) => Padding(
+                  padding: const EdgeInsets.only(bottom: UIConstants.spacingXs),
+                  child: tile,
+                ))
+            .toList(),
       ),
     );
   }

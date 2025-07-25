@@ -1,8 +1,0 @@
-class: FmpStockInfo
-
-fields:
-    symbol: String?,
-    name: String?,
-    currency: String?,
-    stockExchange: String?,
-    exchangeShortName: String?

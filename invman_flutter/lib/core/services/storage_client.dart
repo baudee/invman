@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class StorageClient {
   static const languageKey = "language";
   static const themeKey = "theme";
+  static const emailKey = "email";
   static const sellerModeKey = "sellerMode";
 
   Future<void> init();

@@ -1,24 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:invman_client/invman_client.dart';
+import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
+import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/transfer/transfer.dart';
 
-class TransferDetailScreen extends StatelessWidget {
+class TransferDetailScreen extends BaseScreen<Transfer> {
   final int id;
   const TransferDetailScreen({super.key, required this.id});
-  static String route([int? id]) => "${TransferRoutes.namespace}/${id ?? ':id'}";
+  static const String idKey = 'transferId';
+  static String route([int? id]) => "${InvestmentRoutes.namespaceTransfer}/${id ?? ':$idKey'}";
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () => context.push(TransferEditScreen.route(id)),
-          ),
-        ],
-      ),
-      body: TransferDetailComponent(id: id),
+  AppBar? appBar(BuildContext context, WidgetRef ref) {
+    return AppBar(
+      actions: [
+        EditIconButton(
+          onPressed: () => router.pushRelative(TransferEditScreen.route()),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget body(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(transferDetailProvider(id));
+    return BaseStateComponent(
+      state: state,
+      successBuilder: (transfer) => TransferDetailComponent(transfer: transfer),
+      onErrorRefresh: () => ref.read(transferDetailProvider(id).notifier).load(),
     );
   }
 }

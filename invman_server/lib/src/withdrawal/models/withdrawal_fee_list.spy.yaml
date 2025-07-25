@@ -1,0 +1,9 @@
+class: WithdrawalFeeList
+
+fields:
+    count: int
+    results: List<WithdrawalFee>
+    page: int
+    limit: int
+    numPages: int
+    canLoadMore: bool

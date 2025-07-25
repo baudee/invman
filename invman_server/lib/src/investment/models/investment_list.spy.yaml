@@ -1,0 +1,9 @@
+class: InvestmentList
+
+fields:
+    count: int
+    results: List<Investment>
+    page: int
+    limit: int
+    numPages: int
+    canLoadMore: bool

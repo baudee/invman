@@ -1,0 +1,9 @@
+class: WithdrawalRule
+
+table: withdrawal_rule
+
+fields:
+  user: module:auth:UserInfo?, relation(onDelete=Cascade)
+  name: String
+  currencyChangePercentage: double
+  fees: List<WithdrawalFee>?, relation(name=rule_fees)

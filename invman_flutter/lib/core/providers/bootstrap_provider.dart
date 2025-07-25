@@ -13,8 +13,8 @@ class Bootstrap extends _$Bootstrap {
   }
 
   Future<void> bootstrapApp() async {
-    await ref.read(authProvider.notifier).init();
     await ref.read(storageProvider).init();
+    await ref.read(authProvider.notifier).init();
 
     state = false;
   }

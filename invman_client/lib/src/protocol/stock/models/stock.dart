@@ -13,41 +13,30 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
 abstract class Stock implements _i1.SerializableModel {
   Stock._({
-    this.id,
     required this.symbol,
     required this.name,
-    double? value,
+    required this.value,
     required this.currency,
-    required this.stockExchange,
-    required this.exchangeShortName,
-  }) : value = value ?? 0.0;
+    required this.quoteType,
+  });
 
   factory Stock({
-    int? id,
     required String symbol,
     required String name,
-    double? value,
+    required double value,
     required String currency,
-    required String stockExchange,
-    required String exchangeShortName,
+    required String quoteType,
   }) = _StockImpl;
 
   factory Stock.fromJson(Map<String, dynamic> jsonSerialization) {
     return Stock(
-      id: jsonSerialization['id'] as int?,
       symbol: jsonSerialization['symbol'] as String,
       name: jsonSerialization['name'] as String,
       value: (jsonSerialization['value'] as num).toDouble(),
       currency: jsonSerialization['currency'] as String,
-      stockExchange: jsonSerialization['stockExchange'] as String,
-      exchangeShortName: jsonSerialization['exchangeShortName'] as String,
+      quoteType: jsonSerialization['quoteType'] as String,
     );
   }
-
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
-  int? id;
 
   String symbol;
 
@@ -57,29 +46,23 @@ abstract class Stock implements _i1.SerializableModel {
 
   String currency;
 
-  String stockExchange;
-
-  String exchangeShortName;
+  String quoteType;
 
   Stock copyWith({
-    int? id,
     String? symbol,
     String? name,
     double? value,
     String? currency,
-    String? stockExchange,
-    String? exchangeShortName,
+    String? quoteType,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
-      if (id != null) 'id': id,
       'symbol': symbol,
       'name': name,
       'value': value,
       'currency': currency,
-      'stockExchange': stockExchange,
-      'exchangeShortName': exchangeShortName,
+      'quoteType': quoteType,
     };
   }
 
@@ -89,45 +72,35 @@ abstract class Stock implements _i1.SerializableModel {
   }
 }
 
-class _Undefined {}
-
 class _StockImpl extends Stock {
   _StockImpl({
-    int? id,
     required String symbol,
     required String name,
-    double? value,
+    required double value,
     required String currency,
-    required String stockExchange,
-    required String exchangeShortName,
+    required String quoteType,
   }) : super._(
-          id: id,
           symbol: symbol,
           name: name,
           value: value,
           currency: currency,
-          stockExchange: stockExchange,
-          exchangeShortName: exchangeShortName,
+          quoteType: quoteType,
         );
 
   @override
   Stock copyWith({
-    Object? id = _Undefined,
     String? symbol,
     String? name,
     double? value,
     String? currency,
-    String? stockExchange,
-    String? exchangeShortName,
+    String? quoteType,
   }) {
     return Stock(
-      id: id is int? ? id : this.id,
       symbol: symbol ?? this.symbol,
       name: name ?? this.name,
       value: value ?? this.value,
       currency: currency ?? this.currency,
-      stockExchange: stockExchange ?? this.stockExchange,
-      exchangeShortName: exchangeShortName ?? this.exchangeShortName,
+      quoteType: quoteType ?? this.quoteType,
     );
   }
 }

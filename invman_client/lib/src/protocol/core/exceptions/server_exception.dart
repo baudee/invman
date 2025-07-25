@@ -14,23 +14,38 @@ import '../../core/exceptions/error_code.dart' as _i2;
 
 abstract class ServerException
     implements _i1.SerializableException, _i1.SerializableModel {
-  ServerException._({required this.errorCode});
+  ServerException._({
+    required this.errorCode,
+    this.message,
+  });
 
-  factory ServerException({required _i2.ErrorCode errorCode}) =
-      _ServerExceptionImpl;
+  factory ServerException({
+    required _i2.ErrorCode errorCode,
+    String? message,
+  }) = _ServerExceptionImpl;
 
   factory ServerException.fromJson(Map<String, dynamic> jsonSerialization) {
     return ServerException(
-        errorCode:
-            _i2.ErrorCode.fromJson((jsonSerialization['errorCode'] as String)));
+      errorCode:
+          _i2.ErrorCode.fromJson((jsonSerialization['errorCode'] as String)),
+      message: jsonSerialization['message'] as String?,
+    );
   }
 
   _i2.ErrorCode errorCode;
 
-  ServerException copyWith({_i2.ErrorCode? errorCode});
+  String? message;
+
+  ServerException copyWith({
+    _i2.ErrorCode? errorCode,
+    String? message,
+  });
   @override
   Map<String, dynamic> toJson() {
-    return {'errorCode': errorCode.toJson()};
+    return {
+      'errorCode': errorCode.toJson(),
+      if (message != null) 'message': message,
+    };
   }
 
   @override
@@ -39,12 +54,25 @@ abstract class ServerException
   }
 }
 
+class _Undefined {}
+
 class _ServerExceptionImpl extends ServerException {
-  _ServerExceptionImpl({required _i2.ErrorCode errorCode})
-      : super._(errorCode: errorCode);
+  _ServerExceptionImpl({
+    required _i2.ErrorCode errorCode,
+    String? message,
+  }) : super._(
+          errorCode: errorCode,
+          message: message,
+        );
 
   @override
-  ServerException copyWith({_i2.ErrorCode? errorCode}) {
-    return ServerException(errorCode: errorCode ?? this.errorCode);
+  ServerException copyWith({
+    _i2.ErrorCode? errorCode,
+    Object? message = _Undefined,
+  }) {
+    return ServerException(
+      errorCode: errorCode ?? this.errorCode,
+      message: message is String? ? message : this.message,
+    );
   }
 }

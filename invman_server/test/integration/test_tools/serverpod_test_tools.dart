@@ -14,13 +14,19 @@
 import 'package:serverpod_test/serverpod_test.dart' as _i1;
 import 'package:serverpod/serverpod.dart' as _i2;
 import 'dart:async' as _i3;
-import 'package:invman_server/src/generated/stock/models/stock_list.dart'
+import 'package:invman_server/src/generated/investment/models/investment_list.dart'
     as _i4;
-import 'package:invman_server/src/generated/stock/models/stock.dart' as _i5;
-import 'package:invman_server/src/generated/transfer/models/transfer_list.dart'
-    as _i6;
+import 'package:invman_server/src/generated/investment/models/investment.dart'
+    as _i5;
+import 'package:invman_server/src/generated/stock/models/stock.dart' as _i6;
 import 'package:invman_server/src/generated/transfer/models/transfer.dart'
     as _i7;
+import 'package:invman_server/src/generated/withdrawal/models/withdrawal_fee.dart'
+    as _i8;
+import 'package:invman_server/src/generated/withdrawal/models/withdrawal_rule_list.dart'
+    as _i9;
+import 'package:invman_server/src/generated/withdrawal/models/withdrawal_rule.dart'
+    as _i10;
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:invman_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -103,9 +109,15 @@ void withServerpod(
 class TestEndpoints {
   late final _AuthEndpoint auth;
 
+  late final _InvestmentEndpoint investment;
+
   late final _StockEndpoint stock;
 
   late final _TransferEndpoint transfer;
+
+  late final _WithdrawalFeeEndpoint withdrawalFee;
+
+  late final _WithdrawalRuleEndpoint withdrawalRule;
 }
 
 class _InternalTestEndpoints extends TestEndpoints
@@ -119,11 +131,23 @@ class _InternalTestEndpoints extends TestEndpoints
       endpoints,
       serializationManager,
     );
+    investment = _InvestmentEndpoint(
+      endpoints,
+      serializationManager,
+    );
     stock = _StockEndpoint(
       endpoints,
       serializationManager,
     );
     transfer = _TransferEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    withdrawalFee = _WithdrawalFeeEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    withdrawalRule = _WithdrawalRuleEndpoint(
       endpoints,
       serializationManager,
     );
@@ -170,6 +194,176 @@ class _AuthEndpoint {
   }
 }
 
+class _InvestmentEndpoint {
+  _InvestmentEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<_i4.InvestmentList> list(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required String currency,
+    required int limit,
+    required int page,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'investment',
+        method: 'list',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'investment',
+          methodName: 'list',
+          parameters: _i1.testObjectToJson({
+            'currency': currency,
+            'limit': limit,
+            'page': page,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i4.InvestmentList>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i5.Investment> total(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required String currency,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'investment',
+        method: 'total',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'investment',
+          methodName: 'total',
+          parameters: _i1.testObjectToJson({'currency': currency}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i5.Investment>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i5.Investment> save(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i5.Investment investment, {
+    required String currency,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'investment',
+        method: 'save',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'investment',
+          methodName: 'save',
+          parameters: _i1.testObjectToJson({
+            'investment': investment,
+            'currency': currency,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i5.Investment>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i5.Investment> delete(
+    _i1.TestSessionBuilder sessionBuilder,
+    int id,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'investment',
+        method: 'delete',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'investment',
+          methodName: 'delete',
+          parameters: _i1.testObjectToJson({'id': id}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i5.Investment>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i5.Investment> retrieve(
+    _i1.TestSessionBuilder sessionBuilder,
+    int id, {
+    required String currency,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'investment',
+        method: 'retrieve',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'investment',
+          methodName: 'retrieve',
+          parameters: _i1.testObjectToJson({
+            'id': id,
+            'currency': currency,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i5.Investment>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
 class _StockEndpoint {
   _StockEndpoint(
     this._endpointDispatch,
@@ -180,32 +374,28 @@ class _StockEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i4.StockList> list(
-    _i1.TestSessionBuilder sessionBuilder, {
-    required int limit,
-    required int page,
-  }) async {
+  _i3.Future<_i6.Stock> retrieve(
+    _i1.TestSessionBuilder sessionBuilder,
+    String symbol,
+  ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
           (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
         endpoint: 'stock',
-        method: 'list',
+        method: 'retrieve',
       );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
           endpointPath: 'stock',
-          methodName: 'list',
-          parameters: _i1.testObjectToJson({
-            'limit': limit,
-            'page': page,
-          }),
+          methodName: 'retrieve',
+          parameters: _i1.testObjectToJson({'symbol': symbol}),
           serializationManager: _serializationManager,
         );
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<_i4.StockList>);
+        ) as _i3.Future<_i6.Stock>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -213,7 +403,7 @@ class _StockEndpoint {
     });
   }
 
-  _i3.Future<_i4.StockList> search(
+  _i3.Future<List<_i6.Stock>> search(
     _i1.TestSessionBuilder sessionBuilder, {
     required String query,
     required int limit,
@@ -238,36 +428,7 @@ class _StockEndpoint {
         var _localReturnValue = await (_localCallContext.method.call(
           _localUniqueSession,
           _localCallContext.arguments,
-        ) as _i3.Future<_i4.StockList>);
-        return _localReturnValue;
-      } finally {
-        await _localUniqueSession.close();
-      }
-    });
-  }
-
-  _i3.Future<_i5.Stock> save(
-    _i1.TestSessionBuilder sessionBuilder,
-    _i5.Stock stock,
-  ) async {
-    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession =
-          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'stock',
-        method: 'save',
-      );
-      try {
-        var _localCallContext = await _endpointDispatch.getMethodCallContext(
-          createSessionCallback: (_) => _localUniqueSession,
-          endpointPath: 'stock',
-          methodName: 'save',
-          parameters: _i1.testObjectToJson({'stock': stock}),
-          serializationManager: _serializationManager,
-        );
-        var _localReturnValue = await (_localCallContext.method.call(
-          _localUniqueSession,
-          _localCallContext.arguments,
-        ) as _i3.Future<_i5.Stock>);
+        ) as _i3.Future<List<_i6.Stock>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -285,39 +446,6 @@ class _TransferEndpoint {
   final _i2.EndpointDispatch _endpointDispatch;
 
   final _i2.SerializationManager _serializationManager;
-
-  _i3.Future<_i6.TransferList> list(
-    _i1.TestSessionBuilder sessionBuilder, {
-    required int limit,
-    required int page,
-  }) async {
-    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession =
-          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'transfer',
-        method: 'list',
-      );
-      try {
-        var _localCallContext = await _endpointDispatch.getMethodCallContext(
-          createSessionCallback: (_) => _localUniqueSession,
-          endpointPath: 'transfer',
-          methodName: 'list',
-          parameters: _i1.testObjectToJson({
-            'limit': limit,
-            'page': page,
-          }),
-          serializationManager: _serializationManager,
-        );
-        var _localReturnValue = await (_localCallContext.method.call(
-          _localUniqueSession,
-          _localCallContext.arguments,
-        ) as _i3.Future<_i6.TransferList>);
-        return _localReturnValue;
-      } finally {
-        await _localUniqueSession.close();
-      }
-    });
-  }
 
   _i3.Future<_i7.Transfer> retrieve(
     _i1.TestSessionBuilder sessionBuilder,
@@ -370,6 +498,264 @@ class _TransferEndpoint {
           _localUniqueSession,
           _localCallContext.arguments,
         ) as _i3.Future<_i7.Transfer>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i7.Transfer> delete(
+    _i1.TestSessionBuilder sessionBuilder,
+    int id,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'transfer',
+        method: 'delete',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'transfer',
+          methodName: 'delete',
+          parameters: _i1.testObjectToJson({'id': id}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i7.Transfer>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _WithdrawalFeeEndpoint {
+  _WithdrawalFeeEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<_i8.WithdrawalFee> retrieve(
+    _i1.TestSessionBuilder sessionBuilder,
+    int id,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'withdrawalFee',
+        method: 'retrieve',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'withdrawalFee',
+          methodName: 'retrieve',
+          parameters: _i1.testObjectToJson({'id': id}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i8.WithdrawalFee>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i8.WithdrawalFee> save(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i8.WithdrawalFee fee,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'withdrawalFee',
+        method: 'save',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'withdrawalFee',
+          methodName: 'save',
+          parameters: _i1.testObjectToJson({'fee': fee}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i8.WithdrawalFee>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i8.WithdrawalFee> delete(
+    _i1.TestSessionBuilder sessionBuilder,
+    int id,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'withdrawalFee',
+        method: 'delete',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'withdrawalFee',
+          methodName: 'delete',
+          parameters: _i1.testObjectToJson({'id': id}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i8.WithdrawalFee>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _WithdrawalRuleEndpoint {
+  _WithdrawalRuleEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<_i9.WithdrawalRuleList> list(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required int limit,
+    required int page,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'withdrawalRule',
+        method: 'list',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'withdrawalRule',
+          methodName: 'list',
+          parameters: _i1.testObjectToJson({
+            'limit': limit,
+            'page': page,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i9.WithdrawalRuleList>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i10.WithdrawalRule> retrieve(
+    _i1.TestSessionBuilder sessionBuilder,
+    int id,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'withdrawalRule',
+        method: 'retrieve',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'withdrawalRule',
+          methodName: 'retrieve',
+          parameters: _i1.testObjectToJson({'id': id}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i10.WithdrawalRule>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i10.WithdrawalRule> save(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i10.WithdrawalRule transfer,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'withdrawalRule',
+        method: 'save',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'withdrawalRule',
+          methodName: 'save',
+          parameters: _i1.testObjectToJson({'transfer': transfer}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i10.WithdrawalRule>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i10.WithdrawalRule> delete(
+    _i1.TestSessionBuilder sessionBuilder,
+    int id,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'withdrawalRule',
+        method: 'delete',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'withdrawalRule',
+          methodName: 'delete',
+          parameters: _i1.testObjectToJson({'id': id}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<_i10.WithdrawalRule>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

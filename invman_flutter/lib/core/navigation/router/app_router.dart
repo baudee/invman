@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/features/account/account.dart';
+import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
-import 'package:invman_flutter/features/transfer/transfer.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
 
 part 'app_router.g.dart';
 
+final rootNavigatorKey = GlobalKey<NavigatorState>();
+late GoRouter router;
+
 @Riverpod(keepAlive: true)
-GoRouter router(Ref ref) {
-  final initialRoute = AccountRootScreen.route();
+GoRouter appRouter(Ref ref) {
+  final initialRoute = InvestmentRootScreen.route();
   String destination = initialRoute;
-  final rootNavigatorKey = GlobalKey<NavigatorState>();
 
   return GoRouter(
     initialLocation: initialRoute,
@@ -30,7 +32,7 @@ GoRouter router(Ref ref) {
       ),
       StatefulShellRoute.indexedStack(
         branches: [
-          TransferRoutes.branch,
+          InvestmentRoutes.branch,
           StockRoutes.branch,
           AccountRoutes.branch,
         ],

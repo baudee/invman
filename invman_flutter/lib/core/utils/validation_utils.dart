@@ -2,7 +2,7 @@ import 'package:invman_flutter/config/generated/l10n.dart';
 
 class ValidationUtils {
   static bool isValidEmail(String email) {
-    return RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$').hasMatch(email);
+    return RegExp(r'^.+@[a-zA-Z0-9]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$').hasMatch(email);
   }
 
   static bool isValidUrl(String url) {
@@ -44,7 +44,7 @@ class ValidationUtils {
     return null;
   }
 
-  static String? formValidatorAmount(String? value) {
+  static String? formValidatorDouble(String? value) {
     if (value == null || value.isEmpty) {
       return S.current.error_amountRequired;
     }
