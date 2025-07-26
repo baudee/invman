@@ -1,3 +1,5 @@
+.env
+
 # Generated files
 **.g.dart
 lib/config/generated/

@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:invman_flutter/core/core.dart';
@@ -11,6 +12,10 @@ late final SharedPreferences prefs;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
 
   prefs = await SharedPreferences.getInstance();
 
