@@ -7,10 +7,36 @@ import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/config/theme/themes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:invman_flutter/env.dart';
 
 late final SharedPreferences prefs;
 
 void main() async {
+  final env = Env();
+  
+  if (env.sentryDsn.isNotEmpty) {
+    await SentryFlutter.init(
+      (options) {
+        options.dsn = env.sentryDsn;
+        options.environment = env.flavor.name;
+        // Set tracesSampleRate to 1.0 to capture 100% of the transactions for performance monitoring.
+        // We recommend adjusting this value in production.
+        options.tracesSampleRate = 1.0;
+        // The sampling rate for profiling is relative to tracesSampleRate
+        // Setting to 1.0 will profile 100% of sampled transactions:
+        options.profilesSampleRate = 1.0;
+      },
+      appRunner: () async {
+        await _initializeApp();
+      },
+    );
+  } else {
+    await _initializeApp();
+  }
+}
+
+Future<void> _initializeApp() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await SystemChrome.setPreferredOrientations([

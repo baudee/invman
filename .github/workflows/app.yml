@@ -89,10 +89,17 @@ jobs:
           dart run build_runner build --delete-conflicting-outputs
           dart run intl_utils:generate
 
+      - name: Extract version from pubspec.yaml
+        run: |
+          VERSION=$(grep "^version: " pubspec.yaml | cut -d ' ' -f 2 | tr -d '\r')
+          echo "APP_VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Extracted version: $VERSION"
+
       - name: Create .env File
         run: |
           echo "BASE_URL=${{ vars.BASE_URL }}" > .env
           echo "APP_FLAVOR=production" >> .env
+          echo "SENTRY_DSN=${{ vars.SENTRY_DSN }}" >> .env
 
       - name: Decode Keystore
         run: |
@@ -106,13 +113,13 @@ jobs:
           echo "storeFile=keystore.jks" >> android/key.properties
         
       - name: Build APK
-        run: flutter build apk --release --dart-define-from-file .env
+        run: flutter build apk --release --build-name=${{ env.APP_VERSION }} --build-number=${{ github.run_number }} --dart-define-from-file .env
 
       - name: Build appBundle
-        run: flutter build appbundle --dart-define-from-file .env
+        run: flutter build appbundle --build-name=${{ env.APP_VERSION }} --build-number=${{ github.run_number }} --dart-define-from-file .env
  
       - name: Build IPA
-        run: flutter build ipa --no-codesign --dart-define-from-file .env
+        run: flutter build ipa --no-codesign --build-name=${{ env.APP_VERSION }} --build-number=${{ github.run_number }} --dart-define-from-file .env
 
       - name: Compress Archives and IPAs
         run: |
@@ -121,7 +128,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Releases
+          name: Releases-v${{ env.APP_VERSION }}-build${{ github.run_number }}
           path: |
             invman_flutter/build/app/outputs/flutter-apk/app-release.apk
             invman_flutter/build/app/outputs/bundle/release/app.aab 
