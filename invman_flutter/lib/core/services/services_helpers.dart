@@ -9,6 +9,7 @@ Future<Either<String, T>> safeCall<T>(Future<Either<String, T>> Function() actio
   } on ServerException catch (e) {
     return left(e.errorCode.message);
   } catch (e, st) {
+    // Log to Sentry
     await Sentry.captureException(e, stackTrace: st);
     return left(ErrorCode.unknown.message);
   }
