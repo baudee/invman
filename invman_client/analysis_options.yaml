@@ -9,5 +9,8 @@
 #     - camel_case_types
 
 analyzer:
-#   exclude:
-#     - path/to/excluded/files/**
+  exclude:
+    - lib/src/protocol/**
+
+formatter:
+  trailing_commas: preserve

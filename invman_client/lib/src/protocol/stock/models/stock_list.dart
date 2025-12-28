@@ -7,10 +7,12 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../../stock/models/stock.dart' as _i2;
+import 'package:invman_client/src/protocol/protocol.dart' as _i3;
 
 abstract class StockList implements _i1.SerializableModel {
   StockList._({
@@ -34,9 +36,9 @@ abstract class StockList implements _i1.SerializableModel {
   factory StockList.fromJson(Map<String, dynamic> jsonSerialization) {
     return StockList(
       count: jsonSerialization['count'] as int,
-      results: (jsonSerialization['results'] as List)
-          .map((e) => _i2.Stock.fromJson((e as Map<String, dynamic>)))
-          .toList(),
+      results: _i3.Protocol().deserialize<List<_i2.Stock>>(
+        jsonSerialization['results'],
+      ),
       page: jsonSerialization['page'] as int,
       limit: jsonSerialization['limit'] as int,
       numPages: jsonSerialization['numPages'] as int,
@@ -56,6 +58,9 @@ abstract class StockList implements _i1.SerializableModel {
 
   bool canLoadMore;
 
+  /// Returns a shallow copy of this [StockList]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   StockList copyWith({
     int? count,
     List<_i2.Stock>? results,
@@ -67,6 +72,7 @@ abstract class StockList implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'StockList',
       'count': count,
       'results': results.toJson(valueToJson: (v) => v.toJson()),
       'page': page,
@@ -91,14 +97,17 @@ class _StockListImpl extends StockList {
     required int numPages,
     required bool canLoadMore,
   }) : super._(
-          count: count,
-          results: results,
-          page: page,
-          limit: limit,
-          numPages: numPages,
-          canLoadMore: canLoadMore,
-        );
+         count: count,
+         results: results,
+         page: page,
+         limit: limit,
+         numPages: numPages,
+         canLoadMore: canLoadMore,
+       );
 
+  /// Returns a shallow copy of this [StockList]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   @override
   StockList copyWith({
     int? count,

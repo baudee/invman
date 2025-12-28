@@ -16,6 +16,7 @@ class RouterNotifier extends ChangeNotifier {
       }
     });
   }
-  Ref<RouterNotifier> ref;
+
+  Ref ref;
   bool isLoggedIn = false;
 }

@@ -18,8 +18,8 @@ class WithdrawalFeeService {
       throw ServerException(errorCode: ErrorCode.notFound);
     }
 
-    final sessionUser = await session.authenticated;
-    if (withdrawal.rule?.userId != sessionUser!.userId) {
+    final sessionUser = session.authenticated;
+    if (withdrawal.rule?.userId != sessionUser) {
       throw ServerException(errorCode: ErrorCode.forbidden);
     }
 

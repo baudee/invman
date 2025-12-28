@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -48,6 +49,9 @@ abstract class Stock implements _i1.SerializableModel {
 
   String quoteType;
 
+  /// Returns a shallow copy of this [Stock]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   Stock copyWith({
     String? symbol,
     String? name,
@@ -58,6 +62,7 @@ abstract class Stock implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Stock',
       'symbol': symbol,
       'name': name,
       'value': value,
@@ -80,13 +85,16 @@ class _StockImpl extends Stock {
     required String currency,
     required String quoteType,
   }) : super._(
-          symbol: symbol,
-          name: name,
-          value: value,
-          currency: currency,
-          quoteType: quoteType,
-        );
+         symbol: symbol,
+         name: name,
+         value: value,
+         currency: currency,
+         quoteType: quoteType,
+       );
 
+  /// Returns a shallow copy of this [Stock]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   @override
   Stock copyWith({
     String? symbol,

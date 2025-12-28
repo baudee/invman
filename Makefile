@@ -3,7 +3,7 @@ PROJECT_NAME := invman
 
 # Server
 server/build:
-	cd $(PROJECT_NAME)_server && serverpod generate
+	cd $(PROJECT_NAME)_server && dart pub get && serverpod generate
 
 server/migration:
 	cd $(PROJECT_NAME)_server && serverpod create-migration

@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -26,8 +27,9 @@ abstract class ServerException
 
   factory ServerException.fromJson(Map<String, dynamic> jsonSerialization) {
     return ServerException(
-      errorCode:
-          _i2.ErrorCode.fromJson((jsonSerialization['errorCode'] as String)),
+      errorCode: _i2.ErrorCode.fromJson(
+        (jsonSerialization['errorCode'] as String),
+      ),
       message: jsonSerialization['message'] as String?,
     );
   }
@@ -36,6 +38,9 @@ abstract class ServerException
 
   String? message;
 
+  /// Returns a shallow copy of this [ServerException]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   ServerException copyWith({
     _i2.ErrorCode? errorCode,
     String? message,
@@ -43,6 +48,7 @@ abstract class ServerException
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'ServerException',
       'errorCode': errorCode.toJson(),
       if (message != null) 'message': message,
     };
@@ -50,7 +56,7 @@ abstract class ServerException
 
   @override
   String toString() {
-    return _i1.SerializationManager.encode(this);
+    return 'ServerException(errorCode: $errorCode, message: $message)';
   }
 }
 
@@ -61,10 +67,13 @@ class _ServerExceptionImpl extends ServerException {
     required _i2.ErrorCode errorCode,
     String? message,
   }) : super._(
-          errorCode: errorCode,
-          message: message,
-        );
+         errorCode: errorCode,
+         message: message,
+       );
 
+  /// Returns a shallow copy of this [ServerException]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   @override
   ServerException copyWith({
     _i2.ErrorCode? errorCode,

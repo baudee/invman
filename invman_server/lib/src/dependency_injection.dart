@@ -1,5 +1,4 @@
 import 'package:get_it/get_it.dart';
-import 'package:invman_server/src/auth/auth.dart';
 import 'package:invman_server/src/env.dart';
 import 'package:invman_server/src/investment/investment.dart';
 import 'package:invman_server/src/stock/stock.dart';
@@ -16,7 +15,6 @@ void initDependencyInjection() {
   getIt.registerSingleton<StockClient>(StockClientImpl(baseUrl: getIt<Env>().yfinBaseUrl));
 
   // Business
-  getIt.registerSingleton<AuthService>(AuthService());
   getIt.registerSingleton<StockService>(StockService(stockClient: getIt<StockClient>()));
   getIt.registerSingleton<WithdrawalRuleService>(WithdrawalRuleService());
   getIt.registerSingleton<InvestmentService>(

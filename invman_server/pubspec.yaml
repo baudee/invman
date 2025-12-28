@@ -4,18 +4,29 @@ description: Starting point for a Serverpod server.
 # homepage: https://www.example.com
 
 environment:
-  sdk: '>=3.4.0 <4.0.0'
+  sdk: '^3.8.0'
 
 dependencies:
   dotenv: 4.2.0
-  get_it: 8.0.1
-  http: 1.3.0
-  serverpod: 2.3.1
-  serverpod_auth_server: 2.3.1
-  serverpod_shared: 2.3.1
+  get_it: 9.2.0
+  http: 1.6.0
+  serverpod: 3.1.1
+  serverpod_auth_idp_server: 3.1.1
 
 dev_dependencies:
-  lints: 5.0.0
-  test: ^1.25.15
-  serverpod_test: 2.3.1
+  lints: '>=3.0.0 <7.0.0'
+  serverpod_test: 3.1.1
+  test: ^1.25.5
 
+
+serverpod:
+  scripts:
+    # Starts the server and applies migrations
+    start: dart bin/main.dart --apply-migrations
+
+    # Build the Flutter web app and move it to the server's web directory
+    # 
+    # Unfortunately, we can't use the `-o` flag directly because of an error
+    # that happens on windows. Issue is tracked in the flutter
+    # repository here: https://github.com/flutter/flutter/issues/157886
+    flutter_build: cd ../invman_flutter && flutter build web --base-href /app/ --wasm && rm -rf ../invman_server/web/app && mv build/web/ ../invman_server/web/app

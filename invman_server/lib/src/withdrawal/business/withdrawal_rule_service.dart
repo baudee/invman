@@ -1,12 +1,13 @@
 import 'package:invman_server/src/core/helpers/helpers.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
+import 'package:serverpod_auth_idp_server/core.dart';
 
 class WithdrawalRuleService {
   WithdrawalRuleService();
 
   Future<WithdrawalRuleList> list(Session session, {int limit = 10, int page = 1}) async {
-    final sessionUserId = (await session.authenticated)!.userId;
+    final sessionUserId = (session.authenticated)!.authUserId;
     final count = await WithdrawalRule.db.count(session, where: (e) => e.userId.equals(sessionUserId));
 
     final results = await WithdrawalRule.db.find(
@@ -38,8 +39,8 @@ class WithdrawalRuleService {
       throw ServerException(errorCode: ErrorCode.notFound);
     }
 
-    final sessionUser = await session.authenticated;
-    if (withdrawal.userId != sessionUser!.userId) {
+    final sessionUser = session.authenticated;
+    if (withdrawal.userId != sessionUser!.authUserId) {
       throw ServerException(errorCode: ErrorCode.forbidden);
     }
 
@@ -48,7 +49,7 @@ class WithdrawalRuleService {
 
   Future<WithdrawalRule> save(Session session, WithdrawalRule withdrawal) async {
     if (withdrawal.id == 0 || withdrawal.id == null) {
-      final sessionUserId = (await session.authenticated)!.userId;
+      final sessionUserId = (session.authenticated)!.authUserId;
       withdrawal = withdrawal.copyWith(userId: sessionUserId);
       return WithdrawalRule.db.insertRow(session, withdrawal);
     } else {

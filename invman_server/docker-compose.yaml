@@ -1,53 +1,43 @@
 services:
   # Development services
   postgres:
-    image: postgres:16.3
+    image: pgvector/pgvector:pg16
     ports:
-      - '8090:5432'
+      - "8090:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: invman
-      POSTGRES_PASSWORD: "HczNr6JoV84Blu2WQJ-3XoeldHmri3dq"
+      POSTGRES_PASSWORD: "GVpLSvgYMaDM9KyQx3fG95pUORbNVERo"
     volumes:
       - invman_data:/var/lib/postgresql/data
-    profiles:
-      - '' # Default profile
-      - dev
+
   redis:
     image: redis:6.2.6
     ports:
-      - '8091:6379'
-    command: redis-server --requirepass "gQ1_tzMyEET2IngHE_47Xr4dtXNWiKAm"
+      - "8091:6379"
+    command: redis-server --requirepass "97DXUsmKSlX4dgsOPaEt1QbblFE9fJHo"
     environment:
       - REDIS_REPLICATION_MODE=master
-    profiles:
-      - '' # Default profile
-      - dev
 
   # Test services
   postgres_test:
-    image: postgres:16.3
+    image: pgvector/pgvector:pg16
     ports:
-      - '9090:5432'
+      - "9090:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: invman_test
-      POSTGRES_PASSWORD: "SMdRtEmh8CznvfyrD5x4BgYqhPyNqCPt"
+      POSTGRES_PASSWORD: "Q3glh2C9bYOtqVMHTvwq-d6DaI8UYaCN"
     volumes:
       - invman_test_data:/var/lib/postgresql/data
-    profiles:
-      - '' # Default profile
-      - test
+
   redis_test:
     image: redis:6.2.6
     ports:
-      - '9091:6379'
-    command: redis-server --requirepass "lWi0u_zZyAvuszwyPTb-GvQkSy3LIkg3"
+      - "9091:6379"
+    command: redis-server --requirepass "e0nMgHYBS-sRcuqS8PLvbFKBqworspBt"
     environment:
       - REDIS_REPLICATION_MODE=master
-    profiles:
-      - '' # Default profile
-      - test
 
 volumes:
   invman_data:

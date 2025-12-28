@@ -1,0 +1,32 @@
+emailIdp:
+  - login:
+  - startRegistration:
+  - verifyRegistrationCode:
+  - finishRegistration:
+  - startPasswordReset:
+  - verifyPasswordResetCode:
+  - finishPasswordReset:
+jwtRefresh:
+  - refreshAccessToken:
+investment:
+  - list:
+  - total:
+  - save:
+  - delete:
+  - retrieve:
+stock:
+  - retrieve:
+  - search:
+transfer:
+  - retrieve:
+  - save:
+  - delete:
+withdrawalFee:
+  - retrieve:
+  - save:
+  - delete:
+withdrawalRule:
+  - list:
+  - retrieve:
+  - save:
+  - delete:

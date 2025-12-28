@@ -7,8 +7,5 @@ Future<Either<String, T>> safeCall<T>(Future<Either<String, T>> Function() actio
     return await action();
   } on ServerException catch (e) {
     return left(e.errorCode.message);
-  } catch (e, st) {
-    // TODO: Log error to Sentry or another logging service
-    return left(ErrorCode.unknown.message);
-  }
+  } 
 }

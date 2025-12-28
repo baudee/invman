@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -22,17 +23,17 @@ enum ErrorCode implements _i1.SerializableModel {
   static ErrorCode fromJson(String name) {
     switch (name) {
       case 'unknown':
-        return unknown;
+        return ErrorCode.unknown;
       case 'notFound':
-        return notFound;
+        return ErrorCode.notFound;
       case 'conflict':
-        return conflict;
+        return ErrorCode.conflict;
       case 'unauthorized':
-        return unauthorized;
+        return ErrorCode.unauthorized;
       case 'forbidden':
-        return forbidden;
+        return ErrorCode.forbidden;
       case 'badRequest':
-        return badRequest;
+        return ErrorCode.badRequest;
       default:
         throw ArgumentError('Value "$name" cannot be converted to "ErrorCode"');
     }
@@ -40,6 +41,7 @@ enum ErrorCode implements _i1.SerializableModel {
 
   @override
   String toJson() => name;
+
   @override
   String toString() => name;
 }

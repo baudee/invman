@@ -7,10 +7,12 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../../investment/models/investment.dart' as _i2;
+import 'package:invman_client/src/protocol/protocol.dart' as _i3;
 
 abstract class Transfer implements _i1.SerializableModel {
   Transfer._({
@@ -37,12 +39,14 @@ abstract class Transfer implements _i1.SerializableModel {
       investmentId: jsonSerialization['investmentId'] as int,
       investment: jsonSerialization['investment'] == null
           ? null
-          : _i2.Investment.fromJson(
-              (jsonSerialization['investment'] as Map<String, dynamic>)),
+          : _i3.Protocol().deserialize<_i2.Investment>(
+              jsonSerialization['investment'],
+            ),
       quantity: (jsonSerialization['quantity'] as num).toDouble(),
       amount: (jsonSerialization['amount'] as num).toDouble(),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
     );
   }
 
@@ -61,6 +65,9 @@ abstract class Transfer implements _i1.SerializableModel {
 
   DateTime createdAt;
 
+  /// Returns a shallow copy of this [Transfer]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   Transfer copyWith({
     int? id,
     int? investmentId,
@@ -72,6 +79,7 @@ abstract class Transfer implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Transfer',
       if (id != null) 'id': id,
       'investmentId': investmentId,
       if (investment != null) 'investment': investment?.toJson(),
@@ -98,14 +106,17 @@ class _TransferImpl extends Transfer {
     required double amount,
     DateTime? createdAt,
   }) : super._(
-          id: id,
-          investmentId: investmentId,
-          investment: investment,
-          quantity: quantity,
-          amount: amount,
-          createdAt: createdAt,
-        );
+         id: id,
+         investmentId: investmentId,
+         investment: investment,
+         quantity: quantity,
+         amount: amount,
+         createdAt: createdAt,
+       );
 
+  /// Returns a shallow copy of this [Transfer]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   @override
   Transfer copyWith({
     Object? id = _Undefined,

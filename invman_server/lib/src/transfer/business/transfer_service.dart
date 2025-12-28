@@ -2,6 +2,7 @@ import 'package:invman_server/src/core/helpers/helpers.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:invman_server/src/investment/investment.dart';
 import 'package:serverpod/serverpod.dart';
+import 'package:serverpod_auth_idp_server/core.dart';
 
 class TransferService {
   TransferService({required this.investmentService});
@@ -19,8 +20,8 @@ class TransferService {
       throw ServerException(errorCode: ErrorCode.notFound);
     }
 
-    final sessionUser = await session.authenticated;
-    if (transfer.investment?.userId != sessionUser!.userId) {
+    final sessionUserId = (session.authenticated)!.authUserId;
+    if (transfer.investment?.userId != sessionUserId) {
       throw ServerException(errorCode: ErrorCode.forbidden);
     }
 
@@ -30,22 +31,38 @@ class TransferService {
   Future<Transfer> save(Session session, Transfer transfer) async {
     return session.db.transaction(
       (transaction) async {
-        final investment = await Investment.db.findById(session, transfer.investmentId);
+        final investment = await Investment.db.findById(
+          session,
+          transfer.investmentId,
+        );
         await investmentService.retrieveChecks(session, investment: investment);
 
         final Transfer savedTransfer;
         if (transfer.id == 0 || transfer.id == null) {
-          savedTransfer = await Transfer.db.insertRow(session, transfer, transaction: transaction);
+          savedTransfer = await Transfer.db.insertRow(
+            session,
+            transfer,
+            transaction: transaction,
+          );
         } else {
           await retrieve(session, transfer.id!);
-          savedTransfer = await Transfer.db.updateRow(session, transfer, transaction: transaction);
+          savedTransfer = await Transfer.db.updateRow(
+            session,
+            transfer,
+            transaction: transaction,
+          );
         }
 
-        await Investment.db.updateRow(session, investment!.copyWith(updatedAt: DateTime.now()));
+        await Investment.db.updateRow(
+          session,
+          investment!.copyWith(updatedAt: DateTime.now()),
+        );
 
         return savedTransfer;
       },
-      settings: TransactionSettings(isolationLevel: IsolationLevel.serializable),
+      settings: TransactionSettings(
+        isolationLevel: IsolationLevel.serializable,
+      ),
     );
   }
 

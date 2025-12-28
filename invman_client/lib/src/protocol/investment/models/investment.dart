@@ -7,13 +7,16 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i2;
+import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+    as _i2;
 import '../../transfer/models/transfer.dart' as _i3;
 import '../../withdrawal/models/withdrawal_rule.dart' as _i4;
 import '../../stock/models/stock.dart' as _i5;
+import 'package:invman_client/src/protocol/protocol.dart' as _i6;
 
 abstract class Investment implements _i1.SerializableModel {
   Investment._({
@@ -33,8 +36,8 @@ abstract class Investment implements _i1.SerializableModel {
 
   factory Investment({
     int? id,
-    required int userId,
-    _i2.UserInfo? user,
+    required _i1.UuidValue userId,
+    _i2.AuthUser? user,
     required String name,
     List<_i3.Transfer>? transfers,
     required int withdrawalRuleId,
@@ -49,27 +52,29 @@ abstract class Investment implements _i1.SerializableModel {
   factory Investment.fromJson(Map<String, dynamic> jsonSerialization) {
     return Investment(
       id: jsonSerialization['id'] as int?,
-      userId: jsonSerialization['userId'] as int,
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
-          : _i2.UserInfo.fromJson(
-              (jsonSerialization['user'] as Map<String, dynamic>)),
+          : _i6.Protocol().deserialize<_i2.AuthUser>(jsonSerialization['user']),
       name: jsonSerialization['name'] as String,
-      transfers: (jsonSerialization['transfers'] as List?)
-          ?.map((e) => _i3.Transfer.fromJson((e as Map<String, dynamic>)))
-          .toList(),
+      transfers: jsonSerialization['transfers'] == null
+          ? null
+          : _i6.Protocol().deserialize<List<_i3.Transfer>>(
+              jsonSerialization['transfers'],
+            ),
       withdrawalRuleId: jsonSerialization['withdrawalRuleId'] as int,
       withdrawalRule: jsonSerialization['withdrawalRule'] == null
           ? null
-          : _i4.WithdrawalRule.fromJson(
-              (jsonSerialization['withdrawalRule'] as Map<String, dynamic>)),
+          : _i6.Protocol().deserialize<_i4.WithdrawalRule>(
+              jsonSerialization['withdrawalRule'],
+            ),
       stockSymbol: jsonSerialization['stockSymbol'] as String,
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
       stock: jsonSerialization['stock'] == null
           ? null
-          : _i5.Stock.fromJson(
-              (jsonSerialization['stock'] as Map<String, dynamic>)),
+          : _i6.Protocol().deserialize<_i5.Stock>(jsonSerialization['stock']),
       investAmount: (jsonSerialization['investAmount'] as num?)?.toDouble(),
       withdrawAmount: (jsonSerialization['withdrawAmount'] as num?)?.toDouble(),
     );
@@ -80,9 +85,9 @@ abstract class Investment implements _i1.SerializableModel {
   /// the id will be null.
   int? id;
 
-  int userId;
+  _i1.UuidValue userId;
 
-  _i2.UserInfo? user;
+  _i2.AuthUser? user;
 
   String name;
 
@@ -102,10 +107,13 @@ abstract class Investment implements _i1.SerializableModel {
 
   double? withdrawAmount;
 
+  /// Returns a shallow copy of this [Investment]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   Investment copyWith({
     int? id,
-    int? userId,
-    _i2.UserInfo? user,
+    _i1.UuidValue? userId,
+    _i2.AuthUser? user,
     String? name,
     List<_i3.Transfer>? transfers,
     int? withdrawalRuleId,
@@ -119,8 +127,9 @@ abstract class Investment implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Investment',
       if (id != null) 'id': id,
-      'userId': userId,
+      'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
       'name': name,
       if (transfers != null)
@@ -146,8 +155,8 @@ class _Undefined {}
 class _InvestmentImpl extends Investment {
   _InvestmentImpl({
     int? id,
-    required int userId,
-    _i2.UserInfo? user,
+    required _i1.UuidValue userId,
+    _i2.AuthUser? user,
     required String name,
     List<_i3.Transfer>? transfers,
     required int withdrawalRuleId,
@@ -158,24 +167,27 @@ class _InvestmentImpl extends Investment {
     double? investAmount,
     double? withdrawAmount,
   }) : super._(
-          id: id,
-          userId: userId,
-          user: user,
-          name: name,
-          transfers: transfers,
-          withdrawalRuleId: withdrawalRuleId,
-          withdrawalRule: withdrawalRule,
-          stockSymbol: stockSymbol,
-          updatedAt: updatedAt,
-          stock: stock,
-          investAmount: investAmount,
-          withdrawAmount: withdrawAmount,
-        );
+         id: id,
+         userId: userId,
+         user: user,
+         name: name,
+         transfers: transfers,
+         withdrawalRuleId: withdrawalRuleId,
+         withdrawalRule: withdrawalRule,
+         stockSymbol: stockSymbol,
+         updatedAt: updatedAt,
+         stock: stock,
+         investAmount: investAmount,
+         withdrawAmount: withdrawAmount,
+       );
 
+  /// Returns a shallow copy of this [Investment]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   @override
   Investment copyWith({
     Object? id = _Undefined,
-    int? userId,
+    _i1.UuidValue? userId,
     Object? user = _Undefined,
     String? name,
     Object? transfers = _Undefined,
@@ -190,7 +202,7 @@ class _InvestmentImpl extends Investment {
     return Investment(
       id: id is int? ? id : this.id,
       userId: userId ?? this.userId,
-      user: user is _i2.UserInfo? ? user : this.user?.copyWith(),
+      user: user is _i2.AuthUser? ? user : this.user?.copyWith(),
       name: name ?? this.name,
       transfers: transfers is List<_i3.Transfer>?
           ? transfers
@@ -203,8 +215,9 @@ class _InvestmentImpl extends Investment {
       updatedAt: updatedAt ?? this.updatedAt,
       stock: stock is _i5.Stock? ? stock : this.stock?.copyWith(),
       investAmount: investAmount is double? ? investAmount : this.investAmount,
-      withdrawAmount:
-          withdrawAmount is double? ? withdrawAmount : this.withdrawAmount,
+      withdrawAmount: withdrawAmount is double?
+          ? withdrawAmount
+          : this.withdrawAmount,
     );
   }
 }

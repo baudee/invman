@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -23,7 +24,10 @@ import 'withdrawal/models/withdrawal_fee_list.dart' as _i11;
 import 'withdrawal/models/withdrawal_rule.dart' as _i12;
 import 'withdrawal/models/withdrawal_rule_list.dart' as _i13;
 import 'package:invman_client/src/protocol/stock/models/stock.dart' as _i14;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i15;
+import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
+    as _i15;
+import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+    as _i16;
 export 'core/exceptions/error_code.dart';
 export 'core/exceptions/server_exception.dart';
 export 'investment/models/investment.dart';
@@ -45,12 +49,33 @@ class Protocol extends _i1.SerializationManager {
 
   static final Protocol _instance = Protocol._();
 
+  static String? getClassNameFromObjectJson(dynamic data) {
+    if (data is! Map) return null;
+    final className = data['__className__'] as String?;
+    return className;
+  }
+
   @override
   T deserialize<T>(
     dynamic data, [
     Type? t,
   ]) {
     t ??= T;
+
+    final dataClassName = getClassNameFromObjectJson(data);
+    if (dataClassName != null && dataClassName != getClassNameForType(t)) {
+      try {
+        return deserializeByClassName({
+          'className': dataClassName,
+          'data': data,
+        });
+      } on FormatException catch (_) {
+        // If the className is not recognized (e.g., older client receiving
+        // data with a new subtype), fall back to deserializing without the
+        // className, using the expected type T.
+      }
+    }
+
     if (t == _i2.ErrorCode) {
       return _i2.ErrorCode.fromJson(data) as T;
     }
@@ -124,93 +149,116 @@ class Protocol extends _i1.SerializationManager {
       return (data != null ? _i13.WithdrawalRuleList.fromJson(data) : null)
           as T;
     }
+    if (t == List<_i8.Transfer>) {
+      return (data as List).map((e) => deserialize<_i8.Transfer>(e)).toList()
+          as T;
+    }
     if (t == _i1.getType<List<_i8.Transfer>?>()) {
       return (data != null
-          ? (data as List).map((e) => deserialize<_i8.Transfer>(e)).toList()
-          : null) as dynamic;
+              ? (data as List).map((e) => deserialize<_i8.Transfer>(e)).toList()
+              : null)
+          as T;
     }
     if (t == List<_i4.Investment>) {
       return (data as List).map((e) => deserialize<_i4.Investment>(e)).toList()
-          as dynamic;
+          as T;
     }
     if (t == List<_i6.Stock>) {
-      return (data as List).map((e) => deserialize<_i6.Stock>(e)).toList()
-          as dynamic;
-    }
-    if (t == List<_i8.Transfer>) {
-      return (data as List).map((e) => deserialize<_i8.Transfer>(e)).toList()
-          as dynamic;
+      return (data as List).map((e) => deserialize<_i6.Stock>(e)).toList() as T;
     }
     if (t == List<_i10.WithdrawalFee>) {
       return (data as List)
-          .map((e) => deserialize<_i10.WithdrawalFee>(e))
-          .toList() as dynamic;
+              .map((e) => deserialize<_i10.WithdrawalFee>(e))
+              .toList()
+          as T;
     }
     if (t == _i1.getType<List<_i10.WithdrawalFee>?>()) {
       return (data != null
-          ? (data as List)
-              .map((e) => deserialize<_i10.WithdrawalFee>(e))
-              .toList()
-          : null) as dynamic;
+              ? (data as List)
+                    .map((e) => deserialize<_i10.WithdrawalFee>(e))
+                    .toList()
+              : null)
+          as T;
     }
     if (t == List<_i12.WithdrawalRule>) {
       return (data as List)
-          .map((e) => deserialize<_i12.WithdrawalRule>(e))
-          .toList() as dynamic;
+              .map((e) => deserialize<_i12.WithdrawalRule>(e))
+              .toList()
+          as T;
     }
     if (t == List<_i14.Stock>) {
       return (data as List).map((e) => deserialize<_i14.Stock>(e)).toList()
-          as dynamic;
+          as T;
     }
     try {
       return _i15.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
+    try {
+      return _i16.Protocol().deserialize<T>(data, t);
+    } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
+  }
+
+  static String? getClassNameForType(Type type) {
+    return switch (type) {
+      _i2.ErrorCode => 'ErrorCode',
+      _i3.ServerException => 'ServerException',
+      _i4.Investment => 'Investment',
+      _i5.InvestmentList => 'InvestmentList',
+      _i6.Stock => 'Stock',
+      _i7.StockList => 'StockList',
+      _i8.Transfer => 'Transfer',
+      _i9.TransferList => 'TransferList',
+      _i10.WithdrawalFee => 'WithdrawalFee',
+      _i11.WithdrawalFeeList => 'WithdrawalFeeList',
+      _i12.WithdrawalRule => 'WithdrawalRule',
+      _i13.WithdrawalRuleList => 'WithdrawalRuleList',
+      _ => null,
+    };
   }
 
   @override
   String? getClassNameForObject(Object? data) {
     String? className = super.getClassNameForObject(data);
     if (className != null) return className;
-    if (data is _i2.ErrorCode) {
-      return 'ErrorCode';
+
+    if (data is Map<String, dynamic> && data['__className__'] is String) {
+      return (data['__className__'] as String).replaceFirst('invman.', '');
     }
-    if (data is _i3.ServerException) {
-      return 'ServerException';
-    }
-    if (data is _i4.Investment) {
-      return 'Investment';
-    }
-    if (data is _i5.InvestmentList) {
-      return 'InvestmentList';
-    }
-    if (data is _i6.Stock) {
-      return 'Stock';
-    }
-    if (data is _i7.StockList) {
-      return 'StockList';
-    }
-    if (data is _i8.Transfer) {
-      return 'Transfer';
-    }
-    if (data is _i9.TransferList) {
-      return 'TransferList';
-    }
-    if (data is _i10.WithdrawalFee) {
-      return 'WithdrawalFee';
-    }
-    if (data is _i11.WithdrawalFeeList) {
-      return 'WithdrawalFeeList';
-    }
-    if (data is _i12.WithdrawalRule) {
-      return 'WithdrawalRule';
-    }
-    if (data is _i13.WithdrawalRuleList) {
-      return 'WithdrawalRuleList';
+
+    switch (data) {
+      case _i2.ErrorCode():
+        return 'ErrorCode';
+      case _i3.ServerException():
+        return 'ServerException';
+      case _i4.Investment():
+        return 'Investment';
+      case _i5.InvestmentList():
+        return 'InvestmentList';
+      case _i6.Stock():
+        return 'Stock';
+      case _i7.StockList():
+        return 'StockList';
+      case _i8.Transfer():
+        return 'Transfer';
+      case _i9.TransferList():
+        return 'TransferList';
+      case _i10.WithdrawalFee():
+        return 'WithdrawalFee';
+      case _i11.WithdrawalFeeList():
+        return 'WithdrawalFeeList';
+      case _i12.WithdrawalRule():
+        return 'WithdrawalRule';
+      case _i13.WithdrawalRuleList():
+        return 'WithdrawalRuleList';
     }
     className = _i15.Protocol().getClassNameForObject(data);
     if (className != null) {
-      return 'serverpod_auth.$className';
+      return 'serverpod_auth_idp.$className';
+    }
+    className = _i16.Protocol().getClassNameForObject(data);
+    if (className != null) {
+      return 'serverpod_auth_core.$className';
     }
     return null;
   }
@@ -257,9 +305,13 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'WithdrawalRuleList') {
       return deserialize<_i13.WithdrawalRuleList>(data['data']);
     }
-    if (dataClassName.startsWith('serverpod_auth.')) {
-      data['className'] = dataClassName.substring(15);
+    if (dataClassName.startsWith('serverpod_auth_idp.')) {
+      data['className'] = dataClassName.substring(19);
       return _i15.Protocol().deserializeByClassName(data);
+    }
+    if (dataClassName.startsWith('serverpod_auth_core.')) {
+      data['className'] = dataClassName.substring(20);
+      return _i16.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }

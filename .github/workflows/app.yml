@@ -14,7 +14,7 @@ on:
 
 env:
   WORK_DIR: invman_flutter
-  FLUTTER_VERSION: 3.29.x
+  FLUTTER_VERSION: 3.38.x
 
 jobs:
   unit_tests_and_coverage:

@@ -7,10 +7,12 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../../withdrawal/models/withdrawal_rule.dart' as _i2;
+import 'package:invman_client/src/protocol/protocol.dart' as _i3;
 
 abstract class WithdrawalFee implements _i1.SerializableModel {
   WithdrawalFee._({
@@ -20,9 +22,9 @@ abstract class WithdrawalFee implements _i1.SerializableModel {
     double? minimum,
     required this.ruleId,
     this.rule,
-  })  : fixed = fixed ?? 0.0,
-        percent = percent ?? 0.0,
-        minimum = minimum ?? 0.0;
+  }) : fixed = fixed ?? 0.0,
+       percent = percent ?? 0.0,
+       minimum = minimum ?? 0.0;
 
   factory WithdrawalFee({
     int? id,
@@ -42,8 +44,9 @@ abstract class WithdrawalFee implements _i1.SerializableModel {
       ruleId: jsonSerialization['ruleId'] as int,
       rule: jsonSerialization['rule'] == null
           ? null
-          : _i2.WithdrawalRule.fromJson(
-              (jsonSerialization['rule'] as Map<String, dynamic>)),
+          : _i3.Protocol().deserialize<_i2.WithdrawalRule>(
+              jsonSerialization['rule'],
+            ),
     );
   }
 
@@ -62,6 +65,9 @@ abstract class WithdrawalFee implements _i1.SerializableModel {
 
   _i2.WithdrawalRule? rule;
 
+  /// Returns a shallow copy of this [WithdrawalFee]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   WithdrawalFee copyWith({
     int? id,
     double? fixed,
@@ -73,6 +79,7 @@ abstract class WithdrawalFee implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'WithdrawalFee',
       if (id != null) 'id': id,
       'fixed': fixed,
       'percent': percent,
@@ -99,14 +106,17 @@ class _WithdrawalFeeImpl extends WithdrawalFee {
     required int ruleId,
     _i2.WithdrawalRule? rule,
   }) : super._(
-          id: id,
-          fixed: fixed,
-          percent: percent,
-          minimum: minimum,
-          ruleId: ruleId,
-          rule: rule,
-        );
+         id: id,
+         fixed: fixed,
+         percent: percent,
+         minimum: minimum,
+         ruleId: ruleId,
+         rule: rule,
+       );
 
+  /// Returns a shallow copy of this [WithdrawalFee]
+  /// with some or all fields replaced by the given arguments.
+  @_i1.useResult
   @override
   WithdrawalFee copyWith({
     Object? id = _Undefined,

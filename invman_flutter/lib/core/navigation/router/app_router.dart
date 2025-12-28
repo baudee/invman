@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/features/account/account.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
@@ -22,14 +21,7 @@ GoRouter appRouter(Ref ref) {
     initialLocation: initialRoute,
     navigatorKey: rootNavigatorKey,
     routes: [
-      GoRoute(
-        path: LoginScreen.route(),
-        builder: (_, __) => LoginScreen(),
-      ),
-      GoRoute(
-        path: RegisterScreen.route(),
-        builder: (_, __) => RegisterScreen(),
-      ),
+      GoRoute(path: SignInScreen.route(), builder: (_, __) => SignInScreen()),
       StatefulShellRoute.indexedStack(
         branches: [
           InvestmentRoutes.branch,
@@ -39,7 +31,7 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state, navigationShell) {
           return AppContainer(navigationShell: navigationShell);
         },
-      )
+      ),
     ],
     refreshListenable: ref.watch(routerNotifierProvider),
     redirect: (context, state) {
@@ -49,8 +41,9 @@ GoRouter appRouter(Ref ref) {
 
       final namespaceWhiteList = [];
 
-      final isGoingToLogin = location == LoginScreen.route() || location == RegisterScreen.route();
-      if (!isGoingToLogin && namespaceWhiteList.any((e) => e == state.fullPath)) {
+      final isGoingToLogin = location == SignInScreen.route();
+      if (!isGoingToLogin &&
+          namespaceWhiteList.any((e) => e == state.fullPath)) {
         return null;
       }
 
@@ -60,7 +53,7 @@ GoRouter appRouter(Ref ref) {
 
       if (!isLoggedIn && !isGoingToLogin) {
         destination = location;
-        return LoginScreen.route();
+        return SignInScreen.route();
       }
 
       if (isLoggedIn && isGoingToLogin) {
