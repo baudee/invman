@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
 
 class StockRoutes {
-  static String namespace = "/stock";
+  static String namespace = "/stocks";
   static final shellNavigatorKey = GlobalKey<NavigatorState>(debugLabel: "Stock Shell");
 
   static StatefulShellBranch branch = StatefulShellBranch(

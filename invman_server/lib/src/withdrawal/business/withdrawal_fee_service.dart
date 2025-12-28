@@ -31,8 +31,8 @@ class WithdrawalFeeService {
       (transaction) async {
         await ruleService.retrieve(session, fee.ruleId);
 
-        if (fee.id == 0) {
-          return WithdrawalFee.db.insertRow(session, fee);
+        if (fee.id == 0 || fee.id == null) {
+          return WithdrawalFee.db.insertRow(session, fee.copyWith(id: null));
         } else {
           return WithdrawalFee.db.updateRow(session, fee);
         }

@@ -15,11 +15,11 @@ class WithdrawalRuleSelectTileComponent extends ConsumerWidget {
     final provider = ref.read(investmentFormProvider(rule?.id ?? 0).notifier);
     if (rule == null) {
       return ListTile(
-        contentPadding: EdgeInsets.zero,
         title: Text(S.of(context).withdrawal_addRule),
         trailing: Icon(Icons.arrow_forward_ios),
         onTap: () async {
           final object = await context.push(WithdrawalRuleSelectScreen.route());
+          print(object);
           if (object is WithdrawalRule) {
             provider.setWithdrawalRule(object);
           }
@@ -27,11 +27,11 @@ class WithdrawalRuleSelectTileComponent extends ConsumerWidget {
       );
     } else {
       return WithdrawalRuleTileComponent(
-        contentPadding: EdgeInsets.zero,
         trailing: Icon(Icons.arrow_forward_ios),
         rule: rule!,
         onTap: (_) async {
           final object = await context.push(WithdrawalRuleSelectScreen.route());
+          print(object);
           if (object is WithdrawalRule) {
             provider.setWithdrawalRule(object);
           }

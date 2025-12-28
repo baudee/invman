@@ -7,25 +7,15 @@ class InvestmentService {
 
   const InvestmentService(this.client);
 
-  Future<Either<String, InvestmentList>> list({
-    required String currency,
-    required int page,
-    required int limit,
-  }) async {
+  Future<Either<String, List<Investment>>> list() async {
     return safeCall(() async {
-      return right(await client.investment.list(currency: currency, page: page, limit: limit));
+      return right(await client.investment.list());
     });
   }
 
-  Future<Either<String, Investment>> total({required String currency}) async {
+  Future<Either<String, Investment>> save(Investment investment) async {
     return safeCall(() async {
-      return right(await client.investment.total(currency: currency));
-    });
-  }
-
-  Future<Either<String, Investment>> save(Investment investment, {required String currency}) async {
-    return safeCall(() async {
-      return right(await client.investment.save(investment, currency: currency));
+      return right(await client.investment.save(investment));
     });
   }
 
@@ -35,9 +25,9 @@ class InvestmentService {
     });
   }
 
-  Future<Either<String, Investment>> retrieve(int id, {required String currency}) async {
+  Future<Either<String, Investment>> retrieve(int id) async {
     return safeCall(() async {
-      return right(await client.investment.retrieve(id, currency: currency));
+      return right(await client.investment.retrieve(id));
     });
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
-import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/transfer/transfer.dart';
 
 class TransferEditScreen extends BaseScreen {
@@ -10,7 +9,7 @@ class TransferEditScreen extends BaseScreen {
   final int investmentId;
   const TransferEditScreen({super.key, required this.id, required this.investmentId});
 
-  static String route([int? id]) => id == null ? "/edit" : "${InvestmentRoutes.namespaceTransfer}/$id/edit";
+  static String route([int? id]) => id == null ? "/:transferId/edit" : "/$id/edit";
 
   @override
   AppBar? appBar(BuildContext context, WidgetRef ref) {

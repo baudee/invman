@@ -50,7 +50,7 @@ class WithdrawalRuleService {
   Future<WithdrawalRule> save(Session session, WithdrawalRule withdrawal) async {
     if (withdrawal.id == 0 || withdrawal.id == null) {
       final sessionUserId = (session.authenticated)!.authUserId;
-      withdrawal = withdrawal.copyWith(userId: sessionUserId);
+      withdrawal = withdrawal.copyWith(id: null, userId: sessionUserId);
       return WithdrawalRule.db.insertRow(session, withdrawal);
     } else {
       await retrieve(session, withdrawal.id!);

@@ -9,6 +9,7 @@ class Env {
 
   late final Flavor flavor;
   late final String baseUrl;
+  late final String sentryDsn;
 
   factory Env() {
     return _instance;
@@ -37,6 +38,13 @@ class Env {
       throw Exception("BASE_URL is not set");
     } else {
       baseUrl = stringBaseUrl;
+    }
+
+    const stringSentryDsn = String.fromEnvironment("SENTRY_DSN");
+    if (stringSentryDsn.isEmpty && flavor != Flavor.develop) {
+      throw Exception("SENTRY_DSN is not set for ${flavor.name} environment");
+    } else {
+      sentryDsn = stringSentryDsn;
     }
   }
 }

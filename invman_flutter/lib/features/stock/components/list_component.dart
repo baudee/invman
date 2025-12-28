@@ -12,13 +12,16 @@ class StockListComponent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return BaseStateComponent<List<Stock>>(
       state: ref.watch(stockSearchListProvider),
-      successBuilder: (data) => ListView.separated(
-        itemCount: data.length,
-        separatorBuilder: (context, index) => const SizedBox(height: UIConstants.spacingXs),
-        itemBuilder: (context, index) {
-          final stock = data[index];
-          return StockTileComponent(stock: stock, onTap: onTileTap);
-        },
+      successBuilder: (data) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: UIConstants.spacingSm),
+        child: ListView.separated(
+          itemCount: data.length,
+          separatorBuilder: (context, index) => const SizedBox(height: UIConstants.spacingXs),
+          itemBuilder: (context, index) {
+            final stock = data[index];
+            return StockTileComponent(stock: stock, onTap: onTileTap);
+          },
+        ),
       ),
     );
   }

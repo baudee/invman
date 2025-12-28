@@ -15,9 +15,9 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i2;
-import '../../transfer/models/transfer.dart' as _i3;
+import '../../stock/models/stock.dart' as _i3;
 import '../../withdrawal/models/withdrawal_rule.dart' as _i4;
-import '../../stock/models/stock.dart' as _i5;
+import '../../transfer/models/transfer.dart' as _i5;
 import 'package:invman_server/src/generated/protocol.dart' as _i6;
 
 abstract class Investment
@@ -27,28 +27,32 @@ abstract class Investment
     required this.userId,
     this.user,
     required this.name,
-    this.transfers,
+    required this.stockId,
+    this.stock,
     required this.withdrawalRuleId,
     this.withdrawalRule,
-    required this.stockSymbol,
+    this.transfers,
+    double? investAmount,
+    double? quantity,
     DateTime? updatedAt,
-    this.stock,
-    this.investAmount,
     this.withdrawAmount,
-  }) : updatedAt = updatedAt ?? DateTime.now();
+  }) : investAmount = investAmount ?? 0.0,
+       quantity = quantity ?? 0.0,
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Investment({
     int? id,
     required _i1.UuidValue userId,
     _i2.AuthUser? user,
     required String name,
-    List<_i3.Transfer>? transfers,
+    required int stockId,
+    _i3.Stock? stock,
     required int withdrawalRuleId,
     _i4.WithdrawalRule? withdrawalRule,
-    required String stockSymbol,
-    DateTime? updatedAt,
-    _i5.Stock? stock,
+    List<_i5.Transfer>? transfers,
     double? investAmount,
+    double? quantity,
+    DateTime? updatedAt,
     double? withdrawAmount,
   }) = _InvestmentImpl;
 
@@ -60,25 +64,26 @@ abstract class Investment
           ? null
           : _i6.Protocol().deserialize<_i2.AuthUser>(jsonSerialization['user']),
       name: jsonSerialization['name'] as String,
-      transfers: jsonSerialization['transfers'] == null
+      stockId: jsonSerialization['stockId'] as int,
+      stock: jsonSerialization['stock'] == null
           ? null
-          : _i6.Protocol().deserialize<List<_i3.Transfer>>(
-              jsonSerialization['transfers'],
-            ),
+          : _i6.Protocol().deserialize<_i3.Stock>(jsonSerialization['stock']),
       withdrawalRuleId: jsonSerialization['withdrawalRuleId'] as int,
       withdrawalRule: jsonSerialization['withdrawalRule'] == null
           ? null
           : _i6.Protocol().deserialize<_i4.WithdrawalRule>(
               jsonSerialization['withdrawalRule'],
             ),
-      stockSymbol: jsonSerialization['stockSymbol'] as String,
+      transfers: jsonSerialization['transfers'] == null
+          ? null
+          : _i6.Protocol().deserialize<List<_i5.Transfer>>(
+              jsonSerialization['transfers'],
+            ),
+      investAmount: (jsonSerialization['investAmount'] as num).toDouble(),
+      quantity: (jsonSerialization['quantity'] as num).toDouble(),
       updatedAt: _i1.DateTimeJsonExtension.fromJson(
         jsonSerialization['updatedAt'],
       ),
-      stock: jsonSerialization['stock'] == null
-          ? null
-          : _i6.Protocol().deserialize<_i5.Stock>(jsonSerialization['stock']),
-      investAmount: (jsonSerialization['investAmount'] as num?)?.toDouble(),
       withdrawAmount: (jsonSerialization['withdrawAmount'] as num?)?.toDouble(),
     );
   }
@@ -96,19 +101,21 @@ abstract class Investment
 
   String name;
 
-  List<_i3.Transfer>? transfers;
+  int stockId;
+
+  _i3.Stock? stock;
 
   int withdrawalRuleId;
 
   _i4.WithdrawalRule? withdrawalRule;
 
-  String stockSymbol;
+  List<_i5.Transfer>? transfers;
+
+  double investAmount;
+
+  double quantity;
 
   DateTime updatedAt;
-
-  _i5.Stock? stock;
-
-  double? investAmount;
 
   double? withdrawAmount;
 
@@ -123,13 +130,14 @@ abstract class Investment
     _i1.UuidValue? userId,
     _i2.AuthUser? user,
     String? name,
-    List<_i3.Transfer>? transfers,
+    int? stockId,
+    _i3.Stock? stock,
     int? withdrawalRuleId,
     _i4.WithdrawalRule? withdrawalRule,
-    String? stockSymbol,
-    DateTime? updatedAt,
-    _i5.Stock? stock,
+    List<_i5.Transfer>? transfers,
     double? investAmount,
+    double? quantity,
+    DateTime? updatedAt,
     double? withdrawAmount,
   });
   @override
@@ -140,14 +148,15 @@ abstract class Investment
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
       'name': name,
-      if (transfers != null)
-        'transfers': transfers?.toJson(valueToJson: (v) => v.toJson()),
+      'stockId': stockId,
+      if (stock != null) 'stock': stock?.toJson(),
       'withdrawalRuleId': withdrawalRuleId,
       if (withdrawalRule != null) 'withdrawalRule': withdrawalRule?.toJson(),
-      'stockSymbol': stockSymbol,
+      if (transfers != null)
+        'transfers': transfers?.toJson(valueToJson: (v) => v.toJson()),
+      'investAmount': investAmount,
+      'quantity': quantity,
       'updatedAt': updatedAt.toJson(),
-      if (stock != null) 'stock': stock?.toJson(),
-      if (investAmount != null) 'investAmount': investAmount,
       if (withdrawAmount != null) 'withdrawAmount': withdrawAmount,
     };
   }
@@ -160,30 +169,33 @@ abstract class Investment
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJsonForProtocol(),
       'name': name,
+      'stockId': stockId,
+      if (stock != null) 'stock': stock?.toJsonForProtocol(),
+      'withdrawalRuleId': withdrawalRuleId,
+      if (withdrawalRule != null)
+        'withdrawalRule': withdrawalRule?.toJsonForProtocol(),
       if (transfers != null)
         'transfers': transfers?.toJson(
           valueToJson: (v) => v.toJsonForProtocol(),
         ),
-      'withdrawalRuleId': withdrawalRuleId,
-      if (withdrawalRule != null)
-        'withdrawalRule': withdrawalRule?.toJsonForProtocol(),
-      'stockSymbol': stockSymbol,
+      'investAmount': investAmount,
+      'quantity': quantity,
       'updatedAt': updatedAt.toJson(),
-      if (stock != null) 'stock': stock?.toJsonForProtocol(),
-      if (investAmount != null) 'investAmount': investAmount,
       if (withdrawAmount != null) 'withdrawAmount': withdrawAmount,
     };
   }
 
   static InvestmentInclude include({
     _i2.AuthUserInclude? user,
-    _i3.TransferIncludeList? transfers,
+    _i3.StockInclude? stock,
     _i4.WithdrawalRuleInclude? withdrawalRule,
+    _i5.TransferIncludeList? transfers,
   }) {
     return InvestmentInclude._(
       user: user,
-      transfers: transfers,
+      stock: stock,
       withdrawalRule: withdrawalRule,
+      transfers: transfers,
     );
   }
 
@@ -221,26 +233,28 @@ class _InvestmentImpl extends Investment {
     required _i1.UuidValue userId,
     _i2.AuthUser? user,
     required String name,
-    List<_i3.Transfer>? transfers,
+    required int stockId,
+    _i3.Stock? stock,
     required int withdrawalRuleId,
     _i4.WithdrawalRule? withdrawalRule,
-    required String stockSymbol,
-    DateTime? updatedAt,
-    _i5.Stock? stock,
+    List<_i5.Transfer>? transfers,
     double? investAmount,
+    double? quantity,
+    DateTime? updatedAt,
     double? withdrawAmount,
   }) : super._(
          id: id,
          userId: userId,
          user: user,
          name: name,
-         transfers: transfers,
+         stockId: stockId,
+         stock: stock,
          withdrawalRuleId: withdrawalRuleId,
          withdrawalRule: withdrawalRule,
-         stockSymbol: stockSymbol,
-         updatedAt: updatedAt,
-         stock: stock,
+         transfers: transfers,
          investAmount: investAmount,
+         quantity: quantity,
+         updatedAt: updatedAt,
          withdrawAmount: withdrawAmount,
        );
 
@@ -253,13 +267,14 @@ class _InvestmentImpl extends Investment {
     _i1.UuidValue? userId,
     Object? user = _Undefined,
     String? name,
-    Object? transfers = _Undefined,
+    int? stockId,
+    Object? stock = _Undefined,
     int? withdrawalRuleId,
     Object? withdrawalRule = _Undefined,
-    String? stockSymbol,
+    Object? transfers = _Undefined,
+    double? investAmount,
+    double? quantity,
     DateTime? updatedAt,
-    Object? stock = _Undefined,
-    Object? investAmount = _Undefined,
     Object? withdrawAmount = _Undefined,
   }) {
     return Investment(
@@ -267,17 +282,18 @@ class _InvestmentImpl extends Investment {
       userId: userId ?? this.userId,
       user: user is _i2.AuthUser? ? user : this.user?.copyWith(),
       name: name ?? this.name,
-      transfers: transfers is List<_i3.Transfer>?
-          ? transfers
-          : this.transfers?.map((e0) => e0.copyWith()).toList(),
+      stockId: stockId ?? this.stockId,
+      stock: stock is _i3.Stock? ? stock : this.stock?.copyWith(),
       withdrawalRuleId: withdrawalRuleId ?? this.withdrawalRuleId,
       withdrawalRule: withdrawalRule is _i4.WithdrawalRule?
           ? withdrawalRule
           : this.withdrawalRule?.copyWith(),
-      stockSymbol: stockSymbol ?? this.stockSymbol,
+      transfers: transfers is List<_i5.Transfer>?
+          ? transfers
+          : this.transfers?.map((e0) => e0.copyWith()).toList(),
+      investAmount: investAmount ?? this.investAmount,
+      quantity: quantity ?? this.quantity,
       updatedAt: updatedAt ?? this.updatedAt,
-      stock: stock is _i5.Stock? ? stock : this.stock?.copyWith(),
-      investAmount: investAmount is double? ? investAmount : this.investAmount,
       withdrawAmount: withdrawAmount is double?
           ? withdrawAmount
           : this.withdrawAmount,
@@ -299,13 +315,23 @@ class InvestmentUpdateTable extends _i1.UpdateTable<InvestmentTable> {
     value,
   );
 
+  _i1.ColumnValue<int, int> stockId(int value) => _i1.ColumnValue(
+    table.stockId,
+    value,
+  );
+
   _i1.ColumnValue<int, int> withdrawalRuleId(int value) => _i1.ColumnValue(
     table.withdrawalRuleId,
     value,
   );
 
-  _i1.ColumnValue<String, String> stockSymbol(String value) => _i1.ColumnValue(
-    table.stockSymbol,
+  _i1.ColumnValue<double, double> investAmount(double value) => _i1.ColumnValue(
+    table.investAmount,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> quantity(double value) => _i1.ColumnValue(
+    table.quantity,
     value,
   );
 
@@ -327,13 +353,23 @@ class InvestmentTable extends _i1.Table<int?> {
       'name',
       this,
     );
+    stockId = _i1.ColumnInt(
+      'stockId',
+      this,
+    );
     withdrawalRuleId = _i1.ColumnInt(
       'withdrawalRuleId',
       this,
     );
-    stockSymbol = _i1.ColumnString(
-      'stockSymbol',
+    investAmount = _i1.ColumnDouble(
+      'investAmount',
       this,
+      hasDefault: true,
+    );
+    quantity = _i1.ColumnDouble(
+      'quantity',
+      this,
+      hasDefault: true,
     );
     updatedAt = _i1.ColumnDateTime(
       'updatedAt',
@@ -350,15 +386,21 @@ class InvestmentTable extends _i1.Table<int?> {
 
   late final _i1.ColumnString name;
 
-  _i3.TransferTable? ___transfers;
+  late final _i1.ColumnInt stockId;
 
-  _i1.ManyRelation<_i3.TransferTable>? _transfers;
+  _i3.StockTable? _stock;
 
   late final _i1.ColumnInt withdrawalRuleId;
 
   _i4.WithdrawalRuleTable? _withdrawalRule;
 
-  late final _i1.ColumnString stockSymbol;
+  _i5.TransferTable? ___transfers;
+
+  _i1.ManyRelation<_i5.TransferTable>? _transfers;
+
+  late final _i1.ColumnDouble investAmount;
+
+  late final _i1.ColumnDouble quantity;
 
   late final _i1.ColumnDateTime updatedAt;
 
@@ -375,17 +417,17 @@ class InvestmentTable extends _i1.Table<int?> {
     return _user!;
   }
 
-  _i3.TransferTable get __transfers {
-    if (___transfers != null) return ___transfers!;
-    ___transfers = _i1.createRelationTable(
-      relationFieldName: '__transfers',
-      field: Investment.t.id,
-      foreignField: _i3.Transfer.t.investmentId,
+  _i3.StockTable get stock {
+    if (_stock != null) return _stock!;
+    _stock = _i1.createRelationTable(
+      relationFieldName: 'stock',
+      field: Investment.t.stockId,
+      foreignField: _i3.Stock.t.id,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i3.TransferTable(tableRelation: foreignTableRelation),
+          _i3.StockTable(tableRelation: foreignTableRelation),
     );
-    return ___transfers!;
+    return _stock!;
   }
 
   _i4.WithdrawalRuleTable get withdrawalRule {
@@ -401,19 +443,32 @@ class InvestmentTable extends _i1.Table<int?> {
     return _withdrawalRule!;
   }
 
-  _i1.ManyRelation<_i3.TransferTable> get transfers {
+  _i5.TransferTable get __transfers {
+    if (___transfers != null) return ___transfers!;
+    ___transfers = _i1.createRelationTable(
+      relationFieldName: '__transfers',
+      field: Investment.t.id,
+      foreignField: _i5.Transfer.t.investmentId,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i5.TransferTable(tableRelation: foreignTableRelation),
+    );
+    return ___transfers!;
+  }
+
+  _i1.ManyRelation<_i5.TransferTable> get transfers {
     if (_transfers != null) return _transfers!;
     var relationTable = _i1.createRelationTable(
       relationFieldName: 'transfers',
       field: Investment.t.id,
-      foreignField: _i3.Transfer.t.investmentId,
+      foreignField: _i5.Transfer.t.investmentId,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i3.TransferTable(tableRelation: foreignTableRelation),
+          _i5.TransferTable(tableRelation: foreignTableRelation),
     );
-    _transfers = _i1.ManyRelation<_i3.TransferTable>(
+    _transfers = _i1.ManyRelation<_i5.TransferTable>(
       tableWithRelations: relationTable,
-      table: _i3.TransferTable(
+      table: _i5.TransferTable(
         tableRelation: relationTable.tableRelation!.lastRelation,
       ),
     );
@@ -425,8 +480,10 @@ class InvestmentTable extends _i1.Table<int?> {
     id,
     userId,
     name,
+    stockId,
     withdrawalRuleId,
-    stockSymbol,
+    investAmount,
+    quantity,
     updatedAt,
   ];
 
@@ -435,11 +492,14 @@ class InvestmentTable extends _i1.Table<int?> {
     if (relationField == 'user') {
       return user;
     }
-    if (relationField == 'transfers') {
-      return __transfers;
+    if (relationField == 'stock') {
+      return stock;
     }
     if (relationField == 'withdrawalRule') {
       return withdrawalRule;
+    }
+    if (relationField == 'transfers') {
+      return __transfers;
     }
     return null;
   }
@@ -448,25 +508,30 @@ class InvestmentTable extends _i1.Table<int?> {
 class InvestmentInclude extends _i1.IncludeObject {
   InvestmentInclude._({
     _i2.AuthUserInclude? user,
-    _i3.TransferIncludeList? transfers,
+    _i3.StockInclude? stock,
     _i4.WithdrawalRuleInclude? withdrawalRule,
+    _i5.TransferIncludeList? transfers,
   }) {
     _user = user;
-    _transfers = transfers;
+    _stock = stock;
     _withdrawalRule = withdrawalRule;
+    _transfers = transfers;
   }
 
   _i2.AuthUserInclude? _user;
 
-  _i3.TransferIncludeList? _transfers;
+  _i3.StockInclude? _stock;
 
   _i4.WithdrawalRuleInclude? _withdrawalRule;
+
+  _i5.TransferIncludeList? _transfers;
 
   @override
   Map<String, _i1.Include?> get includes => {
     'user': _user,
-    'transfers': _transfers,
+    'stock': _stock,
     'withdrawalRule': _withdrawalRule,
+    'transfers': _transfers,
   };
 
   @override
@@ -768,7 +833,7 @@ class InvestmentAttachRepository {
   Future<void> transfers(
     _i1.Session session,
     Investment investment,
-    List<_i3.Transfer> transfer, {
+    List<_i5.Transfer> transfer, {
     _i1.Transaction? transaction,
   }) async {
     if (transfer.any((e) => e.id == null)) {
@@ -781,9 +846,9 @@ class InvestmentAttachRepository {
     var $transfer = transfer
         .map((e) => e.copyWith(investmentId: investment.id))
         .toList();
-    await session.db.update<_i3.Transfer>(
+    await session.db.update<_i5.Transfer>(
       $transfer,
-      columns: [_i3.Transfer.t.investmentId],
+      columns: [_i5.Transfer.t.investmentId],
       transaction: transaction,
     );
   }
@@ -811,6 +876,29 @@ class InvestmentAttachRowRepository {
     await session.db.updateRow<Investment>(
       $investment,
       columns: [Investment.t.userId],
+      transaction: transaction,
+    );
+  }
+
+  /// Creates a relation between the given [Investment] and [Stock]
+  /// by setting the [Investment]'s foreign key `stockId` to refer to the [Stock].
+  Future<void> stock(
+    _i1.Session session,
+    Investment investment,
+    _i3.Stock stock, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (investment.id == null) {
+      throw ArgumentError.notNull('investment.id');
+    }
+    if (stock.id == null) {
+      throw ArgumentError.notNull('stock.id');
+    }
+
+    var $investment = investment.copyWith(stockId: stock.id);
+    await session.db.updateRow<Investment>(
+      $investment,
+      columns: [Investment.t.stockId],
       transaction: transaction,
     );
   }
@@ -843,7 +931,7 @@ class InvestmentAttachRowRepository {
   Future<void> transfers(
     _i1.Session session,
     Investment investment,
-    _i3.Transfer transfer, {
+    _i5.Transfer transfer, {
     _i1.Transaction? transaction,
   }) async {
     if (transfer.id == null) {
@@ -854,9 +942,9 @@ class InvestmentAttachRowRepository {
     }
 
     var $transfer = transfer.copyWith(investmentId: investment.id);
-    await session.db.updateRow<_i3.Transfer>(
+    await session.db.updateRow<_i5.Transfer>(
       $transfer,
-      columns: [_i3.Transfer.t.investmentId],
+      columns: [_i5.Transfer.t.investmentId],
       transaction: transaction,
     );
   }
@@ -872,7 +960,7 @@ class InvestmentDetachRepository {
   /// the related record.
   Future<void> transfers(
     _i1.Session session,
-    List<_i3.Transfer> transfer, {
+    List<_i5.Transfer> transfer, {
     _i1.Transaction? transaction,
   }) async {
     if (transfer.any((e) => e.id == null)) {
@@ -882,9 +970,9 @@ class InvestmentDetachRepository {
     var $transfer = transfer
         .map((e) => e.copyWith(investmentId: null))
         .toList();
-    await session.db.update<_i3.Transfer>(
+    await session.db.update<_i5.Transfer>(
       $transfer,
-      columns: [_i3.Transfer.t.investmentId],
+      columns: [_i5.Transfer.t.investmentId],
       transaction: transaction,
     );
   }
@@ -900,7 +988,7 @@ class InvestmentDetachRowRepository {
   /// the related record.
   Future<void> transfers(
     _i1.Session session,
-    _i3.Transfer transfer, {
+    _i5.Transfer transfer, {
     _i1.Transaction? transaction,
   }) async {
     if (transfer.id == null) {
@@ -908,9 +996,9 @@ class InvestmentDetachRowRepository {
     }
 
     var $transfer = transfer.copyWith(investmentId: null);
-    await session.db.updateRow<_i3.Transfer>(
+    await session.db.updateRow<_i5.Transfer>(
       $transfer,
-      columns: [_i3.Transfer.t.investmentId],
+      columns: [_i5.Transfer.t.investmentId],
       transaction: transaction,
     );
   }

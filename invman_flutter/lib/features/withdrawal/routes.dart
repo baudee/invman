@@ -3,8 +3,8 @@ import 'package:invman_flutter/features/withdrawal/fee/fee.dart';
 import 'package:invman_flutter/features/withdrawal/rule/screens/screens.dart';
 
 class WithdrawalRoutes {
-  static String namespace = "/withdrawal";
-  static String namespaceFee = "/fee";
+  static String namespace = "/withdrawals";
+  static String namespaceFee = "/fees";
 
   static final routes = [
     GoRoute(

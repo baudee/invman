@@ -11,7 +11,7 @@ class InvestmentRootScreen extends BaseScreen {
 
   @override
   Widget body(BuildContext context, WidgetRef ref) {
-    return InvestmentSliverListComponent();
+    return InvestmentListComponent();
   }
 
   @override

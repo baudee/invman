@@ -1,8 +1,6 @@
-import 'package:invman_server/src/core/helpers/helpers.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:invman_server/src/investment/investment.dart';
 import 'package:serverpod/serverpod.dart';
-import 'package:serverpod_auth_idp_server/core.dart';
 
 class TransferService {
   TransferService({required this.investmentService});
@@ -13,17 +11,13 @@ class TransferService {
     final transfer = await Transfer.db.findById(
       session,
       id,
-      include: IncludeHelpers.transferInclude(),
     );
 
     if (transfer == null) {
       throw ServerException(errorCode: ErrorCode.notFound);
     }
 
-    final sessionUserId = (session.authenticated)!.authUserId;
-    if (transfer.investment?.userId != sessionUserId) {
-      throw ServerException(errorCode: ErrorCode.forbidden);
-    }
+    await investmentService.retrieve(session, transfer.investmentId);
 
     return transfer.copyWith(investment: null);
   }
@@ -31,17 +25,11 @@ class TransferService {
   Future<Transfer> save(Session session, Transfer transfer) async {
     return session.db.transaction(
       (transaction) async {
-        final investment = await Investment.db.findById(
-          session,
-          transfer.investmentId,
-        );
-        await investmentService.retrieveChecks(session, investment: investment);
-
         final Transfer savedTransfer;
         if (transfer.id == 0 || transfer.id == null) {
           savedTransfer = await Transfer.db.insertRow(
             session,
-            transfer,
+            transfer.copyWith(id: null),
             transaction: transaction,
           );
         } else {
@@ -53,10 +41,7 @@ class TransferService {
           );
         }
 
-        await Investment.db.updateRow(
-          session,
-          investment!.copyWith(updatedAt: DateTime.now()),
-        );
+        await investmentService.updateTotalTransfers(session, savedTransfer.investmentId, transaction: transaction);
 
         return savedTransfer;
       },
@@ -67,7 +52,38 @@ class TransferService {
   }
 
   Future<Transfer> delete(Session session, int id) async {
-    final transfer = await retrieve(session, id);
-    return Transfer.db.deleteRow(session, transfer);
+    return session.db.transaction(
+      (transaction) async {
+        final transfer = await retrieve(session, id);
+        final deletedTransfer = await Transfer.db.deleteRow(session, transfer, transaction: transaction);
+        await investmentService.updateTotalTransfers(session, transfer.investmentId, transaction: transaction);
+        return deletedTransfer;
+      },
+      settings: TransactionSettings(
+        isolationLevel: IsolationLevel.serializable,
+      ),
+    );
+  }
+
+  Future<TransferList> list(Session session, int investmentId, {int limit = 10, int page = 1}) async {
+    await investmentService.retrieve(session, investmentId);
+
+    final count = await Transfer.db.count(session, where: (e) => e.investmentId.equals(investmentId));
+
+    final results = await Transfer.db.find(
+      session,
+      where: (e) => e.investmentId.equals(investmentId),
+      limit: limit,
+      offset: (page * limit) - limit,
+    );
+
+    return TransferList(
+      count: count,
+      limit: limit,
+      page: page,
+      results: results,
+      numPages: (count / limit).ceil(),
+      canLoadMore: page * limit < count,
+    );
   }
 }

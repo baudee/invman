@@ -1,9 +1,11 @@
 class: Stock
 
+table: stock
+
 fields:
   symbol: String,
   name: String,
   value: double,
   currency: String,
-  quoteType: String
-
+  quoteType: String,
+  updatedAt: DateTime

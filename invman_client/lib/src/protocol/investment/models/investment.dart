@@ -13,9 +13,9 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i2;
-import '../../transfer/models/transfer.dart' as _i3;
+import '../../stock/models/stock.dart' as _i3;
 import '../../withdrawal/models/withdrawal_rule.dart' as _i4;
-import '../../stock/models/stock.dart' as _i5;
+import '../../transfer/models/transfer.dart' as _i5;
 import 'package:invman_client/src/protocol/protocol.dart' as _i6;
 
 abstract class Investment implements _i1.SerializableModel {
@@ -24,28 +24,32 @@ abstract class Investment implements _i1.SerializableModel {
     required this.userId,
     this.user,
     required this.name,
-    this.transfers,
+    required this.stockId,
+    this.stock,
     required this.withdrawalRuleId,
     this.withdrawalRule,
-    required this.stockSymbol,
+    this.transfers,
+    double? investAmount,
+    double? quantity,
     DateTime? updatedAt,
-    this.stock,
-    this.investAmount,
     this.withdrawAmount,
-  }) : updatedAt = updatedAt ?? DateTime.now();
+  }) : investAmount = investAmount ?? 0.0,
+       quantity = quantity ?? 0.0,
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Investment({
     int? id,
     required _i1.UuidValue userId,
     _i2.AuthUser? user,
     required String name,
-    List<_i3.Transfer>? transfers,
+    required int stockId,
+    _i3.Stock? stock,
     required int withdrawalRuleId,
     _i4.WithdrawalRule? withdrawalRule,
-    required String stockSymbol,
-    DateTime? updatedAt,
-    _i5.Stock? stock,
+    List<_i5.Transfer>? transfers,
     double? investAmount,
+    double? quantity,
+    DateTime? updatedAt,
     double? withdrawAmount,
   }) = _InvestmentImpl;
 
@@ -57,25 +61,26 @@ abstract class Investment implements _i1.SerializableModel {
           ? null
           : _i6.Protocol().deserialize<_i2.AuthUser>(jsonSerialization['user']),
       name: jsonSerialization['name'] as String,
-      transfers: jsonSerialization['transfers'] == null
+      stockId: jsonSerialization['stockId'] as int,
+      stock: jsonSerialization['stock'] == null
           ? null
-          : _i6.Protocol().deserialize<List<_i3.Transfer>>(
-              jsonSerialization['transfers'],
-            ),
+          : _i6.Protocol().deserialize<_i3.Stock>(jsonSerialization['stock']),
       withdrawalRuleId: jsonSerialization['withdrawalRuleId'] as int,
       withdrawalRule: jsonSerialization['withdrawalRule'] == null
           ? null
           : _i6.Protocol().deserialize<_i4.WithdrawalRule>(
               jsonSerialization['withdrawalRule'],
             ),
-      stockSymbol: jsonSerialization['stockSymbol'] as String,
+      transfers: jsonSerialization['transfers'] == null
+          ? null
+          : _i6.Protocol().deserialize<List<_i5.Transfer>>(
+              jsonSerialization['transfers'],
+            ),
+      investAmount: (jsonSerialization['investAmount'] as num).toDouble(),
+      quantity: (jsonSerialization['quantity'] as num).toDouble(),
       updatedAt: _i1.DateTimeJsonExtension.fromJson(
         jsonSerialization['updatedAt'],
       ),
-      stock: jsonSerialization['stock'] == null
-          ? null
-          : _i6.Protocol().deserialize<_i5.Stock>(jsonSerialization['stock']),
-      investAmount: (jsonSerialization['investAmount'] as num?)?.toDouble(),
       withdrawAmount: (jsonSerialization['withdrawAmount'] as num?)?.toDouble(),
     );
   }
@@ -91,19 +96,21 @@ abstract class Investment implements _i1.SerializableModel {
 
   String name;
 
-  List<_i3.Transfer>? transfers;
+  int stockId;
+
+  _i3.Stock? stock;
 
   int withdrawalRuleId;
 
   _i4.WithdrawalRule? withdrawalRule;
 
-  String stockSymbol;
+  List<_i5.Transfer>? transfers;
+
+  double investAmount;
+
+  double quantity;
 
   DateTime updatedAt;
-
-  _i5.Stock? stock;
-
-  double? investAmount;
 
   double? withdrawAmount;
 
@@ -115,13 +122,14 @@ abstract class Investment implements _i1.SerializableModel {
     _i1.UuidValue? userId,
     _i2.AuthUser? user,
     String? name,
-    List<_i3.Transfer>? transfers,
+    int? stockId,
+    _i3.Stock? stock,
     int? withdrawalRuleId,
     _i4.WithdrawalRule? withdrawalRule,
-    String? stockSymbol,
-    DateTime? updatedAt,
-    _i5.Stock? stock,
+    List<_i5.Transfer>? transfers,
     double? investAmount,
+    double? quantity,
+    DateTime? updatedAt,
     double? withdrawAmount,
   });
   @override
@@ -132,14 +140,15 @@ abstract class Investment implements _i1.SerializableModel {
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
       'name': name,
-      if (transfers != null)
-        'transfers': transfers?.toJson(valueToJson: (v) => v.toJson()),
+      'stockId': stockId,
+      if (stock != null) 'stock': stock?.toJson(),
       'withdrawalRuleId': withdrawalRuleId,
       if (withdrawalRule != null) 'withdrawalRule': withdrawalRule?.toJson(),
-      'stockSymbol': stockSymbol,
+      if (transfers != null)
+        'transfers': transfers?.toJson(valueToJson: (v) => v.toJson()),
+      'investAmount': investAmount,
+      'quantity': quantity,
       'updatedAt': updatedAt.toJson(),
-      if (stock != null) 'stock': stock?.toJson(),
-      if (investAmount != null) 'investAmount': investAmount,
       if (withdrawAmount != null) 'withdrawAmount': withdrawAmount,
     };
   }
@@ -158,26 +167,28 @@ class _InvestmentImpl extends Investment {
     required _i1.UuidValue userId,
     _i2.AuthUser? user,
     required String name,
-    List<_i3.Transfer>? transfers,
+    required int stockId,
+    _i3.Stock? stock,
     required int withdrawalRuleId,
     _i4.WithdrawalRule? withdrawalRule,
-    required String stockSymbol,
-    DateTime? updatedAt,
-    _i5.Stock? stock,
+    List<_i5.Transfer>? transfers,
     double? investAmount,
+    double? quantity,
+    DateTime? updatedAt,
     double? withdrawAmount,
   }) : super._(
          id: id,
          userId: userId,
          user: user,
          name: name,
-         transfers: transfers,
+         stockId: stockId,
+         stock: stock,
          withdrawalRuleId: withdrawalRuleId,
          withdrawalRule: withdrawalRule,
-         stockSymbol: stockSymbol,
-         updatedAt: updatedAt,
-         stock: stock,
+         transfers: transfers,
          investAmount: investAmount,
+         quantity: quantity,
+         updatedAt: updatedAt,
          withdrawAmount: withdrawAmount,
        );
 
@@ -190,13 +201,14 @@ class _InvestmentImpl extends Investment {
     _i1.UuidValue? userId,
     Object? user = _Undefined,
     String? name,
-    Object? transfers = _Undefined,
+    int? stockId,
+    Object? stock = _Undefined,
     int? withdrawalRuleId,
     Object? withdrawalRule = _Undefined,
-    String? stockSymbol,
+    Object? transfers = _Undefined,
+    double? investAmount,
+    double? quantity,
     DateTime? updatedAt,
-    Object? stock = _Undefined,
-    Object? investAmount = _Undefined,
     Object? withdrawAmount = _Undefined,
   }) {
     return Investment(
@@ -204,17 +216,18 @@ class _InvestmentImpl extends Investment {
       userId: userId ?? this.userId,
       user: user is _i2.AuthUser? ? user : this.user?.copyWith(),
       name: name ?? this.name,
-      transfers: transfers is List<_i3.Transfer>?
-          ? transfers
-          : this.transfers?.map((e0) => e0.copyWith()).toList(),
+      stockId: stockId ?? this.stockId,
+      stock: stock is _i3.Stock? ? stock : this.stock?.copyWith(),
       withdrawalRuleId: withdrawalRuleId ?? this.withdrawalRuleId,
       withdrawalRule: withdrawalRule is _i4.WithdrawalRule?
           ? withdrawalRule
           : this.withdrawalRule?.copyWith(),
-      stockSymbol: stockSymbol ?? this.stockSymbol,
+      transfers: transfers is List<_i5.Transfer>?
+          ? transfers
+          : this.transfers?.map((e0) => e0.copyWith()).toList(),
+      investAmount: investAmount ?? this.investAmount,
+      quantity: quantity ?? this.quantity,
       updatedAt: updatedAt ?? this.updatedAt,
-      stock: stock is _i5.Stock? ? stock : this.stock?.copyWith(),
-      investAmount: investAmount is double? ? investAmount : this.investAmount,
       withdrawAmount: withdrawAmount is double?
           ? withdrawAmount
           : this.withdrawAmount,

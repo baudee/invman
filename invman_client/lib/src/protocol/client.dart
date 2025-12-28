@@ -16,12 +16,12 @@ import 'package:serverpod_client/serverpod_client.dart' as _i2;
 import 'dart:async' as _i3;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i4;
-import 'package:invman_client/src/protocol/investment/models/investment_list.dart'
-    as _i5;
 import 'package:invman_client/src/protocol/investment/models/investment.dart'
-    as _i6;
-import 'package:invman_client/src/protocol/stock/models/stock.dart' as _i7;
+    as _i5;
+import 'package:invman_client/src/protocol/stock/models/stock.dart' as _i6;
 import 'package:invman_client/src/protocol/transfer/models/transfer.dart'
+    as _i7;
+import 'package:invman_client/src/protocol/transfer/models/transfer_list.dart'
     as _i8;
 import 'package:invman_client/src/protocol/withdrawal/models/withdrawal_fee.dart'
     as _i9;
@@ -252,57 +252,33 @@ class EndpointInvestment extends _i2.EndpointRef {
   @override
   String get name => 'investment';
 
-  _i3.Future<_i5.InvestmentList> list({
-    required String currency,
-    required int limit,
-    required int page,
-  }) => caller.callServerEndpoint<_i5.InvestmentList>(
-    'investment',
-    'list',
-    {
-      'currency': currency,
-      'limit': limit,
-      'page': page,
-    },
-  );
-
-  _i3.Future<_i6.Investment> total({required String currency}) =>
-      caller.callServerEndpoint<_i6.Investment>(
+  _i3.Future<List<_i5.Investment>> list() =>
+      caller.callServerEndpoint<List<_i5.Investment>>(
         'investment',
-        'total',
-        {'currency': currency},
+        'list',
+        {},
       );
 
-  _i3.Future<_i6.Investment> save(
-    _i6.Investment investment, {
-    required String currency,
-  }) => caller.callServerEndpoint<_i6.Investment>(
-    'investment',
-    'save',
-    {
-      'investment': investment,
-      'currency': currency,
-    },
-  );
+  _i3.Future<_i5.Investment> save(_i5.Investment investment) =>
+      caller.callServerEndpoint<_i5.Investment>(
+        'investment',
+        'save',
+        {'investment': investment},
+      );
 
-  _i3.Future<_i6.Investment> delete(int id) =>
-      caller.callServerEndpoint<_i6.Investment>(
+  _i3.Future<_i5.Investment> delete(int id) =>
+      caller.callServerEndpoint<_i5.Investment>(
         'investment',
         'delete',
         {'id': id},
       );
 
-  _i3.Future<_i6.Investment> retrieve(
-    int id, {
-    required String currency,
-  }) => caller.callServerEndpoint<_i6.Investment>(
-    'investment',
-    'retrieve',
-    {
-      'id': id,
-      'currency': currency,
-    },
-  );
+  _i3.Future<_i5.Investment> retrieve(int id) =>
+      caller.callServerEndpoint<_i5.Investment>(
+        'investment',
+        'retrieve',
+        {'id': id},
+      );
 }
 
 /// {@category Endpoint}
@@ -312,17 +288,17 @@ class EndpointStock extends _i2.EndpointRef {
   @override
   String get name => 'stock';
 
-  _i3.Future<_i7.Stock> retrieve(String symbol) =>
-      caller.callServerEndpoint<_i7.Stock>(
+  _i3.Future<_i6.Stock> retrieve(String symbol) =>
+      caller.callServerEndpoint<_i6.Stock>(
         'stock',
         'retrieve',
         {'symbol': symbol},
       );
 
-  _i3.Future<List<_i7.Stock>> search({
+  _i3.Future<List<_i6.Stock>> search({
     required String query,
     required int limit,
-  }) => caller.callServerEndpoint<List<_i7.Stock>>(
+  }) => caller.callServerEndpoint<List<_i6.Stock>>(
     'stock',
     'search',
     {
@@ -339,26 +315,40 @@ class EndpointTransfer extends _i2.EndpointRef {
   @override
   String get name => 'transfer';
 
-  _i3.Future<_i8.Transfer> retrieve(int id) =>
-      caller.callServerEndpoint<_i8.Transfer>(
+  _i3.Future<_i7.Transfer> retrieve(int id) =>
+      caller.callServerEndpoint<_i7.Transfer>(
         'transfer',
         'retrieve',
         {'id': id},
       );
 
-  _i3.Future<_i8.Transfer> save(_i8.Transfer transfer) =>
-      caller.callServerEndpoint<_i8.Transfer>(
+  _i3.Future<_i7.Transfer> save(_i7.Transfer transfer) =>
+      caller.callServerEndpoint<_i7.Transfer>(
         'transfer',
         'save',
         {'transfer': transfer},
       );
 
-  _i3.Future<_i8.Transfer> delete(int id) =>
-      caller.callServerEndpoint<_i8.Transfer>(
+  _i3.Future<_i7.Transfer> delete(int id) =>
+      caller.callServerEndpoint<_i7.Transfer>(
         'transfer',
         'delete',
         {'id': id},
       );
+
+  _i3.Future<_i8.TransferList> list(
+    int investmentId, {
+    required int limit,
+    required int page,
+  }) => caller.callServerEndpoint<_i8.TransferList>(
+    'transfer',
+    'list',
+    {
+      'investmentId': investmentId,
+      'limit': limit,
+      'page': page,
+    },
+  );
 }
 
 /// {@category Endpoint}

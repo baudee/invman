@@ -32,6 +32,7 @@ class YFinStock {
       name: longName,
       value: regularMarketPrice,
       quoteType: quoteType,
+      updatedAt: DateTime.now(),
     );
   }
 }

@@ -36,4 +36,4 @@ EXPOSE 8081
 EXPOSE 8082
 
 # Define the entrypoint command
-ENTRYPOINT ./server --mode=$runmode --server-id=$serverid --logging=$logging --role=$role
+ENTRYPOINT ./server --apply-migrations --apply-repair-migration --mode=$runmode --server-id=$serverid --logging=$logging --role=$role

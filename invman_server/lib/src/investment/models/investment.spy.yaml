@@ -5,14 +5,15 @@ table: investment
 fields:
   user: module:serverpod_auth_core:AuthUser?, relation(onDelete=Cascade)
   name: String
-  transfers: List<Transfer>?, relation(optional, name=investment_transfers)
+  stock: Stock?, relation
   withdrawalRule : WithdrawalRule?, relation
-  stockSymbol: String
+  transfers: List<Transfer>?, relation(optional, name=investment_transfers)
+  investAmount: double, default=0.0
+  quantity: double, default=0.0
   updatedAt: DateTime, default=now
-  stock: Stock?, !persist 
-  investAmount: double?, !persist 
-  withdrawAmount: double?, !persist 
+  withdrawAmount: double?, !persist
+
 
 indexes:
   investment_user_idx:
-    fields: userId, updatedAt
+    fields: userId

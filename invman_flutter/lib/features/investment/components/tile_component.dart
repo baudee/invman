@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/core/navigation/router/router.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
 
 class InvestmentTileComponent extends ConsumerWidget {
@@ -16,12 +17,23 @@ class InvestmentTileComponent extends ConsumerWidget {
     return ListTile(
       title: Text(investment.name, overflow: TextOverflow.ellipsis),
       subtitle: Text(
-          "${investment.investAmount?.toStringPrice(currency)} / ${investment.withdrawAmount?.toStringPrice(currency)}"),
-      trailing: Text(
-        "${investment.percent.toStringAsFixed(2)}%",
-        style: TextStyle(color: investment.percentColor),
+        "${investment.investAmount.toStringPrice(currency)} / ${investment.withdrawAmount?.toStringPrice(currency)}",
       ),
-      onTap: () => context.push(".${InvestmentDetailScreen.route(investment.id)}"),
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end, 
+        children: [
+          Text(
+            "${investment.percent.toStringAsFixed(1)}%",
+            style: TextStyle(
+              color: investment.percentColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(investment.amountDifference.toStringPrice(currency), style: TextStyle(color: investment.percentColor)),
+        ],
+      ),
+      onTap: () => router.pushRelative(InvestmentDetailScreen.route(investment.id)),
     );
   }
 }

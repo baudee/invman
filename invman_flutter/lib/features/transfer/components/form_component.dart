@@ -30,20 +30,27 @@ class TransferFormComponent extends ConsumerWidget {
                 controller: provider.amountController,
                 validator: (value) => ValidationUtils.formValidatorDouble(value),
                 decoration: InputDecoration(
-                    label: Text(S.of(context).transfer_amount), suffixText: ref.read(userPreferencesProvider).currency),
+                  label: Text(S.of(context).transfer_amount),
+                  suffixText: ref.read(userPreferencesProvider).currency,
+                ),
                 keyboardType: TextInputType.number,
               ),
               TextFormField(
                 controller: provider.quantityController,
                 validator: (value) => ValidationUtils.formValidatorDouble(value),
                 decoration: InputDecoration(
-                    label: Text(S.of(context).transfer_quantity),
-                    suffixText: ref.read(userPreferencesProvider).currency),
+                  label: Text(S.of(context).transfer_quantity),
+                  suffixText: ref.read(userPreferencesProvider).currency,
+                ),
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(
-                height: 16,
+              CalendarDatePicker(
+                initialDate: data.createdAt,
+                firstDate: DateTime(1970),
+                lastDate: DateTime.now(),
+                onDateChanged: (date) => {provider.setTransferDate(date)},
               ),
+              SizedBox(height: 16),
               SaveButton(
                 onPressed: () async {
                   final (success, message) = await provider.submit();

@@ -3,11 +3,18 @@ import 'package:invman_client/invman_client.dart';
 
 extension InvestmentExtension on Investment {
   double get percent {
-    if (investAmount == null || withdrawAmount == null) {
+    if (withdrawAmount == null) {
       return double.nan;
     }
-    final percent = (withdrawAmount! - investAmount!) / investAmount!;
+    final percent = (withdrawAmount! - investAmount) / investAmount;
     return percent * 100;
+  }
+
+  double get amountDifference {
+    if (withdrawAmount == null) {
+      return double.nan;
+    }
+    return withdrawAmount! - investAmount;
   }
 
   Color get percentColor {

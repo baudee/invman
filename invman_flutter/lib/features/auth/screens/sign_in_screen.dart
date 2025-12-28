@@ -13,6 +13,7 @@ class SignInScreen extends BaseScreen {
     return SignInWidget(
       client: ref.read(clientProvider),
       onError: (error) => ToastUtils.message(error.toString(), success: false),
+      
     );
   }
 }

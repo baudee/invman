@@ -20,10 +20,7 @@ class InvestmentHeaderComponent extends ConsumerWidget {
       padding: const EdgeInsets.all(UIConstants.spacingXxl),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            theme.colorScheme.primary,
-            theme.colorScheme.primary.withValues(alpha: 0.8),
-          ],
+          colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.8)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -49,7 +46,7 @@ class InvestmentHeaderComponent extends ConsumerWidget {
           const SizedBox(height: UIConstants.spacingSm),
           Text(
             (investment.withdrawAmount ?? 0).toStringPrice(currency),
-            style: theme.textTheme.displayMedium?.copyWith(
+            style: theme.textTheme.displaySmall?.copyWith(
               color: theme.colorScheme.onPrimary,
               fontWeight: FontWeight.w300,
               letterSpacing: -1,
@@ -60,66 +57,51 @@ class InvestmentHeaderComponent extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Column(
-                children: [
-                  Text(
-                    S.of(context).investment_invested,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: UIConstants.spacingXs),
-                  Text(
-                    (investment.investAmount ?? 0).toStringPrice(currency),
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: theme.colorScheme.onPrimary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
+              Expanded(
+                child: _buildInfoColumn(
+                  context,
+                  S.of(context).investment_invested,
+                  (investment.investAmount).toStringPrice(currency),
+                ),
               ),
-              Container(
-                height: UIConstants.spacingXl * 2,
-                width: UIConstants.borderWidth,
-                color: theme.colorScheme.onPrimary.withValues(alpha: 0.3),
+              Expanded(
+                child: _buildInfoColumn(
+                  context,
+                  S.of(context).investment_return,
+                  investment.percent.isNaN ? '-' : '${investment.percent.toStringAsFixed(1)}%',
+                ),
               ),
-              Column(
-                children: [
-                  Text(
-                    S.of(context).investment_return,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: UIConstants.spacingXs),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: UIConstants.spacingMd, vertical: UIConstants.spacingXs + 2),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.onPrimary.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(UIConstants.radiusXl),
-                      border: Border.all(
-                        color: theme.colorScheme.onPrimary.withValues(alpha: 0.3),
-                        width: UIConstants.borderWidth,
-                      ),
-                    ),
-                    child: Text(
-                      investment.percent.isNaN ? '-' : '${investment.percent.toStringAsFixed(2)}%',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: theme.colorScheme.onPrimary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ],
+              Expanded(
+                child: _buildInfoColumn(
+                  context,
+                  S.of(context).investment_return,
+                  investment.percent.isNaN ? '-' : investment.amountDifference.toStringPrice(currency),
+                ),
               ),
             ],
           ),
         ],
       ),
+    );
+  }
+
+  Column _buildInfoColumn(BuildContext context, String label, String value) {
+    final theme = Theme.of(context);
+    return Column(
+      children: [
+        Text(
+          label,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: UIConstants.spacingXs),
+        Text(
+          value,
+          style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.onPrimary, fontWeight: FontWeight.w600),
+        ),
+      ],
     );
   }
 }

@@ -20,6 +20,7 @@ class YFinLightStock {
       currency: '',
       name: longName,
       value: -1.0,
+      updatedAt: DateTime.now(),
     );
   }
 

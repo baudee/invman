@@ -16,7 +16,6 @@ class StockSelectTileComponent extends ConsumerWidget {
     final provider = ref.read(investmentFormProvider(investmentId).notifier);
     if (stock == null || stock!.symbol.isEmpty) {
       return ListTile(
-        contentPadding: EdgeInsets.zero,
         title: Text(S.of(context).stock_add),
         trailing: Icon(Icons.arrow_forward_ios),
         onTap: () async {
@@ -28,7 +27,6 @@ class StockSelectTileComponent extends ConsumerWidget {
       );
     } else {
       return StockTileComponent(
-        contentPadding: EdgeInsets.zero,
         trailing: Icon(Icons.arrow_forward_ios),
         stock: stock!,
         onTap: (_) async {

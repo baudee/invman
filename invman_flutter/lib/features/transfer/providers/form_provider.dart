@@ -29,6 +29,12 @@ class TransferForm extends _$TransferForm {
     }
   }
 
+  void setTransferDate(DateTime date) {
+    if (state case Success<Transfer>(data: final transfer)) {
+      state = Success(transfer.copyWith(createdAt: date));
+    }
+  }
+
   Future<void> load() async {
     state = Loading();
 
@@ -40,12 +46,15 @@ class TransferForm extends _$TransferForm {
 
     final result = await ref.read(transferServiceProvider).retrieve(id);
 
-    result.fold((error) {
-      state = Failure(error);
-    }, (transfer) {
-      state = Success(transfer);
-      _refreshControllers();
-    });
+    result.fold(
+      (error) {
+        state = Failure(error);
+      },
+      (transfer) {
+        state = Success(transfer);
+        _refreshControllers();
+      },
+    );
   }
 
   Future<(bool, String?)> submit() async {
@@ -66,23 +75,29 @@ class TransferForm extends _$TransferForm {
         quantity: double.parse(quantityController.text.trim()),
         amount: double.parse(amountController.text.trim()),
         investmentId: investmentId,
+        createdAt: transfer.createdAt.toUtc(),
       );
 
       state = Loading();
 
       final result = await ref.read(transferServiceProvider).save(transferToSave);
 
-      return result.fold((error) {
-        state = Success(transferToSave);
-        return (false, error);
-      }, (t) {
-        state = Success(t);
-        ref.invalidate(investmentDetailProvider(t.investmentId));
-        if (t.id != null || transfer.id == 0) {
-          ref.invalidate(transferDetailProvider(t.id!));
-        }
-        return (true, S.current.core_itemSaved);
-      });
+      return result.fold(
+        (error) {
+          state = Success(transferToSave);
+          return (false, error);
+        },
+        (t) {
+          state = Success(t);
+          ref.read(transferListProvider(t.investmentId).notifier).refresh();
+          ref.invalidate(investmentDetailProvider(t.investmentId));
+          ref.read(investmentListProvider.notifier).load();
+          if (t.id != null || transfer.id == 0) {
+            ref.invalidate(transferDetailProvider(t.id!));
+          }
+          return (true, S.current.core_itemSaved);
+        },
+      );
     }
     return (false, S.current.error_invalidState);
   }
@@ -98,13 +113,18 @@ class TransferForm extends _$TransferForm {
 
     final result = await ref.read(transferServiceProvider).delete(id);
 
-    return result.fold((error) {
-      state = Success(transferToDelete);
-      return (false, error);
-    }, (deletedTransfer) {
-      state = Success(deletedTransfer);
-      ref.invalidate(investmentDetailProvider(deletedTransfer.investmentId));
-      return (true, S.current.core_itemDeleted);
-    });
+    return result.fold(
+      (error) {
+        state = Success(transferToDelete);
+        return (false, error);
+      },
+      (deletedTransfer) {
+        state = Success(deletedTransfer);
+        ref.read(transferListProvider(transferToDelete.investmentId).notifier).refresh();
+        ref.invalidate(investmentDetailProvider(transferToDelete.investmentId));
+        ref.read(investmentListProvider.notifier).load();
+        return (true, S.current.core_itemDeleted);
+      },
+    );
   }
 }

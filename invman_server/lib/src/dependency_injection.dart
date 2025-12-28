@@ -20,7 +20,7 @@ void initDependencyInjection() {
   getIt.registerSingleton<InvestmentService>(
     InvestmentService(
       withdrawalRuleService: getIt<WithdrawalRuleService>(),
-      stockClient: getIt<StockClient>(),
+      stockService: getIt<StockService>(),
     ),
   );
   getIt.registerSingleton<TransferService>(TransferService(investmentService: getIt<InvestmentService>()));

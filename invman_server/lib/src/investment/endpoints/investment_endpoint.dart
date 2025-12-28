@@ -8,45 +8,19 @@ class InvestmentEndpoint extends Endpoint with EndpointMiddleware {
   @override
   bool get requireLogin => true;
 
-  Future<InvestmentList> list(
-    Session session, {
-    required String currency,
-    int limit = 10,
-    int page = 1,
-  }) async {
-    return withMiddleware(
-      session,
-      () => getIt<InvestmentService>().list(
-        session,
-        currency: currency.toUpperCase(),
-        limit: limit,
-        page: page,
-      ),
-    );
+  Future<List<Investment>> list(Session session) async {
+    return withMiddleware(session, () => getIt<InvestmentService>().list(session));
   }
 
-  Future<Investment> total(
-    Session session, {
-    required String currency,
-  }) async {
-    return withMiddleware(
-      session,
-      () => getIt<InvestmentService>().total(
-        session,
-        currency: currency.toUpperCase(),
-      ),
-    );
-  }
-
-  Future<Investment> save(Session session, Investment investment, {required String currency}) async {
-    return withMiddleware(session, () => getIt<InvestmentService>().save(session, investment, currency: currency));
+  Future<Investment> save(Session session, Investment investment) async {
+    return withMiddleware(session, () => getIt<InvestmentService>().save(session, investment));
   }
 
   Future<Investment> delete(Session session, int id) async {
     return withMiddleware(session, () => getIt<InvestmentService>().delete(session, id));
   }
 
-  Future<Investment> retrieve(Session session, int id, {required String currency}) async {
-    return withMiddleware(session, () => getIt<InvestmentService>().retrieve(session, id, currency: currency));
+  Future<Investment> retrieve(Session session, int id) async {
+    return withMiddleware(session, () => getIt<InvestmentService>().retrieve(session, id));
   }
 }

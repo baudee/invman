@@ -10,7 +10,6 @@ jwtRefresh:
   - refreshAccessToken:
 investment:
   - list:
-  - total:
   - save:
   - delete:
   - retrieve:
@@ -21,6 +20,7 @@ transfer:
   - retrieve:
   - save:
   - delete:
+  - list:
 withdrawalFee:
   - retrieve:
   - save:

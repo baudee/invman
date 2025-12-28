@@ -278,53 +278,13 @@ class Endpoints extends _i1.EndpointDispatch {
       methodConnectors: {
         'list': _i1.MethodConnector(
           name: 'list',
-          params: {
-            'currency': _i1.ParameterDescription(
-              name: 'currency',
-              type: _i1.getType<String>(),
-              nullable: false,
-            ),
-            'limit': _i1.ParameterDescription(
-              name: 'limit',
-              type: _i1.getType<int>(),
-              nullable: false,
-            ),
-            'page': _i1.ParameterDescription(
-              name: 'page',
-              type: _i1.getType<int>(),
-              nullable: false,
-            ),
-          },
+          params: {},
           call:
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async =>
-                  (endpoints['investment'] as _i4.InvestmentEndpoint).list(
-                    session,
-                    currency: params['currency'],
-                    limit: params['limit'],
-                    page: params['page'],
-                  ),
-        ),
-        'total': _i1.MethodConnector(
-          name: 'total',
-          params: {
-            'currency': _i1.ParameterDescription(
-              name: 'currency',
-              type: _i1.getType<String>(),
-              nullable: false,
-            ),
-          },
-          call:
-              (
-                _i1.Session session,
-                Map<String, dynamic> params,
-              ) async =>
-                  (endpoints['investment'] as _i4.InvestmentEndpoint).total(
-                    session,
-                    currency: params['currency'],
-                  ),
+              ) async => (endpoints['investment'] as _i4.InvestmentEndpoint)
+                  .list(session),
         ),
         'save': _i1.MethodConnector(
           name: 'save',
@@ -332,11 +292,6 @@ class Endpoints extends _i1.EndpointDispatch {
             'investment': _i1.ParameterDescription(
               name: 'investment',
               type: _i1.getType<_i9.Investment>(),
-              nullable: false,
-            ),
-            'currency': _i1.ParameterDescription(
-              name: 'currency',
-              type: _i1.getType<String>(),
               nullable: false,
             ),
           },
@@ -348,7 +303,6 @@ class Endpoints extends _i1.EndpointDispatch {
                   (endpoints['investment'] as _i4.InvestmentEndpoint).save(
                     session,
                     params['investment'],
-                    currency: params['currency'],
                   ),
         ),
         'delete': _i1.MethodConnector(
@@ -378,11 +332,6 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<int>(),
               nullable: false,
             ),
-            'currency': _i1.ParameterDescription(
-              name: 'currency',
-              type: _i1.getType<String>(),
-              nullable: false,
-            ),
           },
           call:
               (
@@ -392,7 +341,6 @@ class Endpoints extends _i1.EndpointDispatch {
                   (endpoints['investment'] as _i4.InvestmentEndpoint).retrieve(
                     session,
                     params['id'],
-                    currency: params['currency'],
                   ),
         ),
       },
@@ -502,6 +450,36 @@ class Endpoints extends _i1.EndpointDispatch {
               ) async => (endpoints['transfer'] as _i6.TransferEndpoint).delete(
                 session,
                 params['id'],
+              ),
+        ),
+        'list': _i1.MethodConnector(
+          name: 'list',
+          params: {
+            'investmentId': _i1.ParameterDescription(
+              name: 'investmentId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'limit': _i1.ParameterDescription(
+              name: 'limit',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'page': _i1.ParameterDescription(
+              name: 'page',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['transfer'] as _i6.TransferEndpoint).list(
+                session,
+                params['investmentId'],
+                limit: params['limit'],
+                page: params['page'],
               ),
         ),
       },

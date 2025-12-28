@@ -15,21 +15,12 @@ class TransferTileComponent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currency = ref.read(userPreferencesProvider).currency;
-    final isPositive = transfer.amount > 0;
-    
+
     return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: isPositive ? Colors.green.withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.1),
-        child: Icon(
-          isPositive ? Icons.add : Icons.remove,
-          color: isPositive ? Colors.green : Colors.red,
-          size: UIConstants.iconMd,
-        ),
-      ),
       title: Text(transfer.amount.toStringPrice(currency)),
       subtitle: Text(DateFormat('dd/MM/yyyy').format(transfer.createdAt.toLocal())),
       trailing: Text('${S.of(context).investment_quantity}: ${transfer.quantity}'),
-      onTap: () => router.pushRelative(TransferDetailScreen.route(transfer.id)),
+      onTap: () => router.pushRelative(TransferEditScreen.route(transfer.id)),
     );
   }
 }

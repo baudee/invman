@@ -27,13 +27,14 @@ class InvestmentForm extends _$InvestmentForm {
 
   void setWithdrawalRule(WithdrawalRule rule) {
     if (state case Success<Investment>(data: final investment)) {
+      print(rule);
       state = Success(investment.copyWith(withdrawalRule: rule, withdrawalRuleId: rule.id));
     }
   }
 
   void setStock(Stock stock) {
     if (state case Success<Investment>(data: final investment)) {
-      state = Success(investment.copyWith(stockSymbol: stock.symbol, stock: stock));
+      state = Success(investment.copyWith(stock: stock));
     }
   }
 
@@ -45,15 +46,17 @@ class InvestmentForm extends _$InvestmentForm {
       _refreshControllers();
       return;
     }
-    final currency = ref.read(userPreferencesProvider).currency;
-    final result = await ref.read(investmentServiceProvider).retrieve(id, currency: currency);
+    final result = await ref.read(investmentServiceProvider).retrieve(id);
 
-    result.fold((error) {
-      state = Failure(error);
-    }, (investment) {
-      state = Success(investment);
-      _refreshControllers();
-    });
+    result.fold(
+      (error) {
+        state = Failure(error);
+      },
+      (investment) {
+        state = Success(investment);
+        _refreshControllers();
+      },
+    );
   }
 
   Future<(bool, String?)> submit() async {
@@ -66,30 +69,30 @@ class InvestmentForm extends _$InvestmentForm {
         return (false, S.current.error_selectWithdrawalRule);
       }
 
-      if (investment.stockSymbol.isEmpty) {
+      if (investment.stock == null) {
         return (false, S.current.error_selectStock);
       }
 
-      investment = investment.copyWith(
-        name: nameController.text,
-      );
+      investment = investment.copyWith(name: nameController.text);
 
       state = Loading();
 
-      final currency = ref.read(userPreferencesProvider).currency;
-      final result = await ref.read(investmentServiceProvider).save(investment, currency: currency);
+      final result = await ref.read(investmentServiceProvider).save(investment);
 
-      return result.fold((error) {
-        state = Success(investment);
-        return (false, error);
-      }, (t) {
-        state = Success(t);
-        ref.read(investmentListProvider.notifier).refresh();
-        if (t.id != null) {
-          ref.invalidate(investmentDetailProvider(t.id!));
-        }
-        return (true, S.current.core_itemSaved);
-      });
+      return result.fold(
+        (error) {
+          state = Success(investment);
+          return (false, error);
+        },
+        (t) {
+          state = Success(t);
+          ref.read(investmentListProvider.notifier).load();
+          if (t.id != null) {
+            ref.invalidate(investmentDetailProvider(t.id!));
+          }
+          return (true, S.current.core_itemSaved);
+        },
+      );
     }
     return (false, S.current.error_invalidState);
   }
@@ -105,13 +108,16 @@ class InvestmentForm extends _$InvestmentForm {
 
     final result = await ref.read(investmentServiceProvider).delete(id);
 
-    return result.fold((error) {
-      state = Success(investmentToDelete);
-      return (false, error);
-    }, (deletedInvestment) {
-      state = Success(deletedInvestment);
-      ref.read(investmentListProvider.notifier).refresh();
-      return (true, S.current.core_itemDeleted);
-    });
+    return result.fold(
+      (error) {
+        state = Success(investmentToDelete);
+        return (false, error);
+      },
+      (deletedInvestment) {
+        state = Success(deletedInvestment);
+        ref.read(investmentListProvider.notifier).load();
+        return (true, S.current.core_itemDeleted);
+      },
+    );
   }
 }

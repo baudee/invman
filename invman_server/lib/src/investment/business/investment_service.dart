@@ -6,32 +6,28 @@ import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 
 class InvestmentService {
-  final StockClient stockClient;
+  final StockService stockService;
   final WithdrawalRuleService withdrawalRuleService;
+  final String currency = 'CHF';
 
   InvestmentService({
-    required this.stockClient,
+    required this.stockService,
     required this.withdrawalRuleService,
   });
 
-  Future<Investment> addRentabilityAndStock({
+  Future<Investment> _addWithdrawAmountAndStock(
+    Session session, {
     required Investment investment,
-    required String currency,
+    Transaction? transaction,
   }) async {
-    final stock = await stockClient.get(symbol: investment.stockSymbol);
-    final transfers = investment.transfers ?? [];
+    final stock = await stockService.retrieve(session, investment.stock!.symbol, transaction: transaction);
 
-    double investAmount = transfers
-        .map((e) => e.amount)
-        .fold(0, (v, e) => v + e);
-    double quantity = transfers.map((e) => e.quantity).fold(0, (v, e) => v + e);
-
-    double amountBeforeFees = quantity * stock.value;
+    double amountBeforeFees = investment.quantity * stock.value;
     double totalFees = 0;
 
     final withdrawalRule = investment.withdrawalRule;
     final feeList = withdrawalRule?.fees ?? [];
-    if (quantity != 0) {
+    if (investment.quantity != 0) {
       for (final feeRule in feeList) {
         double fee = feeRule.fixed + amountBeforeFees * feeRule.percent / 100;
         if (fee < feeRule.minimum) {
@@ -44,74 +40,19 @@ class InvestmentService {
     double actualAmount = amountBeforeFees - totalFees;
 
     if (currency != stock.currency) {
-      double change = await stockClient.currencyChange(
-        from: stock.currency,
-        to: currency,
-      );
+      double change = await stockService.currencyChange(session, from: stock.currency, to: currency);
       change = change - (withdrawalRule?.currencyChangePercentage ?? 0) / 100;
       actualAmount *= change;
     }
 
     investment = investment.copyWith(
       stock: stock,
-      investAmount: investAmount,
       withdrawAmount: actualAmount,
     );
     return investment;
   }
 
-  Future<InvestmentList> list(
-    Session session, {
-    required String currency,
-    int limit = 10,
-    int page = 1,
-  }) async {
-    final sessionUserId = (session.authenticated)!.authUserId;
-
-    final count = await Investment.db.count(
-      session,
-      where: (e) => e.userId.equals(sessionUserId),
-    );
-
-    final investments = await Investment.db.find(
-      session,
-      limit: limit,
-      offset: (page * limit) - limit,
-      where: (e) => e.userId.equals(sessionUserId),
-      orderBy: (e) => e.updatedAt,
-      orderDescending: true,
-      include: IncludeHelpers.investmentInclude(),
-    );
-
-    List<Investment> cleanedInvestments = [];
-    for (final investment in investments) {
-      Investment cleanInvestment = await addRentabilityAndStock(
-        investment: investment,
-        currency: currency,
-      );
-      // Remove unnecessary data
-      cleanInvestment = cleanInvestment.copyWith(
-        transfers: null,
-        withdrawalRule: null,
-        stock: null,
-      );
-      cleanedInvestments.add(cleanInvestment);
-    }
-
-    return InvestmentList(
-      count: count,
-      limit: limit,
-      page: page,
-      results: cleanedInvestments,
-      numPages: (count / limit).ceil(),
-      canLoadMore: page * limit < count,
-    );
-  }
-
-  Future<Investment> total(
-    Session session, {
-    required String currency,
-  }) async {
+  Future<List<Investment>> list(Session session) async {
     final sessionUserId = (session.authenticated)!.authUserId;
 
     final investments = await Investment.db.find(
@@ -120,34 +61,17 @@ class InvestmentService {
       include: IncludeHelpers.investmentInclude(),
     );
 
-    double totalInvestAmount = 0;
-    double totalWithdrawAmount = 0;
-    for (final investment in investments) {
-      final cleanInvestment = await addRentabilityAndStock(
-        investment: investment,
-        currency: currency,
-      );
-      totalInvestAmount += cleanInvestment.investAmount ?? 0;
-      totalWithdrawAmount += cleanInvestment.withdrawAmount ?? 0;
+    for (var i = 0; i < investments.length; i++) {
+      investments[i] = await _addWithdrawAmountAndStock(session, investment: investments[i]);
     }
 
-    return Investment(
-      userId: session.authenticated!.authUserId,
-      name: 'TOTAL',
-      withdrawalRuleId: 0,
-      stockSymbol: '',
-      stock: null,
-      investAmount: totalInvestAmount,
-      withdrawAmount: totalWithdrawAmount,
-    );
+    investments.sort((a, b) => a.withdrawAmount!.compareTo(b.withdrawAmount!));
+
+    return investments;
   }
 
-  Future<Investment> save(
-    Session session,
-    Investment investment, {
-    required String currency,
-  }) async {
-    if (investment.name.isEmpty) {
+  Future<Investment> save(Session session, Investment investment) async {
+    if (investment.name.isEmpty || investment.stock == null) {
       throw ServerException(errorCode: ErrorCode.badRequest);
     }
 
@@ -158,19 +82,17 @@ class InvestmentService {
           investment.withdrawalRuleId,
           transaction: transaction,
         );
-        await stockClient.get(symbol: investment.stockSymbol);
+        final stock = await stockService.retrieve(session, investment.stock!.symbol, transaction: transaction);
+        investment = investment.copyWith(userId: (session.authenticated)!.authUserId, stockId: stock.id);
 
         if (investment.id == 0 || investment.id == null) {
-          investment = investment.copyWith(
-            userId: (session.authenticated)!.authUserId,
-          );
           return Investment.db.insertRow(
             session,
-            investment,
+            investment.copyWith(id: null),
             transaction: transaction,
           );
         } else {
-          await retrieve(session, investment.id!, currency: currency);
+          await retrieve(session, investment.id!, transaction: transaction);
           return Investment.db.updateRow(
             session,
             investment,
@@ -184,10 +106,14 @@ class InvestmentService {
     );
   }
 
-  Future<void> retrieveChecks(
-    Session session, {
-    required Investment? investment,
-  }) async {
+  Future<Investment> retrieve(Session session, int id, {Transaction? transaction}) async {
+    Investment? investment = await Investment.db.findById(
+      session,
+      id,
+      include: IncludeHelpers.investmentInclude(),
+      transaction: transaction,
+    );
+
     if (investment == null) {
       throw ServerException(errorCode: ErrorCode.notFound);
     }
@@ -196,27 +122,8 @@ class InvestmentService {
     if (investment.userId != sessionUser!.authUserId) {
       throw ServerException(errorCode: ErrorCode.forbidden);
     }
-  }
 
-  Future<Investment> retrieve(
-    Session session,
-    int id, {
-    required String currency,
-  }) async {
-    Investment? investment = await Investment.db.findById(
-      session,
-      id,
-      include: IncludeHelpers.investmentInclude(),
-    );
-
-    await retrieveChecks(session, investment: investment);
-
-    investment = await addRentabilityAndStock(
-      investment: investment!,
-      currency: currency,
-    );
-
-    return investment;
+    return _addWithdrawAmountAndStock(session, investment: investment, transaction: transaction);
   }
 
   Future<Investment> delete(Session session, int id) async {
@@ -226,12 +133,37 @@ class InvestmentService {
           session,
           id,
         );
-        await retrieveChecks(session, investment: investment);
+        await retrieve(session, id);
         return Investment.db.deleteRow(session, investment!);
       },
       settings: TransactionSettings(
         isolationLevel: IsolationLevel.serializable,
       ),
+    );
+  }
+
+  Future<void> updateTotalTransfers(Session session, int investmentId, {Transaction? transaction}) async {
+    final investment = await retrieve(session, investmentId, transaction: transaction);
+    final transfers = await Transfer.db.find(
+      session,
+      where: (e) => e.investmentId.equals(investmentId),
+      transaction: transaction,
+    );
+
+    double totalInvested = 0;
+    double totalQuantity = 0;
+    for (final transfer in transfers) {
+      totalInvested += transfer.amount;
+      totalQuantity += transfer.quantity;
+    }
+    await Investment.db.updateRow(
+      session,
+      investment.copyWith(
+        investAmount: totalInvested,
+        quantity: totalQuantity,
+        updatedAt: DateTime.now(),
+      ),
+      transaction: transaction,
     );
   }
 }

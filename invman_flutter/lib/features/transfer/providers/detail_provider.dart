@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'detail_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class TransferDetail extends _$TransferDetail {
   @override
   ModelState<Transfer> build(int id) {

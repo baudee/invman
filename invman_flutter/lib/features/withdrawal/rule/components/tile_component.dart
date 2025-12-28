@@ -31,7 +31,7 @@ class WithdrawalRuleTileComponent extends ConsumerWidget {
       title: Text(rule.name),
       trailing: trailing,
       subtitle: Text('${S.of(context).withdrawal_currency_percentage}: ${rule.currencyChangePercentage}%'),
-      onTap: onTap != null ? () => onTap!(rule) : () => router.pushRelative(WithdrawalRuleDetailScreen.route(rule.id)),
+      onTap: onTap != null ? () => onTap!(rule) : null,
     );
   }
 }

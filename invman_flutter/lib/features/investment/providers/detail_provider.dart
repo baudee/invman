@@ -16,8 +16,7 @@ class InvestmentDetail extends _$InvestmentDetail {
   Future<void> load() async {
     state = Loading();
 
-    final currency = ref.read(userPreferencesProvider).currency;
-    final result = await ref.read(investmentServiceProvider).retrieve(id, currency: currency);
+    final result = await ref.read(investmentServiceProvider).retrieve(id);
 
     result.fold((error) {
       state = Failure(error);
