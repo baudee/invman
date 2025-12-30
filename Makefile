@@ -31,3 +31,6 @@ app/build:
 	cd $(PROJECT_NAME)_flutter && flutter pub get
 	cd $(PROJECT_NAME)_flutter && dart run build_runner build --delete-conflicting-outputs
 	cd $(PROJECT_NAME)_flutter && dart run intl_utils:generate
+
+app/run:
+	cd $(PROJECT_NAME)_flutter && flutter run --dart-define-from-file=.env

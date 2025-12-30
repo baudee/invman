@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:invman_server/src/core/services/mail/mail.dart';
 import 'package:invman_server/src/dependency_injection.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
@@ -88,9 +89,12 @@ void _sendRegistrationCode(
   required String verificationCode,
   required Transaction? transaction,
 }) {
-  // NOTE: Here you call your mail service to send the verification code to
-  // the user. For testing, we will just log the verification code.
   session.log('[EmailIdp] Registration code ($email): $verificationCode');
+  getIt<MailServiceInterface>().sendEmail(
+    to: email,
+    subject: 'Your registration verification code',
+    body: 'Your verification code is: <b>$verificationCode</b>',
+  );
 }
 
 void _sendPasswordResetCode(
@@ -100,7 +104,10 @@ void _sendPasswordResetCode(
   required String verificationCode,
   required Transaction? transaction,
 }) {
-  // NOTE: Here you call your mail service to send the verification code to
-  // the user. For testing, we will just log the verification code.
   session.log('[EmailIdp] Password reset code ($email): $verificationCode');
+  getIt<MailServiceInterface>().sendEmail(
+    to: email,
+    subject: 'Your password reset verification code',
+    body: 'Your verification code is: <b>$verificationCode</b>',
+  );
 }

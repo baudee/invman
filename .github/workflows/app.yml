@@ -1,7 +1,7 @@
 name: App Workflow
 
 permissions:
-  contents: write # Aligns with reusable workflow requirements
+  contents: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
@@ -19,11 +19,9 @@ env:
 jobs:
   unit_tests_and_coverage:
     runs-on: ubuntu-latest
-
     defaults:
       run:
         working-directory: ${{env.WORK_DIR}}
-
     steps:
       - name: 🛠️ Checkout code
         uses: actions/checkout@v3
@@ -34,9 +32,6 @@ jobs:
           channel: "stable"
           flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
-
-      - name: 👁️ Check Flutter version
-        run: flutter --version
 
       - name: ⚙️ Install LCOV
         run: |
@@ -83,11 +78,28 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
 
+      - name: 🔑 Install Apple Certificate
+        uses: apple-actions/import-codesign-certs@v2
+        with:
+          p12-file-base64: ${{ secrets.P12_DIST_CERT }}
+          p12-password: ${{ secrets.P12_PASSWORD }}
+          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+
+      - name: 📱 Install Provisioning Profile
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "${{ secrets.PROVISIONING_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/distribution.mobileprovision
+
       - name: Install Dependencies
         run: |
           flutter pub get
           dart run build_runner build --delete-conflicting-outputs
           dart run intl_utils:generate
+
+      - name: Install CocoaPods
+        run: |
+          cd ios
+          pod install --repo-update
 
       - name: Create .env File
         run: |
@@ -112,11 +124,7 @@ jobs:
         run: flutter build appbundle --dart-define-from-file .env
  
       - name: Build IPA
-        run: flutter build ipa --no-codesign --dart-define-from-file .env
-
-      - name: Compress Archives and IPAs
-        run: |
-          tar -czf build/ios_build.tar.gz build/ios
+        run: flutter build ipa --release  --dart-define-from-file .env
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
@@ -125,5 +133,5 @@ jobs:
           path: |
             invman_flutter/build/app/outputs/flutter-apk/app-release.apk
             invman_flutter/build/app/outputs/bundle/release/app.aab 
-            invman_flutter/build/ios_build.tar.gz
+            invman_flutter/build/ios/ipa/*.ipa
           if-no-files-found: error

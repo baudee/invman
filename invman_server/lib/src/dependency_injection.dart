@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:invman_server/src/core/services/mail/mail.dart';
 import 'package:invman_server/src/env.dart';
 import 'package:invman_server/src/investment/investment.dart';
 import 'package:invman_server/src/stock/stock.dart';
@@ -10,6 +11,15 @@ final GetIt getIt = GetIt.instance;
 void initDependencyInjection() {
   // Env
   getIt.registerSingleton<Env>(Env());
+
+  // Core
+  getIt.registerSingleton<MailServiceInterface>(
+    MailjetMailService(
+      apiKeyPrivate: getIt<Env>().mailjetApiKeyPrivate,
+      apiKeyPublic: getIt<Env>().mailjetApiKeyPublic,
+      senderEmail: getIt<Env>().mailjetEmailSender,
+    ),
+  );
 
   // Data
   getIt.registerSingleton<StockClient>(StockClientImpl(baseUrl: getIt<Env>().yfinBaseUrl));
