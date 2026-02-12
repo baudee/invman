@@ -1,21 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/core/components/components.dart';
+import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/transfer/transfer.dart';
 
-class TransferListComponent extends BaseComponent {
+class TransferListComponent extends StatefulWidget {
   final int investmentId;
 
   const TransferListComponent({super.key, required this.investmentId});
 
   @override
-  Widget body(BuildContext context, WidgetRef ref) {
-    final provider = ref.read(transferListProvider(investmentId).notifier);
-    final pagingController = provider.pagingController;
+  State<TransferListComponent> createState() => _TransferListComponentState();
+}
+
+class _TransferListComponentState extends State<TransferListComponent> {
+  late final TransferListController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = getIt<TransferListController>(param1: widget.investmentId);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return InfiniteListComponent<Transfer>(
-      onRefresh: provider.refresh,
-      pagingController: pagingController,
+      onRefresh: controller.refresh,
+      pagingController: controller.pagingController,
       itemBuilder: (context, transfer, index) {
         return TransferTileComponent(transfer: transfer);
       },

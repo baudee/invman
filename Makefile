@@ -3,7 +3,7 @@ PROJECT_NAME := invman
 
 # Server
 server/build:
-	cd $(PROJECT_NAME)_server && dart pub get && serverpod generate
+	cd $(PROJECT_NAME)_server && dart pub get && dart pub run build_runner build --delete-conflicting-outputs && serverpod generate
 
 server/migration:
 	cd $(PROJECT_NAME)_server && serverpod create-migration

@@ -1,12 +1,14 @@
+import 'package:injectable/injectable.dart';
 import 'package:invman_server/src/core/helpers/helpers.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 
+@injectable
 class WithdrawalRuleService {
   WithdrawalRuleService();
 
-  Future<WithdrawalRuleList> list(Session session, {int limit = 10, int page = 1}) async {
+  Future<WithdrawalRuleList> list(Session session, {required int limit, required int page}) async {
     final sessionUserId = (session.authenticated)!.authUserId;
     final count = await WithdrawalRule.db.count(session, where: (e) => e.userId.equals(sessionUserId));
 

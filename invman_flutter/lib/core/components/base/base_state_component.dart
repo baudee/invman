@@ -1,29 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invman_flutter/core/components/components.dart';
-import 'package:invman_flutter/core/models/models.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
-class BaseStateComponent<T> extends ConsumerWidget {
+class BaseStateComponent<T> extends StatelessWidget {
   final Widget Function(T data) successBuilder;
-  final ModelState<T> state;
-  final Future<void> Function()? onErrorRefresh;
+  final AsyncSignal<T> state;
 
-  const BaseStateComponent({
-    super.key,
-    required this.state,
-    required this.successBuilder,
-    this.onErrorRefresh,
-  });
+  const BaseStateComponent({super.key, required this.state, required this.successBuilder});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return switch (state) {
-      Initial() || Loading() => const Center(child: CircularProgressIndicator()),
-      Success(:final data) => successBuilder(data),
-      Failure(:final error) => ErrorComponent(
-          error: error,
-          handleRefresh: onErrorRefresh,
-        ),
-    };
+  Widget build(BuildContext context) {
+    return state
+        .watch(context)
+        .map(
+          data: (data) => successBuilder(data),
+          error: (error, _) => ErrorComponent(error: error, handleRefresh: () => state.refresh()),
+          loading: () => const LoadingComponent(),
+        );
   }
 }

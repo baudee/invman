@@ -42,7 +42,7 @@ abstract class Investment implements _i1.SerializableModel {
     required _i1.UuidValue userId,
     _i2.AuthUser? user,
     required String name,
-    required int stockId,
+    required _i1.UuidValue stockId,
     _i3.Stock? stock,
     required int withdrawalRuleId,
     _i4.WithdrawalRule? withdrawalRule,
@@ -61,7 +61,9 @@ abstract class Investment implements _i1.SerializableModel {
           ? null
           : _i6.Protocol().deserialize<_i2.AuthUser>(jsonSerialization['user']),
       name: jsonSerialization['name'] as String,
-      stockId: jsonSerialization['stockId'] as int,
+      stockId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['stockId'],
+      ),
       stock: jsonSerialization['stock'] == null
           ? null
           : _i6.Protocol().deserialize<_i3.Stock>(jsonSerialization['stock']),
@@ -76,11 +78,11 @@ abstract class Investment implements _i1.SerializableModel {
           : _i6.Protocol().deserialize<List<_i5.Transfer>>(
               jsonSerialization['transfers'],
             ),
-      investAmount: (jsonSerialization['investAmount'] as num).toDouble(),
-      quantity: (jsonSerialization['quantity'] as num).toDouble(),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      investAmount: (jsonSerialization['investAmount'] as num?)?.toDouble(),
+      quantity: (jsonSerialization['quantity'] as num?)?.toDouble(),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
       withdrawAmount: (jsonSerialization['withdrawAmount'] as num?)?.toDouble(),
     );
   }
@@ -96,7 +98,7 @@ abstract class Investment implements _i1.SerializableModel {
 
   String name;
 
-  int stockId;
+  _i1.UuidValue stockId;
 
   _i3.Stock? stock;
 
@@ -122,7 +124,7 @@ abstract class Investment implements _i1.SerializableModel {
     _i1.UuidValue? userId,
     _i2.AuthUser? user,
     String? name,
-    int? stockId,
+    _i1.UuidValue? stockId,
     _i3.Stock? stock,
     int? withdrawalRuleId,
     _i4.WithdrawalRule? withdrawalRule,
@@ -140,7 +142,7 @@ abstract class Investment implements _i1.SerializableModel {
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
       'name': name,
-      'stockId': stockId,
+      'stockId': stockId.toJson(),
       if (stock != null) 'stock': stock?.toJson(),
       'withdrawalRuleId': withdrawalRuleId,
       if (withdrawalRule != null) 'withdrawalRule': withdrawalRule?.toJson(),
@@ -167,7 +169,7 @@ class _InvestmentImpl extends Investment {
     required _i1.UuidValue userId,
     _i2.AuthUser? user,
     required String name,
-    required int stockId,
+    required _i1.UuidValue stockId,
     _i3.Stock? stock,
     required int withdrawalRuleId,
     _i4.WithdrawalRule? withdrawalRule,
@@ -201,7 +203,7 @@ class _InvestmentImpl extends Investment {
     _i1.UuidValue? userId,
     Object? user = _Undefined,
     String? name,
-    int? stockId,
+    _i1.UuidValue? stockId,
     Object? stock = _Undefined,
     int? withdrawalRuleId,
     Object? withdrawalRule = _Undefined,

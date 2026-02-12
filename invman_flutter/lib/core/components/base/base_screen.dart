@@ -1,66 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invman_flutter/core/utils/utils.dart';
 
-abstract class BaseScreen<T> extends ConsumerWidget {
-  const BaseScreen({super.key});
+class BaseScreen extends StatelessWidget {
+  final PreferredSizeWidget? appBar;
+  final PreferredSizeWidget? appBarMd;
+  final PreferredSizeWidget? appBarLg;
+
+  final Widget body;
+  final Widget? bodyMd;
+  final Widget? bodyLg;
+
+  final FloatingActionButton? floatingActionButton;
+  final Widget? bottomNavigationBar;
+
+  const BaseScreen({
+    super.key,
+    required this.body,
+    this.bodyMd,
+    this.bodyLg,
+    this.appBar,
+    this.appBarMd,
+    this.appBarLg,
+    this.floatingActionButton,
+    this.bottomNavigationBar,
+  });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final size = ScreenUtils.size(context);
+
+    final PreferredSizeWidget? currentAppBar = switch (size) {
+      ScreenSize.sm => appBar,
+      ScreenSize.md => appBarMd ?? appBar,
+      ScreenSize.lg => appBarLg ?? appBarMd ?? appBar,
+    };
+
+    final Widget currentBody = switch (size) {
+      ScreenSize.sm => body,
+      ScreenSize.md => bodyMd ?? body,
+      ScreenSize.lg => bodyLg ?? bodyMd ?? body,
+    };
+
     return Scaffold(
-      appBar: switch (ScreenUtils.size(context)) {
-        ScreenSize.sm => appBar(context, ref),
-        ScreenSize.md => appBarMd(context, ref),
-        ScreenSize.lg => appBarLg(context, ref),
-      },
-      floatingActionButton: floatingActionButton(context, ref),
-      bottomNavigationBar: bottomNavigationBar(context, ref),
+      appBar: currentAppBar,
+      floatingActionButton: floatingActionButton,
+      bottomNavigationBar: bottomNavigationBar,
       body: SafeArea(
-        child: Builder(
-          builder: (bodyContext) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: UIConstants.appHorizontalPadding,
-              ),
-              child: switch (ScreenUtils.size(context)) {
-                ScreenSize.sm => body(context, ref),
-                ScreenSize.md => bodyMd(context, ref),
-                ScreenSize.lg => bodyLg(context, ref),
-              },
-            );
-          },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: UIConstants.appHorizontalPadding),
+          child: currentBody,
         ),
       ),
     );
-  }
-
-  AppBar? appBar(BuildContext context, WidgetRef ref) {
-    return null;
-  }
-
-  AppBar? appBarMd(BuildContext context, WidgetRef ref) {
-    return appBar(context, ref);
-  }
-
-  AppBar? appBarLg(BuildContext context, WidgetRef ref) {
-    return appBarMd(context, ref);
-  }
-
-  FloatingActionButton? floatingActionButton(BuildContext context, WidgetRef ref) {
-    return null;
-  }
-
-  Widget? bottomNavigationBar(BuildContext context, WidgetRef ref) {
-    return null;
-  }
-
-  Widget body(BuildContext context, WidgetRef ref);
-
-  Widget bodyMd(BuildContext context, WidgetRef ref) {
-    return body(context, ref);
-  }
-
-  Widget bodyLg(BuildContext context, WidgetRef ref) {
-    return bodyMd(context, ref);
   }
 }

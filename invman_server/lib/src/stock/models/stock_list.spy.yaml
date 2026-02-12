@@ -1,9 +1,4 @@
 class: StockList
-
+extends: PaginationList
 fields:
-    count: int
     results: List<Stock>
-    page: int
-    limit: int
-    numPages: int
-    canLoadMore: bool

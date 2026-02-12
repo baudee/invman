@@ -3,9 +3,10 @@ class: Stock
 table: stock
 
 fields:
+  id: UuidValue, defaultModel=random,
   symbol: String,
-  name: String,
-  value: double,
-  currency: String,
-  quoteType: String,
-  updatedAt: DateTime
+  shortName: String,
+  longName: String,
+  quoteType: StockType,
+  currency: Currency?, relation
+  prices: List<StockPrice>?, relation(optional, name=stock_stock_prices)

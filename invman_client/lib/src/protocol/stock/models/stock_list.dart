@@ -10,120 +10,113 @@
 // ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import '../../stock/models/stock.dart' as _i2;
-import 'package:invman_client/src/protocol/protocol.dart' as _i3;
+import '../../protocol.dart' as _i1;
+import 'package:serverpod_client/serverpod_client.dart' as _i2;
+import '../../stock/models/stock.dart' as _i3;
+import 'package:invman_client/src/protocol/protocol.dart' as _i4;
 
-abstract class StockList implements _i1.SerializableModel {
+abstract class StockList extends _i1.PaginationList
+    implements _i2.SerializableModel {
   StockList._({
-    required this.count,
+    required super.count,
+    required super.page,
+    required super.limit,
+    required super.numPages,
+    required super.canLoadMore,
     required this.results,
-    required this.page,
-    required this.limit,
-    required this.numPages,
-    required this.canLoadMore,
   });
 
   factory StockList({
     required int count,
-    required List<_i2.Stock> results,
     required int page,
     required int limit,
     required int numPages,
     required bool canLoadMore,
+    required List<_i3.Stock> results,
   }) = _StockListImpl;
 
   factory StockList.fromJson(Map<String, dynamic> jsonSerialization) {
     return StockList(
       count: jsonSerialization['count'] as int,
-      results: _i3.Protocol().deserialize<List<_i2.Stock>>(
-        jsonSerialization['results'],
-      ),
       page: jsonSerialization['page'] as int,
       limit: jsonSerialization['limit'] as int,
       numPages: jsonSerialization['numPages'] as int,
       canLoadMore: jsonSerialization['canLoadMore'] as bool,
+      results: _i4.Protocol().deserialize<List<_i3.Stock>>(
+        jsonSerialization['results'],
+      ),
     );
   }
 
-  int count;
-
-  List<_i2.Stock> results;
-
-  int page;
-
-  int limit;
-
-  int numPages;
-
-  bool canLoadMore;
+  List<_i3.Stock> results;
 
   /// Returns a shallow copy of this [StockList]
   /// with some or all fields replaced by the given arguments.
-  @_i1.useResult
+  @override
+  @_i2.useResult
   StockList copyWith({
     int? count,
-    List<_i2.Stock>? results,
     int? page,
     int? limit,
     int? numPages,
     bool? canLoadMore,
+    List<_i3.Stock>? results,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'StockList',
       'count': count,
-      'results': results.toJson(valueToJson: (v) => v.toJson()),
       'page': page,
       'limit': limit,
       'numPages': numPages,
       'canLoadMore': canLoadMore,
+      'results': results.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
   @override
   String toString() {
-    return _i1.SerializationManager.encode(this);
+    return _i2.SerializationManager.encode(this);
   }
 }
 
 class _StockListImpl extends StockList {
   _StockListImpl({
     required int count,
-    required List<_i2.Stock> results,
     required int page,
     required int limit,
     required int numPages,
     required bool canLoadMore,
+    required List<_i3.Stock> results,
   }) : super._(
          count: count,
-         results: results,
          page: page,
          limit: limit,
          numPages: numPages,
          canLoadMore: canLoadMore,
+         results: results,
        );
 
   /// Returns a shallow copy of this [StockList]
   /// with some or all fields replaced by the given arguments.
-  @_i1.useResult
+  @_i2.useResult
   @override
   StockList copyWith({
     int? count,
-    List<_i2.Stock>? results,
     int? page,
     int? limit,
     int? numPages,
     bool? canLoadMore,
+    List<_i3.Stock>? results,
   }) {
     return StockList(
       count: count ?? this.count,
-      results: results ?? this.results.map((e0) => e0.copyWith()).toList(),
       page: page ?? this.page,
       limit: limit ?? this.limit,
       numPages: numPages ?? this.numPages,
       canLoadMore: canLoadMore ?? this.canLoadMore,
+      results: results ?? this.results.map((e0) => e0.copyWith()).toList(),
     );
   }
 }

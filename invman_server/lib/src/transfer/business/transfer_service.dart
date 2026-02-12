@@ -1,7 +1,9 @@
+import 'package:injectable/injectable.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:invman_server/src/investment/investment.dart';
 import 'package:serverpod/serverpod.dart';
 
+@injectable
 class TransferService {
   TransferService({required this.investmentService});
 
@@ -65,7 +67,7 @@ class TransferService {
     );
   }
 
-  Future<TransferList> list(Session session, int investmentId, {int limit = 10, int page = 1}) async {
+  Future<TransferList> list(Session session, int investmentId, {required int limit, required int page}) async {
     await investmentService.retrieve(session, investmentId);
 
     final count = await Transfer.db.count(session, where: (e) => e.investmentId.equals(investmentId));

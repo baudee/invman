@@ -9,7 +9,7 @@ class WithdrawalRoutes {
   static final routes = [
     GoRoute(
       path: WithdrawalRuleRootScreen.route(),
-      builder: (_, __) => WithdrawalRuleRootScreen(),
+      builder: (_, _) => WithdrawalRuleRootScreen(),
       routes: [
         GoRoute(
           path: WithdrawalRuleDetailScreen.route(),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:invman_flutter/core/navigation/router/app_router.dart';
+import 'package:invman_flutter/core/navigation/router.dart';
 
 class ToastUtils {
   static void message(String? text, {bool success = true}) {

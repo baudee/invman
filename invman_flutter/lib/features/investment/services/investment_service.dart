@@ -1,16 +1,16 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:injectable/injectable.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/core/core.dart';
 
+@injectable
 class InvestmentService {
   final Client client;
 
   const InvestmentService(this.client);
 
-  Future<Either<String, List<Investment>>> list() async {
-    return safeCall(() async {
-      return right(await client.investment.list());
-    });
+  Future<List<Investment>> list() async {
+    return client.investment.list();
   }
 
   Future<Either<String, Investment>> save(Investment investment) async {
@@ -25,9 +25,7 @@ class InvestmentService {
     });
   }
 
-  Future<Either<String, Investment>> retrieve(int id) async {
-    return safeCall(() async {
-      return right(await client.investment.retrieve(id));
-    });
+  Future<Investment> retrieve(int id) async {
+    return client.investment.retrieve(id);
   }
 }

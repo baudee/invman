@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
-import 'package:invman_flutter/core/navigation/navigation.dart';
+import 'package:go_router/go_router.dart';
+import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/transfer/transfer.dart';
 
@@ -13,20 +13,20 @@ class TransferRootScreen extends BaseScreen {
   static String route() => InvestmentRoutes.namespaceTransfer;
 
   @override
-  AppBar? appBar(BuildContext context, WidgetRef ref) {
+  AppBar? appBar(BuildContext context) {
     return AppBar(title: Text(S.of(context).transfer_title));
   }
 
   @override
-  Widget body(BuildContext context, WidgetRef ref) {
+  Widget body(BuildContext context) {
     return TransferListComponent(investmentId: investmentId);
   }
 
   @override
-  FloatingActionButton? floatingActionButton(BuildContext context, WidgetRef ref) {
+  FloatingActionButton? floatingActionButton(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
-        router.pushRelative(TransferEditScreen.route(0));
+        getIt<GoRouter>().pushRelative(TransferEditScreen.route(0));
       },
       child: Icon(Icons.add),
     );

@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/di.dart';
+import 'package:invman_flutter/features/auth/auth.dart';
 
-class WithdrawalFeeDetailComponent extends ConsumerWidget {
+class WithdrawalFeeDetailComponent extends StatelessWidget {
   final WithdrawalFee fee;
   const WithdrawalFeeDetailComponent({super.key, required this.fee});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final currency = ref.read(userPreferencesProvider).currency;
-    
+  Widget build(BuildContext context) {
+    final currency = (getIt<AuthController>().state.value as AuthStateSuccess).account.currency;
+
     return SingleChildScrollView(
       child: Column(
         children: [
-          _buildDetailCard(
-            context,
-            S.of(context).withdrawal_percentage,
-            "${fee.percent}%",
-            Icons.percent,
-          ),
+          _buildDetailCard(context, S.of(context).withdrawal_percentage, "${fee.percent}%", Icons.percent),
           const SizedBox(height: UIConstants.spacingMd),
           _buildDetailCard(
             context,
@@ -39,10 +35,10 @@ class WithdrawalFeeDetailComponent extends ConsumerWidget {
       ),
     );
   }
-  
+
   Widget _buildDetailCard(BuildContext context, String label, String value, IconData icon) {
     final theme = Theme.of(context);
-    
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(UIConstants.spacingLg),
@@ -65,11 +61,7 @@ class WithdrawalFeeDetailComponent extends ConsumerWidget {
               color: theme.colorScheme.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(UIConstants.radiusSm),
             ),
-            child: Icon(
-              icon,
-              color: theme.colorScheme.primary,
-              size: UIConstants.iconMd,
-            ),
+            child: Icon(icon, color: theme.colorScheme.primary, size: UIConstants.iconMd),
           ),
           const SizedBox(width: UIConstants.spacingLg),
           Expanded(
@@ -84,12 +76,7 @@ class WithdrawalFeeDetailComponent extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: UIConstants.spacingXs),
-                Text(
-                  value,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                Text(value, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
               ],
             ),
           ),

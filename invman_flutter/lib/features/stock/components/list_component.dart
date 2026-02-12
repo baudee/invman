@@ -1,28 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invman_client/invman_client.dart';
-import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/core/components/components.dart';
+import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
 
-class StockListComponent extends ConsumerWidget {
+class StockListComponent extends StatelessWidget {
   final void Function(Stock stock)? onTileTap;
   const StockListComponent({super.key, this.onTileTap});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final controller = getIt<StockSearchListController>();
     return BaseStateComponent<List<Stock>>(
-      state: ref.watch(stockSearchListProvider),
-      successBuilder: (data) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: UIConstants.spacingSm),
-        child: ListView.separated(
-          itemCount: data.length,
-          separatorBuilder: (context, index) => const SizedBox(height: UIConstants.spacingXs),
-          itemBuilder: (context, index) {
-            final stock = data[index];
-            return StockTileComponent(stock: stock, onTap: onTileTap);
-          },
-        ),
-      ),
+      state: controller.state,
+      successBuilder: (data) => data.isEmpty
+          ? const SizedBox.shrink()
+          : ListView.builder(
+              itemCount: data.length,
+              itemBuilder: (context, index) {
+                return StockTileComponent(stock: data[index], onTap: onTileTap);
+              },
+            ),
     );
   }
 }

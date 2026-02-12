@@ -1,4 +1,0 @@
-class: CachedCurrencyChange
-
-fields:
-    currencyChange: double

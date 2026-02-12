@@ -1,5 +1,5 @@
 import 'package:invman_server/src/core/helpers/helpers.dart';
-import 'package:invman_server/src/dependency_injection.dart';
+import 'package:invman_server/src/di.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:invman_server/src/withdrawal/withdrawal.dart';
 import 'package:serverpod/serverpod.dart';

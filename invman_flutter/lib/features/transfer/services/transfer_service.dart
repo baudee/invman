@@ -1,17 +1,17 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:injectable/injectable.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/core/core.dart';
 
+@injectable
 class TransferService {
   final Client client;
 
   const TransferService(this.client);
 
-  Future<Either<String, Transfer>> retrieve(int id) async {
-    return safeCall(() async {
-      Transfer transfer = await client.transfer.retrieve(id);
-      return right(transfer.copyWith(createdAt: transfer.createdAt.toLocal()));
-    });
+  Future<Transfer> retrieve(int id) async {
+    Transfer transfer = await client.transfer.retrieve(id);
+    return transfer.copyWith(createdAt: transfer.createdAt.toLocal());
   }
 
   Future<Either<String, Transfer>> save(Transfer transfer) async {

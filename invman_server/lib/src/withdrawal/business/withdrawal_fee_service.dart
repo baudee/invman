@@ -1,8 +1,11 @@
+import 'package:injectable/injectable.dart';
 import 'package:invman_server/src/core/helpers/helpers.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:invman_server/src/withdrawal/withdrawal.dart';
 import 'package:serverpod/serverpod.dart';
+import 'package:serverpod_auth_idp_server/core.dart';
 
+@injectable
 class WithdrawalFeeService {
   final WithdrawalRuleService ruleService;
   WithdrawalFeeService({required this.ruleService});
@@ -19,7 +22,7 @@ class WithdrawalFeeService {
     }
 
     final sessionUser = session.authenticated;
-    if (withdrawal.rule?.userId != sessionUser) {
+    if (withdrawal.rule?.userId != sessionUser!.authUserId) {
       throw ServerException(errorCode: ErrorCode.forbidden);
     }
 

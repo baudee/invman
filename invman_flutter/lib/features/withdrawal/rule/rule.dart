@@ -1,3 +1,3 @@
 export 'components/components.dart';
-export 'providers/providers.dart';
+export 'controllers/controllers.dart';
 export 'screens/screens.dart';

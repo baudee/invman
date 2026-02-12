@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
 
 class StockRoutes {
@@ -11,15 +12,15 @@ class StockRoutes {
     routes: [
       GoRoute(
         path: StockSearchScreen.route(),
-        builder: (_, __) => StockSearchScreen(),
+        builder: (_, _) => StockSearchScreen(),
       ),
       GoRoute(
         path: StockSelectScreen.route(),
-        builder: (_, __) => StockSelectScreen(),
+        builder: (_, _) => StockSelectScreen(),
       ),
       GoRoute(
         path: StockDetailScreen.route(),
-        builder: (_, state) => StockDetailScreen(symbol: state.pathParameters['symbol'] ?? ''),
+        builder: (_, state) => StockDetailScreen(uuid: UuidValue.fromString(state.pathParameters['uuid'] ?? '')),
       ),
     ],
   );

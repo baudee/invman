@@ -1,3 +1,4 @@
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class StorageClient {
@@ -18,6 +19,7 @@ abstract class StorageClient {
   Future<bool> setInt(String key, int value);
 }
 
+@Singleton(as: StorageClient)
 class StorageClientSharedPrefsImpl extends StorageClient {
   late final SharedPreferences _instance;
 

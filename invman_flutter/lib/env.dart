@@ -1,21 +1,14 @@
-enum Flavor {
-  develop,
-  staging,
-  production,
-}
+import 'package:injectable/injectable.dart';
 
+enum Flavor { develop, staging, production }
+
+@singleton
 class Env {
-  static final Env _instance = Env._internal();
-
   late final Flavor flavor;
   late final String baseUrl;
   late final String sentryDsn;
 
-  factory Env() {
-    return _instance;
-  }
-
-  Env._internal() {
+  Env() {
     switch (const String.fromEnvironment("APP_FLAVOR")) {
       case 'develop':
         flavor = Flavor.develop;

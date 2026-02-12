@@ -1,20 +1,25 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
+import 'package:invman_flutter/di.dart';
+import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:invman_flutter/core/core.dart';
-import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/config/theme/themes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:invman_flutter/env.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 late final SharedPreferences prefs;
 
 void main() async {
-  final env = Env();
+  // DEPENDENCY INJECTION
+  configureDependencies();
 
+  final env = getIt<Env>();
   if (env.sentryDsn.isNotEmpty) {
     await SentryFlutter.init(
       (options) {
@@ -41,38 +46,24 @@ Future<void> _initializeApp() async {
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  prefs = await SharedPreferences.getInstance();
+  await getIt<StorageClient>().init();
+  await S.load(getIt<UserPreferencesController>().locale.value);
+  await getIt<AuthController>().init();
 
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(const MyApp());
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final booting = ref.watch(bootstrapProvider);
-
-    final appName = "InvMan";
-
-    if (booting) {
-      return MaterialApp(
-        title: appName,
-        theme: AppTheme.light().themeData,
-        darkTheme: AppTheme.dark().themeData,
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(body: LoadingComponent()),
-      );
-    }
-
-    router = ref.read(appRouterProvider);
-
+  Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: appName,
+      title: "InvMan",
       theme: AppTheme.light().themeData,
       darkTheme: AppTheme.dark().themeData,
-      themeMode: ref.watch(userPreferencesProvider.select((value) => value.theme)),
-      locale: ref.watch(userPreferencesProvider.select((value) => value.locale)),
+      themeMode: getIt<UserPreferencesController>().theme.watch(context),
+      locale: getIt<UserPreferencesController>().locale.watch(context),
       localizationsDelegates: const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,

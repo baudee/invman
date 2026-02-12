@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
-import 'package:invman_flutter/core/components/base/base.dart';
+import 'package:invman_flutter/core/components/components.dart';
+import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
-class WithdrawalRuleSelectScreen extends BaseScreen {
+class WithdrawalRuleSelectScreen extends HookWidget {
   const WithdrawalRuleSelectScreen({super.key});
+
   static String route() => "${WithdrawalRoutes.namespace}/select";
 
   @override
-  Widget body(BuildContext context, WidgetRef ref) {
-    return Scaffold(
+  Widget build(BuildContext context) {
+    final controller = useMemoized(() => getIt<WithdrawalRuleListController>());
+    return BaseScreen(
       appBar: AppBar(title: Text(S.of(context).withdrawal_title)),
-      body: WithdrawalRuleListComponent(onTileTap: (rule) => context.pop(rule)),
+      body: BaseStateComponent(
+        state: controller,
+        successBuilder: (_) => InfiniteListComponent(
+          controller: controller,
+          itemBuilder: (rule) => WithdrawalRuleTileComponent(rule: rule, onTap: () => context.pop(rule)),
+        ),
+      ),
     );
   }
 }

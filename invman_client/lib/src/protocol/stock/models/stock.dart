@@ -11,82 +11,102 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
+import '../../stock/models/stock_type.dart' as _i2;
+import '../../currency/models/currency.dart' as _i3;
+import '../../stock/models/stock_price.dart' as _i4;
+import 'package:invman_client/src/protocol/protocol.dart' as _i5;
 
 abstract class Stock implements _i1.SerializableModel {
   Stock._({
-    this.id,
+    _i1.UuidValue? id,
     required this.symbol,
-    required this.name,
-    required this.value,
-    required this.currency,
+    required this.shortName,
+    required this.longName,
     required this.quoteType,
-    required this.updatedAt,
-  });
+    required this.currencyId,
+    this.currency,
+    this.prices,
+  }) : id = id ?? _i1.Uuid().v4obj();
 
   factory Stock({
-    int? id,
+    _i1.UuidValue? id,
     required String symbol,
-    required String name,
-    required double value,
-    required String currency,
-    required String quoteType,
-    required DateTime updatedAt,
+    required String shortName,
+    required String longName,
+    required _i2.StockType quoteType,
+    required int currencyId,
+    _i3.Currency? currency,
+    List<_i4.StockPrice>? prices,
   }) = _StockImpl;
 
   factory Stock.fromJson(Map<String, dynamic> jsonSerialization) {
     return Stock(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       symbol: jsonSerialization['symbol'] as String,
-      name: jsonSerialization['name'] as String,
-      value: (jsonSerialization['value'] as num).toDouble(),
-      currency: jsonSerialization['currency'] as String,
-      quoteType: jsonSerialization['quoteType'] as String,
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
+      shortName: jsonSerialization['shortName'] as String,
+      longName: jsonSerialization['longName'] as String,
+      quoteType: _i2.StockType.fromJson(
+        (jsonSerialization['quoteType'] as String),
       ),
+      currencyId: jsonSerialization['currencyId'] as int,
+      currency: jsonSerialization['currency'] == null
+          ? null
+          : _i5.Protocol().deserialize<_i3.Currency>(
+              jsonSerialization['currency'],
+            ),
+      prices: jsonSerialization['prices'] == null
+          ? null
+          : _i5.Protocol().deserialize<List<_i4.StockPrice>>(
+              jsonSerialization['prices'],
+            ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
-  int? id;
+  /// The id of the object.
+  _i1.UuidValue id;
 
   String symbol;
 
-  String name;
+  String shortName;
 
-  double value;
+  String longName;
 
-  String currency;
+  _i2.StockType quoteType;
 
-  String quoteType;
+  int currencyId;
 
-  DateTime updatedAt;
+  _i3.Currency? currency;
+
+  List<_i4.StockPrice>? prices;
 
   /// Returns a shallow copy of this [Stock]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Stock copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? symbol,
-    String? name,
-    double? value,
-    String? currency,
-    String? quoteType,
-    DateTime? updatedAt,
+    String? shortName,
+    String? longName,
+    _i2.StockType? quoteType,
+    int? currencyId,
+    _i3.Currency? currency,
+    List<_i4.StockPrice>? prices,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Stock',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'symbol': symbol,
-      'name': name,
-      'value': value,
-      'currency': currency,
-      'quoteType': quoteType,
-      'updatedAt': updatedAt.toJson(),
+      'shortName': shortName,
+      'longName': longName,
+      'quoteType': quoteType.toJson(),
+      'currencyId': currencyId,
+      if (currency != null) 'currency': currency?.toJson(),
+      if (prices != null)
+        'prices': prices?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -100,21 +120,23 @@ class _Undefined {}
 
 class _StockImpl extends Stock {
   _StockImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String symbol,
-    required String name,
-    required double value,
-    required String currency,
-    required String quoteType,
-    required DateTime updatedAt,
+    required String shortName,
+    required String longName,
+    required _i2.StockType quoteType,
+    required int currencyId,
+    _i3.Currency? currency,
+    List<_i4.StockPrice>? prices,
   }) : super._(
          id: id,
          symbol: symbol,
-         name: name,
-         value: value,
-         currency: currency,
+         shortName: shortName,
+         longName: longName,
          quoteType: quoteType,
-         updatedAt: updatedAt,
+         currencyId: currencyId,
+         currency: currency,
+         prices: prices,
        );
 
   /// Returns a shallow copy of this [Stock]
@@ -122,22 +144,28 @@ class _StockImpl extends Stock {
   @_i1.useResult
   @override
   Stock copyWith({
-    Object? id = _Undefined,
+    _i1.UuidValue? id,
     String? symbol,
-    String? name,
-    double? value,
-    String? currency,
-    String? quoteType,
-    DateTime? updatedAt,
+    String? shortName,
+    String? longName,
+    _i2.StockType? quoteType,
+    int? currencyId,
+    Object? currency = _Undefined,
+    Object? prices = _Undefined,
   }) {
     return Stock(
-      id: id is int? ? id : this.id,
+      id: id ?? this.id,
       symbol: symbol ?? this.symbol,
-      name: name ?? this.name,
-      value: value ?? this.value,
-      currency: currency ?? this.currency,
+      shortName: shortName ?? this.shortName,
+      longName: longName ?? this.longName,
       quoteType: quoteType ?? this.quoteType,
-      updatedAt: updatedAt ?? this.updatedAt,
+      currencyId: currencyId ?? this.currencyId,
+      currency: currency is _i3.Currency?
+          ? currency
+          : this.currency?.copyWith(),
+      prices: prices is List<_i4.StockPrice>?
+          ? prices
+          : this.prices?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }

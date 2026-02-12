@@ -11,73 +11,124 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import '../auth/email_idp_endpoint.dart' as _i2;
-import '../auth/jwt_refresh_endpoint.dart' as _i3;
-import '../investment/endpoints/investment_endpoint.dart' as _i4;
-import '../stock/endpoints/stock_endpoint.dart' as _i5;
-import '../transfer/endpoints/transfer_endpoint.dart' as _i6;
-import '../withdrawal/endpoints/withdrawal_fee_endpoint.dart' as _i7;
-import '../withdrawal/endpoints/withdrawal_rule_endpoint.dart' as _i8;
-import 'package:invman_server/src/generated/investment/models/investment.dart'
-    as _i9;
-import 'package:invman_server/src/generated/transfer/models/transfer.dart'
-    as _i10;
-import 'package:invman_server/src/generated/withdrawal/models/withdrawal_fee.dart'
+import '../account/endpoints/account_endpoint.dart' as _i2;
+import '../auth/email_idp_endpoint.dart' as _i3;
+import '../auth/jwt_refresh_endpoint.dart' as _i4;
+import '../currency/endpoints/currency_endpoint.dart' as _i5;
+import '../investment/endpoints/investment_endpoint.dart' as _i6;
+import '../stock/endpoints/stock_endpoint.dart' as _i7;
+import '../transfer/endpoints/transfer_endpoint.dart' as _i8;
+import '../withdrawal/endpoints/withdrawal_fee_endpoint.dart' as _i9;
+import '../withdrawal/endpoints/withdrawal_rule_endpoint.dart' as _i10;
+import 'package:invman_server/src/generated/account/models/account.dart'
     as _i11;
-import 'package:invman_server/src/generated/withdrawal/models/withdrawal_rule.dart'
+import 'package:invman_server/src/generated/investment/models/investment.dart'
     as _i12;
-import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
+import 'package:invman_server/src/generated/transfer/models/transfer.dart'
     as _i13;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+import 'package:invman_server/src/generated/withdrawal/models/withdrawal_fee.dart'
     as _i14;
+import 'package:invman_server/src/generated/withdrawal/models/withdrawal_rule.dart'
+    as _i15;
+import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
+    as _i16;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+    as _i17;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
   void initializeEndpoints(_i1.Server server) {
     var endpoints = <String, _i1.Endpoint>{
-      'emailIdp': _i2.EmailIdpEndpoint()
+      'account': _i2.AccountEndpoint()
+        ..initialize(
+          server,
+          'account',
+          null,
+        ),
+      'emailIdp': _i3.EmailIdpEndpoint()
         ..initialize(
           server,
           'emailIdp',
           null,
         ),
-      'jwtRefresh': _i3.JwtRefreshEndpoint()
+      'jwtRefresh': _i4.JwtRefreshEndpoint()
         ..initialize(
           server,
           'jwtRefresh',
           null,
         ),
-      'investment': _i4.InvestmentEndpoint()
+      'currency': _i5.CurrencyEndpoint()
+        ..initialize(
+          server,
+          'currency',
+          null,
+        ),
+      'investment': _i6.InvestmentEndpoint()
         ..initialize(
           server,
           'investment',
           null,
         ),
-      'stock': _i5.StockEndpoint()
+      'stock': _i7.StockEndpoint()
         ..initialize(
           server,
           'stock',
           null,
         ),
-      'transfer': _i6.TransferEndpoint()
+      'transfer': _i8.TransferEndpoint()
         ..initialize(
           server,
           'transfer',
           null,
         ),
-      'withdrawalFee': _i7.WithdrawalFeeEndpoint()
+      'withdrawalFee': _i9.WithdrawalFeeEndpoint()
         ..initialize(
           server,
           'withdrawalFee',
           null,
         ),
-      'withdrawalRule': _i8.WithdrawalRuleEndpoint()
+      'withdrawalRule': _i10.WithdrawalRuleEndpoint()
         ..initialize(
           server,
           'withdrawalRule',
           null,
         ),
     };
+    connectors['account'] = _i1.EndpointConnector(
+      name: 'account',
+      endpoint: endpoints['account']!,
+      methodConnectors: {
+        'retrieve': _i1.MethodConnector(
+          name: 'retrieve',
+          params: {},
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['account'] as _i2.AccountEndpoint).retrieve(
+                session,
+              ),
+        ),
+        'save': _i1.MethodConnector(
+          name: 'save',
+          params: {
+            'account': _i1.ParameterDescription(
+              name: 'account',
+              type: _i1.getType<_i11.Account>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['account'] as _i2.AccountEndpoint).save(
+                session,
+                params['account'],
+              ),
+        ),
+      },
+    );
     connectors['emailIdp'] = _i1.EndpointConnector(
       name: 'emailIdp',
       endpoint: endpoints['emailIdp']!,
@@ -100,7 +151,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['emailIdp'] as _i2.EmailIdpEndpoint).login(
+              ) async => (endpoints['emailIdp'] as _i3.EmailIdpEndpoint).login(
                 session,
                 email: params['email'],
                 password: params['password'],
@@ -119,7 +170,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['emailIdp'] as _i2.EmailIdpEndpoint)
+              ) async => (endpoints['emailIdp'] as _i3.EmailIdpEndpoint)
                   .startRegistration(
                     session,
                     email: params['email'],
@@ -143,7 +194,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['emailIdp'] as _i2.EmailIdpEndpoint)
+              ) async => (endpoints['emailIdp'] as _i3.EmailIdpEndpoint)
                   .verifyRegistrationCode(
                     session,
                     accountRequestId: params['accountRequestId'],
@@ -168,7 +219,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['emailIdp'] as _i2.EmailIdpEndpoint)
+              ) async => (endpoints['emailIdp'] as _i3.EmailIdpEndpoint)
                   .finishRegistration(
                     session,
                     registrationToken: params['registrationToken'],
@@ -188,7 +239,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['emailIdp'] as _i2.EmailIdpEndpoint)
+              ) async => (endpoints['emailIdp'] as _i3.EmailIdpEndpoint)
                   .startPasswordReset(
                     session,
                     email: params['email'],
@@ -212,7 +263,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['emailIdp'] as _i2.EmailIdpEndpoint)
+              ) async => (endpoints['emailIdp'] as _i3.EmailIdpEndpoint)
                   .verifyPasswordResetCode(
                     session,
                     passwordResetRequestId: params['passwordResetRequestId'],
@@ -237,7 +288,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['emailIdp'] as _i2.EmailIdpEndpoint)
+              ) async => (endpoints['emailIdp'] as _i3.EmailIdpEndpoint)
                   .finishPasswordReset(
                     session,
                     finishPasswordResetToken:
@@ -264,11 +315,27 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['jwtRefresh'] as _i3.JwtRefreshEndpoint)
+              ) async => (endpoints['jwtRefresh'] as _i4.JwtRefreshEndpoint)
                   .refreshAccessToken(
                     session,
                     refreshToken: params['refreshToken'],
                   ),
+        ),
+      },
+    );
+    connectors['currency'] = _i1.EndpointConnector(
+      name: 'currency',
+      endpoint: endpoints['currency']!,
+      methodConnectors: {
+        'list': _i1.MethodConnector(
+          name: 'list',
+          params: {},
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['currency'] as _i5.CurrencyEndpoint).list(session),
         ),
       },
     );
@@ -283,7 +350,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['investment'] as _i4.InvestmentEndpoint)
+              ) async => (endpoints['investment'] as _i6.InvestmentEndpoint)
                   .list(session),
         ),
         'save': _i1.MethodConnector(
@@ -291,7 +358,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'investment': _i1.ParameterDescription(
               name: 'investment',
-              type: _i1.getType<_i9.Investment>(),
+              type: _i1.getType<_i12.Investment>(),
               nullable: false,
             ),
           },
@@ -300,7 +367,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['investment'] as _i4.InvestmentEndpoint).save(
+                  (endpoints['investment'] as _i6.InvestmentEndpoint).save(
                     session,
                     params['investment'],
                   ),
@@ -319,7 +386,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['investment'] as _i4.InvestmentEndpoint).delete(
+                  (endpoints['investment'] as _i6.InvestmentEndpoint).delete(
                     session,
                     params['id'],
                   ),
@@ -338,7 +405,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['investment'] as _i4.InvestmentEndpoint).retrieve(
+                  (endpoints['investment'] as _i6.InvestmentEndpoint).retrieve(
                     session,
                     params['id'],
                   ),
@@ -352,9 +419,9 @@ class Endpoints extends _i1.EndpointDispatch {
         'retrieve': _i1.MethodConnector(
           name: 'retrieve',
           params: {
-            'symbol': _i1.ParameterDescription(
-              name: 'symbol',
-              type: _i1.getType<String>(),
+            'uuid': _i1.ParameterDescription(
+              name: 'uuid',
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
           },
@@ -362,9 +429,9 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['stock'] as _i5.StockEndpoint).retrieve(
+              ) async => (endpoints['stock'] as _i7.StockEndpoint).retrieve(
                 session,
-                params['symbol'],
+                params['uuid'],
               ),
         ),
         'search': _i1.MethodConnector(
@@ -380,15 +447,21 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<int>(),
               nullable: false,
             ),
+            'page': _i1.ParameterDescription(
+              name: 'page',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
           },
           call:
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['stock'] as _i5.StockEndpoint).search(
+              ) async => (endpoints['stock'] as _i7.StockEndpoint).search(
                 session,
                 query: params['query'],
                 limit: params['limit'],
+                page: params['page'],
               ),
         ),
       },
@@ -411,7 +484,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['transfer'] as _i6.TransferEndpoint).retrieve(
+                  (endpoints['transfer'] as _i8.TransferEndpoint).retrieve(
                     session,
                     params['id'],
                   ),
@@ -421,7 +494,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'transfer': _i1.ParameterDescription(
               name: 'transfer',
-              type: _i1.getType<_i10.Transfer>(),
+              type: _i1.getType<_i13.Transfer>(),
               nullable: false,
             ),
           },
@@ -429,7 +502,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['transfer'] as _i6.TransferEndpoint).save(
+              ) async => (endpoints['transfer'] as _i8.TransferEndpoint).save(
                 session,
                 params['transfer'],
               ),
@@ -447,7 +520,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['transfer'] as _i6.TransferEndpoint).delete(
+              ) async => (endpoints['transfer'] as _i8.TransferEndpoint).delete(
                 session,
                 params['id'],
               ),
@@ -475,7 +548,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['transfer'] as _i6.TransferEndpoint).list(
+              ) async => (endpoints['transfer'] as _i8.TransferEndpoint).list(
                 session,
                 params['investmentId'],
                 limit: params['limit'],
@@ -502,7 +575,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['withdrawalFee'] as _i7.WithdrawalFeeEndpoint)
+                  (endpoints['withdrawalFee'] as _i9.WithdrawalFeeEndpoint)
                       .retrieve(
                         session,
                         params['id'],
@@ -513,7 +586,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'fee': _i1.ParameterDescription(
               name: 'fee',
-              type: _i1.getType<_i11.WithdrawalFee>(),
+              type: _i1.getType<_i14.WithdrawalFee>(),
               nullable: false,
             ),
           },
@@ -522,7 +595,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['withdrawalFee'] as _i7.WithdrawalFeeEndpoint)
+                  (endpoints['withdrawalFee'] as _i9.WithdrawalFeeEndpoint)
                       .save(
                         session,
                         params['fee'],
@@ -542,7 +615,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['withdrawalFee'] as _i7.WithdrawalFeeEndpoint)
+                  (endpoints['withdrawalFee'] as _i9.WithdrawalFeeEndpoint)
                       .delete(
                         session,
                         params['id'],
@@ -573,7 +646,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['withdrawalRule'] as _i8.WithdrawalRuleEndpoint)
+                  (endpoints['withdrawalRule'] as _i10.WithdrawalRuleEndpoint)
                       .list(
                         session,
                         limit: params['limit'],
@@ -594,7 +667,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['withdrawalRule'] as _i8.WithdrawalRuleEndpoint)
+                  (endpoints['withdrawalRule'] as _i10.WithdrawalRuleEndpoint)
                       .retrieve(
                         session,
                         params['id'],
@@ -605,7 +678,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'transfer': _i1.ParameterDescription(
               name: 'transfer',
-              type: _i1.getType<_i12.WithdrawalRule>(),
+              type: _i1.getType<_i15.WithdrawalRule>(),
               nullable: false,
             ),
           },
@@ -614,7 +687,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['withdrawalRule'] as _i8.WithdrawalRuleEndpoint)
+                  (endpoints['withdrawalRule'] as _i10.WithdrawalRuleEndpoint)
                       .save(
                         session,
                         params['transfer'],
@@ -634,7 +707,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['withdrawalRule'] as _i8.WithdrawalRuleEndpoint)
+                  (endpoints['withdrawalRule'] as _i10.WithdrawalRuleEndpoint)
                       .delete(
                         session,
                         params['id'],
@@ -642,9 +715,9 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    modules['serverpod_auth_idp'] = _i13.Endpoints()
+    modules['serverpod_auth_idp'] = _i16.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i14.Endpoints()
+    modules['serverpod_auth_core'] = _i17.Endpoints()
       ..initializeEndpoints(server);
   }
 }

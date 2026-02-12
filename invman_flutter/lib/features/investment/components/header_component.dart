@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/di.dart';
+import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
 
-class InvestmentHeaderComponent extends ConsumerWidget {
+class InvestmentHeaderComponent extends StatelessWidget {
   final Investment investment;
 
   const InvestmentHeaderComponent({super.key, required this.investment});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final currency = ref.read(userPreferencesProvider).currency;
+    final currency = (getIt<AuthController>().state.value as AuthStateSuccess).account.currency;
 
     return Container(
       margin: const EdgeInsets.only(bottom: UIConstants.spacingSm),

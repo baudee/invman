@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
+import 'package:invman_flutter/core/components/components.dart';
 
 class SaveButton extends StatelessWidget {
   final void Function()? onPressed;
@@ -7,12 +8,6 @@ class SaveButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        minimumSize: const Size(double.infinity, 0),
-      ),
-      child: Text(S.of(context).core_save),
-    );
+    return ActionButton(onPressed: onPressed, child: Text(S.of(context).core_save));
   }
 }

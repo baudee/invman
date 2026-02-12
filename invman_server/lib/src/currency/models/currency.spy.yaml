@@ -1,0 +1,7 @@
+class: Currency
+
+table: currency
+
+fields:
+  code: String
+  rates: List<CurrencyRate>?, relation(optional, name=currency_currency_rates)

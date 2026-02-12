@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invman_flutter/core/utils/utils.dart';
 
-abstract class BaseComponent extends ConsumerWidget {
+abstract class BaseComponent extends StatelessWidget {
   const BaseComponent({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     switch (ScreenUtils.size(context)) {
       case ScreenSize.lg:
-        return bodyLg(context, ref);
+        return bodyLg(context);
       case ScreenSize.md:
-        return bodyMd(context, ref);
+        return bodyMd(context);
       case ScreenSize.sm:
-        return body(context, ref);
+        return body(context);
     }
   }
 
-  Widget body(BuildContext context, WidgetRef ref) {
+  Widget body(BuildContext context) {
     return const SizedBox.shrink();
   }
 
-  Widget bodyMd(BuildContext context, WidgetRef ref) {
-    return body(context, ref);
+  Widget bodyMd(BuildContext context) {
+    return body(context);
   }
 
-  Widget bodyLg(BuildContext context, WidgetRef ref) {
-    return bodyMd(context, ref);
+  Widget bodyLg(BuildContext context) {
+    return bodyMd(context);
   }
 }

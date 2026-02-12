@@ -38,9 +38,9 @@ abstract class WithdrawalFee implements _i1.SerializableModel {
   factory WithdrawalFee.fromJson(Map<String, dynamic> jsonSerialization) {
     return WithdrawalFee(
       id: jsonSerialization['id'] as int?,
-      fixed: (jsonSerialization['fixed'] as num).toDouble(),
-      percent: (jsonSerialization['percent'] as num).toDouble(),
-      minimum: (jsonSerialization['minimum'] as num).toDouble(),
+      fixed: (jsonSerialization['fixed'] as num?)?.toDouble(),
+      percent: (jsonSerialization['percent'] as num?)?.toDouble(),
+      minimum: (jsonSerialization['minimum'] as num?)?.toDouble(),
       ruleId: jsonSerialization['ruleId'] as int,
       rule: jsonSerialization['rule'] == null
           ? null

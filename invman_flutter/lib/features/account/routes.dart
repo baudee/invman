@@ -12,7 +12,7 @@ class AccountRoutes {
     routes: [
       GoRoute(
         path: AccountRootScreen.route(),
-        builder: (_, __) => AccountRootScreen(),
+        builder: (_, _) => AccountRootScreen(),
         routes: [
           ...WithdrawalRoutes.routes,
         ],

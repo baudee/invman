@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
-import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
-class WithdrawalFeeEditScreen extends BaseScreen {
+class WithdrawalFeeEditScreen extends StatefulWidget {
   final int ruleId;
   final int id;
   const WithdrawalFeeEditScreen({super.key, required this.ruleId, required this.id});
@@ -12,19 +11,32 @@ class WithdrawalFeeEditScreen extends BaseScreen {
   static String route([int? id]) => id == null ? "/edit" : "${WithdrawalRoutes.namespaceFee}/$id/edit";
 
   @override
-  AppBar? appBar(BuildContext context, WidgetRef ref) {
-    return AppBar(
-      title: Text(id == 0 ? S.of(context).withdrawal_fee_create : S.of(context).withdrawal_fee_edit),
-    );
+  State<WithdrawalFeeEditScreen> createState() => _WithdrawalFeeEditScreenState();
+}
+
+class _WithdrawalFeeEditScreenState extends State<WithdrawalFeeEditScreen> {
+  late final WithdrawalFeeFormController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = getIt<WithdrawalFeeFormController>(param1: widget.ruleId, param2: widget.id);
   }
 
   @override
-  Widget body(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(withdrawalFeeFormProvider(ruleId, id));
-    return BaseStateComponent(
-      state: state,
-      successBuilder: (fee) => WithdrawalFeeFormComponent(ruleId: ruleId, id: id),
-      onErrorRefresh: () => ref.read(withdrawalFeeFormProvider(ruleId, id).notifier).load(),
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.id == 0 ? S.of(context).withdrawal_fee_create : S.of(context).withdrawal_fee_edit)),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: WithdrawalFeeFormComponent(controller: controller),
+      ),
     );
   }
 }

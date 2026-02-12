@@ -1,0 +1,7 @@
+class: PaginationList
+fields:
+    count: int
+    page: int
+    limit: int
+    numPages: int
+    canLoadMore: bool

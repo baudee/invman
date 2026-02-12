@@ -14,7 +14,7 @@ class InvestmentRoutes {
     routes: [
       GoRoute(
         path: InvestmentRootScreen.route(),
-        builder: (_, __) => InvestmentRootScreen(),
+        builder: (_, _) => InvestmentRootScreen(),
         routes: [
           GoRoute(
             path: InvestmentDetailScreen.route(),

@@ -44,9 +44,9 @@ abstract class Transfer implements _i1.SerializableModel {
             ),
       quantity: (jsonSerialization['quantity'] as num).toDouble(),
       amount: (jsonSerialization['amount'] as num).toDouble(),
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
     );
   }
 

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/features/stock/stock.dart';
 
-class StockDetailComponent extends ConsumerWidget {
+class StockDetailComponent extends StatelessWidget {
   final Stock stock;
   const StockDetailComponent({super.key, required this.stock});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return SingleChildScrollView(
@@ -20,10 +20,7 @@ class StockDetailComponent extends ConsumerWidget {
             padding: const EdgeInsets.all(UIConstants.spacingXxl),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  theme.colorScheme.primary,
-                  theme.colorScheme.primary.withValues(alpha: 0.8),
-                ],
+                colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.8)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -48,7 +45,7 @@ class StockDetailComponent extends ConsumerWidget {
                 ),
                 const SizedBox(height: UIConstants.spacingLg),
                 Text(
-                  stock.value.toStringPrice(stock.currency),
+                  stock.currentPrice.toStringPrice(stock.currency),
                   style: theme.textTheme.displayMedium?.copyWith(
                     color: theme.colorScheme.onPrimary,
                     fontWeight: FontWeight.w300,
@@ -67,19 +64,9 @@ class StockDetailComponent extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: UIConstants.spacingXxl),
-          _buildDetailCard(
-            context,
-            S.of(context).investment_currency,
-            stock.currency,
-            Icons.attach_money,
-          ),
+          _buildDetailCard(context, S.of(context).investment_currency, stock.currency?.code ?? '-', Icons.attach_money),
           const SizedBox(height: UIConstants.spacingMd),
-          _buildDetailCard(
-            context,
-            S.of(context).investment_quoteType,
-            stock.quoteType,
-            Icons.category,
-          ),
+          _buildDetailCard(context, S.of(context).investment_quoteType, stock.quoteType.name, Icons.category),
         ],
       ),
     );
@@ -110,11 +97,7 @@ class StockDetailComponent extends ConsumerWidget {
               color: theme.colorScheme.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(UIConstants.radiusSm),
             ),
-            child: Icon(
-              icon,
-              color: theme.colorScheme.primary,
-              size: UIConstants.iconMd,
-            ),
+            child: Icon(icon, color: theme.colorScheme.primary, size: UIConstants.iconMd),
           ),
           const SizedBox(width: UIConstants.spacingLg),
           Expanded(
@@ -129,12 +112,7 @@ class StockDetailComponent extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: UIConstants.spacingXs),
-                Text(
-                  value,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                Text(value, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
               ],
             ),
           ),

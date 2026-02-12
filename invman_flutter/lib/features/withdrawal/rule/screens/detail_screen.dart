@@ -1,45 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:invman_client/invman_client.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:invman_flutter/core/core.dart';
-import 'package:invman_flutter/core/navigation/navigation.dart';
+import 'package:invman_flutter/core/navigation/router.dart';
+import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
-class WithdrawalRuleDetailScreen extends BaseScreen<WithdrawalRule> {
+class WithdrawalRuleDetailScreen extends HookWidget {
   final int id;
   const WithdrawalRuleDetailScreen({super.key, required this.id});
   static String route([int? id]) => "/${id ?? ':id'}";
 
   @override
-  AppBar? appBar(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(withdrawalRuleDetailProvider(id));
-    return AppBar(
-      title: state is Success<WithdrawalRule> ? Text(state.data.name) : null,
-      actions: [
-        EditIconButton(
-          onPressed: () => router.pushRelative(WithdrawalRuleEditScreen.route()),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Widget body(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(withdrawalRuleDetailProvider(id));
-    return BaseStateComponent(
-      state: state,
-      successBuilder: (rule) => WithdrawalRuleDetailComponent(rule: rule),
-      onErrorRefresh: () => ref.read(withdrawalRuleDetailProvider(id).notifier).load(),
-    );
-  }
-
-  @override
-  FloatingActionButton? floatingActionButton(BuildContext context, WidgetRef ref) {
-    return FloatingActionButton(
-      onPressed: () {
-        router.pushRelative(WithdrawalFeeEditScreen.route(0));
-      },
-      child: Icon(Icons.add),
+  Widget build(BuildContext context) {
+    final controller = useMemoized(() => getIt<WithdrawalRuleDetailController>(param1: id));
+    return BaseScreen(
+      appBar: AppBar(
+        title: controller.value.map(data: (rule) => Text(rule.name), error: (_) => null, loading: () => null),
+        actions: [
+          PopupMenuButton<int>(
+            icon: const Icon(Icons.more_vert),
+            onSelected: (value) async {
+              switch (value) {
+                case 0:
+                  router.pushRelative(WithdrawalRuleEditScreen.route());
+                  break;
+                case 1:
+                  final (success, message) = await controller.delete();
+                  ToastUtils.message(message, success: success);
+                  break;
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 0,
+                child: ListTile(leading: Icon(Icons.edit), title: Text('Edit')),
+              ),
+              const PopupMenuItem(
+                value: 1,
+                child: ListTile(leading: Icon(Icons.delete), title: Text('Delete')),
+              ),
+            ],
+          ),
+        ],
+      ),
+      body: BaseStateComponent(
+        state: controller,
+        successBuilder: (rule) => WithdrawalRuleDetailComponent(rule: rule),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          router.pushRelative(WithdrawalFeeEditScreen.route(0));
+        },
+        child: Icon(Icons.add),
+      ),
     );
   }
 }

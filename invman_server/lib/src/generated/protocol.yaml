@@ -1,3 +1,6 @@
+account:
+  - retrieve:
+  - save:
 emailIdp:
   - login:
   - startRegistration:
@@ -8,6 +11,8 @@ emailIdp:
   - finishPasswordReset:
 jwtRefresh:
   - refreshAccessToken:
+currency:
+  - list:
 investment:
   - list:
   - save:

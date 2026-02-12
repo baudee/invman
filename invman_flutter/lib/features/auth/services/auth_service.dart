@@ -1,8 +1,10 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:injectable/injectable.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 import 'package:invman_client/invman_client.dart';
 
+@injectable
 class AuthService {
   final Client client;
 

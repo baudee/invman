@@ -1,4 +1,0 @@
-class: CachedStockSearch
-
-fields:
-    stocks: List<Stock>

@@ -1,16 +1,23 @@
+import 'package:injectable/injectable.dart';
+import 'package:invman_server/src/account/account.dart';
 import 'package:invman_server/src/core/helpers/helpers.dart';
+import 'package:invman_server/src/currency/currency.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:invman_server/src/stock/stock.dart';
 import 'package:invman_server/src/withdrawal/withdrawal.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 
+@injectable
 class InvestmentService {
+  final AccountService accountService;
+  final CurrencyService currencyService;
   final StockService stockService;
   final WithdrawalRuleService withdrawalRuleService;
-  final String currency = 'CHF';
 
   InvestmentService({
+    required this.accountService,
+    required this.currencyService,
     required this.stockService,
     required this.withdrawalRuleService,
   });
@@ -20,9 +27,9 @@ class InvestmentService {
     required Investment investment,
     Transaction? transaction,
   }) async {
-    final stock = await stockService.retrieve(session, investment.stock!.symbol, transaction: transaction);
+    final stock = await stockService.retrieve(session, investment.stockId);
 
-    double amountBeforeFees = investment.quantity * stock.value;
+    double amountBeforeFees = investment.quantity * (stock.currentPrice);
     double totalFees = 0;
 
     final withdrawalRule = investment.withdrawalRule;
@@ -39,8 +46,9 @@ class InvestmentService {
 
     double actualAmount = amountBeforeFees - totalFees;
 
-    if (currency != stock.currency) {
-      double change = await stockService.currencyChange(session, from: stock.currency, to: currency);
+    final accountCurrency = (await accountService.retrieve(session)).currency;
+    if (accountCurrency?.id != stock.currency?.id) {
+      double change = await currencyService.change(session, from: stock.currency, to: accountCurrency);
       change = change - (withdrawalRule?.currencyChangePercentage ?? 0) / 100;
       actualAmount *= change;
     }
@@ -82,7 +90,7 @@ class InvestmentService {
           investment.withdrawalRuleId,
           transaction: transaction,
         );
-        final stock = await stockService.retrieve(session, investment.stock!.symbol, transaction: transaction);
+        final stock = await stockService.retrieve(session, investment.stockId, transaction: transaction);
         investment = investment.copyWith(userId: (session.authenticated)!.authUserId, stockId: stock.id);
 
         if (investment.id == 0 || investment.id == null) {

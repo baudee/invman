@@ -1,3 +1,3 @@
 export 'business/business.dart';
 export 'endpoints/endpoints.dart';
-export 'data/data.dart';
+export 'utils/utils.dart';

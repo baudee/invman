@@ -2,6 +2,7 @@
 **.g.dart
 lib/config/generated/
 lib/generated/
+lib/di.config.dart
 
 # Miscellaneous
 *.class

@@ -1,18 +1,20 @@
 import 'dart:convert';
 
+import 'package:injectable/injectable.dart';
 import 'package:invman_server/src/core/services/api_client/api_client_service.dart';
 import 'package:invman_server/src/core/services/mail/mail.dart';
+import 'package:invman_server/src/env.dart';
 
+@Injectable(as: MailServiceInterface)
 class MailjetMailService implements MailServiceInterface {
-  final String apiKeyPublic;
-  final String apiKeyPrivate;
-  final String senderEmail;
+  final String _apiKeyPublic;
+  final String _apiKeyPrivate;
+  final String _senderEmail;
 
-  MailjetMailService({
-    required this.apiKeyPublic,
-    required this.apiKeyPrivate,
-    required this.senderEmail,
-  });
+  MailjetMailService(Env env)
+    : _senderEmail = env.mailjetEmailSender,
+      _apiKeyPrivate = env.mailjetApiKeyPrivate,
+      _apiKeyPublic = env.mailjetApiKeyPublic;
 
   @override
   Future<void> sendEmail({
@@ -20,7 +22,7 @@ class MailjetMailService implements MailServiceInterface {
     required String subject,
     required String body,
   }) async {
-    final authHeader = 'Basic ${base64Encode(utf8.encode('$apiKeyPublic:$apiKeyPrivate'))}';
+    final authHeader = 'Basic ${base64Encode(utf8.encode('$_apiKeyPublic:$_apiKeyPrivate'))}';
     Map<String, String> headers = {
       "Content-Type": "application/json",
       "Authorization": authHeader,
@@ -29,7 +31,7 @@ class MailjetMailService implements MailServiceInterface {
     String content = json.encode({
       "Messages": [
         {
-          "From": {"Email": senderEmail, "Name": "Rimawari Support"},
+          "From": {"Email": _senderEmail, "Name": "Rimawari Support"},
           "To": [
             {"Email": to},
           ],

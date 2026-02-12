@@ -1,79 +1,76 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/components/components.dart';
-import 'package:invman_flutter/core/navigation/navigation.dart';
-import 'package:invman_flutter/core/providers/providers.dart';
 import 'package:invman_flutter/core/utils/utils.dart';
+import 'package:invman_flutter/di.dart';
+import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/withdrawal/fee/fee.dart';
 
-class WithdrawalFeeFormComponent extends ConsumerWidget {
-  final int id;
-  final int ruleId;
-  const WithdrawalFeeFormComponent({super.key, required this.ruleId, required this.id});
+class WithdrawalFeeFormComponent extends StatelessWidget {
+  final WithdrawalFeeFormController controller;
+  const WithdrawalFeeFormComponent({super.key, required this.controller});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(withdrawalFeeFormProvider(ruleId, id));
-    final provider = ref.read(withdrawalFeeFormProvider(ruleId, id).notifier);
+  Widget build(BuildContext context) {
+    final currency = (getIt<AuthController>().state.value as AuthStateSuccess).account.currency;
 
-    return BaseStateComponent(
-      state: state,
-      onErrorRefresh: () => provider.load(),
-      successBuilder: (data) => Form(
-        key: provider.formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: provider.percentController,
-                validator: (value) => ValidationUtils.formValidatorDouble(value),
-                decoration: InputDecoration(label: Text(S.of(context).withdrawal_percentage), suffixText: "%"),
-                keyboardType: TextInputType.number,
-              ),
-              TextFormField(
-                controller: provider.fixedController,
-                validator: (value) => ValidationUtils.formValidatorDouble(value),
-                decoration: InputDecoration(
-                    label: Text(S.of(context).withdrawal_fixed),
-                    suffixText: ref.read(userPreferencesProvider).currency),
-                keyboardType: TextInputType.number,
-              ),
-              TextFormField(
-                controller: provider.minimumController,
-                validator: (value) => ValidationUtils.formValidatorDouble(value),
-                decoration: InputDecoration(
-                    label: Text(S.of(context).withdrawal_minimum),
-                    suffixText: ref.read(userPreferencesProvider).currency),
-                keyboardType: TextInputType.number,
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              SaveButton(
+    return controller.state.value.map(
+      data: (data) => _buildForm(context, data, currency),
+      error: (error, _) => ErrorComponent(error: error, handleRefresh: () => controller.state.refresh()),
+      loading: () => const LoadingComponent(),
+    );
+  }
+
+  Widget _buildForm(BuildContext context, WithdrawalFee data, Currency? currency) {
+    return Form(
+      key: controller.formKey,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              controller: controller.percentController,
+              validator: (value) => ValidationUtils.formValidatorDouble(value),
+              decoration: InputDecoration(label: Text(S.of(context).withdrawal_percentage), suffixText: "%"),
+              keyboardType: TextInputType.number,
+            ),
+            TextFormField(
+              controller: controller.fixedController,
+              validator: (value) => ValidationUtils.formValidatorDouble(value),
+              decoration: InputDecoration(label: Text(S.of(context).withdrawal_fixed), suffixText: currency?.code),
+              keyboardType: TextInputType.number,
+            ),
+            TextFormField(
+              controller: controller.minimumController,
+              validator: (value) => ValidationUtils.formValidatorDouble(value),
+              decoration: InputDecoration(label: Text(S.of(context).withdrawal_minimum), suffixText: currency?.code),
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 16),
+            SaveButton(
+              onPressed: () async {
+                final (success, message) = await controller.submit();
+                ToastUtils.message(message, success: success);
+                if (success) {
+                  getIt<GoRouter>().pop();
+                }
+              },
+            ),
+            if (controller.id != 0) ...[
+              const SizedBox(height: UIConstants.spacingXs),
+              DeleteButton(
                 onPressed: () async {
-                  final (success, message) = await provider.submit();
+                  final (success, message) = await controller.delete();
                   ToastUtils.message(message, success: success);
                   if (success) {
-                    router.pop();
+                    getIt<GoRouter>().pop();
                   }
                 },
               ),
-              if (id != 0) ...[
-                const SizedBox(height: UIConstants.spacingXs),
-                DeleteButton(
-                  onPressed: () async {
-                    final (success, message) = await provider.delete();
-                    ToastUtils.message(message, success: success);
-                    if (success) {
-                      router.pop();
-                    }
-                  },
-                ),
-              ]
             ],
-          ),
+          ],
         ),
       ),
     );

@@ -10,33 +10,58 @@
 // ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:serverpod_client/serverpod_client.dart' as _i1;
+import 'dart:async' as _i2;
+import 'package:invman_client/src/protocol/account/models/account.dart' as _i3;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
-    as _i1;
-import 'package:serverpod_client/serverpod_client.dart' as _i2;
-import 'dart:async' as _i3;
-import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i4;
-import 'package:invman_client/src/protocol/investment/models/investment.dart'
+import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i5;
-import 'package:invman_client/src/protocol/stock/models/stock.dart' as _i6;
-import 'package:invman_client/src/protocol/transfer/models/transfer.dart'
+import 'package:invman_client/src/protocol/currency/models/currency.dart'
+    as _i6;
+import 'package:invman_client/src/protocol/investment/models/investment.dart'
     as _i7;
-import 'package:invman_client/src/protocol/transfer/models/transfer_list.dart'
-    as _i8;
-import 'package:invman_client/src/protocol/withdrawal/models/withdrawal_fee.dart'
-    as _i9;
-import 'package:invman_client/src/protocol/withdrawal/models/withdrawal_rule_list.dart'
+import 'package:invman_client/src/protocol/stock/models/stock.dart' as _i8;
+import 'package:invman_client/src/protocol/stock/models/stock_list.dart' as _i9;
+import 'package:invman_client/src/protocol/transfer/models/transfer.dart'
     as _i10;
-import 'package:invman_client/src/protocol/withdrawal/models/withdrawal_rule.dart'
+import 'package:invman_client/src/protocol/transfer/models/transfer_list.dart'
     as _i11;
-import 'protocol.dart' as _i12;
+import 'package:invman_client/src/protocol/withdrawal/models/withdrawal_fee.dart'
+    as _i12;
+import 'package:invman_client/src/protocol/withdrawal/models/withdrawal_rule_list.dart'
+    as _i13;
+import 'package:invman_client/src/protocol/withdrawal/models/withdrawal_rule.dart'
+    as _i14;
+import 'protocol.dart' as _i15;
+
+/// {@category Endpoint}
+class EndpointAccount extends _i1.EndpointRef {
+  EndpointAccount(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'account';
+
+  _i2.Future<_i3.Account> retrieve() => caller.callServerEndpoint<_i3.Account>(
+    'account',
+    'retrieve',
+    {},
+  );
+
+  _i2.Future<_i3.Account> save(_i3.Account account) =>
+      caller.callServerEndpoint<_i3.Account>(
+        'account',
+        'save',
+        {'account': account},
+      );
+}
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
 /// are made available on the server and enable the corresponding sign-in widget
 /// on the client.
 /// {@category Endpoint}
-class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
-  EndpointEmailIdp(_i2.EndpointCaller caller) : super(caller);
+class EndpointEmailIdp extends _i4.EndpointEmailIdpBase {
+  EndpointEmailIdp(_i1.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'emailIdp';
@@ -51,10 +76,10 @@ class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
   ///
   /// Throws an [AuthUserBlockedException] if the auth user is blocked.
   @override
-  _i3.Future<_i4.AuthSuccess> login({
+  _i2.Future<_i5.AuthSuccess> login({
     required String email,
     required String password,
-  }) => caller.callServerEndpoint<_i4.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i5.AuthSuccess>(
     'emailIdp',
     'login',
     {
@@ -74,8 +99,8 @@ class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
   /// registration. If the email is already registered, the returned ID will not
   /// be valid.
   @override
-  _i3.Future<_i2.UuidValue> startRegistration({required String email}) =>
-      caller.callServerEndpoint<_i2.UuidValue>(
+  _i2.Future<_i1.UuidValue> startRegistration({required String email}) =>
+      caller.callServerEndpoint<_i1.UuidValue>(
         'emailIdp',
         'startRegistration',
         {'email': email},
@@ -92,8 +117,8 @@ class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
   /// - [EmailAccountRequestExceptionReason.invalid] if no request exists
   ///   for the given [accountRequestId] or [verificationCode] is invalid.
   @override
-  _i3.Future<String> verifyRegistrationCode({
-    required _i2.UuidValue accountRequestId,
+  _i2.Future<String> verifyRegistrationCode({
+    required _i1.UuidValue accountRequestId,
     required String verificationCode,
   }) => caller.callServerEndpoint<String>(
     'emailIdp',
@@ -119,10 +144,10 @@ class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
   ///
   /// Returns a session for the newly created user.
   @override
-  _i3.Future<_i4.AuthSuccess> finishRegistration({
+  _i2.Future<_i5.AuthSuccess> finishRegistration({
     required String registrationToken,
     required String password,
-  }) => caller.callServerEndpoint<_i4.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i5.AuthSuccess>(
     'emailIdp',
     'finishRegistration',
     {
@@ -145,8 +170,8 @@ class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
   ///   made too many attempts trying to request a password reset.
   ///
   @override
-  _i3.Future<_i2.UuidValue> startPasswordReset({required String email}) =>
-      caller.callServerEndpoint<_i2.UuidValue>(
+  _i2.Future<_i1.UuidValue> startPasswordReset({required String email}) =>
+      caller.callServerEndpoint<_i1.UuidValue>(
         'emailIdp',
         'startPasswordReset',
         {'email': email},
@@ -167,8 +192,8 @@ class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
   /// should be overridden to return credentials for the next step instead
   /// of the credentials for setting the password.
   @override
-  _i3.Future<String> verifyPasswordResetCode({
-    required _i2.UuidValue passwordResetRequestId,
+  _i2.Future<String> verifyPasswordResetCode({
+    required _i1.UuidValue passwordResetRequestId,
     required String verificationCode,
   }) => caller.callServerEndpoint<String>(
     'emailIdp',
@@ -194,7 +219,7 @@ class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
   ///
   /// Throws an [AuthUserBlockedException] if the auth user is blocked.
   @override
-  _i3.Future<void> finishPasswordReset({
+  _i2.Future<void> finishPasswordReset({
     required String finishPasswordResetToken,
     required String newPassword,
   }) => caller.callServerEndpoint<void>(
@@ -210,8 +235,8 @@ class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
 /// By extending [RefreshJwtTokensEndpoint], the JWT token refresh endpoint
 /// is made available on the server and enables automatic token refresh on the client.
 /// {@category Endpoint}
-class EndpointJwtRefresh extends _i4.EndpointRefreshJwtTokens {
-  EndpointJwtRefresh(_i2.EndpointCaller caller) : super(caller);
+class EndpointJwtRefresh extends _i5.EndpointRefreshJwtTokens {
+  EndpointJwtRefresh(_i1.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'jwtRefresh';
@@ -235,9 +260,9 @@ class EndpointJwtRefresh extends _i4.EndpointRefreshJwtTokens {
   /// This endpoint is unauthenticated, meaning the client won't include any
   /// authentication information with the call.
   @override
-  _i3.Future<_i4.AuthSuccess> refreshAccessToken({
+  _i2.Future<_i5.AuthSuccess> refreshAccessToken({
     required String refreshToken,
-  }) => caller.callServerEndpoint<_i4.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i5.AuthSuccess>(
     'jwtRefresh',
     'refreshAccessToken',
     {'refreshToken': refreshToken},
@@ -246,35 +271,50 @@ class EndpointJwtRefresh extends _i4.EndpointRefreshJwtTokens {
 }
 
 /// {@category Endpoint}
-class EndpointInvestment extends _i2.EndpointRef {
-  EndpointInvestment(_i2.EndpointCaller caller) : super(caller);
+class EndpointCurrency extends _i1.EndpointRef {
+  EndpointCurrency(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'currency';
+
+  _i2.Future<List<_i6.Currency>> list() =>
+      caller.callServerEndpoint<List<_i6.Currency>>(
+        'currency',
+        'list',
+        {},
+      );
+}
+
+/// {@category Endpoint}
+class EndpointInvestment extends _i1.EndpointRef {
+  EndpointInvestment(_i1.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'investment';
 
-  _i3.Future<List<_i5.Investment>> list() =>
-      caller.callServerEndpoint<List<_i5.Investment>>(
+  _i2.Future<List<_i7.Investment>> list() =>
+      caller.callServerEndpoint<List<_i7.Investment>>(
         'investment',
         'list',
         {},
       );
 
-  _i3.Future<_i5.Investment> save(_i5.Investment investment) =>
-      caller.callServerEndpoint<_i5.Investment>(
+  _i2.Future<_i7.Investment> save(_i7.Investment investment) =>
+      caller.callServerEndpoint<_i7.Investment>(
         'investment',
         'save',
         {'investment': investment},
       );
 
-  _i3.Future<_i5.Investment> delete(int id) =>
-      caller.callServerEndpoint<_i5.Investment>(
+  _i2.Future<_i7.Investment> delete(int id) =>
+      caller.callServerEndpoint<_i7.Investment>(
         'investment',
         'delete',
         {'id': id},
       );
 
-  _i3.Future<_i5.Investment> retrieve(int id) =>
-      caller.callServerEndpoint<_i5.Investment>(
+  _i2.Future<_i7.Investment> retrieve(int id) =>
+      caller.callServerEndpoint<_i7.Investment>(
         'investment',
         'retrieve',
         {'id': id},
@@ -282,65 +322,67 @@ class EndpointInvestment extends _i2.EndpointRef {
 }
 
 /// {@category Endpoint}
-class EndpointStock extends _i2.EndpointRef {
-  EndpointStock(_i2.EndpointCaller caller) : super(caller);
+class EndpointStock extends _i1.EndpointRef {
+  EndpointStock(_i1.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'stock';
 
-  _i3.Future<_i6.Stock> retrieve(String symbol) =>
-      caller.callServerEndpoint<_i6.Stock>(
+  _i2.Future<_i8.Stock> retrieve(_i1.UuidValue uuid) =>
+      caller.callServerEndpoint<_i8.Stock>(
         'stock',
         'retrieve',
-        {'symbol': symbol},
+        {'uuid': uuid},
       );
 
-  _i3.Future<List<_i6.Stock>> search({
+  _i2.Future<_i9.StockList> search({
     required String query,
     required int limit,
-  }) => caller.callServerEndpoint<List<_i6.Stock>>(
+    required int page,
+  }) => caller.callServerEndpoint<_i9.StockList>(
     'stock',
     'search',
     {
       'query': query,
       'limit': limit,
+      'page': page,
     },
   );
 }
 
 /// {@category Endpoint}
-class EndpointTransfer extends _i2.EndpointRef {
-  EndpointTransfer(_i2.EndpointCaller caller) : super(caller);
+class EndpointTransfer extends _i1.EndpointRef {
+  EndpointTransfer(_i1.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'transfer';
 
-  _i3.Future<_i7.Transfer> retrieve(int id) =>
-      caller.callServerEndpoint<_i7.Transfer>(
+  _i2.Future<_i10.Transfer> retrieve(int id) =>
+      caller.callServerEndpoint<_i10.Transfer>(
         'transfer',
         'retrieve',
         {'id': id},
       );
 
-  _i3.Future<_i7.Transfer> save(_i7.Transfer transfer) =>
-      caller.callServerEndpoint<_i7.Transfer>(
+  _i2.Future<_i10.Transfer> save(_i10.Transfer transfer) =>
+      caller.callServerEndpoint<_i10.Transfer>(
         'transfer',
         'save',
         {'transfer': transfer},
       );
 
-  _i3.Future<_i7.Transfer> delete(int id) =>
-      caller.callServerEndpoint<_i7.Transfer>(
+  _i2.Future<_i10.Transfer> delete(int id) =>
+      caller.callServerEndpoint<_i10.Transfer>(
         'transfer',
         'delete',
         {'id': id},
       );
 
-  _i3.Future<_i8.TransferList> list(
+  _i2.Future<_i11.TransferList> list(
     int investmentId, {
     required int limit,
     required int page,
-  }) => caller.callServerEndpoint<_i8.TransferList>(
+  }) => caller.callServerEndpoint<_i11.TransferList>(
     'transfer',
     'list',
     {
@@ -352,28 +394,28 @@ class EndpointTransfer extends _i2.EndpointRef {
 }
 
 /// {@category Endpoint}
-class EndpointWithdrawalFee extends _i2.EndpointRef {
-  EndpointWithdrawalFee(_i2.EndpointCaller caller) : super(caller);
+class EndpointWithdrawalFee extends _i1.EndpointRef {
+  EndpointWithdrawalFee(_i1.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'withdrawalFee';
 
-  _i3.Future<_i9.WithdrawalFee> retrieve(int id) =>
-      caller.callServerEndpoint<_i9.WithdrawalFee>(
+  _i2.Future<_i12.WithdrawalFee> retrieve(int id) =>
+      caller.callServerEndpoint<_i12.WithdrawalFee>(
         'withdrawalFee',
         'retrieve',
         {'id': id},
       );
 
-  _i3.Future<_i9.WithdrawalFee> save(_i9.WithdrawalFee fee) =>
-      caller.callServerEndpoint<_i9.WithdrawalFee>(
+  _i2.Future<_i12.WithdrawalFee> save(_i12.WithdrawalFee fee) =>
+      caller.callServerEndpoint<_i12.WithdrawalFee>(
         'withdrawalFee',
         'save',
         {'fee': fee},
       );
 
-  _i3.Future<_i9.WithdrawalFee> delete(int id) =>
-      caller.callServerEndpoint<_i9.WithdrawalFee>(
+  _i2.Future<_i12.WithdrawalFee> delete(int id) =>
+      caller.callServerEndpoint<_i12.WithdrawalFee>(
         'withdrawalFee',
         'delete',
         {'id': id},
@@ -381,16 +423,16 @@ class EndpointWithdrawalFee extends _i2.EndpointRef {
 }
 
 /// {@category Endpoint}
-class EndpointWithdrawalRule extends _i2.EndpointRef {
-  EndpointWithdrawalRule(_i2.EndpointCaller caller) : super(caller);
+class EndpointWithdrawalRule extends _i1.EndpointRef {
+  EndpointWithdrawalRule(_i1.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'withdrawalRule';
 
-  _i3.Future<_i10.WithdrawalRuleList> list({
+  _i2.Future<_i13.WithdrawalRuleList> list({
     required int limit,
     required int page,
-  }) => caller.callServerEndpoint<_i10.WithdrawalRuleList>(
+  }) => caller.callServerEndpoint<_i13.WithdrawalRuleList>(
     'withdrawalRule',
     'list',
     {
@@ -399,22 +441,22 @@ class EndpointWithdrawalRule extends _i2.EndpointRef {
     },
   );
 
-  _i3.Future<_i11.WithdrawalRule> retrieve(int id) =>
-      caller.callServerEndpoint<_i11.WithdrawalRule>(
+  _i2.Future<_i14.WithdrawalRule> retrieve(int id) =>
+      caller.callServerEndpoint<_i14.WithdrawalRule>(
         'withdrawalRule',
         'retrieve',
         {'id': id},
       );
 
-  _i3.Future<_i11.WithdrawalRule> save(_i11.WithdrawalRule transfer) =>
-      caller.callServerEndpoint<_i11.WithdrawalRule>(
+  _i2.Future<_i14.WithdrawalRule> save(_i14.WithdrawalRule transfer) =>
+      caller.callServerEndpoint<_i14.WithdrawalRule>(
         'withdrawalRule',
         'save',
         {'transfer': transfer},
       );
 
-  _i3.Future<_i11.WithdrawalRule> delete(int id) =>
-      caller.callServerEndpoint<_i11.WithdrawalRule>(
+  _i2.Future<_i14.WithdrawalRule> delete(int id) =>
+      caller.callServerEndpoint<_i14.WithdrawalRule>(
         'withdrawalRule',
         'delete',
         {'id': id},
@@ -423,16 +465,16 @@ class EndpointWithdrawalRule extends _i2.EndpointRef {
 
 class Modules {
   Modules(Client client) {
-    serverpod_auth_idp = _i1.Caller(client);
-    serverpod_auth_core = _i4.Caller(client);
+    serverpod_auth_idp = _i4.Caller(client);
+    serverpod_auth_core = _i5.Caller(client);
   }
 
-  late final _i1.Caller serverpod_auth_idp;
+  late final _i4.Caller serverpod_auth_idp;
 
-  late final _i4.Caller serverpod_auth_core;
+  late final _i5.Caller serverpod_auth_core;
 }
 
-class Client extends _i2.ServerpodClientShared {
+class Client extends _i1.ServerpodClientShared {
   Client(
     String host, {
     dynamic securityContext,
@@ -443,16 +485,16 @@ class Client extends _i2.ServerpodClientShared {
     Duration? streamingConnectionTimeout,
     Duration? connectionTimeout,
     Function(
-      _i2.MethodCallContext,
+      _i1.MethodCallContext,
       Object,
       StackTrace,
     )?
     onFailedCall,
-    Function(_i2.MethodCallContext)? onSucceededCall,
+    Function(_i1.MethodCallContext)? onSucceededCall,
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i12.Protocol(),
+         _i15.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -461,8 +503,10 @@ class Client extends _i2.ServerpodClientShared {
          disconnectStreamsOnLostInternetConnection:
              disconnectStreamsOnLostInternetConnection,
        ) {
+    account = EndpointAccount(this);
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
+    currency = EndpointCurrency(this);
     investment = EndpointInvestment(this);
     stock = EndpointStock(this);
     transfer = EndpointTransfer(this);
@@ -471,9 +515,13 @@ class Client extends _i2.ServerpodClientShared {
     modules = Modules(this);
   }
 
+  late final EndpointAccount account;
+
   late final EndpointEmailIdp emailIdp;
 
   late final EndpointJwtRefresh jwtRefresh;
+
+  late final EndpointCurrency currency;
 
   late final EndpointInvestment investment;
 
@@ -488,9 +536,11 @@ class Client extends _i2.ServerpodClientShared {
   late final Modules modules;
 
   @override
-  Map<String, _i2.EndpointRef> get endpointRefLookup => {
+  Map<String, _i1.EndpointRef> get endpointRefLookup => {
+    'account': account,
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
+    'currency': currency,
     'investment': investment,
     'stock': stock,
     'transfer': transfer,
@@ -499,7 +549,7 @@ class Client extends _i2.ServerpodClientShared {
   };
 
   @override
-  Map<String, _i2.ModuleEndpointCaller> get moduleLookup => {
+  Map<String, _i1.ModuleEndpointCaller> get moduleLookup => {
     'serverpod_auth_idp': modules.serverpod_auth_idp,
     'serverpod_auth_core': modules.serverpod_auth_core,
   };

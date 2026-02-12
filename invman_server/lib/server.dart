@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:invman_server/src/core/services/mail/mail.dart';
-import 'package:invman_server/src/dependency_injection.dart';
+import 'package:invman_server/src/di.dart';
+import 'package:invman_server/src/env.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 import 'package:serverpod_auth_idp_server/providers/email.dart';
@@ -17,7 +18,7 @@ void run(List<String> args) async {
   final pod = Serverpod(args, Protocol(), Endpoints());
 
   // DEPENDENCY INJECTION
-  initDependencyInjection();
+  configureDependencies();
 
   // Initialize authentication services for the server.
   // Token managers will be used to validate and issue authentication keys,
@@ -34,6 +35,12 @@ void run(List<String> args) async {
         sendPasswordResetVerificationCode: _sendPasswordResetCode,
       ),
     ],
+    authUsersConfig: AuthUsersConfig(
+      onAfterAuthUserCreated: (session, authUser, {required transaction}) async {
+        final account = Account(userId: authUser.id);
+        await Account.db.insertRow(session, account, transaction: transaction);
+      },
+    ),
   );
 
   // Setup a default page at the web root.
@@ -90,11 +97,13 @@ void _sendRegistrationCode(
   required Transaction? transaction,
 }) {
   session.log('[EmailIdp] Registration code ($email): $verificationCode');
-  getIt<MailServiceInterface>().sendEmail(
-    to: email,
-    subject: 'Your registration verification code',
-    body: 'Your verification code is: <b>$verificationCode</b>',
-  );
+  if (getIt<Env>().flavor != Flavor.develop) {
+    getIt<MailServiceInterface>().sendEmail(
+      to: email,
+      subject: 'Your registration verification code',
+      body: 'Your verification code is: <b>$verificationCode</b>',
+    );
+  }
 }
 
 void _sendPasswordResetCode(
@@ -105,9 +114,11 @@ void _sendPasswordResetCode(
   required Transaction? transaction,
 }) {
   session.log('[EmailIdp] Password reset code ($email): $verificationCode');
-  getIt<MailServiceInterface>().sendEmail(
-    to: email,
-    subject: 'Your password reset verification code',
-    body: 'Your verification code is: <b>$verificationCode</b>',
-  );
+  if (getIt<Env>().flavor != Flavor.develop) {
+    getIt<MailServiceInterface>().sendEmail(
+      to: email,
+      subject: 'Your password reset verification code',
+      body: 'Your verification code is: <b>$verificationCode</b>',
+    );
+  }
 }

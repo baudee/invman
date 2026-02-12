@@ -2,7 +2,7 @@ import 'package:invman_client/invman_client.dart';
 
 class InitialUtils {
   static Stock getStock() {
-    return Stock(name: '', symbol: '', currency: '', quoteType: '', value: 0.0, updatedAt: DateTime.now());
+    return Stock(symbol: '', shortName: '', longName: '', quoteType: StockType.stock, currencyId: 0);
   }
 
   static Transfer getTransfer() {
@@ -32,7 +32,7 @@ class InitialUtils {
       withdrawalRuleId: 0,
       stock: InitialUtils.getStock(),
       investAmount: 0,
-      stockId: 0,
+      stockId: UuidValue.fromString(Namespace.nil.value),
       withdrawAmount: 0,
     );
   }

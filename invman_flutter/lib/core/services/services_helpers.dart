@@ -16,3 +16,17 @@ Future<Either<String, T>> safeCall<T>(
     return left(ErrorCode.unknown.message);
   }
 }
+
+Future<T> safeCallTest<T>(
+  Future<T> Function() action,
+) async {
+  try {
+    return await action();
+  } on ServerException catch (e) {
+    throw Exception(e.errorCode.message);
+  } catch (e, st) {
+    // Log to Sentry
+    await Sentry.captureException(e, stackTrace: st);
+    throw Exception(ErrorCode.unknown.message);
+  }
+}
