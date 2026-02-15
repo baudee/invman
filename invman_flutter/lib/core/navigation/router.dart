@@ -16,7 +16,7 @@ final router = getIt<GoRouter>();
 @module
 abstract class RouterModule {
   @singleton
-  GoRouter router(AuthController authController) {
+  GoRouter router(AuthManager authService) {
     final initialRoute = InvestmentRootScreen.route();
     String destination = initialRoute;
 
@@ -33,10 +33,10 @@ abstract class RouterModule {
           },
         ),
       ],
-      refreshListenable: authController.state,
+      refreshListenable: authService.state,
       redirect: (context, state) {
-        final isLoggedIn = authController.isLoggedIn.value;
-        final isOnboarded = authController.isOnboarded.value;
+        final isLoggedIn = authService.isLoggedIn.value;
+        final isOnboarded = authService.isOnboarded.value;
         final location = state.matchedLocation;
 
         final isGoingToLogin = location == SignInScreen.route();

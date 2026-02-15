@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/di.dart';
@@ -46,10 +45,6 @@ Future<void> _initializeApp() async {
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  await getIt<StorageClient>().init();
-  await S.load(getIt<UserPreferencesController>().locale.value);
-  await getIt<AuthController>().init();
-
   runApp(const MyApp());
 }
 
@@ -62,8 +57,8 @@ class MyApp extends StatelessWidget {
       title: "InvMan",
       theme: AppTheme.light().themeData,
       darkTheme: AppTheme.dark().themeData,
-      themeMode: getIt<UserPreferencesController>().theme.watch(context),
-      locale: getIt<UserPreferencesController>().locale.watch(context),
+      themeMode: getIt<UserPreferencesManager>().theme.watch(context),
+      locale: getIt<UserPreferencesManager>().locale.watch(context),
       localizationsDelegates: const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,

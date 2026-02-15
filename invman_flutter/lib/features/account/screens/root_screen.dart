@@ -3,18 +3,16 @@ import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/features/account/account.dart';
 
-class AccountRootScreen extends BaseScreen {
+class AccountRootScreen extends StatelessWidget {
   const AccountRootScreen({super.key});
 
   static String route() => AccountRoutes.namespace;
 
   @override
-  AppBar? appBar(BuildContext context) {
-    return AppBar(title: Text(S.of(context).account_title));
-  }
-
-  @override
-  Widget body(BuildContext context) {
-    return AccountRootComponent();
+  Widget build(BuildContext context) {
+    return BaseScreen(
+      appBar: AppBar(title: Text(S.of(context).account_title)),
+      body: AccountRootComponent(),
+    );
   }
 }

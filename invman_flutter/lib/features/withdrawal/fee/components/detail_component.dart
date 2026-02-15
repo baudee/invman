@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 
-class WithdrawalFeeDetailComponent extends StatelessWidget {
+class WithdrawalFeeDetailComponent extends HookWidget {
   final WithdrawalFee fee;
   const WithdrawalFeeDetailComponent({super.key, required this.fee});
 
   @override
   Widget build(BuildContext context) {
-    final currency = (getIt<AuthController>().state.value as AuthStateSuccess).account.currency;
+    final authManager = useMemoized(() => getIt<AuthManager>());
 
     return SingleChildScrollView(
       child: Column(
@@ -21,14 +22,14 @@ class WithdrawalFeeDetailComponent extends StatelessWidget {
           _buildDetailCard(
             context,
             S.of(context).withdrawal_fixed,
-            fee.fixed.toStringPrice(currency),
+            fee.fixed.toStringPrice(authManager.currencyCode),
             Icons.attach_money,
           ),
           const SizedBox(height: UIConstants.spacingMd),
           _buildDetailCard(
             context,
             S.of(context).withdrawal_minimum,
-            fee.minimum.toStringPrice(currency),
+            fee.minimum.toStringPrice(authManager.currencyCode),
             Icons.trending_down,
           ),
         ],

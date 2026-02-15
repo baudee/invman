@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
@@ -6,7 +7,7 @@ import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
 
-class InvestmentHeaderComponent extends StatelessWidget {
+class InvestmentHeaderComponent extends HookWidget {
   final Investment investment;
 
   const InvestmentHeaderComponent({super.key, required this.investment});
@@ -14,7 +15,7 @@ class InvestmentHeaderComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final currency = (getIt<AuthController>().state.value as AuthStateSuccess).account.currency;
+    final authManager = useMemoized(() => getIt<AuthManager>());
 
     return Container(
       margin: const EdgeInsets.only(bottom: UIConstants.spacingSm),
@@ -46,7 +47,7 @@ class InvestmentHeaderComponent extends StatelessWidget {
           ),
           const SizedBox(height: UIConstants.spacingSm),
           Text(
-            (investment.withdrawAmount ?? 0).toStringPrice(currency),
+            (investment.withdrawAmount ?? 0).toStringPrice(authManager.currencyCode),
             style: theme.textTheme.displaySmall?.copyWith(
               color: theme.colorScheme.onPrimary,
               fontWeight: FontWeight.w300,
@@ -62,7 +63,7 @@ class InvestmentHeaderComponent extends StatelessWidget {
                 child: _buildInfoColumn(
                   context,
                   S.of(context).investment_invested,
-                  (investment.investAmount).toStringPrice(currency),
+                  (investment.investAmount).toStringPrice(authManager.currencyCode),
                 ),
               ),
               Expanded(
@@ -76,7 +77,7 @@ class InvestmentHeaderComponent extends StatelessWidget {
                 child: _buildInfoColumn(
                   context,
                   S.of(context).investment_return,
-                  investment.percent.isNaN ? '-' : investment.amountDifference.toStringPrice(currency),
+                  investment.percent.isNaN ? '-' : investment.amountDifference.toStringPrice(authManager.currencyCode),
                 ),
               ),
             ],

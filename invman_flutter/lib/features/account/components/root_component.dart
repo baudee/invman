@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-class AccountRootComponent extends StatelessWidget {
+class AccountRootComponent extends HookWidget {
   const AccountRootComponent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final userPrefsController = getIt<UserPreferencesController>();
-    final authController = getIt<AuthController>();
+    final userPrefsManager = useMemoized(() => getIt<UserPreferencesManager>());
+    final currentLocale = userPrefsManager.locale.watch(context);
+    final currentTheme = userPrefsManager.theme.watch(context);
 
-    final currentLocale = userPrefsController.locale.watch(context);
-    final currentTheme = userPrefsController.theme.watch(context);
-    final successAuthState = authController.state.value as AuthStateSuccess;
+    final authManager = useMemoized(() => getIt<AuthManager>());
 
     final tiles = [
       ListTile(
@@ -28,7 +30,7 @@ class AccountRootComponent extends StatelessWidget {
           value: currentLocale,
           onChanged: (value) {
             if (value != null) {
-              userPrefsController.setLocale(value);
+              userPrefsManager.setLocale(value);
             }
           },
           items: [
@@ -49,7 +51,7 @@ class AccountRootComponent extends StatelessWidget {
           value: currentTheme,
           onChanged: (value) {
             if (value != null) {
-              userPrefsController.setTheme(value);
+              userPrefsManager.setTheme(value);
             }
           },
           items: [
@@ -60,18 +62,18 @@ class AccountRootComponent extends StatelessWidget {
       ListTile(
         title: Text(S.of(context).withdrawal_title),
         leading: Icon(Icons.list_alt_rounded),
-        onTap: () => getIt<GoRouter>().pushRelative(WithdrawalRuleRootScreen.route()),
+        onTap: () => router.pushRelative(WithdrawalRuleRootScreen.route()),
       ),
       ListTile(
         title: Text(S.of(context).account_currency),
-        subtitle: Text(successAuthState.account.currency?.code ?? ''),
+        subtitle: Text(authManager.currencyCode),
         leading: Icon(Icons.attach_money_rounded),
       ),
       ListTile(
         title: Text(S.of(context).auth_logOut, style: TextStyle(color: Colors.red)),
         leading: Icon(Icons.logout, color: Colors.red),
         onTap: () async {
-          final errorMessage = await authController.logout();
+          final errorMessage = await authManager.logout();
 
           if (errorMessage == null && context.mounted) {
             StatefulNavigationShell.of(context).goBranch(0, initialLocation: true);

@@ -1,0 +1,35 @@
+import 'package:fpdart/fpdart.dart';
+import 'package:injectable/injectable.dart';
+import 'package:invman_client/invman_client.dart';
+import 'package:invman_flutter/core/core.dart';
+
+@injectable
+class InvestmentRepository {
+  final Client client;
+
+  const InvestmentRepository(this.client);
+
+  Future<Either<String, List<Investment>>> list({required int page, required int limit}) async {
+    return safeCall(() async {
+      return right(await client.investment.list());
+    });
+  }
+
+  Future<Either<String, Investment>> save(Investment investment) async {
+    return safeCall(() async {
+      return right(await client.investment.save(investment));
+    });
+  }
+
+  Future<Either<String, Investment>> delete(int id) async {
+    return safeCall(() async {
+      return right(await client.investment.delete(id));
+    });
+  }
+
+  Future<Either<String, Investment>> retrieve(int id) async {
+    return safeCall(() async {
+      return right(await client.investment.retrieve(id));
+    });
+  }
+}

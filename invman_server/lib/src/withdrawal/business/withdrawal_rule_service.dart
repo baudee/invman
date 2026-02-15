@@ -8,24 +8,14 @@ import 'package:serverpod_auth_idp_server/core.dart';
 class WithdrawalRuleService {
   WithdrawalRuleService();
 
-  Future<WithdrawalRuleList> list(Session session, {required int limit, required int page}) async {
+  Future<List<WithdrawalRule>> list(Session session, {required int limit, required int page}) async {
     final sessionUserId = (session.authenticated)!.authUserId;
-    final count = await WithdrawalRule.db.count(session, where: (e) => e.userId.equals(sessionUserId));
 
-    final results = await WithdrawalRule.db.find(
+    return WithdrawalRule.db.find(
       session,
       where: (e) => e.userId.equals(sessionUserId),
       limit: limit,
       offset: (page * limit) - limit,
-    );
-
-    return WithdrawalRuleList(
-      count: count,
-      limit: limit,
-      page: page,
-      results: results,
-      numPages: (count / limit).ceil(),
-      canLoadMore: page * limit < count,
     );
   }
 

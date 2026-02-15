@@ -45,7 +45,7 @@ class StockDetailComponent extends StatelessWidget {
                 ),
                 const SizedBox(height: UIConstants.spacingLg),
                 Text(
-                  stock.currentPrice.toStringPrice(stock.currency),
+                  stock.currentPrice.toStringPrice(stock.currency?.code),
                   style: theme.textTheme.displayMedium?.copyWith(
                     color: theme.colorScheme.onPrimary,
                     fontWeight: FontWeight.w300,

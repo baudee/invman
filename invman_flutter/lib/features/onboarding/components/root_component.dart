@@ -23,7 +23,7 @@ class OnboardingRootComponent extends StatelessWidget {
         Text(S.of(context).onboarding_select_currency, style: Theme.of(context).textTheme.bodyMedium),
         const SizedBox(height: UIConstants.spacingLg),
         DropdownMenu(
-          dropdownMenuEntries: controller.currencies.requireValue
+          dropdownMenuEntries: controller.value.requireValue
               .map((c) => DropdownMenuEntry(value: c.id, label: c.code))
               .toList(),
           onSelected: (value) => controller.selectCurrency(value),

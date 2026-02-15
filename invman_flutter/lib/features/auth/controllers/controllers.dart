@@ -1,1 +1,1 @@
-export 'auth_controller.dart';
+export 'auth_manager.dart';

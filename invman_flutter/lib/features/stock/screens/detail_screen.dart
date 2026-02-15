@@ -1,30 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
 
-class StockDetailScreen extends BaseScreen {
+class StockDetailScreen extends HookWidget {
   final UuidValue uuid;
   const StockDetailScreen({super.key, required this.uuid});
 
   static String route([UuidValue? uuid]) => "${StockRoutes.namespace}/${uuid ?? ':uuid'}";
 
   @override
-  AppBar? appBar(BuildContext context) {
-    final state = getIt<StockDetailController>(param1: uuid);
-    return state.value.map(
-      data: (stock) => AppBar(title: Text(stock.shortName)),
-      error: (error, _) => AppBar(),
-      loading: () => AppBar(),
-    );
-  }
-
-  @override
-  Widget body(BuildContext context) {
-    return BaseStateComponent<Stock>(
-      state: getIt<StockDetailController>(param1: uuid),
-      successBuilder: (stock) => StockDetailComponent(stock: stock),
+  Widget build(BuildContext context) {
+    final controller = useMemoized(() => getIt<StockDetailController>(param1: uuid));
+    return BaseScreen(
+      appBar: AppBar(
+        title: controller.value.map(
+          data: (stock) => Text(stock.shortName),
+          error: (_, _) => null,
+          loading: () => null,
+        ),
+      ),
+      body: BaseStateComponent<Stock>(
+        state: controller,
+        successBuilder: (stock) => StockDetailComponent(stock: stock),
+      ),
     );
   }
 }

@@ -8,7 +8,7 @@ class WithdrawalRuleEndpoint extends Endpoint with EndpointMiddleware {
   @override
   bool get requireLogin => true;
 
-  Future<WithdrawalRuleList> list(Session session, {int limit = 10, int page = 1}) async {
+  Future<List<WithdrawalRule>> list(Session session, {int limit = 10, int page = 1}) async {
     return withMiddleware(session, () => getIt<WithdrawalRuleService>().list(session, limit: limit, page: page));
   }
 

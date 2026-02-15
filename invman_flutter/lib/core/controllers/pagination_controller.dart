@@ -30,5 +30,15 @@ abstract class PaginationController<T> extends AsyncSignal<List<T>> {
     await _fetch(currentPage.value + 1);
   }
 
+  @override
+  Future<void> reload() async {
+    batch(() {
+      currentPage.value = 0;
+      hasMore.value = true;
+      setValue([]);
+    });
+    await _fetch(1);
+  }
+
   Future<Either<String, List<T>>> getData(int page);
 }

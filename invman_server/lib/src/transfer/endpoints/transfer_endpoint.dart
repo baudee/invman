@@ -20,7 +20,7 @@ class TransferEndpoint extends Endpoint with EndpointMiddleware {
     return withMiddleware(session, () => getIt<TransferService>().delete(session, id));
   }
 
-  Future<TransferList> list(Session session, int investmentId, {int limit = 10, int page = 1}) async {
+  Future<List<Transfer>> list(Session session, int investmentId, {int limit = 10, int page = 1}) async {
     return withMiddleware(
       session,
       () => getIt<TransferService>().list(session, investmentId, limit: limit, page: page),

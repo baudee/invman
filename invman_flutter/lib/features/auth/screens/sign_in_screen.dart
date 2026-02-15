@@ -4,16 +4,18 @@ import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 
-class SignInScreen extends BaseScreen {
+class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
 
   static String route() => "/signin";
 
   @override
-  Widget body(BuildContext context) {
-    return SignInWidget(
-      client: getIt<Client>(),
-      onError: (error) => ToastUtils.message(error.toString(), success: false),
+  Widget build(BuildContext context) {
+    return BaseScreen(
+      body: SignInWidget(
+        client: getIt<Client>(),
+        onError: (error) => ToastUtils.message(error.toString(), success: false),
+      ),
     );
   }
 }

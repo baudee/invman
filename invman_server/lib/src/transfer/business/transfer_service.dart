@@ -67,25 +67,14 @@ class TransferService {
     );
   }
 
-  Future<TransferList> list(Session session, int investmentId, {required int limit, required int page}) async {
+  Future<List<Transfer>> list(Session session, int investmentId, {required int limit, required int page}) async {
     await investmentService.retrieve(session, investmentId);
 
-    final count = await Transfer.db.count(session, where: (e) => e.investmentId.equals(investmentId));
-
-    final results = await Transfer.db.find(
+    return Transfer.db.find(
       session,
       where: (e) => e.investmentId.equals(investmentId),
       limit: limit,
       offset: (page * limit) - limit,
-    );
-
-    return TransferList(
-      count: count,
-      limit: limit,
-      page: page,
-      results: results,
-      numPages: (count / limit).ceil(),
-      canLoadMore: page * limit < count,
     );
   }
 }

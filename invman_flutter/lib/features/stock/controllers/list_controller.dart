@@ -1,11 +1,11 @@
 import 'package:injectable/injectable.dart';
 import 'package:invman_client/invman_client.dart';
-import 'package:invman_flutter/features/stock/services/stock_service.dart';
+import 'package:invman_flutter/features/stock/repositories/stock_repository.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 @lazySingleton
 class StockSearchListController {
-  final StockService _service;
+  final StockRepository _service;
 
   late final AsyncSignal<List<Stock>> state;
 
@@ -18,7 +18,7 @@ class StockSearchListController {
     final result = await _service.search(query: query);
     result.fold(
       (error) => state.value = AsyncError(error, StackTrace.current),
-      (data) => state.value = AsyncData(data.results),
+      (data) => state.value = AsyncData(data),
     );
   }
 

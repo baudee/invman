@@ -1,15 +1,20 @@
+import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 import 'package:invman_client/invman_client.dart';
-import 'package:invman_flutter/features/transfer/services/transfer_service.dart';
-import 'package:signals_flutter/signals_flutter.dart';
+import 'package:invman_flutter/core/controllers/detail_controller.dart';
+import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/features/transfer/repositories/transfer_repository.dart';
 
 @injectable
-class TransferDetailController extends FutureSignal<Transfer> {
-  final int id;
-  final TransferService _service;
+class TransferDetailController extends DetailController<int, Transfer> {
+  final TransferRepository _service;
 
-  TransferDetailController(
-    @factoryParam this.id,
-    this._service,
-  ) : super(() => _service.retrieve(id));
+  TransferDetailController(@factoryParam super.id, this._service);
+
+  @override
+  Future<Either<String, Transfer>> retrieve(int id) {
+    return _service.retrieve(id);
+  }
+
+  Future<(bool, String?)> delete() => DeleteCommand(onExecute: () => _service.delete(id)).execute();
 }

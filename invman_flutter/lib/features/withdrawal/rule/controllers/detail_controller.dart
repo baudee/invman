@@ -3,13 +3,11 @@ import 'package:injectable/injectable.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/core/controllers/detail_controller.dart';
 import 'package:invman_flutter/core/core.dart';
-import 'package:invman_flutter/features/withdrawal/services/withdrawal_rule_service.dart';
-import 'package:signals_flutter/signals_flutter.dart';
+import 'package:invman_flutter/features/withdrawal/repositories/withdrawal_rule_repository.dart';
 
 @injectable
 class WithdrawalRuleDetailController extends DetailController<int, WithdrawalRule> {
-  final WithdrawalRuleService _service;
-  AsyncSignal<WithdrawalRule> state = AsyncSignal<WithdrawalRule>(AsyncState.loading());
+  final WithdrawalRuleRepository _service;
 
   WithdrawalRuleDetailController(@factoryParam super.id, this._service);
 

@@ -7,18 +7,19 @@ import 'package:invman_flutter/features/onboarding/onboarding.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 @injectable
-class OnboardingController {
-  final AuthController _authController;
+class OnboardingController extends AsyncSignal<List<Currency>> {
+  final AuthManager _authService;
+  final AccountRepository _accountService;
+  final CurrencyRepository _currencyService;
 
-  final AccountService _accountService;
-  final CurrencyService _currencyService;
-
-  late final FutureSignal<List<Currency>> currencies;
   late final Signal<int?> selectedCurrency = signal(null);
   late final Signal<bool> isValidating = signal(false);
 
-  OnboardingController(this._authController, this._accountService, this._currencyService) {
-    currencies = FutureSignal(() => _currencyService.list());
+  OnboardingController(this._authService, this._accountService, this._currencyService) : super(AsyncState.loading()) {
+    setLoading();
+    _currencyService.list().then((result) {
+      result.fold((error) => setError(error), (currencies) => setValue(currencies));
+    });
   }
 
   Future<String?> validateCurrency() async {
@@ -29,7 +30,7 @@ class OnboardingController {
     try {
       final account = Account(userId: UuidValue.fromString(Namespace.nil.value), currencyId: selectedCurrency.value!);
       await _accountService.save(account.copyWith(currencyId: selectedCurrency.value));
-      await _authController.refreshMe();
+      await _authService.refreshMe();
       isValidating.value = false;
       return null;
     } on Exception catch (e) {

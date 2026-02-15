@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/core/core.dart';
-import 'package:go_router/go_router.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
 
-class InvestmentTileComponent extends StatelessWidget {
+class InvestmentTileComponent extends HookWidget {
   final Investment investment;
 
   const InvestmentTileComponent({super.key, required this.investment});
 
   @override
   Widget build(BuildContext context) {
-    final currency = (getIt<AuthController>().state.value as AuthStateSuccess).account.currency;
+    final authManager = useMemoized(() => getIt<AuthManager>());
     return ListTile(
       title: Text(investment.name, overflow: TextOverflow.ellipsis),
       subtitle: Text(
-        "${investment.investAmount.toStringPrice(currency)} / ${investment.withdrawAmount?.toStringPrice(currency)}",
+        "${investment.investAmount.toStringPrice(authManager.currencyCode)} / ${investment.withdrawAmount?.toStringPrice(authManager.currencyCode)}",
       ),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -27,10 +28,13 @@ class InvestmentTileComponent extends StatelessWidget {
             "${investment.percent.toStringAsFixed(1)}%",
             style: TextStyle(color: investment.percentColor, fontWeight: FontWeight.bold),
           ),
-          Text(investment.amountDifference.toStringPrice(currency), style: TextStyle(color: investment.percentColor)),
+          Text(
+            investment.amountDifference.toStringPrice(authManager.currencyCode),
+            style: TextStyle(color: investment.percentColor),
+          ),
         ],
       ),
-      onTap: () => getIt<GoRouter>().pushRelative(InvestmentDetailScreen.route(investment.id)),
+      onTap: () => router.pushRelative(InvestmentDetailScreen.route(investment.id)),
     );
   }
 }

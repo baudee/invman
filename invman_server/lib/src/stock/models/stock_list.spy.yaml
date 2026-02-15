@@ -1,4 +1,0 @@
-class: StockList
-extends: PaginationList
-fields:
-    results: List<Stock>
