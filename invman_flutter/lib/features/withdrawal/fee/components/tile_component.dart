@@ -21,7 +21,11 @@ class WithdrawalFeeTileComponent extends HookWidget {
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
-        child: Icon(Icons.percent, color: theme.colorScheme.primary, size: UIConstants.iconMd),
+        child: Icon(
+          Icons.percent,
+          color: theme.colorScheme.primary,
+          size: UIConstants.iconMd,
+        ),
       ),
       title: Text("${fee.percent}%"),
       subtitle: Text(

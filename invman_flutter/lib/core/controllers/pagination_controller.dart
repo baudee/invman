@@ -1,44 +1,46 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-abstract class PaginationController<T> extends AsyncSignal<List<T>> {
-  final currentPage = signal(0);
-  final hasMore = signal(true);
+abstract class PaginationController<T> {
+  final Signal<PagingState<int, T>> state = signal(PagingState());
 
-  PaginationController() : super(AsyncState.loading());
-
-  Future<void> _fetch(int page) async {
-    setLoading(value);
-
-    await Future.delayed(const Duration(seconds: 1));
-
-    final result = await getData(page);
-
-    result.fold((error) => setError(error), (result) {
-      batch(() {
-        currentPage.value = page;
-        final current = value.value ?? [];
-        hasMore.value = result.isNotEmpty;
-        setValue(current + result);
-      });
-    });
+  PaginationController() {
+    fetchNextPage();
   }
 
-  Future<void> checkForMore() async {
-    if (value.isLoading) return;
-    if (!hasMore()) return;
-    await _fetch(currentPage.value + 1);
+  Future<void> fetchNextPage() async {
+    final currentState = state.value;
+    if (currentState.isLoading || !currentState.hasNextPage) return;
+
+    state.value = currentState.copyWith(isLoading: true, error: null);
+
+    final nextKey = (currentState.keys?.lastOrNull ?? 0) + 1;
+    final result = await fetchPage(nextKey);
+
+    result.fold(
+      (error) {
+        state.value = currentState.copyWith(
+          error: Exception(error),
+          isLoading: false,
+        );
+      },
+      (items) {
+        final isLastPage = items.isEmpty;
+        state.value = currentState.copyWith(
+          pages: [...?currentState.pages, items],
+          keys: [...?currentState.keys, nextKey],
+          hasNextPage: !isLastPage,
+          isLoading: false,
+        );
+      },
+    );
   }
 
-  @override
-  Future<void> reload() async {
-    batch(() {
-      currentPage.value = 0;
-      hasMore.value = true;
-      setValue([]);
-    });
-    await _fetch(1);
+  Future<void> refresh() async {
+    state.value = PagingState();
+    await fetchNextPage();
   }
 
-  Future<Either<String, List<T>>> getData(int page);
+  Future<Either<String, List<T>>> fetchPage(int page);
 }

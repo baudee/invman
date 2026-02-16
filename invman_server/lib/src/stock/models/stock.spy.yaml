@@ -8,5 +8,6 @@ fields:
   shortName: String,
   longName: String,
   quoteType: StockType,
+  logoUrl: String?,
   currency: Currency?, relation
   prices: List<StockPrice>?, relation(optional, name=stock_stock_prices)

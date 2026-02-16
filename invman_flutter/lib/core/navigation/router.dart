@@ -11,12 +11,12 @@ import 'package:invman_flutter/features/auth/auth.dart';
 import 'containers/containers.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
-final router = getIt<GoRouter>();
+GoRouter get router => getIt<GoRouter>();
 
 @module
 abstract class RouterModule {
   @singleton
-  GoRouter router(AuthManager authService) {
+  GoRouter router(AuthManager authManager) {
     final initialRoute = InvestmentRootScreen.route();
     String destination = initialRoute;
 
@@ -27,16 +27,20 @@ abstract class RouterModule {
         GoRoute(path: SignInScreen.route(), builder: (_, _) => SignInScreen()),
         ...OnboardingRoutes.routes,
         StatefulShellRoute.indexedStack(
-          branches: [InvestmentRoutes.branch, StockRoutes.branch, AccountRoutes.branch],
+          branches: [
+            InvestmentRoutes.branch,
+            StockRoutes.branch,
+            AccountRoutes.branch,
+          ],
           builder: (context, state, navigationShell) {
             return AppContainer(navigationShell: navigationShell);
           },
         ),
       ],
-      refreshListenable: authService.state,
+      refreshListenable: authManager.state,
       redirect: (context, state) {
-        final isLoggedIn = authService.isLoggedIn.value;
-        final isOnboarded = authService.isOnboarded.value;
+        final isLoggedIn = authManager.isLoggedIn.value;
+        final isOnboarded = authManager.isOnboarded.value;
         final location = state.matchedLocation;
 
         final isGoingToLogin = location == SignInScreen.route();

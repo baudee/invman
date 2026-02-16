@@ -23,6 +23,7 @@ abstract class Stock implements _i1.SerializableModel {
     required this.shortName,
     required this.longName,
     required this.quoteType,
+    this.logoUrl,
     required this.currencyId,
     this.currency,
     this.prices,
@@ -34,6 +35,7 @@ abstract class Stock implements _i1.SerializableModel {
     required String shortName,
     required String longName,
     required _i2.StockType quoteType,
+    String? logoUrl,
     required int currencyId,
     _i3.Currency? currency,
     List<_i4.StockPrice>? prices,
@@ -50,6 +52,7 @@ abstract class Stock implements _i1.SerializableModel {
       quoteType: _i2.StockType.fromJson(
         (jsonSerialization['quoteType'] as String),
       ),
+      logoUrl: jsonSerialization['logoUrl'] as String?,
       currencyId: jsonSerialization['currencyId'] as int,
       currency: jsonSerialization['currency'] == null
           ? null
@@ -75,6 +78,8 @@ abstract class Stock implements _i1.SerializableModel {
 
   _i2.StockType quoteType;
 
+  String? logoUrl;
+
   int currencyId;
 
   _i3.Currency? currency;
@@ -90,6 +95,7 @@ abstract class Stock implements _i1.SerializableModel {
     String? shortName,
     String? longName,
     _i2.StockType? quoteType,
+    String? logoUrl,
     int? currencyId,
     _i3.Currency? currency,
     List<_i4.StockPrice>? prices,
@@ -103,6 +109,7 @@ abstract class Stock implements _i1.SerializableModel {
       'shortName': shortName,
       'longName': longName,
       'quoteType': quoteType.toJson(),
+      if (logoUrl != null) 'logoUrl': logoUrl,
       'currencyId': currencyId,
       if (currency != null) 'currency': currency?.toJson(),
       if (prices != null)
@@ -125,6 +132,7 @@ class _StockImpl extends Stock {
     required String shortName,
     required String longName,
     required _i2.StockType quoteType,
+    String? logoUrl,
     required int currencyId,
     _i3.Currency? currency,
     List<_i4.StockPrice>? prices,
@@ -134,6 +142,7 @@ class _StockImpl extends Stock {
          shortName: shortName,
          longName: longName,
          quoteType: quoteType,
+         logoUrl: logoUrl,
          currencyId: currencyId,
          currency: currency,
          prices: prices,
@@ -149,6 +158,7 @@ class _StockImpl extends Stock {
     String? shortName,
     String? longName,
     _i2.StockType? quoteType,
+    Object? logoUrl = _Undefined,
     int? currencyId,
     Object? currency = _Undefined,
     Object? prices = _Undefined,
@@ -159,6 +169,7 @@ class _StockImpl extends Stock {
       shortName: shortName ?? this.shortName,
       longName: longName ?? this.longName,
       quoteType: quoteType ?? this.quoteType,
+      logoUrl: logoUrl is String? ? logoUrl : this.logoUrl,
       currencyId: currencyId ?? this.currencyId,
       currency: currency is _i3.Currency?
           ? currency

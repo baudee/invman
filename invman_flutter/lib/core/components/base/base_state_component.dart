@@ -6,7 +6,11 @@ class BaseStateComponent<T> extends StatelessWidget {
   final Widget Function(T data) successBuilder;
   final AsyncSignal<T> state;
 
-  const BaseStateComponent({super.key, required this.state, required this.successBuilder});
+  const BaseStateComponent({
+    super.key,
+    required this.state,
+    required this.successBuilder,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +18,10 @@ class BaseStateComponent<T> extends StatelessWidget {
         .watch(context)
         .map(
           data: (data) => successBuilder(data),
-          error: (error, _) => ErrorComponent(error: error, handleRefresh: () => state.refresh()),
+          error: (error, _) => ErrorComponent(
+            error: error,
+            handleRefresh: () => state.refresh(),
+          ),
           loading: () => const LoadingComponent(),
         );
   }

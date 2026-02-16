@@ -9,13 +9,10 @@ class TransferListController extends PaginationController<Transfer> {
   final int investmentId;
   final TransferRepository _service;
 
-  TransferListController(
-    @factoryParam this.investmentId,
-    this._service,
-  );
+  TransferListController(@factoryParam this.investmentId, this._service);
 
   @override
-  Future<Either<String, List<Transfer>>> getData(int page) {
+  Future<Either<String, List<Transfer>>> fetchPage(int page) {
     return _service.list(investmentId, page: page, limit: 10);
   }
 }

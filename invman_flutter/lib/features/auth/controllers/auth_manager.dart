@@ -18,7 +18,8 @@ class AuthManager {
     () => state.value is AuthStateSuccess || state.value is AuthStateOnboarding,
   );
   late final FlutterComputed<bool> isOnboarded = computed(
-    () => state.value is! AuthStateOnboarding && state.value is AuthStateSuccess,
+    () =>
+        state.value is! AuthStateOnboarding && state.value is AuthStateSuccess,
   );
 
   late final FlutterComputed<Account?> account = computed(() {
@@ -39,6 +40,7 @@ class AuthManager {
        _preferencesRepository = preferencesRepository,
        _client = client;
 
+  @PostConstruct()
   Future<void> init() async {
     state.value = AuthStateBooting();
     await _client.auth.initialize();

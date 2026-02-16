@@ -13,12 +13,24 @@ class AppContainer extends StatelessWidget {
       bottomNavigationBar: NavigationBar(
         selectedIndex: navigationShell.currentIndex,
         onDestinationSelected: (index) {
-          navigationShell.goBranch(index, initialLocation: index == navigationShell.currentIndex);
+          navigationShell.goBranch(
+            index,
+            initialLocation: index == navigationShell.currentIndex,
+          );
         },
         destinations: [
-          NavigationDestination(icon: Icon(Icons.home), label: S.of(context).investment_title),
-          NavigationDestination(icon: Icon(Icons.my_library_books_outlined), label: S.of(context).stock_title),
-          NavigationDestination(icon: Icon(Icons.menu), label: S.of(context).account_title),
+          NavigationDestination(
+            icon: Icon(Icons.home),
+            label: S.of(context).investment_title,
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.my_library_books_outlined),
+            label: S.of(context).stock_title,
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.menu),
+            label: S.of(context).account_title,
+          ),
         ],
       ),
     );

@@ -6,13 +6,18 @@ class AppTheme {
 
   AppTheme(this.themeData);
 
-  static final _searchBarTheme = SearchBarThemeData(elevation: WidgetStateProperty.all(0.0));
+  static final _searchBarTheme = SearchBarThemeData(
+    elevation: WidgetStateProperty.all(0.0),
+  );
 
   static const _seedColor = Colors.deepPurple;
 
   static ListTileThemeData _listTileTheme(ColorScheme colorScheme) {
     return ListTileThemeData(
-      contentPadding: const EdgeInsets.symmetric(horizontal: UIConstants.spacingLg, vertical: UIConstants.spacingXs),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: UIConstants.spacingLg,
+        vertical: UIConstants.spacingXs,
+      ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(UIConstants.radiusMd),
       ),
@@ -29,17 +34,24 @@ class AppTheme {
 
   static final _buttonStyle = ButtonStyle(
     padding: WidgetStateProperty.all(
-      const EdgeInsets.symmetric(horizontal: UIConstants.spacingXl, vertical: UIConstants.spacingLg),
+      const EdgeInsets.symmetric(
+        horizontal: UIConstants.spacingXl,
+        vertical: UIConstants.spacingLg,
+      ),
     ),
     shape: WidgetStateProperty.all(
       RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(UIConstants.radiusMd),
       ),
     ),
-    minimumSize: WidgetStateProperty.all(const Size(0, UIConstants.buttonHeight)),
+    minimumSize: WidgetStateProperty.all(
+      const Size(0, UIConstants.buttonHeight),
+    ),
   );
 
-  static final _elevatedButtonTheme = ElevatedButtonThemeData(style: _buttonStyle);
+  static final _elevatedButtonTheme = ElevatedButtonThemeData(
+    style: _buttonStyle,
+  );
 
   static final _filledButtonTheme = FilledButtonThemeData(style: _buttonStyle);
 

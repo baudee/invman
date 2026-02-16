@@ -16,14 +16,12 @@ class WithdrawalRuleRootScreen extends HookWidget {
     final controller = useMemoized(() => getIt<WithdrawalRuleListController>());
     return BaseScreen(
       appBar: AppBar(title: Text(S.of(context).withdrawal_title)),
-      body: BaseStateComponent(
-        state: controller,
-        successBuilder: (_) => InfiniteListComponent(
-          controller: controller,
-          itemBuilder: (rule) => WithdrawalRuleTileComponent(
-            rule: rule,
-            onTap: () => router.pushRelative(WithdrawalRuleDetailScreen.route(rule.id)),
-          ),
+      body: InfiniteListComponent(
+        controller: controller,
+        itemBuilder: (rule) => WithdrawalRuleTileComponent(
+          rule: rule,
+          onTap: () =>
+              router.pushRelative(WithdrawalRuleDetailScreen.route(rule.id)),
         ),
       ),
       floatingActionButton: FloatingActionButton(

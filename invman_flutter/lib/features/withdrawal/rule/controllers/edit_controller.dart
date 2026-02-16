@@ -9,13 +9,14 @@ import 'package:signals_flutter/signals_flutter.dart';
 @injectable
 class WithdrawalRuleEditController extends AsyncSignal<WithdrawalRule> {
   final int id;
-  final WithdrawalRuleRepository _service;
+  final WithdrawalRuleRepository _repository;
 
   final formKey = GlobalKey<FormState>();
   final currencyChangePercentageController = TextEditingController();
   final nameController = TextEditingController();
 
-  WithdrawalRuleEditController(@factoryParam this.id, this._service) : super(AsyncState.loading()) {
+  WithdrawalRuleEditController(@factoryParam this.id, this._repository)
+    : super(AsyncState.loading()) {
     _load();
   }
 
@@ -25,16 +26,18 @@ class WithdrawalRuleEditController extends AsyncSignal<WithdrawalRule> {
       final initial = InitialUtils.getWithdrawalRule();
       _refreshControllers(initial);
       setValue(initial);
+    } else {
+      final result = await _repository.retrieve(id);
+      result.fold((error) => setError(error), (rule) {
+        _refreshControllers(rule);
+        setValue(rule);
+      });
     }
-    final result = await _service.retrieve(id);
-    result.fold((error) => setError(error), (rule) {
-      _refreshControllers(rule);
-      setValue(rule);
-    });
   }
 
   void _refreshControllers(WithdrawalRule rule) {
-    currencyChangePercentageController.text = rule.currencyChangePercentage.toString();
+    currencyChangePercentageController.text = rule.currencyChangePercentage
+        .toString();
     nameController.text = rule.name;
   }
 
@@ -44,18 +47,21 @@ class WithdrawalRuleEditController extends AsyncSignal<WithdrawalRule> {
         return (false, S.current.error_fixToContinue);
       }
 
-      if (double.tryParse(currencyChangePercentageController.text.trim()) == null) {
+      if (double.tryParse(currencyChangePercentageController.text.trim()) ==
+          null) {
         return (false, S.current.withdrawal_selectValidPercentage);
       }
 
       final ruleToSave = rule.copyWith(
-        currencyChangePercentage: double.parse(currencyChangePercentageController.text.trim()),
+        currencyChangePercentage: double.parse(
+          currencyChangePercentageController.text.trim(),
+        ),
         name: nameController.text.trim(),
       );
 
       setLoading(value);
 
-      final result = await _service.save(ruleToSave);
+      final result = await _repository.save(ruleToSave);
 
       return result.fold(
         (error) {

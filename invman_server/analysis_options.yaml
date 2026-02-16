@@ -24,6 +24,8 @@ analyzer:
   exclude:
     - lib/src/generated/**
     - test/integration/test_tools/serverpod_test_tools.dart
+  errors:
+    experimental_member_use: info
 # For more information about the core and recommended set of lints, see
 # https://dart.dev/go/core-lints
 

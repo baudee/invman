@@ -25,13 +25,19 @@ class TransferFormComponent extends HookWidget {
             TextFormField(
               controller: controller.amountController,
               validator: (value) => ValidationUtils.formValidatorDouble(value),
-              decoration: InputDecoration(label: Text(S.of(context).transfer_amount), suffixText: authManager.currencyCode),
+              decoration: InputDecoration(
+                label: Text(S.of(context).transfer_amount),
+                suffixText: authManager.currencyCode,
+              ),
               keyboardType: TextInputType.number,
             ),
             TextFormField(
               controller: controller.quantityController,
               validator: (value) => ValidationUtils.formValidatorDouble(value),
-              decoration: InputDecoration(label: Text(S.of(context).transfer_quantity), suffixText: authManager.currencyCode),
+              decoration: InputDecoration(
+                label: Text(S.of(context).transfer_quantity),
+                suffixText: authManager.currencyCode,
+              ),
               keyboardType: TextInputType.number,
             ),
             CalendarDatePicker(

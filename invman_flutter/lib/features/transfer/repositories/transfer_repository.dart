@@ -18,9 +18,13 @@ class TransferRepository {
 
   Future<Either<String, Transfer>> save(Transfer transfer) async {
     return safeCall(() async {
-      final transferUtc = transfer.copyWith(createdAt: transfer.createdAt.toUtc());
+      final transferUtc = transfer.copyWith(
+        createdAt: transfer.createdAt.toUtc(),
+      );
       Transfer savedTransfer = await client.transfer.save(transferUtc);
-      return right(savedTransfer.copyWith(createdAt: savedTransfer.createdAt.toLocal()));
+      return right(
+        savedTransfer.copyWith(createdAt: savedTransfer.createdAt.toLocal()),
+      );
     });
   }
 
@@ -30,11 +34,22 @@ class TransferRepository {
     });
   }
 
-  Future<Either<String, List<Transfer>>> list(int investmentId, {required int page, required int limit}) async {
+  Future<Either<String, List<Transfer>>> list(
+    int investmentId, {
+    required int page,
+    required int limit,
+  }) async {
     return safeCall(() async {
-      final transfers = await client.transfer.list(investmentId, page: page, limit: limit);
+      final transfers = await client.transfer.list(
+        investmentId,
+        page: page,
+        limit: limit,
+      );
       final localTransfers = transfers
-          .map((transfer) => transfer.copyWith(createdAt: transfer.createdAt.toLocal()))
+          .map(
+            (transfer) =>
+                transfer.copyWith(createdAt: transfer.createdAt.toLocal()),
+          )
           .toList();
       return right(localTransfers);
     });

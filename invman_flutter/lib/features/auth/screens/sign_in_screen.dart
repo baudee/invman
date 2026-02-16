@@ -14,7 +14,8 @@ class SignInScreen extends StatelessWidget {
     return BaseScreen(
       body: SignInWidget(
         client: getIt<Client>(),
-        onError: (error) => ToastUtils.message(error.toString(), success: false),
+        onError: (error) =>
+            ToastUtils.message(error.toString(), success: false),
       ),
     );
   }

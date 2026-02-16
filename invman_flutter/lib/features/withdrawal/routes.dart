@@ -13,23 +13,31 @@ class WithdrawalRoutes {
       routes: [
         GoRoute(
           path: WithdrawalRuleDetailScreen.route(),
-          builder: (_, state) => WithdrawalRuleDetailScreen(id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0),
+          builder: (_, state) => WithdrawalRuleDetailScreen(
+            id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
+          ),
           routes: [
             GoRoute(
               path: WithdrawalRuleEditScreen.route(),
-              builder: (_, state) => WithdrawalRuleEditScreen(id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0),
+              builder: (_, state) => WithdrawalRuleEditScreen(
+                id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
+              ),
             ),
             GoRoute(
               path: WithdrawalFeeDetailScreen.route(),
-              builder: (_, state) =>
-                  WithdrawalFeeDetailScreen(id: int.tryParse(state.pathParameters['idFee'] ?? '') ?? 0),
+              builder: (_, state) => WithdrawalFeeDetailScreen(
+                id: int.tryParse(state.pathParameters['idFee'] ?? '') ?? 0,
+              ),
               routes: [
                 GoRoute(
                   path: WithdrawalFeeEditScreen.route(),
                   builder: (_, state) {
                     return WithdrawalFeeEditScreen(
-                      ruleId: int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
-                      id: int.tryParse(state.pathParameters['idFee'] ?? '') ?? 0,
+                      ruleId:
+                          int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
+                      id:
+                          int.tryParse(state.pathParameters['idFee'] ?? '') ??
+                          0,
                     );
                   },
                 ),

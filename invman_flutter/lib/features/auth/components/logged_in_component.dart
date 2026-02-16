@@ -6,8 +6,6 @@ class LoggedInComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(S.of(context).auth_loggedIn),
-    );
+    return Center(child: Text(S.of(context).auth_loggedIn));
   }
 }

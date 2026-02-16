@@ -26,7 +26,10 @@ class InvestmentTileComponent extends HookWidget {
         children: [
           Text(
             "${investment.percent.toStringAsFixed(1)}%",
-            style: TextStyle(color: investment.percentColor, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: investment.percentColor,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           Text(
             investment.amountDifference.toStringPrice(authManager.currencyCode),
@@ -34,7 +37,8 @@ class InvestmentTileComponent extends HookWidget {
           ),
         ],
       ),
-      onTap: () => router.pushRelative(InvestmentDetailScreen.route(investment.id)),
+      onTap: () =>
+          router.pushRelative(InvestmentDetailScreen.route(investment.id)),
     );
   }
 }

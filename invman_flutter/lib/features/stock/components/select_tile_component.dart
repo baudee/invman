@@ -7,7 +7,11 @@ import 'package:invman_flutter/features/stock/stock.dart';
 class StockSelectTileComponent extends StatelessWidget {
   final Stock? stock;
   final void Function(Stock) onStockSelected;
-  const StockSelectTileComponent({super.key, required this.stock, required this.onStockSelected});
+  const StockSelectTileComponent({
+    super.key,
+    required this.stock,
+    required this.onStockSelected,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -16,11 +16,11 @@ class WithdrawalRuleSelectScreen extends HookWidget {
     final controller = useMemoized(() => getIt<WithdrawalRuleListController>());
     return BaseScreen(
       appBar: AppBar(title: Text(S.of(context).withdrawal_title)),
-      body: BaseStateComponent(
-        state: controller,
-        successBuilder: (_) => InfiniteListComponent(
-          controller: controller,
-          itemBuilder: (rule) => WithdrawalRuleTileComponent(rule: rule, onTap: () => context.pop(rule)),
+      body: InfiniteListComponent(
+        controller: controller,
+        itemBuilder: (rule) => WithdrawalRuleTileComponent(
+          rule: rule,
+          onTap: () => context.pop(rule),
         ),
       ),
     );

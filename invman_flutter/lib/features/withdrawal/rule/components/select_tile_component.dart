@@ -7,7 +7,11 @@ import 'package:invman_flutter/features/withdrawal/rule/rule.dart';
 class WithdrawalRuleSelectTileComponent extends StatelessWidget {
   final WithdrawalRule? rule;
   final void Function(WithdrawalRule) onRuleSelected;
-  const WithdrawalRuleSelectTileComponent({super.key, this.rule, required this.onRuleSelected});
+  const WithdrawalRuleSelectTileComponent({
+    super.key,
+    this.rule,
+    required this.onRuleSelected,
+  });
 
   @override
   Widget build(BuildContext context) {

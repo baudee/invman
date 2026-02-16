@@ -14,12 +14,10 @@ class InvestmentRootScreen extends HookWidget {
   Widget build(BuildContext context) {
     final controller = useMemoized(() => getIt<InvestmentListController>());
     return BaseScreen(
-      body: BaseStateComponent(
-        state: controller,
-        successBuilder: (_) => InfiniteListComponent(
-          controller: controller,
-          itemBuilder: (investment) => InvestmentTileComponent(investment: investment),
-        ),
+      body: InfiniteListComponent(
+        controller: controller,
+        itemBuilder: (investment) =>
+            InvestmentTileComponent(investment: investment),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => router.pushRelative(InvestmentEditScreen.route(0)),

@@ -411,6 +411,12 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'protocol:StockType',
         ),
         _i2.ColumnDefinition(
+          name: 'logoUrl',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
           name: 'currencyId',
           columnType: _i2.ColumnType.bigint,
           isNullable: false,

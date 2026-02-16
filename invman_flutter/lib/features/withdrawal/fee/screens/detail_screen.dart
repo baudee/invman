@@ -8,11 +8,14 @@ import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 class WithdrawalFeeDetailScreen extends HookWidget {
   final int id;
   const WithdrawalFeeDetailScreen({super.key, required this.id});
-  static String route([int? id]) => "${WithdrawalRoutes.namespaceFee}/${id ?? ':idFee'}";
+  static String route([int? id]) =>
+      "${WithdrawalRoutes.namespaceFee}/${id ?? ':idFee'}";
 
   @override
   Widget build(BuildContext context) {
-    final controller = useMemoized(() => getIt<WithdrawalFeeDetailController>(param1: id));
+    final controller = useMemoized(
+      () => getIt<WithdrawalFeeDetailController>(param1: id),
+    );
     return BaseScreen(
       appBar: AppBar(
         actions: [
@@ -37,7 +40,10 @@ class WithdrawalFeeDetailScreen extends HookWidget {
               ),
               const PopupMenuItem(
                 value: 1,
-                child: ListTile(leading: Icon(Icons.delete), title: Text('Delete')),
+                child: ListTile(
+                  leading: Icon(Icons.delete),
+                  title: Text('Delete'),
+                ),
               ),
             ],
           ),

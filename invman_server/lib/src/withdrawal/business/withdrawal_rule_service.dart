@@ -8,7 +8,11 @@ import 'package:serverpod_auth_idp_server/core.dart';
 class WithdrawalRuleService {
   WithdrawalRuleService();
 
-  Future<List<WithdrawalRule>> list(Session session, {required int limit, required int page}) async {
+  Future<List<WithdrawalRule>> list(
+    Session session, {
+    required int limit,
+    required int page,
+  }) async {
     final sessionUserId = (session.authenticated)!.authUserId;
 
     return WithdrawalRule.db.find(
@@ -19,7 +23,11 @@ class WithdrawalRuleService {
     );
   }
 
-  Future<WithdrawalRule> retrieve(Session session, int id, {Transaction? transaction}) async {
+  Future<WithdrawalRule> retrieve(
+    Session session,
+    int id, {
+    Transaction? transaction,
+  }) async {
     final withdrawal = await WithdrawalRule.db.findById(
       session,
       id,
@@ -39,7 +47,10 @@ class WithdrawalRuleService {
     return withdrawal;
   }
 
-  Future<WithdrawalRule> save(Session session, WithdrawalRule withdrawal) async {
+  Future<WithdrawalRule> save(
+    Session session,
+    WithdrawalRule withdrawal,
+  ) async {
     if (withdrawal.id == 0 || withdrawal.id == null) {
       final sessionUserId = (session.authenticated)!.authUserId;
       withdrawal = withdrawal.copyWith(id: null, userId: sessionUserId);

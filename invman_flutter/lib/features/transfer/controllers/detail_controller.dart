@@ -16,5 +16,6 @@ class TransferDetailController extends DetailController<int, Transfer> {
     return _service.retrieve(id);
   }
 
-  Future<(bool, String?)> delete() => DeleteCommand(onExecute: () => _service.delete(id)).execute();
+  Future<(bool, String?)> delete() =>
+      DeleteCommand(onExecute: () => _service.delete(id)).execute();
 }

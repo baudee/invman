@@ -9,10 +9,16 @@ class AccountEndpoint extends Endpoint with EndpointMiddleware {
   bool get requireLogin => true;
 
   Future<Account> retrieve(Session session) async {
-    return withMiddleware(session, () => getIt<AccountService>().retrieve(session));
+    return withMiddleware(
+      session,
+      () => getIt<AccountService>().retrieve(session),
+    );
   }
 
   Future<Account> save(Session session, Account account) async {
-    return withMiddleware(session, () => getIt<AccountService>().save(session, account));
+    return withMiddleware(
+      session,
+      () => getIt<AccountService>().save(session, account),
+    );
   }
 }

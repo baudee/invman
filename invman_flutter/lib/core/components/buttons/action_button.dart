@@ -9,7 +9,9 @@ class ActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton(
       onPressed: onPressed == null ? null : () => onPressed!(),
-      style: FilledButton.styleFrom(minimumSize: const Size(double.infinity, 0)),
+      style: FilledButton.styleFrom(
+        minimumSize: const Size(double.infinity, 0),
+      ),
       child: child,
     );
   }

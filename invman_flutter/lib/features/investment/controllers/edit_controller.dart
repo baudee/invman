@@ -14,10 +14,8 @@ class InvestmentEditController extends AsyncSignal<Investment> {
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
 
-  InvestmentEditController(
-    @factoryParam this.id,
-    this._service,
-  ) : super(AsyncState.loading()) {
+  InvestmentEditController(@factoryParam this.id, this._service)
+    : super(AsyncState.loading()) {
     _load();
   }
 
@@ -42,7 +40,9 @@ class InvestmentEditController extends AsyncSignal<Investment> {
 
   void setWithdrawalRule(WithdrawalRule rule) {
     if (value case AsyncData(value: final investment)) {
-      setValue(investment.copyWith(withdrawalRule: rule, withdrawalRuleId: rule.id));
+      setValue(
+        investment.copyWith(withdrawalRule: rule, withdrawalRuleId: rule.id),
+      );
     }
   }
 

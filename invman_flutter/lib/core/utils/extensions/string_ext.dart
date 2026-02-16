@@ -7,4 +7,4 @@ extension TextPriceExtension on String {
       return (price * 100).toInt();
     }
   }
-} 
+}

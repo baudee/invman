@@ -36,10 +36,15 @@ void run(List<String> args) async {
       ),
     ],
     authUsersConfig: AuthUsersConfig(
-      onAfterAuthUserCreated: (session, authUser, {required transaction}) async {
-        final account = Account(userId: authUser.id);
-        await Account.db.insertRow(session, account, transaction: transaction);
-      },
+      onAfterAuthUserCreated:
+          (session, authUser, {required transaction}) async {
+            final account = Account(userId: authUser.id);
+            await Account.db.insertRow(
+              session,
+              account,
+              transaction: transaction,
+            );
+          },
     ),
   );
 

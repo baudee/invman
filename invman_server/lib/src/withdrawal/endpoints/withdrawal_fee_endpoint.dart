@@ -9,14 +9,23 @@ class WithdrawalFeeEndpoint extends Endpoint with EndpointMiddleware {
   bool get requireLogin => true;
 
   Future<WithdrawalFee> retrieve(Session session, int id) async {
-    return withMiddleware(session, () => getIt<WithdrawalFeeService>().retrieve(session, id));
+    return withMiddleware(
+      session,
+      () => getIt<WithdrawalFeeService>().retrieve(session, id),
+    );
   }
 
   Future<WithdrawalFee> save(Session session, WithdrawalFee fee) async {
-    return withMiddleware(session, () => getIt<WithdrawalFeeService>().save(session, fee));
+    return withMiddleware(
+      session,
+      () => getIt<WithdrawalFeeService>().save(session, fee),
+    );
   }
 
   Future<WithdrawalFee> delete(Session session, int id) async {
-    return withMiddleware(session, () => getIt<WithdrawalFeeService>().delete(session, id));
+    return withMiddleware(
+      session,
+      () => getIt<WithdrawalFeeService>().delete(session, id),
+    );
   }
 }

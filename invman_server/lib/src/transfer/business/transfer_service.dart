@@ -43,7 +43,11 @@ class TransferService {
           );
         }
 
-        await investmentService.updateTotalTransfers(session, savedTransfer.investmentId, transaction: transaction);
+        await investmentService.updateTotalTransfers(
+          session,
+          savedTransfer.investmentId,
+          transaction: transaction,
+        );
 
         return savedTransfer;
       },
@@ -57,8 +61,16 @@ class TransferService {
     return session.db.transaction(
       (transaction) async {
         final transfer = await retrieve(session, id);
-        final deletedTransfer = await Transfer.db.deleteRow(session, transfer, transaction: transaction);
-        await investmentService.updateTotalTransfers(session, transfer.investmentId, transaction: transaction);
+        final deletedTransfer = await Transfer.db.deleteRow(
+          session,
+          transfer,
+          transaction: transaction,
+        );
+        await investmentService.updateTotalTransfers(
+          session,
+          transfer.investmentId,
+          transaction: transaction,
+        );
         return deletedTransfer;
       },
       settings: TransactionSettings(
@@ -67,7 +79,12 @@ class TransferService {
     );
   }
 
-  Future<List<Transfer>> list(Session session, int investmentId, {required int limit, required int page}) async {
+  Future<List<Transfer>> list(
+    Session session,
+    int investmentId, {
+    required int limit,
+    required int page,
+  }) async {
     await investmentService.retrieve(session, investmentId);
 
     return Transfer.db.find(

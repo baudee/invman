@@ -1,2 +1,1 @@
-class ExtraConstants {
-}
+class ExtraConstants {}

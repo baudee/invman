@@ -1,32 +1,20 @@
+import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 import 'package:invman_client/invman_client.dart';
+import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/features/stock/repositories/stock_repository.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-@lazySingleton
-class StockSearchListController {
+@injectable
+class StockSearchListController extends PaginationController<Stock> {
   final StockRepository _service;
 
-  late final AsyncSignal<List<Stock>> state;
+  final FlutterSignal<String> query = signal("");
 
-  StockSearchListController(this._service) {
-    state = futureSignal(() async => <Stock>[]);
-  }
+  StockSearchListController(this._service);
 
-  Future<void> search(String query) async {
-    state.value = AsyncLoading();
-    final result = await _service.search(query: query);
-    result.fold(
-      (error) => state.value = AsyncError(error, StackTrace.current),
-      (data) => state.value = AsyncData(data),
-    );
-  }
-
-  void clear() {
-    state.value = AsyncData(<Stock>[]);
-  }
-
-  void dispose() {
-    state.dispose();
+  @override
+  Future<Either<String, List<Stock>>> fetchPage(int page) {
+    return _service.search(query: query.value, page: page, limit: 10);
   }
 }

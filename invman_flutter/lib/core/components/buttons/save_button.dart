@@ -8,6 +8,9 @@ class SaveButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ActionButton(onPressed: onPressed, child: Text(S.of(context).core_save));
+    return ActionButton(
+      onPressed: onPressed,
+      child: Text(S.of(context).core_save),
+    );
   }
 }

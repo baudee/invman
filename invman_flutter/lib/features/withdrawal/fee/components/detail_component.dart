@@ -17,7 +17,12 @@ class WithdrawalFeeDetailComponent extends HookWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          _buildDetailCard(context, S.of(context).withdrawal_percentage, "${fee.percent}%", Icons.percent),
+          _buildDetailCard(
+            context,
+            S.of(context).withdrawal_percentage,
+            "${fee.percent}%",
+            Icons.percent,
+          ),
           const SizedBox(height: UIConstants.spacingMd),
           _buildDetailCard(
             context,
@@ -37,7 +42,12 @@ class WithdrawalFeeDetailComponent extends HookWidget {
     );
   }
 
-  Widget _buildDetailCard(BuildContext context, String label, String value, IconData icon) {
+  Widget _buildDetailCard(
+    BuildContext context,
+    String label,
+    String value,
+    IconData icon,
+  ) {
     final theme = Theme.of(context);
 
     return Container(
@@ -62,7 +72,11 @@ class WithdrawalFeeDetailComponent extends HookWidget {
               color: theme.colorScheme.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(UIConstants.radiusSm),
             ),
-            child: Icon(icon, color: theme.colorScheme.primary, size: UIConstants.iconMd),
+            child: Icon(
+              icon,
+              color: theme.colorScheme.primary,
+              size: UIConstants.iconMd,
+            ),
           ),
           const SizedBox(width: UIConstants.spacingLg),
           Expanded(
@@ -72,12 +86,19 @@ class WithdrawalFeeDetailComponent extends HookWidget {
                 Text(
                   label,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
+                    color: theme.textTheme.bodySmall?.color?.withValues(
+                      alpha: 0.7,
+                    ),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(height: UIConstants.spacingXs),
-                Text(value, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+                Text(
+                  value,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ],
             ),
           ),

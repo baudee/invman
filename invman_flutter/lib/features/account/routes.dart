@@ -5,7 +5,9 @@ import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
 class AccountRoutes {
   static String namespace = "/account";
-  static final shellNavigatorKey = GlobalKey<NavigatorState>(debugLabel: "Account Shell");
+  static final shellNavigatorKey = GlobalKey<NavigatorState>(
+    debugLabel: "Account Shell",
+  );
 
   static StatefulShellBranch branch = StatefulShellBranch(
     navigatorKey: shellNavigatorKey,
@@ -13,9 +15,7 @@ class AccountRoutes {
       GoRoute(
         path: AccountRootScreen.route(),
         builder: (_, _) => AccountRootScreen(),
-        routes: [
-          ...WithdrawalRoutes.routes,
-        ],
+        routes: [...WithdrawalRoutes.routes],
       ),
     ],
   );

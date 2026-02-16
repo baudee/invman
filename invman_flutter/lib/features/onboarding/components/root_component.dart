@@ -18,9 +18,15 @@ class OnboardingRootComponent extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(S.of(context).onboarding_welcome, style: Theme.of(context).textTheme.headlineMedium),
+        Text(
+          S.of(context).onboarding_welcome,
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
         const SizedBox(height: UIConstants.spacingMd),
-        Text(S.of(context).onboarding_select_currency, style: Theme.of(context).textTheme.bodyMedium),
+        Text(
+          S.of(context).onboarding_select_currency,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
         const SizedBox(height: UIConstants.spacingLg),
         DropdownMenu(
           dropdownMenuEntries: controller.value.requireValue

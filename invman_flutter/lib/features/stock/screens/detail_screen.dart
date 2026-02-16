@@ -9,11 +9,14 @@ class StockDetailScreen extends HookWidget {
   final UuidValue uuid;
   const StockDetailScreen({super.key, required this.uuid});
 
-  static String route([UuidValue? uuid]) => "${StockRoutes.namespace}/${uuid ?? ':uuid'}";
+  static String route([UuidValue? uuid]) =>
+      "${StockRoutes.namespace}/${uuid ?? ':uuid'}";
 
   @override
   Widget build(BuildContext context) {
-    final controller = useMemoized(() => getIt<StockDetailController>(param1: uuid));
+    final controller = useMemoized(
+      () => getIt<StockDetailController>(param1: uuid),
+    );
     return BaseScreen(
       appBar: AppBar(
         title: controller.value.map(

@@ -9,18 +9,30 @@ class InvestmentEndpoint extends Endpoint with EndpointMiddleware {
   bool get requireLogin => true;
 
   Future<List<Investment>> list(Session session) async {
-    return withMiddleware(session, () => getIt<InvestmentService>().list(session));
+    return withMiddleware(
+      session,
+      () => getIt<InvestmentService>().list(session),
+    );
   }
 
   Future<Investment> save(Session session, Investment investment) async {
-    return withMiddleware(session, () => getIt<InvestmentService>().save(session, investment));
+    return withMiddleware(
+      session,
+      () => getIt<InvestmentService>().save(session, investment),
+    );
   }
 
   Future<Investment> delete(Session session, int id) async {
-    return withMiddleware(session, () => getIt<InvestmentService>().delete(session, id));
+    return withMiddleware(
+      session,
+      () => getIt<InvestmentService>().delete(session, id),
+    );
   }
 
   Future<Investment> retrieve(Session session, int id) async {
-    return withMiddleware(session, () => getIt<InvestmentService>().retrieve(session, id));
+    return withMiddleware(
+      session,
+      () => getIt<InvestmentService>().retrieve(session, id),
+    );
   }
 }

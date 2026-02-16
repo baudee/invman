@@ -9,10 +9,26 @@ class StockEndpoint extends Endpoint with EndpointMiddleware {
   bool get requireLogin => true;
 
   Future<Stock> retrieve(Session session, UuidValue uuid) async {
-    return withMiddleware(session, () => getIt<StockService>().retrieve(session, uuid));
+    return withMiddleware(
+      session,
+      () => getIt<StockService>().retrieve(session, uuid),
+    );
   }
 
-  Future<List<Stock>> search(Session session, {required String query, int limit = 10, int page = 1}) async {
-    return withMiddleware(session, () => getIt<StockService>().search(session, query: query, limit: limit, page: page));
+  Future<List<Stock>> search(
+    Session session, {
+    required String query,
+    int limit = 10,
+    int page = 1,
+  }) async {
+    return withMiddleware(
+      session,
+      () => getIt<StockService>().search(
+        session,
+        query: query,
+        limit: limit,
+        page: page,
+      ),
+    );
   }
 }

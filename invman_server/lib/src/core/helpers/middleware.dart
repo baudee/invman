@@ -2,7 +2,10 @@ import 'package:invman_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
 
 mixin EndpointMiddleware {
-  Future<T> withMiddleware<T>(Session session, Future<T> Function() callback) async {
+  Future<T> withMiddleware<T>(
+    Session session,
+    Future<T> Function() callback,
+  ) async {
     try {
       return await callback();
     } on ServerException catch (e, st) {

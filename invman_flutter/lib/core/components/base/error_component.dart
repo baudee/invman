@@ -16,12 +16,14 @@ class ErrorComponent extends StatelessWidget {
           Text(error),
           if (handleRefresh != null)
             Padding(
-              padding: const EdgeInsets.only(top: UIConstants.appVerticalPadding),
+              padding: const EdgeInsets.only(
+                top: UIConstants.appVerticalPadding,
+              ),
               child: ElevatedButton(
                 onPressed: () => handleRefresh!(),
                 child: Text(S.of(context).error_tryAgain),
               ),
-            )
+            ),
         ],
       ),
     );

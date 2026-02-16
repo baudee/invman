@@ -6,9 +6,6 @@ class EditIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.edit),
-      onPressed: onPressed,
-    );
+    return IconButton(icon: const Icon(Icons.edit), onPressed: onPressed);
   }
 }

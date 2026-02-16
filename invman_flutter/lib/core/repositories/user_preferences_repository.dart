@@ -15,13 +15,16 @@ class UserPreferencesRepository {
   static const themeKey = "theme";
   static const emailKey = "email";
 
-  UserPreferencesRepository({required StorageSource storage}) : _storage = storage;
+  UserPreferencesRepository({required StorageSource storage})
+    : _storage = storage;
 
   Locale getLocale() {
     String localeName = "";
     String languageCode = "";
 
-    final savedLanguage = _storage.getString(UserPreferencesRepository.languageKey);
+    final savedLanguage = _storage.getString(
+      UserPreferencesRepository.languageKey,
+    );
 
     if (savedLanguage != null) {
       languageCode = savedLanguage;
@@ -35,7 +38,10 @@ class UserPreferencesRepository {
       languageCode = localeName.split('_').first.toLowerCase();
       _storage.setString(UserPreferencesRepository.languageKey, languageCode);
     }
-    if (!SupportedLanguage.values.map((e) => e.languageName).toList().contains(languageCode)) {
+    if (!SupportedLanguage.values
+        .map((e) => e.languageName)
+        .toList()
+        .contains(languageCode)) {
       languageCode = "en";
     }
 
@@ -44,7 +50,10 @@ class UserPreferencesRepository {
 
   Future<Either<String, Locale>> setLocale(Locale locale) async {
     String languageCode = locale.languageCode.split('_').first.toLowerCase();
-    final success = await _storage.setString(UserPreferencesRepository.languageKey, languageCode);
+    final success = await _storage.setString(
+      UserPreferencesRepository.languageKey,
+      languageCode,
+    );
     if (success) {
       return right(Locale.fromSubtags(languageCode: languageCode));
     }
@@ -54,13 +63,19 @@ class UserPreferencesRepository {
   ThemeMode getTheme() {
     final savedTheme = _storage.getString(UserPreferencesRepository.themeKey);
     if (savedTheme != null) {
-      return ThemeMode.values.firstWhere((e) => e.name == savedTheme, orElse: () => ThemeMode.system);
+      return ThemeMode.values.firstWhere(
+        (e) => e.name == savedTheme,
+        orElse: () => ThemeMode.system,
+      );
     }
     return ThemeMode.system;
   }
 
   Future<Either<String, ThemeMode>> setTheme(ThemeMode theme) async {
-    final success = await _storage.setString(UserPreferencesRepository.themeKey, theme.name);
+    final success = await _storage.setString(
+      UserPreferencesRepository.themeKey,
+      theme.name,
+    );
     if (success) {
       return right(theme);
     }
@@ -72,7 +87,10 @@ class UserPreferencesRepository {
   }
 
   Future<Either<String, String?>> setEmail(String email) async {
-    final success = await _storage.setString(UserPreferencesRepository.emailKey, email);
+    final success = await _storage.setString(
+      UserPreferencesRepository.emailKey,
+      email,
+    );
     if (success) {
       return right(email);
     }

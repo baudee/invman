@@ -1,8 +1,8 @@
 import 'package:go_router/go_router.dart';
 
 extension GoRouterExtensions on GoRouter {
-  void pushRelative(String path) {
+  Future<T?> pushRelative<T>(String path) {
     String currentPath = state.uri.path;
-    push(currentPath + path);
+    return push<T>(currentPath + path);
   }
 }

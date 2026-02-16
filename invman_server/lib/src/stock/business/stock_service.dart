@@ -6,18 +6,33 @@ import 'package:serverpod/serverpod.dart';
 class StockService {
   StockService();
 
-  Future<Stock> retrieve(Session session, UuidValue uuid, {Transaction? transaction}) async {
-    final stock = await Stock.db.findById(session, uuid, transaction: transaction);
+  Future<Stock> retrieve(
+    Session session,
+    UuidValue uuid, {
+    Transaction? transaction,
+  }) async {
+    final stock = await Stock.db.findById(
+      session,
+      uuid,
+      transaction: transaction,
+    );
     if (stock == null) {
       throw ServerException(errorCode: ErrorCode.notFound);
     }
     return stock;
   }
 
-  Future<List<Stock>> search(Session session, {required String query, required int limit, required int page}) async {
+  Future<List<Stock>> search(
+    Session session, {
+    required String query,
+    required int limit,
+    required int page,
+  }) async {
     return Stock.db.find(
       session,
-      where: (e) => e.shortName.ilike("%${query.trim()}%") | e.longName.ilike("%${query.trim()}%"),
+      where: (e) =>
+          e.shortName.ilike("%${query.trim()}%") |
+          e.longName.ilike("%${query.trim()}%"),
       limit: limit,
       offset: (page * limit) - limit,
     );

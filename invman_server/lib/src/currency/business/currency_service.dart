@@ -11,7 +11,11 @@ class CurrencyService {
     return Currency.db.find(session, orderBy: (c) => c.code);
   }
 
-  Future<Currency> retrieve(Session session, int id, {Transaction? transaction}) async {
+  Future<Currency> retrieve(
+    Session session,
+    int id, {
+    Transaction? transaction,
+  }) async {
     final currency = await Currency.db.findById(
       session,
       id,
@@ -26,7 +30,11 @@ class CurrencyService {
     return currency;
   }
 
-  Future<double> change(Session session, {required Currency? from, required Currency? to}) async {
+  Future<double> change(
+    Session session, {
+    required Currency? from,
+    required Currency? to,
+  }) async {
     final fromRate = from?.rates?.firstOrNull;
     final toRate = to?.rates?.firstOrNull;
 

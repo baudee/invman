@@ -47,7 +47,9 @@ class BaseScreen extends StatelessWidget {
       bottomNavigationBar: bottomNavigationBar,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: UIConstants.appHorizontalPadding),
+          padding: const EdgeInsets.symmetric(
+            horizontal: UIConstants.appHorizontalPadding,
+          ),
           child: currentBody,
         ),
       ),

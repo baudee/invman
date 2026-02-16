@@ -34,7 +34,10 @@ class AccountService {
       throw ServerException(errorCode: ErrorCode.badRequest);
     }
 
-    final currency = await currencyService.retrieve(session, account.currencyId!);
+    final currency = await currencyService.retrieve(
+      session,
+      account.currencyId!,
+    );
 
     return await Account.db.updateRow(
       session,

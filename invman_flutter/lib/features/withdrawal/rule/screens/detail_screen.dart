@@ -12,34 +12,24 @@ class WithdrawalRuleDetailScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = useMemoized(() => getIt<WithdrawalRuleDetailController>(param1: id));
+    final controller = useMemoized(
+      () => getIt<WithdrawalRuleDetailController>(param1: id),
+    );
     return BaseScreen(
       appBar: AppBar(
-        title: controller.value.map(data: (rule) => Text(rule.name), error: (_) => null, loading: () => null),
+        title: controller.value.map(
+          data: (rule) => Text(rule.name),
+          error: (_) => null,
+          loading: () => null,
+        ),
         actions: [
-          PopupMenuButton<int>(
-            icon: const Icon(Icons.more_vert),
-            onSelected: (value) async {
-              switch (value) {
-                case 0:
-                  router.pushRelative(WithdrawalRuleEditScreen.route());
-                  break;
-                case 1:
-                  final (success, message) = await controller.delete();
-                  ToastUtils.message(message, success: success);
-                  break;
-              }
+          PopupMenuActions(
+            onEdit: () => router.pushRelative(WithdrawalRuleEditScreen.route()),
+            onDelete: () async {
+              final (success, message) = await controller.delete();
+              router.pop();
+              ToastUtils.message(message, success: success);
             },
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 0,
-                child: ListTile(leading: Icon(Icons.edit), title: Text('Edit')),
-              ),
-              const PopupMenuItem(
-                value: 1,
-                child: ListTile(leading: Icon(Icons.delete), title: Text('Delete')),
-              ),
-            ],
           ),
         ],
       ),

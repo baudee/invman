@@ -1,11 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:invman_client/invman_client.dart';
-import 'package:invman_flutter/core/core.dart';
-import 'package:invman_flutter/di.dart';
-import 'package:invman_flutter/features/investment/investment.dart';
-
-class InvestmentListComponent extends HookWidget {
+/*class InvestmentListComponent extends HookWidget {
   const InvestmentListComponent({super.key});
 
   @override
@@ -40,4 +33,4 @@ class InvestmentListComponent extends HookWidget {
       ),
     );
   }
-}
+}*/

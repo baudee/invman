@@ -1,6 +1,5 @@
 enum SupportedLanguage {
-  en("en", "english"),
-  ;
+  en("en", "english");
 
   final String languageCode;
   final String languageName;

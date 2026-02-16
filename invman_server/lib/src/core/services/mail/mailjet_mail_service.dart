@@ -22,7 +22,8 @@ class MailjetMailService implements MailServiceInterface {
     required String subject,
     required String body,
   }) async {
-    final authHeader = 'Basic ${base64Encode(utf8.encode('$_apiKeyPublic:$_apiKeyPrivate'))}';
+    final authHeader =
+        'Basic ${base64Encode(utf8.encode('$_apiKeyPublic:$_apiKeyPrivate'))}';
     Map<String, String> headers = {
       "Content-Type": "application/json",
       "Authorization": authHeader,

@@ -3,7 +3,7 @@ PROJECT_NAME := invman
 
 # Server
 server/build:
-	cd $(PROJECT_NAME)_server && dart pub get && dart pub run build_runner build --delete-conflicting-outputs && serverpod generate
+	cd $(PROJECT_NAME)_server && dart pub get && dart run build_runner build --delete-conflicting-outputs && serverpod generate
 
 server/migration:
 	cd $(PROJECT_NAME)_server && serverpod create-migration
@@ -26,6 +26,12 @@ server/down:
 server/clean:
 	cd $(PROJECT_NAME)_server && docker compose down -v --remove-orphans
 
+server/test:
+	cd $(PROJECT_NAME)_server && dart fix --apply
+	cd $(PROJECT_NAME)_server && dart format .
+	cd $(PROJECT_NAME)_server && dart analyze
+	cd $(PROJECT_NAME)_server && dart test
+
 # Flutter app
 app/build:
 	cd $(PROJECT_NAME)_flutter && flutter pub get
@@ -34,3 +40,9 @@ app/build:
 
 app/run:
 	cd $(PROJECT_NAME)_flutter && flutter run --dart-define-from-file=.env
+
+app/test:
+	cd $(PROJECT_NAME)_flutter && dart fix --apply
+	cd $(PROJECT_NAME)_flutter && dart format .
+	cd $(PROJECT_NAME)_flutter && dart analyze
+	cd $(PROJECT_NAME)_flutter && flutter test

@@ -1,6 +1,6 @@
 enum: StockType
 serialized: byName
 values:
-  - stock
+  - ticker
   - etf
   - crypto

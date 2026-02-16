@@ -20,7 +20,10 @@ class StockDetailComponent extends StatelessWidget {
             padding: const EdgeInsets.all(UIConstants.spacingXxl),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.8)],
+                colors: [
+                  theme.colorScheme.primary,
+                  theme.colorScheme.primary.withValues(alpha: 0.8),
+                ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -64,15 +67,30 @@ class StockDetailComponent extends StatelessWidget {
             ),
           ),
           const SizedBox(height: UIConstants.spacingXxl),
-          _buildDetailCard(context, S.of(context).investment_currency, stock.currency?.code ?? '-', Icons.attach_money),
+          _buildDetailCard(
+            context,
+            S.of(context).investment_currency,
+            stock.currency?.code ?? '-',
+            Icons.attach_money,
+          ),
           const SizedBox(height: UIConstants.spacingMd),
-          _buildDetailCard(context, S.of(context).investment_quoteType, stock.quoteType.name, Icons.category),
+          _buildDetailCard(
+            context,
+            S.of(context).investment_quoteType,
+            stock.quoteType.name,
+            Icons.category,
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildDetailCard(BuildContext context, String label, String value, IconData icon) {
+  Widget _buildDetailCard(
+    BuildContext context,
+    String label,
+    String value,
+    IconData icon,
+  ) {
     final theme = Theme.of(context);
 
     return Container(
@@ -97,7 +115,11 @@ class StockDetailComponent extends StatelessWidget {
               color: theme.colorScheme.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(UIConstants.radiusSm),
             ),
-            child: Icon(icon, color: theme.colorScheme.primary, size: UIConstants.iconMd),
+            child: Icon(
+              icon,
+              color: theme.colorScheme.primary,
+              size: UIConstants.iconMd,
+            ),
           ),
           const SizedBox(width: UIConstants.spacingLg),
           Expanded(
@@ -107,12 +129,19 @@ class StockDetailComponent extends StatelessWidget {
                 Text(
                   label,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
+                    color: theme.textTheme.bodySmall?.color?.withValues(
+                      alpha: 0.7,
+                    ),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(height: UIConstants.spacingXs),
-                Text(value, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+                Text(
+                  value,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ],
             ),
           ),

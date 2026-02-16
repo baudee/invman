@@ -11,7 +11,7 @@ class InvestmentListController extends PaginationController<Investment> {
   InvestmentListController(this._service);
 
   @override
-  Future<Either<String, List<Investment>>> getData(int page) {
+  Future<Either<String, List<Investment>>> fetchPage(int page) {
     return _service.list(page: page, limit: 10);
   }
 }

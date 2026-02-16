@@ -4,5 +4,10 @@ import 'package:invman_flutter/features/onboarding/onboarding.dart';
 class OnboardingRoutes {
   static String namespace = "/onboarding";
 
-  static final routes = [GoRoute(path: OnboardingRootComponent.route(), builder: (_, _) => OnboardingRootScreen())];
+  static final routes = [
+    GoRoute(
+      path: OnboardingRootComponent.route(),
+      builder: (_, _) => OnboardingRootScreen(),
+    ),
+  ];
 }

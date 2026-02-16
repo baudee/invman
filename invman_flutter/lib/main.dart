@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/di.dart';
-import 'package:invman_flutter/features/auth/auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/config/theme/themes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -12,11 +10,11 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:invman_flutter/env.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-late final SharedPreferences prefs;
-
 void main() async {
   // DEPENDENCY INJECTION
   configureDependencies();
+
+  await getIt.allReady();
 
   final env = getIt<Env>();
   if (env.sentryDsn.isNotEmpty) {
@@ -65,7 +63,9 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: SupportedLanguage.values.map((e) => Locale.fromSubtags(languageCode: e.languageCode)).toList(),
+      supportedLocales: SupportedLanguage.values
+          .map((e) => Locale.fromSubtags(languageCode: e.languageCode))
+          .toList(),
       debugShowCheckedModeBanner: false,
       routeInformationProvider: router.routeInformationProvider,
       routerDelegate: router.routerDelegate,

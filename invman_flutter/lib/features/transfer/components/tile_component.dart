@@ -20,8 +20,12 @@ class TransferTileComponent extends HookWidget {
 
     return ListTile(
       title: Text(transfer.amount.toStringPrice(authManager.currencyCode)),
-      subtitle: Text(DateFormat('dd/MM/yyyy').format(transfer.createdAt.toLocal())),
-      trailing: Text('${S.of(context).investment_quantity}: ${transfer.quantity}'),
+      subtitle: Text(
+        DateFormat('dd/MM/yyyy').format(transfer.createdAt.toLocal()),
+      ),
+      trailing: Text(
+        '${S.of(context).investment_quantity}: ${transfer.quantity}',
+      ),
       onTap: () => router.pushRelative(TransferEditScreen.route(transfer.id)),
     );
   }

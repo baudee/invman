@@ -9,9 +9,15 @@ class StockRepository {
 
   const StockRepository(this.client);
 
-  Future<Either<String, List<Stock>>> search({required String query, int limit = 10, int page = 1}) async {
+  Future<Either<String, List<Stock>>> search({
+    required String query,
+    int limit = 10,
+    int page = 1,
+  }) async {
     return safeCall(() async {
-      return right(await client.stock.search(query: query, limit: limit, page: page));
+      return right(
+        await client.stock.search(query: query, limit: limit, page: page),
+      );
     });
   }
 

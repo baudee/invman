@@ -48,7 +48,11 @@ class InvestmentService {
 
     final accountCurrency = (await accountService.retrieve(session)).currency;
     if (accountCurrency?.id != stock.currency?.id) {
-      double change = await currencyService.change(session, from: stock.currency, to: accountCurrency);
+      double change = await currencyService.change(
+        session,
+        from: stock.currency,
+        to: accountCurrency,
+      );
       change = change - (withdrawalRule?.currencyChangePercentage ?? 0) / 100;
       actualAmount *= change;
     }
@@ -70,7 +74,10 @@ class InvestmentService {
     );
 
     for (var i = 0; i < investments.length; i++) {
-      investments[i] = await _addWithdrawAmountAndStock(session, investment: investments[i]);
+      investments[i] = await _addWithdrawAmountAndStock(
+        session,
+        investment: investments[i],
+      );
     }
 
     investments.sort((a, b) => a.withdrawAmount!.compareTo(b.withdrawAmount!));
@@ -90,8 +97,15 @@ class InvestmentService {
           investment.withdrawalRuleId,
           transaction: transaction,
         );
-        final stock = await stockService.retrieve(session, investment.stockId, transaction: transaction);
-        investment = investment.copyWith(userId: (session.authenticated)!.authUserId, stockId: stock.id);
+        final stock = await stockService.retrieve(
+          session,
+          investment.stockId,
+          transaction: transaction,
+        );
+        investment = investment.copyWith(
+          userId: (session.authenticated)!.authUserId,
+          stockId: stock.id,
+        );
 
         if (investment.id == 0 || investment.id == null) {
           return Investment.db.insertRow(
@@ -114,7 +128,11 @@ class InvestmentService {
     );
   }
 
-  Future<Investment> retrieve(Session session, int id, {Transaction? transaction}) async {
+  Future<Investment> retrieve(
+    Session session,
+    int id, {
+    Transaction? transaction,
+  }) async {
     Investment? investment = await Investment.db.findById(
       session,
       id,
@@ -131,7 +149,11 @@ class InvestmentService {
       throw ServerException(errorCode: ErrorCode.forbidden);
     }
 
-    return _addWithdrawAmountAndStock(session, investment: investment, transaction: transaction);
+    return _addWithdrawAmountAndStock(
+      session,
+      investment: investment,
+      transaction: transaction,
+    );
   }
 
   Future<Investment> delete(Session session, int id) async {
@@ -150,8 +172,16 @@ class InvestmentService {
     );
   }
 
-  Future<void> updateTotalTransfers(Session session, int investmentId, {Transaction? transaction}) async {
-    final investment = await retrieve(session, investmentId, transaction: transaction);
+  Future<void> updateTotalTransfers(
+    Session session,
+    int investmentId, {
+    Transaction? transaction,
+  }) async {
+    final investment = await retrieve(
+      session,
+      investmentId,
+      transaction: transaction,
+    );
     final transfers = await Transfer.db.find(
       session,
       where: (e) => e.investmentId.equals(investmentId),

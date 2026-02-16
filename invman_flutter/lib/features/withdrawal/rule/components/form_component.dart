@@ -19,22 +19,39 @@ class WithdrawalRuleFormComponent extends StatelessWidget {
           children: [
             TextFormField(
               controller: controller.nameController,
-              validator: (value) => ValidationUtils.formValidatorNotEmpty(value, S.of(context).core_name),
+              validator: (value) => ValidationUtils.formValidatorNotEmpty(
+                value,
+                S.of(context).core_name,
+              ),
               decoration: InputDecoration(label: Text(S.of(context).core_name)),
             ),
             TextFormField(
               controller: controller.currencyChangePercentageController,
               validator: (value) => ValidationUtils.formValidatorDouble(value),
-              decoration: InputDecoration(label: Text(S.of(context).withdrawal_currency_percentage), suffixText: "%"),
+              decoration: InputDecoration(
+                label: Text(S.of(context).withdrawal_currency_percentage),
+                suffixText: "%",
+              ),
               keyboardType: TextInputType.number,
             ),
             SizedBox(height: 16),
             SaveButton(
               onPressed: () async {
+                final isCreate = controller.id == 0;
                 final (success, message) = await controller.submit();
                 ToastUtils.message(message, success: success);
                 if (success) {
-                  router.pop();
+                  if (isCreate) {
+                    final savedRule = controller.value.value!;
+                    final currentPath = router.state.uri.path;
+                    final basePath = currentPath.replaceAll(
+                      RegExp(r'/\d+/edit$'),
+                      '',
+                    );
+                    router.pushReplacement('$basePath/${savedRule.id}');
+                  } else {
+                    router.pop();
+                  }
                 }
               },
             ),

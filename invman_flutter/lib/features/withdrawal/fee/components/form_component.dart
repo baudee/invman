@@ -25,19 +25,28 @@ class WithdrawalFeeFormComponent extends HookWidget {
             TextFormField(
               controller: controller.percentController,
               validator: (value) => ValidationUtils.formValidatorDouble(value),
-              decoration: InputDecoration(label: Text(S.of(context).withdrawal_percentage), suffixText: "%"),
+              decoration: InputDecoration(
+                label: Text(S.of(context).withdrawal_percentage),
+                suffixText: "%",
+              ),
               keyboardType: TextInputType.number,
             ),
             TextFormField(
               controller: controller.fixedController,
               validator: (value) => ValidationUtils.formValidatorDouble(value),
-              decoration: InputDecoration(label: Text(S.of(context).withdrawal_fixed), suffixText: authManager.currencyCode),
+              decoration: InputDecoration(
+                label: Text(S.of(context).withdrawal_fixed),
+                suffixText: authManager.currencyCode,
+              ),
               keyboardType: TextInputType.number,
             ),
             TextFormField(
               controller: controller.minimumController,
               validator: (value) => ValidationUtils.formValidatorDouble(value),
-              decoration: InputDecoration(label: Text(S.of(context).withdrawal_minimum), suffixText: authManager.currencyCode),
+              decoration: InputDecoration(
+                label: Text(S.of(context).withdrawal_minimum),
+                suffixText: authManager.currencyCode,
+              ),
               keyboardType: TextInputType.number,
             ),
             SizedBox(height: 16),

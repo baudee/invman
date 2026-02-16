@@ -6,7 +6,8 @@ import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/features/withdrawal/repositories/withdrawal_fee_repository.dart';
 
 @injectable
-class WithdrawalFeeDetailController extends DetailController<int, WithdrawalFee> {
+class WithdrawalFeeDetailController
+    extends DetailController<int, WithdrawalFee> {
   final WithdrawalFeeRepository _service;
 
   WithdrawalFeeDetailController(@factoryParam super.id, this._service);
@@ -16,5 +17,6 @@ class WithdrawalFeeDetailController extends DetailController<int, WithdrawalFee>
     return _service.retrieve(id);
   }
 
-  Future<(bool, String?)> delete() => DeleteCommand(onExecute: () => _service.delete(id)).execute();
+  Future<(bool, String?)> delete() =>
+      DeleteCommand(onExecute: () => _service.delete(id)).execute();
 }
