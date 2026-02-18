@@ -15,6 +15,8 @@ class WithdrawalRuleEditController extends AsyncSignal<WithdrawalRule> {
   final currencyChangePercentageController = TextEditingController();
   final nameController = TextEditingController();
 
+  final Signal<List<WithdrawalFee>> fees = signal([]);
+
   WithdrawalRuleEditController(@factoryParam this.id, this._repository)
     : super(AsyncState.loading()) {
     _load();
@@ -25,11 +27,13 @@ class WithdrawalRuleEditController extends AsyncSignal<WithdrawalRule> {
     if (id == 0) {
       final initial = InitialUtils.getWithdrawalRule();
       _refreshControllers(initial);
+      fees.value = [];
       setValue(initial);
     } else {
       final result = await _repository.retrieve(id);
       result.fold((error) => setError(error), (rule) {
         _refreshControllers(rule);
+        fees.value = List.from(rule.fees ?? []);
         setValue(rule);
       });
     }
@@ -39,6 +43,22 @@ class WithdrawalRuleEditController extends AsyncSignal<WithdrawalRule> {
     currencyChangePercentageController.text = rule.currencyChangePercentage
         .toString();
     nameController.text = rule.name;
+  }
+
+  void addFee(WithdrawalFee fee) {
+    fees.value = [...fees.value, fee];
+  }
+
+  void updateFee(int index, WithdrawalFee fee) {
+    final updated = List<WithdrawalFee>.from(fees.value);
+    updated[index] = fee;
+    fees.value = updated;
+  }
+
+  void removeFee(int index) {
+    final updated = List<WithdrawalFee>.from(fees.value);
+    updated.removeAt(index);
+    fees.value = updated;
   }
 
   Future<(bool, String?)> submit() async {
@@ -57,6 +77,7 @@ class WithdrawalRuleEditController extends AsyncSignal<WithdrawalRule> {
           currencyChangePercentageController.text.trim(),
         ),
         name: nameController.text.trim(),
+        fees: fees.value,
       );
 
       setLoading(value);

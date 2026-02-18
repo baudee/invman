@@ -18,6 +18,7 @@ class WithdrawalRuleService {
     return WithdrawalRule.db.find(
       session,
       where: (e) => e.userId.equals(sessionUserId),
+      include: IncludeHelpers.withdrawalInclude(),
       limit: limit,
       offset: (page * limit) - limit,
     );
@@ -51,13 +52,97 @@ class WithdrawalRuleService {
     Session session,
     WithdrawalRule withdrawal,
   ) async {
-    if (withdrawal.id == 0 || withdrawal.id == null) {
-      final sessionUserId = (session.authenticated)!.authUserId;
-      withdrawal = withdrawal.copyWith(id: null, userId: sessionUserId);
-      return WithdrawalRule.db.insertRow(session, withdrawal);
-    } else {
-      await retrieve(session, withdrawal.id!);
-      return WithdrawalRule.db.updateRow(session, withdrawal);
+    return session.db.transaction(
+      (transaction) async {
+        final sessionUserId = (session.authenticated)!.authUserId;
+        WithdrawalRule savedRule;
+
+        if (withdrawal.id == 0 || withdrawal.id == null) {
+          withdrawal = withdrawal.copyWith(id: null, userId: sessionUserId);
+          savedRule = await WithdrawalRule.db.insertRow(
+            session,
+            withdrawal,
+            transaction: transaction,
+          );
+        } else {
+          await retrieve(session, withdrawal.id!, transaction: transaction);
+          savedRule = await WithdrawalRule.db.updateRow(
+            session,
+            withdrawal,
+            transaction: transaction,
+          );
+        }
+
+        await _syncFees(
+          session,
+          ruleId: savedRule.id!,
+          incomingFees: withdrawal.fees ?? [],
+          transaction: transaction,
+        );
+
+        return retrieve(session, savedRule.id!, transaction: transaction);
+      },
+      settings: TransactionSettings(
+        isolationLevel: IsolationLevel.serializable,
+      ),
+    );
+  }
+
+  Future<void> _syncFees(
+    Session session, {
+    required int ruleId,
+    required List<WithdrawalFee> incomingFees,
+    required Transaction transaction,
+  }) async {
+    final existingFees = await WithdrawalFee.db.find(
+      session,
+      where: (e) => e.ruleId.equals(ruleId),
+      transaction: transaction,
+    );
+
+    final incomingIds = incomingFees
+        .where((f) => f.id != null && f.id != 0)
+        .map((f) => f.id!)
+        .toSet();
+
+    final feesToDelete = existingFees
+        .where((f) => !incomingIds.contains(f.id))
+        .toList();
+
+    if (feesToDelete.isNotEmpty) {
+      await WithdrawalFee.db.delete(
+        session,
+        feesToDelete,
+        transaction: transaction,
+      );
+    }
+
+    final feesToInsert = <WithdrawalFee>[];
+    final feesToUpdate = <WithdrawalFee>[];
+
+    for (final fee in incomingFees) {
+      final feeWithRule = fee.copyWith(ruleId: ruleId);
+      if (fee.id == null || fee.id == 0) {
+        feesToInsert.add(feeWithRule.copyWith(id: null));
+      } else {
+        feesToUpdate.add(feeWithRule);
+      }
+    }
+
+    if (feesToInsert.isNotEmpty) {
+      await WithdrawalFee.db.insert(
+        session,
+        feesToInsert,
+        transaction: transaction,
+      );
+    }
+
+    if (feesToUpdate.isNotEmpty) {
+      await WithdrawalFee.db.update(
+        session,
+        feesToUpdate,
+        transaction: transaction,
+      );
     }
   }
 

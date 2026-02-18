@@ -85,6 +85,7 @@
     "withdrawal_percentage": "Percentage",
     "withdrawal_currency_percentage": "Currency change percentage",
     "withdrawal_addRule": "Add withdrawal rule",
+    "withdrawal_fees": "Fees",
     "@INVESMENT---------------------------------------------------------------": {},
     "investment_title": "Investments",
     "investment_create": "Create investment",
