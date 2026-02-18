@@ -1,5 +1,36 @@
 {
-  "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
-  }
+    "permissions": {
+        "allow": [
+            "Read",
+            "Edit",
+            "MultiEdit",
+            "Write",
+            "Glob",
+            "Grep",
+            "LS",
+            "Task",
+            "WebFetch",
+            "WebSearch",
+            "Bash"
+        ],
+        "deny": [
+            "Bash(rm -rf /)",
+            "Bash(sudo rm -rf *)"
+        ]
+    },
+    "env": {
+        "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    },
+    "teammateMode": "split-pane",
+    "mcpServers": {
+        "dart": {
+            "command": "dart",
+            "args": [
+                "mcp-server"
+            ]
+        },
+        "serverpod": {
+            "command": "serverpod_mcp"
+        }
+    }
 }
