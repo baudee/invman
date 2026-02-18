@@ -86,7 +86,7 @@ abstract class Investment implements SerializableModel {
 - Models are generated from Serverpod — never edit them manually
 - Use `copyWith()` for immutable updates
 - Models implement `SerializableModel` for API serialization
-- Check `id != null` or `id != 0` for exists/create-vs-update logic
+- Check `id != 0` for exists/create-vs-update logic
 
 ### Custom Domain Models
 
@@ -121,7 +121,7 @@ Repositories wrap Serverpod client calls and handle errors with `safeCall()`.
 
 ```dart
 // features/investment/repositories/investment_repository.dart
-@injectable
+@lazySingleton
 class InvestmentRepository {
   final Client client;
 
@@ -178,7 +178,7 @@ Future<Either<String, T>> safeCall<T>(
 - Return `Either<String, T>` — `left` for error message, `right` for success
 - Use `safeCall()` to wrap all API calls
 - One repository per feature
-- Mark with `@injectable` for DI registration
+- Mark with `@lazySingleton` for DI registration
 
 ## State Management with Signals
 
@@ -464,35 +464,6 @@ class InvestmentEditController extends AsyncSignal<Investment> {
 }
 ```
 
-### Search Controller (extends PaginationController)
-
-```dart
-@injectable
-class StockSearchListController extends PaginationController<Stock> {
-  final StockRepository _repository;
-  final FlutterSignal<String> query = signal("");
-
-  StockSearchListController(this._repository);
-
-  @override
-  Future<Either<String, List<Stock>>> fetchPage(int page) {
-    return _repository.search(query: query.value, page: page, limit: 10);
-  }
-
-  void search(String newQuery) {
-    query.value = newQuery;
-    refresh();
-  }
-}
-```
-
-**Conventions:**
-- `@injectable` for DI registration
-- `@factoryParam` for runtime parameters like IDs
-- `id == 0` means create mode, `id > 0` means edit mode
-- Form controllers own `TextEditingController`s and `GlobalKey<FormState>`
-- Return `(bool, String?)` tuple from mutations for success + message
-
 ## Screens
 
 All screens extend `HookWidget` and use `useMemoized()` for controller lifecycle.
@@ -550,33 +521,13 @@ class InvestmentDetailScreen extends HookWidget {
           loading: () => null,
         ),
         actions: [
-          PopupMenuButton<int>(
-            onSelected: (value) async {
-              switch (value) {
-                case 0:
-                  router.pushRelative(InvestmentEditScreen.route(id));
-                case 1:
-                  final (success, message) = await controller.delete();
-                  ToastUtils.message(message, success: success);
-                  if (success) router.pop();
-              }
+          PopupMenuActions(
+            onEdit: () => router.pushRelative(WithdrawalRuleEditScreen.route()),
+            onDelete: () async {
+              final (success, message) = await controller.delete();
+              router.pop();
+              ToastUtils.message(message, success: success);
             },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 0,
-                child: ListTile(
-                  leading: const Icon(Icons.edit),
-                  title: Text(S.of(context).core_edit),
-                ),
-              ),
-              PopupMenuItem(
-                value: 1,
-                child: ListTile(
-                  leading: const Icon(Icons.delete),
-                  title: Text(S.of(context).core_delete),
-                ),
-              ),
-            ],
           ),
         ],
       ),
@@ -617,64 +568,6 @@ class InvestmentEditScreen extends HookWidget {
       body: BaseStateComponent(
         state: controller,
         successBuilder: (_) => InvestmentFormComponent(controller: controller),
-      ),
-    );
-  }
-}
-```
-
-### Search Screen Pattern
-
-```dart
-class StockSearchScreen extends HookWidget {
-  const StockSearchScreen({super.key});
-
-  static String route() => StockRoutes.search;
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = useMemoized(() => getIt<StockSearchListController>());
-
-    return BaseScreen(
-      appBar: AppBar(
-        title: StockSearchComponent(controller: controller),
-      ),
-      body: InfiniteListComponent(
-        refreshIndicator: false,
-        controller: controller,
-        itemBuilder: (stock) => StockTileComponent(
-          stock: stock,
-          onTap: () => router.push(StockDetailScreen.route(stock.id)),
-        ),
-      ),
-    );
-  }
-}
-```
-
-### Select Screen Pattern (returns value)
-
-```dart
-class StockSelectScreen extends HookWidget {
-  const StockSelectScreen({super.key});
-
-  static String route() => StockRoutes.select;
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = useMemoized(() => getIt<StockSearchListController>());
-
-    return BaseScreen(
-      appBar: AppBar(
-        title: StockSearchComponent(controller: controller),
-      ),
-      body: InfiniteListComponent(
-        refreshIndicator: false,
-        controller: controller,
-        itemBuilder: (stock) => StockTileComponent(
-          stock: stock,
-          onTap: () => context.pop(stock),  // Return selected item
-        ),
       ),
     );
   }
@@ -858,91 +751,6 @@ class InvestmentTileComponent extends StatelessWidget {
 }
 ```
 
-### Selection Tile Component
-
-```dart
-class StockSelectTileComponent extends StatelessWidget {
-  final Stock? stock;
-  final Function(Stock) onStockSelected;
-
-  const StockSelectTileComponent({
-    super.key,
-    required this.stock,
-    required this.onStockSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(S.of(context).stock_title),
-      subtitle: Text(stock?.name ?? S.of(context).core_select),
-      trailing: const Icon(Icons.chevron_right),
-      onTap: () async {
-        final selected = await router.push<Stock>(StockSelectScreen.route());
-        if (selected != null) {
-          onStockSelected(selected);
-        }
-      },
-    );
-  }
-}
-```
-
-### Form Component
-
-```dart
-class InvestmentFormComponent extends StatelessWidget {
-  final InvestmentEditController controller;
-
-  const InvestmentFormComponent({super.key, required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    return BaseStateComponent(
-      state: controller,
-      successBuilder: (investment) => Form(
-        key: controller.formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: controller.nameController,
-                validator: (value) => ValidationUtils.formValidatorNotEmpty(
-                  value,
-                  S.of(context).core_name,
-                ),
-                decoration: InputDecoration(
-                  label: Text(S.of(context).core_name),
-                ),
-              ),
-              const SizedBox(height: UIConstants.spacingXs),
-              WithdrawalRuleSelectTileComponent(
-                rule: investment.withdrawalRule,
-                onRuleSelected: controller.setWithdrawalRule,
-              ),
-              const SizedBox(height: UIConstants.spacingXs),
-              StockSelectTileComponent(
-                stock: investment.stock,
-                onStockSelected: controller.setStock,
-              ),
-              const SizedBox(height: UIConstants.spacingMd),
-              SaveButton(
-                onPressed: () async {
-                  final (success, message) = await controller.submit();
-                  ToastUtils.message(message, success: success);
-                  if (success) router.pop();
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-```
-
 **Conventions:**
 - Pass data down as constructor params when possible
 - Use `StatelessWidget` unless local state is needed (then `HookWidget`)
@@ -974,10 +782,11 @@ class UserPreferencesManager { ... }
 @singleton
 class AuthManager { ... }
 
-// Injectable — new instance each time
-@injectable
+// Lazy Singleton — single instance, but only created when first requested
+@lazySingleton
 class InvestmentRepository { ... }
 
+// Injectable — new instance each time requested
 @injectable
 class InvestmentListController extends PaginationController<Investment> { ... }
 
@@ -991,7 +800,7 @@ class InvestmentDetailController extends DetailController<int, Investment> {
 }
 ```
 
-### Modules for Complex Setup
+### Modules for non custom classes
 
 ```dart
 @module
@@ -1009,21 +818,6 @@ abstract class RouterModule {
     // ... router setup
   );
 }
-```
-
-### Usage
-
-```dart
-// In widgets
-final controller = useMemoized(() => getIt<InvestmentListController>());
-
-// With factory parameters
-final controller = useMemoized(
-  () => getIt<InvestmentDetailController>(param1: id),
-);
-
-// Direct access
-final authManager = getIt<AuthManager>();
 ```
 
 ## Routing
@@ -1134,112 +928,6 @@ context.pop(value);  // Pop with return value
 final selected = await router.push<Stock>(StockSelectScreen.route());
 ```
 
-## Auth
-
-### AuthManager
-
-```dart
-@singleton
-class AuthManager {
-  final AccountRepository _accountRepository;
-  final Client _client;
-
-  final FlutterSignal<AuthState> state = signal<AuthState>(AuthStateBooting());
-
-  late final FlutterComputed<bool> isLoggedIn = computed(
-    () => state.value is AuthStateSuccess || state.value is AuthStateOnboarding,
-  );
-
-  late final FlutterComputed<bool> isOnboarded = computed(
-    () => state.value is AuthStateSuccess,
-  );
-
-  late final FlutterComputed<Account?> account = computed(() {
-    final currentState = state.value;
-    if (currentState case AuthStateSuccess(:final account)) return account;
-    if (currentState case AuthStateOnboarding(:final account)) return account;
-    return null;
-  });
-
-  @PostConstruct()
-  Future<void> init() async {
-    state.value = AuthStateBooting();
-    await _client.auth.initialize();
-
-    _client.auth.authInfoListenable.addListener(() async {
-      if (!_client.auth.isAuthenticated) {
-        resetState();
-      } else {
-        await _setAccount();
-      }
-    });
-
-    await refreshMe();
-  }
-
-  Future<String?> _setAccount() async {
-    final result = await _accountRepository.retrieve();
-    return result.fold(
-      (error) {
-        resetState();
-        return error;
-      },
-      (account) {
-        if (account.isOnboarded()) {
-          state.value = AuthStateSuccess(account: account);
-        } else {
-          state.value = AuthStateOnboarding(account: account);
-        }
-        return null;
-      },
-    );
-  }
-
-  Future<String?> logout() async {
-    try {
-      await _client.auth.signOutDevice();
-      resetState();
-      return null;
-    } catch (e) {
-      return e.toString();
-    }
-  }
-
-  void resetState() {
-    state.value = const AuthStateGuest();
-  }
-}
-```
-
-### Auth States
-
-```dart
-@immutable
-sealed class AuthState {
-  const AuthState();
-}
-
-final class AuthStateBooting extends AuthState {
-  const AuthStateBooting();
-}
-
-final class AuthStateGuest extends AuthState {
-  final String? email;
-  final String? password;
-  const AuthStateGuest({this.email, this.password});
-}
-
-final class AuthStateOnboarding extends AuthState {
-  final Account account;
-  const AuthStateOnboarding({required this.account});
-}
-
-final class AuthStateSuccess extends AuthState {
-  final Account account;
-  const AuthStateSuccess({required this.account});
-}
-```
-
 ## Error Handling
 
 ### ServerException
@@ -1295,101 +983,6 @@ final (success, message) = await controller.submit();
 ToastUtils.message(message, success: success);
 ```
 
-## Forms
-
-### Validation Utilities
-
-```dart
-// core/utils/validation_utils.dart
-class ValidationUtils {
-  static String? formValidatorEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return S.current.error_emailRequired;
-    }
-    if (!isValidEmail(value)) {
-      return S.current.error_invalidEmail;
-    }
-    return null;
-  }
-
-  static String? formValidatorNotEmpty(String? value, String label) {
-    if (value == null || value.isEmpty) {
-      return "$label ${S.current.core_required}";
-    }
-    return null;
-  }
-
-  static String? formValidatorDouble(String? value) {
-    if (value == null || value.isEmpty) {
-      return S.current.error_amountRequired;
-    }
-    if (double.tryParse(value) == null) {
-      return S.current.error_invalidAmount;
-    }
-    return null;
-  }
-
-  static bool isValidEmail(String value) {
-    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value);
-  }
-}
-```
-
-### Form Pattern in Edit Controller
-
-```dart
-class InvestmentEditController extends AsyncSignal<Investment> {
-  final formKey = GlobalKey<FormState>();
-  final nameController = TextEditingController();
-
-  // 1. Load form data
-  void _refreshControllers(Investment investment) {
-    nameController.text = investment.name;
-  }
-
-  // 2. Handle selections
-  void setStock(Stock stock) {
-    if (value case AsyncData(value: final investment)) {
-      setValue(investment.copyWith(stock: stock, stockId: stock.id));
-    }
-  }
-
-  // 3. Validate and submit
-  Future<(bool, String?)> submit() async {
-    if (value case AsyncData(value: Investment investment)) {
-      // Form validation
-      if (!formKey.currentState!.validate()) {
-        return (false, S.current.error_fixToContinue);
-      }
-
-      // Business logic validation
-      if (investment.stock == null) {
-        return (false, S.current.error_selectStock);
-      }
-
-      // Update from TextEditingController
-      investment = investment.copyWith(name: nameController.text);
-
-      // Save
-      setLoading(value);
-      final result = await _repository.save(investment);
-
-      return result.fold(
-        (error) {
-          setValue(investment);
-          return (false, error);
-        },
-        (saved) {
-          setValue(saved);
-          return (true, S.current.core_itemSaved);
-        },
-      );
-    }
-    return (false, S.current.error_invalidState);
-  }
-}
-```
-
 ## Localization
 
 ### Setup
@@ -1401,41 +994,6 @@ flutter_intl:
   class_name: S
   arb_dir: lib/config/l10n
   output_dir: lib/config/generated
-```
-
-### String Definitions
-
-```json
-// lib/config/l10n/intl_en.arb
-{
-  "@@locale": "en",
-  "core_name": "Name",
-  "core_save": "Save",
-  "core_edit": "Edit",
-  "core_delete": "Delete",
-  "core_select": "Select",
-  "core_required": "is required",
-  "core_itemSaved": "Item saved",
-  "core_itemDeleted": "Item deleted",
-  "error_fixToContinue": "Please fix the errors to continue",
-  "error_code": "{code, select, unknown{Error} notFound{Element not found} unauthorized{Invalid credentials} other{{code}}}",
-  "investment_title": "Investments",
-  "investment_create": "Create Investment",
-  "investment_edit": "Edit Investment"
-}
-```
-
-### Usage
-
-```dart
-// With context
-S.of(context).investment_title
-
-// Without context (current locale)
-S.current.core_save
-
-// With parameters
-S.current.error_code(ErrorCode.notFound.name)
 ```
 
 ## Testing
@@ -1614,43 +1172,3 @@ void main() {
 - Test behavior, not implementation
 - Use `Future.delayed(Duration.zero)` to wait for async controller initialization
 
-## Working from Serverpod Integration
-
-When implementing a new feature:
-
-1. **Check Serverpod models** — Models are in `invman_client` package
-2. **Create repository** — Wrap client calls with `safeCall()`
-3. **Create controllers** — Extend `PaginationController`, `DetailController`, or `AsyncSignal`
-4. **Build screens** — `HookWidget` + `useMemoized()` + `BaseScreen`
-5. **Build components** — Tiles, forms, detail views
-6. **Add routes** — Feature routes file + branch in router
-7. **Register DI** — Run `dart run build_runner build --delete-conflicting-outputs`
-
-### New Feature Checklist
-
-```
-features/{feature}/
-├── repositories/
-│   └── {feature}_repository.dart     # @injectable
-├── controllers/
-│   ├── list_controller.dart          # @injectable, extends PaginationController
-│   ├── detail_controller.dart        # @injectable, @factoryParam, extends DetailController
-│   └── edit_controller.dart          # @injectable, @factoryParam, extends AsyncSignal
-├── screens/
-│   ├── root_screen.dart              # List screen
-│   ├── detail_screen.dart            # Detail view
-│   └── edit_screen.dart              # Create/Edit form
-├── components/
-│   ├── tile_component.dart           # List item
-│   ├── detail_component.dart         # Detail view body
-│   └── form_component.dart           # Form fields
-└── routes.dart                       # GoRouter branch
-```
-
-### Code Generation
-
-After creating new injectable classes:
-
-```bash
-dart run build_runner build --delete-conflicting-outputs
-```

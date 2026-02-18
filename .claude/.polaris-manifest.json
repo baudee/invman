@@ -1,6 +1,0 @@
-{
-  "installed_at": "2026-02-16T18:31:55Z",
-  "layout": "monorepo",
-  "stacks": {"serverpod": "invman_server", "flutter": "mobile"},
-  "files": ["skills/execution/serverpod-patterns.md", "skills/verification/verify-serverpod.md", "agents/executor.md", "templates/integration-summary.md", "skills/execution/flutter-patterns.md", "skills/verification/verify-flutter.md", "skills/execution/cross-repo-context.md", "agents/integrator.md"]
-}

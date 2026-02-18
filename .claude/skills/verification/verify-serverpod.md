@@ -1,7 +1,7 @@
 # Skill: Verify Serverpod
 
 ## Purpose
-Systematic verification checklist for Serverpod backend code following the conventions in `SERVERPOD_PATTERNS.md`. Used by the reviewer agent after code execution.
+Systematic verification checklist for Serverpod backend code. Used by the reviewer agent after code execution.
 
 ## Verification Process
 
@@ -102,18 +102,17 @@ Run through each section. Flag issues as PASS, WARN, or FAIL.
 ### 11. Dependency Injection
 - [ ] `@injectable` used for factory registration
 - [ ] `@singleton` used for singletons (Env, etc.)
+- [ ] `@lazySingleton` used for singletons with lazy initialization
 - [ ] `@Injectable(as: Interface)` for interface implementations
 - [ ] Constructor injection for all dependencies
 - [ ] `getIt<T>()` used to resolve dependencies
 - [ ] `configureDependencies()` called in `server.dart`
-- [ ] `dart run build_runner build` run after changes
 
 ### 12. Environment Configuration
 - [ ] `Env` class handles all environment variables
 - [ ] Flavor enum defines environments (develop, staging, production)
 - [ ] `getVarFromKey()` throws for missing required vars
 - [ ] Sensitive values loaded from `.env` or environment
-- [ ] Config files exist for all environments (`development.yaml`, `staging.yaml`, `production.yaml`)
 - [ ] No hardcoded secrets in code
 
 ### 13. External API Calls
@@ -130,20 +129,16 @@ Run through each section. Flag issues as PASS, WARN, or FAIL.
 - [ ] Proper error handling for email failures
 
 ### 15. Migrations
-- [ ] `serverpod generate` run after model changes
-- [ ] Migration files reviewed before committing
-- [ ] No edits to migrations already applied to production
-- [ ] Migration registry updated
-- [ ] Both `.sql` and `.json` files present
+- [ ] `make server/build` run after model changes
+- [ ] You do not create migrations by yourself
 
 ### 16. Code Generation
-- [ ] `serverpod generate` run after `.spy.yaml` changes
-- [ ] `dart run build_runner build` run after `@injectable` changes
+- [ ] `make server/build` run after model changes, or injection annotations
 - [ ] Generated files not manually edited
 - [ ] No conflicts in generated code
 
 ### 17. Testing
-- [ ] `dart test` passes with no failures
+- [ ] `make server/test` passes with no failures
 - [ ] `mocktail` used for mocking
 - [ ] Services tested with mocked dependencies
 - [ ] `ServerException` assertions check `errorCode`
@@ -151,7 +146,7 @@ Run through each section. Flag issues as PASS, WARN, or FAIL.
 - [ ] Test config uses separate database
 
 ### 18. Code Quality
-- [ ] `dart analyze` passes with no issues
+- [ ] `make server/test` passes with no issues
 - [ ] No commented-out code
 - [ ] No debug `print()` statements (use `session.log()`)
 - [ ] Imports organized (dart, package, relative)
@@ -167,7 +162,7 @@ Run through each section. Flag issues as PASS, WARN, or FAIL.
 - [ ] Development logs more verbose than production
 
 ## Output
-Produce a `verification-report.md`:
+Produce:
 ```markdown
 # Verification Report: [Feature/Phase]
 Date: [date]
@@ -234,66 +229,20 @@ Reviewer: Claude (automated)
 ## Recommended Actions
 - [ ] Fix: ...
 - [ ] Consider: ...
-- [ ] Run: `serverpod generate`
-- [ ] Run: `dart run build_runner build --delete-conflicting-outputs`
+- [ ] Run: `make server/build`
+- [ ] Run: `make server/test`
 ```
 
 ## Quick Checks
 
-### Before Committing
 ```bash
 # Run all checks
-dart analyze
-dart test
-serverpod generate
-dart run build_runner build --delete-conflicting-outputs
+make server/build
+make server/test
 ```
 
 ### Common Issues
 
 | Issue | Check | Fix |
 |-------|-------|-----|
-| DI not resolving | `di.config.dart` outdated | `dart run build_runner build` |
-| Model not found | Protocol not generated | `serverpod generate` |
-| 500 error on endpoint | Missing `withMiddleware` | Wrap in `withMiddleware(session, () => ...)` |
-| Null auth user | Missing `requireLogin` | Set `bool get requireLogin => true;` |
-| N+1 queries | Missing `include:` | Add `include: IncludeHelpers.modelInclude()` |
-| Transaction not atomic | Missing `transaction:` param | Pass `transaction` through call chain |
-| Wrong error code | Generic exception | Throw `ServerException(errorCode: ErrorCode.xxx)` |
-| Migration conflict | Edited applied migration | Create new migration instead |
 
-### Service Method Template
-```dart
-Future<Model> methodName(Session session, int id, {Transaction? transaction}) async {
-  // 1. Fetch resource
-  final item = await Model.db.findById(
-    session, id,
-    include: IncludeHelpers.modelInclude(),
-    transaction: transaction,
-  );
-
-  // 2. Check exists
-  if (item == null) {
-    throw ServerException(errorCode: ErrorCode.notFound);
-  }
-
-  // 3. Check authorization
-  if (item.userId != session.authenticated!.authUserId) {
-    throw ServerException(errorCode: ErrorCode.forbidden);
-  }
-
-  // 4. Business logic...
-
-  return item;
-}
-```
-
-### Endpoint Method Template
-```dart
-Future<Model> methodName(Session session, int id) async {
-  return withMiddleware(
-    session,
-    () => getIt<ModelService>().methodName(session, id),
-  );
-}
-```

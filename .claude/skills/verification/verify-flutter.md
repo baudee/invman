@@ -1,7 +1,7 @@
 # Skill: Verify Flutter
 
 ## Purpose
-Systematic verification checklist for Flutter/Dart code following the conventions in `FLUTTER_PATTERNS.md`. Used by the reviewer agent after code execution.
+Systematic verification checklist for Flutter code. Used by the reviewer agent after code execution.
 
 ## Verification Process
 
@@ -13,23 +13,21 @@ Run through each section. Flag issues as PASS, WARN, or FAIL.
 - [ ] File naming follows `snake_case.dart` convention
 - [ ] Generated files in expected locations (`di.config.dart`, `config/generated/`)
 - [ ] No orphan files outside the expected structure
-- [ ] Barrel exports (`components.dart`, `business.dart`) used for clean imports
+- [ ] Barrel exports (`components.dart`, `business.dart`, ...) used for clean imports
 
 ### 2. Models
 - [ ] Serverpod models used from `invman_client` package — not manually created
 - [ ] No manual edits to Serverpod-generated model files
 - [ ] `copyWith()` used for immutable updates
 - [ ] Custom domain models use sealed classes for type-safe states
-- [ ] `id == 0` or `id == null` used for create-vs-update logic
+- [ ] `id == 0` used for create-vs-update logic
 - [ ] Model shapes match Serverpod protocol definitions
 
 ### 3. Repositories
-- [ ] One repository per feature in `{feature}/repositories/`
-- [ ] Marked with `@injectable` for DI registration
+- [ ] Marked with `@lazySingleton` for DI registration
 - [ ] All methods return `Future<Either<String, T>>` (fpdart)
 - [ ] All client calls wrapped in `safeCall()` helper
 - [ ] Error messages returned via `left()`, success via `right()`
-- [ ] No business logic in repositories — only API calls
 
 ### 4. State Management (Signals)
 - [ ] `FlutterSignal<T>` used for basic mutable state
@@ -42,7 +40,7 @@ Run through each section. Flag issues as PASS, WARN, or FAIL.
 
 ### 5. Controllers
 - [ ] List controllers extend `PaginationController<T>`
-- [ ] Detail controllers extend `DetailController<K, T>` or `AsyncSignal<T>`
+- [ ] Detail controllers extend `DetailController<K, T>`
 - [ ] Edit controllers extend `AsyncSignal<T>` with form management
 - [ ] Marked with `@injectable` for DI registration
 - [ ] `@factoryParam` used for runtime parameters (IDs)
@@ -70,7 +68,7 @@ Run through each section. Flag issues as PASS, WARN, or FAIL.
 - [ ] Related controllers invalidated after successful save (if applicable)
 
 ### 8. Screens
-- [ ] Screens extend `HookWidget`
+- [ ] Screens extend `HookWidget` when `useMemoized()` is used, otherwise `StatelessWidget`
 - [ ] Static `route()` method returns the path string
 - [ ] `useMemoized()` used to cache controller instances
 - [ ] `getIt<Controller>()` for dependency injection
@@ -97,12 +95,13 @@ Run through each section. Flag issues as PASS, WARN, or FAIL.
 ### 11. Dependency Injection
 - [ ] `@injectable` used for factory registration (new instance each time)
 - [ ] `@singleton` used for singletons (one instance)
+- [ ] `@lazySingleton` used for lazy singletons (one instance, created on first use)
 - [ ] `@factoryParam` used for runtime parameters
 - [ ] `@Injectable(as: Interface)` for interface implementations
 - [ ] Constructor injection for all dependencies
 - [ ] `getIt<T>()` used to resolve dependencies
 - [ ] `configureDependencies()` called in `main()`
-- [ ] `dart run build_runner build` run after changes
+- [ ] `make app/build` run after changes
 
 ### 12. Routing
 - [ ] GoRouter used with `StatefulShellRoute` for bottom nav
@@ -113,16 +112,7 @@ Run through each section. Flag issues as PASS, WARN, or FAIL.
 - [ ] `context.pop(value)` for returning values from selection screens
 - [ ] Router watches `authManager.state` for auth redirects
 
-### 13. Authentication
-- [ ] `AuthManager` singleton manages auth state
-- [ ] Sealed `AuthState` classes for type-safe state
-- [ ] `FlutterSignal<AuthState>` for reactive state
-- [ ] `FlutterComputed<bool>` for derived auth checks (`isLoggedIn`, `isOnboarded`)
-- [ ] Serverpod auth client used (`_client.auth.*`)
-- [ ] Router redirect guards unauthenticated routes
-- [ ] `AuthStateGuest` → `AuthStateOnboarding` → `AuthStateSuccess` flow
-
-### 14. Error Handling
+### 13. Error Handling
 - [ ] `Either<String, T>` used for all repository returns
 - [ ] `safeCall()` wraps all Serverpod client calls
 - [ ] `ServerException` caught and converted to error string
@@ -132,7 +122,7 @@ Run through each section. Flag issues as PASS, WARN, or FAIL.
 - [ ] `(bool, String?)` tuple returned from controller mutations
 - [ ] No swallowed exceptions — every error surfaces or logs
 
-### 15. Forms
+### 14. Forms
 - [ ] Edit controller owns form state (`formKey`, `TextEditingController`s)
 - [ ] `Form` widget uses controller's `formKey`
 - [ ] `TextFormField` uses controller's `TextEditingController`
@@ -142,23 +132,20 @@ Run through each section. Flag issues as PASS, WARN, or FAIL.
 - [ ] `ToastUtils.message()` displays success/error
 - [ ] `router.pop()` on success
 
-### 16. Lists
+### 15. Lists
 - [ ] `InfiniteListComponent` used with `PaginationController`
 - [ ] `itemBuilder:` returns tile component
-- [ ] `RefreshIndicator` enabled by default (or disabled for search)
-- [ ] Empty state handled in `PagedChildBuilderDelegate`
 - [ ] Pull-to-refresh calls `controller.refresh()`
-- [ ] Pagination offset calculated as `(page * limit) - limit`
 
-### 17. Localization
+### 16. Localization
 - [ ] `intl_utils` configured in `pubspec.yaml`
 - [ ] Strings defined in `config/l10n/intl_en.arb`
-- [ ] `S.of(context).key` or `S.current.key` used (not hardcoded strings)
+- [ ] `S.current.key` used (not hardcoded strings)
 - [ ] Parameterized strings use ICU syntax
-- [ ] `flutter pub run intl_utils:generate` run after string changes
+- [ ] `make app/build` run after string changes
 
-### 18. Testing
-- [ ] `flutter test` passes with no failures
+### 17. Testing
+- [ ] `make app/test` passes with no failures
 - [ ] `mocktail` for mocking (not `mockito`)
 - [ ] Repositories mocked, not Serverpod client directly
 - [ ] Controllers tested with mocked repositories
@@ -166,9 +153,8 @@ Run through each section. Flag issues as PASS, WARN, or FAIL.
 - [ ] Tests assert behavior (what user sees), not implementation
 - [ ] `Future.delayed(Duration.zero)` for async controller init
 
-### 19. Code Quality
-- [ ] `dart analyze` passes with no issues
-- [ ] `flutter analyze` passes with no issues
+### 18. Code Quality
+- [ ] `make app/build` passes with no issues
 - [ ] No commented-out code
 - [ ] No debug `print()` statements
 - [ ] Imports organized (dart, package, relative)
@@ -177,7 +163,7 @@ Run through each section. Flag issues as PASS, WARN, or FAIL.
 - [ ] No unused imports or variables
 
 ## Output
-Produce a `verification-report.md`:
+Produce a output:
 ```markdown
 # Verification Report: [Feature/Phase]
 Date: [date]
@@ -213,9 +199,6 @@ Reviewer: Claude (automated)
 ### Routing: [PASS/WARN/FAIL]
 - [notes]
 
-### Authentication: [PASS/WARN/FAIL]
-- [notes]
-
 ### Error Handling: [PASS/WARN/FAIL]
 - [notes]
 
@@ -241,28 +224,19 @@ Reviewer: Claude (automated)
 ## Recommended Actions
 - [ ] Fix: ...
 - [ ] Consider: ...
-- [ ] Run: `dart run build_runner build --delete-conflicting-outputs`
-- [ ] Run: `flutter pub run intl_utils:generate`
+- [ ] Run: `make app/build`
+- [ ] Run: `make app/test`
 ```
 
 ## Quick Checks
 
-### Before Committing
 ```bash
 # Run all checks
-flutter analyze
-flutter test
-dart run build_runner build --delete-conflicting-outputs
+make app/build
+make app/test
 ```
 
 ### Common Issues
 
 | Issue | Check | Fix |
 |-------|-------|-----|
-| DI not resolving | `di.config.dart` outdated | `dart run build_runner build` |
-| Signal not updating UI | Missing `watch(context)` | Add `.watch(context)` |
-| Controller not initialized | Missing `useMemoized()` | Wrap `getIt<>()` in `useMemoized()` |
-| Navigation not working | Wrong route path | Check `route()` static method |
-| Form not validating | Missing `formKey` | Ensure `Form(key: controller.formKey)` |
-| List not loading | `fetchPage` not called | Check `PaginationController` constructor calls `fetchNextPage()` |
-| Async error swallowed | Missing `fold()` handling | Handle both `left` and `right` cases |
