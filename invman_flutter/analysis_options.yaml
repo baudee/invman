@@ -32,3 +32,6 @@ analyzer:
     - lib/config/generated/**
   errors:
     experimental_member_use: info
+
+formatter:
+  page_width: 120

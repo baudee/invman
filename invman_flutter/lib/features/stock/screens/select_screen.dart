@@ -18,8 +18,7 @@ class StockSelectScreen extends HookWidget {
       body: InfiniteListComponent(
         refreshIndicator: false,
         controller: controller,
-        itemBuilder: (stock) =>
-            StockTileComponent(stock: stock, onTap: (_) => context.pop(stock)),
+        itemBuilder: (stock) => StockTileComponent(stock: stock, onTap: (_) => context.pop(stock)),
       ),
     );
   }

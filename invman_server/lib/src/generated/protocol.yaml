@@ -26,10 +26,6 @@ transfer:
   - save:
   - delete:
   - list:
-withdrawalFee:
-  - retrieve:
-  - save:
-  - delete:
 withdrawalRule:
   - list:
   - retrieve:

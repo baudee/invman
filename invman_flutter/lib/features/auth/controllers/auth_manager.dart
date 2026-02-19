@@ -18,8 +18,7 @@ class AuthManager {
     () => state.value is AuthStateSuccess || state.value is AuthStateOnboarding,
   );
   late final FlutterComputed<bool> isOnboarded = computed(
-    () =>
-        state.value is! AuthStateOnboarding && state.value is AuthStateSuccess,
+    () => state.value is! AuthStateOnboarding && state.value is AuthStateSuccess,
   );
 
   late final FlutterComputed<Account?> account = computed(() {

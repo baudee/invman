@@ -9,13 +9,7 @@ class StockTileComponent extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
   final void Function(Stock stock)? onTap;
 
-  const StockTileComponent({
-    super.key,
-    required this.stock,
-    this.trailing,
-    this.onTap,
-    this.contentPadding,
-  });
+  const StockTileComponent({super.key, required this.stock, this.trailing, this.onTap, this.contentPadding});
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +20,8 @@ class StockTileComponent extends StatelessWidget {
       leading: CircleAvatar(
         backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
         child: Text(
-          stock.symbol.substring(
-            0,
-            stock.symbol.length > 2 ? 2 : stock.symbol.length,
-          ),
-          style: TextStyle(
-            color: theme.colorScheme.primary,
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-          ),
+          stock.symbol.substring(0, stock.symbol.length > 2 ? 2 : stock.symbol.length),
+          style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.bold, fontSize: 14),
         ),
       ),
       title: Text(stock.shortName),

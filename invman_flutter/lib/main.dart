@@ -63,9 +63,7 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: SupportedLanguage.values
-          .map((e) => Locale.fromSubtags(languageCode: e.languageCode))
-          .toList(),
+      supportedLocales: SupportedLanguage.values.map((e) => Locale.fromSubtags(languageCode: e.languageCode)).toList(),
       debugShowCheckedModeBanner: false,
       routeInformationProvider: router.routeInformationProvider,
       routerDelegate: router.routerDelegate,

@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
-import 'package:invman_flutter/features/withdrawal/rule/rule.dart';
+import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
 class WithdrawalRuleSelectTileComponent extends StatelessWidget {
   final WithdrawalRule? rule;
   final void Function(WithdrawalRule) onRuleSelected;
-  const WithdrawalRuleSelectTileComponent({
-    super.key,
-    this.rule,
-    required this.onRuleSelected,
-  });
+  const WithdrawalRuleSelectTileComponent({super.key, this.rule, required this.onRuleSelected});
 
   @override
   Widget build(BuildContext context) {

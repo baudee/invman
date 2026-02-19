@@ -7,15 +7,10 @@ import 'package:signals_flutter/signals_flutter.dart';
 class UserPreferencesManager {
   final UserPreferencesRepository _repository;
 
-  late final FlutterSignal<Locale> locale = signal<Locale>(
-    _repository.getLocale(),
-  );
-  late final FlutterSignal<ThemeMode> theme = signal<ThemeMode>(
-    _repository.getTheme(),
-  );
+  late final FlutterSignal<Locale> locale = signal<Locale>(_repository.getLocale());
+  late final FlutterSignal<ThemeMode> theme = signal<ThemeMode>(_repository.getTheme());
 
-  UserPreferencesManager({required UserPreferencesRepository repository})
-    : _repository = repository;
+  UserPreferencesManager({required UserPreferencesRepository repository}) : _repository = repository;
 
   Future<String?> setLocale(Locale locale) async {
     final result = await _repository.setLocale(locale);

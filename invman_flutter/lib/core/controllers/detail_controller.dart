@@ -15,5 +15,8 @@ abstract class DetailController<K, T> extends AsyncSignal<T> {
     result.fold((error) => setError(error), (result) => setValue(result));
   }
 
+  @override
+  Future<void> reload() => _fetch();
+
   Future<Either<String, T>> retrieve(K id);
 }

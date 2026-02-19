@@ -12,9 +12,7 @@ class InvestmentDetailScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = useMemoized(
-      () => getIt<InvestmentDetailController>(param1: id),
-    );
+    final controller = useMemoized(() => getIt<InvestmentDetailController>(param1: id));
     return BaseScreen(
       appBar: AppBar(
         title: controller.value.map(
@@ -44,10 +42,7 @@ class InvestmentDetailScreen extends HookWidget {
               ),
               const PopupMenuItem(
                 value: 1,
-                child: ListTile(
-                  leading: Icon(Icons.delete),
-                  title: Text('Delete'),
-                ),
+                child: ListTile(leading: Icon(Icons.delete), title: Text('Delete')),
               ),
             ],
           ),
@@ -55,8 +50,7 @@ class InvestmentDetailScreen extends HookWidget {
       ),
       body: BaseStateComponent(
         state: controller,
-        successBuilder: (investment) =>
-            InvestmentDetailComponent(investment: investment),
+        successBuilder: (investment) => InvestmentDetailComponent(investment: investment),
       ),
     );
   }

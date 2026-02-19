@@ -20,10 +20,7 @@ abstract class PaginationController<T> {
 
     result.fold(
       (error) {
-        state.value = currentState.copyWith(
-          error: Exception(error),
-          isLoading: false,
-        );
+        state.value = currentState.copyWith(error: Exception(error), isLoading: false);
       },
       (items) {
         final isLastPage = items.isEmpty;

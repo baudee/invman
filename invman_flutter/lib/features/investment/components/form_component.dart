@@ -23,13 +23,8 @@ class InvestmentFormComponent extends StatelessWidget {
             children: [
               TextFormField(
                 controller: controller.nameController,
-                validator: (value) => ValidationUtils.formValidatorNotEmpty(
-                  value,
-                  S.of(context).core_name,
-                ),
-                decoration: InputDecoration(
-                  label: Text(S.of(context).core_name),
-                ),
+                validator: (value) => ValidationUtils.formValidatorNotEmpty(value, S.of(context).core_name),
+                decoration: InputDecoration(label: Text(S.of(context).core_name)),
               ),
               SizedBox(height: UIConstants.spacingXs),
               WithdrawalRuleSelectTileComponent(
@@ -37,10 +32,7 @@ class InvestmentFormComponent extends StatelessWidget {
                 onRuleSelected: controller.setWithdrawalRule,
               ),
               SizedBox(height: UIConstants.spacingXs),
-              StockSelectTileComponent(
-                stock: investment.stock,
-                onStockSelected: controller.setStock,
-              ),
+              StockSelectTileComponent(stock: investment.stock, onStockSelected: controller.setStock),
               SizedBox(height: UIConstants.spacingMd),
               SaveButton(
                 onPressed: () async {

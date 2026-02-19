@@ -21,13 +21,7 @@ class PopupMenuActions extends StatelessWidget {
         if (onEdit != null)
           PopupMenuItem(
             value: 0,
-            child: Row(
-              children: [
-                const Icon(Icons.edit),
-                const SizedBox(width: 10),
-                Text(S.current.core_edit),
-              ],
-            ),
+            child: Row(children: [const Icon(Icons.edit), const SizedBox(width: 10), Text(S.current.core_edit)]),
           ),
         if (onDelete != null)
           PopupMenuItem(
@@ -36,10 +30,7 @@ class PopupMenuActions extends StatelessWidget {
               children: [
                 const Icon(Icons.delete, color: Colors.red),
                 const SizedBox(width: 10),
-                Text(
-                  S.current.core_delete,
-                  style: const TextStyle(color: Colors.red),
-                ),
+                Text(S.current.core_delete, style: const TextStyle(color: Colors.red)),
               ],
             ),
           ),

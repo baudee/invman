@@ -12,21 +12,12 @@ class WithdrawalRuleEditScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = useMemoized(
-      () => getIt<WithdrawalRuleEditController>(param1: id),
-    );
+    final controller = useMemoized(() => getIt<WithdrawalRuleEditController>(param1: id));
     return BaseScreen(
-      appBar: AppBar(
-        title: Text(
-          id == 0
-              ? S.of(context).withdrawal_create
-              : S.of(context).withdrawal_edit,
-        ),
-      ),
+      appBar: AppBar(title: Text(id == 0 ? S.of(context).withdrawal_create : S.of(context).withdrawal_edit)),
       body: BaseStateComponent(
         state: controller,
-        successBuilder: (_) =>
-            WithdrawalRuleFormComponent(controller: controller),
+        successBuilder: (_) => WithdrawalRuleFormComponent(controller: controller),
       ),
     );
   }

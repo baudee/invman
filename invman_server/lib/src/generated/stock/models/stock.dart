@@ -17,8 +17,7 @@ import '../../currency/models/currency.dart' as _i3;
 import '../../stock/models/stock_price.dart' as _i4;
 import 'package:invman_server/src/generated/protocol.dart' as _i5;
 
-abstract class Stock
-    implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
+abstract class Stock implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
   Stock._({
     _i1.UuidValue? id,
     required this.symbol,
@@ -45,9 +44,7 @@ abstract class Stock
 
   factory Stock.fromJson(Map<String, dynamic> jsonSerialization) {
     return Stock(
-      id: jsonSerialization['id'] == null
-          ? null
-          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null ? null : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       symbol: jsonSerialization['symbol'] as String,
       shortName: jsonSerialization['shortName'] as String,
       longName: jsonSerialization['longName'] as String,
@@ -121,8 +118,7 @@ abstract class Stock
       if (logoUrl != null) 'logoUrl': logoUrl,
       'currencyId': currencyId,
       if (currency != null) 'currency': currency?.toJson(),
-      if (prices != null)
-        'prices': prices?.toJson(valueToJson: (v) => v.toJson()),
+      if (prices != null) 'prices': prices?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -138,8 +134,7 @@ abstract class Stock
       if (logoUrl != null) 'logoUrl': logoUrl,
       'currencyId': currencyId,
       if (currency != null) 'currency': currency?.toJsonForProtocol(),
-      if (prices != null)
-        'prices': prices?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
+      if (prices != null) 'prices': prices?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
     };
   }
 
@@ -227,12 +222,8 @@ class _StockImpl extends Stock {
       quoteType: quoteType ?? this.quoteType,
       logoUrl: logoUrl is String? ? logoUrl : this.logoUrl,
       currencyId: currencyId ?? this.currencyId,
-      currency: currency is _i3.Currency?
-          ? currency
-          : this.currency?.copyWith(),
-      prices: prices is List<_i4.StockPrice>?
-          ? prices
-          : this.prices?.map((e0) => e0.copyWith()).toList(),
+      currency: currency is _i3.Currency? ? currency : this.currency?.copyWith(),
+      prices: prices is List<_i4.StockPrice>? ? prices : this.prices?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }
@@ -330,8 +321,7 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
       field: Stock.t.currencyId,
       foreignField: _i3.Currency.t.id,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) =>
-          _i3.CurrencyTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) => _i3.CurrencyTable(tableRelation: foreignTableRelation),
     );
     return _currency!;
   }
@@ -343,8 +333,7 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
       field: Stock.t.id,
       foreignField: _i4.StockPrice.t.stockId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) =>
-          _i4.StockPriceTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) => _i4.StockPriceTable(tableRelation: foreignTableRelation),
     );
     return ___prices!;
   }
@@ -356,8 +345,7 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
       field: Stock.t.id,
       foreignField: _i4.StockPrice.t.stockId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) =>
-          _i4.StockPriceTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) => _i4.StockPriceTable(tableRelation: foreignTableRelation),
     );
     _prices = _i1.ManyRelation<_i4.StockPriceTable>(
       tableWithRelations: relationTable,
@@ -719,9 +707,7 @@ class StockAttachRepository {
       throw ArgumentError.notNull('stock.id');
     }
 
-    var $stockPrice = stockPrice
-        .map((e) => e.copyWith(stockId: stock.id))
-        .toList();
+    var $stockPrice = stockPrice.map((e) => e.copyWith(stockId: stock.id)).toList();
     await session.db.update<_i4.StockPrice>(
       $stockPrice,
       columns: [_i4.StockPrice.t.stockId],

@@ -31,8 +31,7 @@ class InfiniteListComponent<T> extends StatelessWidget {
       shrinkWrap: shrinkWrap,
       reverse: reverse,
       physics: physics ?? const AlwaysScrollableScrollPhysics(),
-      separatorBuilder: (context, index) =>
-          const SizedBox(height: UIConstants.spacingXs),
+      separatorBuilder: (context, index) => const SizedBox(height: UIConstants.spacingXs),
       builderDelegate: PagedChildBuilderDelegate<T>(
         itemBuilder: (context, item, index) => itemBuilder(item),
         firstPageProgressIndicatorBuilder: (_) => const LoadingComponent(),

@@ -18,9 +18,7 @@ class TransferRootScreen extends HookWidget {
     return BaseScreen(
       appBar: AppBar(title: Text(S.of(context).transfer_title)),
       body: InfiniteListComponent(
-        controller: useMemoized(
-          () => getIt<TransferListController>(param1: investmentId),
-        ),
+        controller: useMemoized(() => getIt<TransferListController>(param1: investmentId)),
         itemBuilder: (transfer) => TransferTileComponent(transfer: transfer),
       ),
       floatingActionButton: FloatingActionButton(

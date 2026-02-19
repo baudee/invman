@@ -16,11 +16,8 @@ class TransferEditController extends AsyncSignal<Transfer> {
   final amountController = TextEditingController();
   final quantityController = TextEditingController();
 
-  TransferEditController(
-    @factoryParam this.investmentId,
-    @factoryParam this.id,
-    this._service,
-  ) : super(AsyncState.loading()) {
+  TransferEditController(@factoryParam this.investmentId, @factoryParam this.id, this._service)
+    : super(AsyncState.loading()) {
     _load();
   }
 

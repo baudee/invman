@@ -30,9 +30,7 @@ class StockService {
   }) async {
     return Stock.db.find(
       session,
-      where: (e) =>
-          e.shortName.ilike("%${query.trim()}%") |
-          e.longName.ilike("%${query.trim()}%"),
+      where: (e) => e.shortName.ilike("%${query.trim()}%") | e.longName.ilike("%${query.trim()}%"),
       limit: limit,
       offset: (page * limit) - limit,
     );

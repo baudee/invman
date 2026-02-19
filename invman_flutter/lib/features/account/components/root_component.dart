@@ -54,12 +54,7 @@ class AccountRootComponent extends HookWidget {
             }
           },
           items: [
-            ...ThemeMode.values.map(
-              (e) => DropdownMenuItem(
-                value: e,
-                child: Text(S.of(context).core_theme(e.name)),
-              ),
-            ),
+            ...ThemeMode.values.map((e) => DropdownMenuItem(value: e, child: Text(S.of(context).core_theme(e.name)))),
           ],
         ),
       ),
@@ -74,18 +69,13 @@ class AccountRootComponent extends HookWidget {
         leading: Icon(Icons.attach_money_rounded),
       ),
       ListTile(
-        title: Text(
-          S.of(context).auth_logOut,
-          style: TextStyle(color: Colors.red),
-        ),
+        title: Text(S.of(context).auth_logOut, style: TextStyle(color: Colors.red)),
         leading: Icon(Icons.logout, color: Colors.red),
         onTap: () async {
           final errorMessage = await authManager.logout();
 
           if (errorMessage == null && context.mounted) {
-            StatefulNavigationShell.of(
-              context,
-            ).goBranch(0, initialLocation: true);
+            StatefulNavigationShell.of(context).goBranch(0, initialLocation: true);
           } else {
             ToastUtils.message(errorMessage, success: false);
           }

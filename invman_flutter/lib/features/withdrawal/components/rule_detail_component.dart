@@ -35,9 +35,7 @@ class WithdrawalRuleDetailComponent extends StatelessWidget {
                 Text(
                   S.of(context).withdrawal_currency_percentage,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.textTheme.bodySmall?.color?.withValues(
-                      alpha: 0.7,
-                    ),
+                    color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -53,6 +51,11 @@ class WithdrawalRuleDetailComponent extends StatelessWidget {
             ),
           ),
           const SizedBox(height: UIConstants.spacingLg),
+          Text(
+            S.of(context).withdrawal_fees,
+            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: UIConstants.spacingMd),
           Builder(
             builder: (_) {
               final fees = rule.fees ?? [];
@@ -60,9 +63,7 @@ class WithdrawalRuleDetailComponent extends StatelessWidget {
                 return Text(
                   S.of(context).core_noItemsFound,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.textTheme.bodyMedium?.color?.withValues(
-                      alpha: 0.7,
-                    ),
+                    color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                   ),
                   textAlign: TextAlign.center,
                 );
@@ -70,9 +71,7 @@ class WithdrawalRuleDetailComponent extends StatelessWidget {
                 return Column(
                   children: fees.map((fee) {
                     return Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: UIConstants.spacingSm,
-                      ),
+                      padding: const EdgeInsets.only(bottom: UIConstants.spacingSm),
                       child: WithdrawalFeeTileComponent(fee: fee),
                     );
                   }).toList(),

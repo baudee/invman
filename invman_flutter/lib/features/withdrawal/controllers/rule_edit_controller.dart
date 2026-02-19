@@ -17,8 +17,16 @@ class WithdrawalRuleEditController extends AsyncSignal<WithdrawalRule> {
 
   final Signal<List<WithdrawalFee>> fees = signal([]);
 
-  WithdrawalRuleEditController(@factoryParam this.id, this._repository)
-    : super(AsyncState.loading()) {
+  // Fee editing state
+  final feeFormKey = GlobalKey<FormState>();
+  final feePercentController = TextEditingController();
+  final feeFixedController = TextEditingController();
+  final feeMinimumController = TextEditingController();
+  int? _editingFeeIndex;
+
+  bool get isEditingFee => _editingFeeIndex != null;
+
+  WithdrawalRuleEditController(@factoryParam this.id, this._repository) : super(AsyncState.loading()) {
     _load();
   }
 
@@ -40,19 +48,44 @@ class WithdrawalRuleEditController extends AsyncSignal<WithdrawalRule> {
   }
 
   void _refreshControllers(WithdrawalRule rule) {
-    currencyChangePercentageController.text = rule.currencyChangePercentage
-        .toString();
+    currencyChangePercentageController.text = rule.currencyChangePercentage.toString();
     nameController.text = rule.name;
   }
 
-  void addFee(WithdrawalFee fee) {
-    fees.value = [...fees.value, fee];
+  void initFeeForAdd() {
+    _editingFeeIndex = null;
+    feePercentController.text = '0.0';
+    feeFixedController.text = '0.00';
+    feeMinimumController.text = '0.00';
   }
 
-  void updateFee(int index, WithdrawalFee fee) {
-    final updated = List<WithdrawalFee>.from(fees.value);
-    updated[index] = fee;
-    fees.value = updated;
+  void initFeeForEdit(int index) {
+    final fee = fees.value[index];
+    _editingFeeIndex = index;
+    feePercentController.text = fee.percent.toString();
+    feeFixedController.text = fee.fixed.toStringAsFixed(2);
+    feeMinimumController.text = fee.minimum.toStringAsFixed(2);
+  }
+
+  bool saveFee() {
+    if (!feeFormKey.currentState!.validate()) return false;
+
+    final percent = double.parse(feePercentController.text.trim());
+    final fixed = double.parse(feeFixedController.text.trim());
+    final minimum = double.parse(feeMinimumController.text.trim());
+
+    if (_editingFeeIndex != null) {
+      final updated = List<WithdrawalFee>.from(fees.value);
+      updated[_editingFeeIndex!] = updated[_editingFeeIndex!].copyWith(
+        percent: percent,
+        fixed: fixed,
+        minimum: minimum,
+      );
+      fees.value = updated;
+    } else {
+      fees.value = [...fees.value, WithdrawalFee(ruleId: id, percent: percent, fixed: fixed, minimum: minimum)];
+    }
+    return true;
   }
 
   void removeFee(int index) {
@@ -67,15 +100,12 @@ class WithdrawalRuleEditController extends AsyncSignal<WithdrawalRule> {
         return (false, S.current.error_fixToContinue);
       }
 
-      if (double.tryParse(currencyChangePercentageController.text.trim()) ==
-          null) {
+      if (double.tryParse(currencyChangePercentageController.text.trim()) == null) {
         return (false, S.current.withdrawal_selectValidPercentage);
       }
 
       final ruleToSave = rule.copyWith(
-        currencyChangePercentage: double.parse(
-          currencyChangePercentageController.text.trim(),
-        ),
+        currencyChangePercentage: double.parse(currencyChangePercentageController.text.trim()),
         name: nameController.text.trim(),
         fees: fees.value,
       );

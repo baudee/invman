@@ -15,8 +15,7 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import '../../currency/models/currency.dart' as _i2;
 import 'package:invman_server/src/generated/protocol.dart' as _i3;
 
-abstract class CurrencyRate
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class CurrencyRate implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   CurrencyRate._({
     this.id,
     required this.dollarValue,
@@ -164,9 +163,7 @@ class _CurrencyRateImpl extends CurrencyRate {
       dollarValue: dollarValue ?? this.dollarValue,
       timestamp: timestamp ?? this.timestamp,
       currencyId: currencyId ?? this.currencyId,
-      currency: currency is _i2.Currency?
-          ? currency
-          : this.currency?.copyWith(),
+      currency: currency is _i2.Currency? ? currency : this.currency?.copyWith(),
     );
   }
 }
@@ -179,11 +176,10 @@ class CurrencyRateUpdateTable extends _i1.UpdateTable<CurrencyRateTable> {
     value,
   );
 
-  _i1.ColumnValue<DateTime, DateTime> timestamp(DateTime value) =>
-      _i1.ColumnValue(
-        table.timestamp,
-        value,
-      );
+  _i1.ColumnValue<DateTime, DateTime> timestamp(DateTime value) => _i1.ColumnValue(
+    table.timestamp,
+    value,
+  );
 
   _i1.ColumnValue<int, int> currencyId(int value) => _i1.ColumnValue(
     table.currencyId,
@@ -225,8 +221,7 @@ class CurrencyRateTable extends _i1.Table<int?> {
       field: CurrencyRate.t.currencyId,
       foreignField: _i2.Currency.t.id,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) =>
-          _i2.CurrencyTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) => _i2.CurrencyTable(tableRelation: foreignTableRelation),
     );
     return _currency!;
   }

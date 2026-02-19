@@ -5,12 +5,7 @@ class OptionalRefreshIndicator extends StatelessWidget {
   final Widget child;
   final Future<void> Function()? onRefresh;
 
-  const OptionalRefreshIndicator({
-    super.key,
-    required this.useRefreshIndicator,
-    required this.child,
-    this.onRefresh,
-  });
+  const OptionalRefreshIndicator({super.key, required this.useRefreshIndicator, required this.child, this.onRefresh});
 
   @override
   Widget build(BuildContext context) {

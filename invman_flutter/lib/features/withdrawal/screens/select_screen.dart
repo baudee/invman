@@ -18,10 +18,7 @@ class WithdrawalRuleSelectScreen extends HookWidget {
       appBar: AppBar(title: Text(S.of(context).withdrawal_title)),
       body: InfiniteListComponent(
         controller: controller,
-        itemBuilder: (rule) => WithdrawalRuleTileComponent(
-          rule: rule,
-          onTap: () => context.pop(rule),
-        ),
+        itemBuilder: (rule) => WithdrawalRuleTileComponent(rule: rule, onTap: () => context.pop(rule)),
       ),
     );
   }

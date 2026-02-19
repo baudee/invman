@@ -18,10 +18,8 @@ class StockSearchScreen extends HookWidget {
       body: InfiniteListComponent(
         refreshIndicator: false,
         controller: controller,
-        itemBuilder: (stock) => StockTileComponent(
-          stock: stock,
-          onTap: (_) => router.push(StockDetailScreen.route(stock.id)),
-        ),
+        itemBuilder: (stock) =>
+            StockTileComponent(stock: stock, onTap: (_) => router.push(StockDetailScreen.route(stock.id))),
       ),
     );
   }

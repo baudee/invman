@@ -1,5 +1,5 @@
-//export 'models/models.dart';
 export 'repositories/repositories.dart';
-export 'fee/fee.dart';
-export 'rule/rule.dart';
+export 'components/components.dart';
+export 'controllers/controllers.dart';
+export 'screens/screens.dart';
 export 'routes.dart';

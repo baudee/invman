@@ -13,17 +13,9 @@ class InvestmentEditScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = useMemoized(
-      () => getIt<InvestmentEditController>(param1: id),
-    );
+    final controller = useMemoized(() => getIt<InvestmentEditController>(param1: id));
     return BaseScreen(
-      appBar: AppBar(
-        title: Text(
-          id == 0
-              ? S.of(context).investment_create
-              : S.of(context).investment_edit,
-        ),
-      ),
+      appBar: AppBar(title: Text(id == 0 ? S.of(context).investment_create : S.of(context).investment_edit)),
       body: BaseStateComponent(
         state: controller,
         successBuilder: (_) => InvestmentFormComponent(controller: controller),

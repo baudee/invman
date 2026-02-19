@@ -15,10 +15,7 @@ class WithdrawalRuleRepository {
 
   void _notifyChange() => _invalidation.value = !_invalidation.value;
 
-  Future<Either<String, List<WithdrawalRule>>> list({
-    required int page,
-    required int limit,
-  }) async {
+  Future<Either<String, List<WithdrawalRule>>> list({required int page, required int limit}) async {
     return safeCall(() async {
       return right(await client.withdrawalRule.list(limit: limit, page: page));
     });

@@ -16,8 +16,7 @@ class InvestmentRootScreen extends HookWidget {
     return BaseScreen(
       body: InfiniteListComponent(
         controller: controller,
-        itemBuilder: (investment) =>
-            InvestmentTileComponent(investment: investment),
+        itemBuilder: (investment) => InvestmentTileComponent(investment: investment),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => router.pushRelative(InvestmentEditScreen.route(0)),

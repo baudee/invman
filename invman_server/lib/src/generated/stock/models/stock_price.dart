@@ -15,8 +15,7 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import '../../stock/models/stock.dart' as _i2;
 import 'package:invman_server/src/generated/protocol.dart' as _i3;
 
-abstract class StockPrice
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class StockPrice implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   StockPrice._({
     this.id,
     required this.value,
@@ -177,17 +176,15 @@ class StockPriceUpdateTable extends _i1.UpdateTable<StockPriceTable> {
     value,
   );
 
-  _i1.ColumnValue<DateTime, DateTime> timestamp(DateTime value) =>
-      _i1.ColumnValue(
-        table.timestamp,
-        value,
-      );
+  _i1.ColumnValue<DateTime, DateTime> timestamp(DateTime value) => _i1.ColumnValue(
+    table.timestamp,
+    value,
+  );
 
-  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> stockId(_i1.UuidValue value) =>
-      _i1.ColumnValue(
-        table.stockId,
-        value,
-      );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> stockId(_i1.UuidValue value) => _i1.ColumnValue(
+    table.stockId,
+    value,
+  );
 }
 
 class StockPriceTable extends _i1.Table<int?> {
@@ -224,8 +221,7 @@ class StockPriceTable extends _i1.Table<int?> {
       field: StockPrice.t.stockId,
       foreignField: _i2.Stock.t.id,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) =>
-          _i2.StockTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) => _i2.StockTable(tableRelation: foreignTableRelation),
     );
     return _stock!;
   }

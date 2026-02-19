@@ -12,19 +12,16 @@ class WithdrawalRuleDetailScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = useMemoized(
-      () => getIt<WithdrawalRuleDetailController>(param1: id),
-    );
+    final controller = useMemoized(() => getIt<WithdrawalRuleDetailController>(param1: id));
     return BaseScreen(
       appBar: AppBar(
-        title: controller.value.map(
-          data: (rule) => Text(rule.name),
-          error: (_) => null,
-          loading: () => null,
-        ),
+        title: controller.value.map(data: (rule) => Text(rule.name), error: (_) => null, loading: () => null),
         actions: [
           PopupMenuActions(
-            onEdit: () => router.pushRelative(WithdrawalRuleEditScreen.route()),
+            onEdit: () async {
+              await router.pushRelative(WithdrawalRuleEditScreen.route());
+              controller.reload();
+            },
             onDelete: () async {
               final (success, message) = await controller.delete();
               router.pop();
@@ -36,12 +33,6 @@ class WithdrawalRuleDetailScreen extends HookWidget {
       body: BaseStateComponent(
         state: controller,
         successBuilder: (rule) => WithdrawalRuleDetailComponent(rule: rule),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          router.pushRelative(WithdrawalFeeEditScreen.route(0));
-        },
-        child: Icon(Icons.add),
       ),
     );
   }

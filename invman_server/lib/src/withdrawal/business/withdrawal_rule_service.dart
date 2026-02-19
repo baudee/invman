@@ -75,7 +75,7 @@ class WithdrawalRuleService {
 
         await _syncFees(
           session,
-          ruleId: savedRule.id!,
+          rule: savedRule,
           incomingFees: withdrawal.fees ?? [],
           transaction: transaction,
         );
@@ -90,60 +90,40 @@ class WithdrawalRuleService {
 
   Future<void> _syncFees(
     Session session, {
-    required int ruleId,
+    required WithdrawalRule rule,
     required List<WithdrawalFee> incomingFees,
     required Transaction transaction,
   }) async {
     final existingFees = await WithdrawalFee.db.find(
       session,
-      where: (e) => e.ruleId.equals(ruleId),
+      where: (e) => e.ruleId.equals(rule.id),
       transaction: transaction,
     );
 
-    final incomingIds = incomingFees
-        .where((f) => f.id != null && f.id != 0)
-        .map((f) => f.id!)
-        .toSet();
-
-    final feesToDelete = existingFees
-        .where((f) => !incomingIds.contains(f.id))
-        .toList();
-
-    if (feesToDelete.isNotEmpty) {
+    if (existingFees.isNotEmpty) {
       await WithdrawalFee.db.delete(
         session,
-        feesToDelete,
+        existingFees,
         transaction: transaction,
       );
     }
 
-    final feesToInsert = <WithdrawalFee>[];
-    final feesToUpdate = <WithdrawalFee>[];
+    if (incomingFees.isEmpty) return;
 
-    for (final fee in incomingFees) {
-      final feeWithRule = fee.copyWith(ruleId: ruleId);
-      if (fee.id == null || fee.id == 0) {
-        feesToInsert.add(feeWithRule.copyWith(id: null));
-      } else {
-        feesToUpdate.add(feeWithRule);
-      }
-    }
+    final feesToInsert = incomingFees.map((f) => f.copyWith(id: null, ruleId: null)).toList();
 
-    if (feesToInsert.isNotEmpty) {
-      await WithdrawalFee.db.insert(
-        session,
-        feesToInsert,
-        transaction: transaction,
-      );
-    }
+    final insertedFees = await WithdrawalFee.db.insert(
+      session,
+      feesToInsert,
+      transaction: transaction,
+    );
 
-    if (feesToUpdate.isNotEmpty) {
-      await WithdrawalFee.db.update(
-        session,
-        feesToUpdate,
-        transaction: transaction,
-      );
-    }
+    await WithdrawalRule.db.attach.fees(
+      session,
+      rule,
+      insertedFees,
+      transaction: transaction,
+    );
   }
 
   Future<WithdrawalRule> delete(Session session, int id) async {

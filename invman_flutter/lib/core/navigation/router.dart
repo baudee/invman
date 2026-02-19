@@ -27,11 +27,7 @@ abstract class RouterModule {
         GoRoute(path: SignInScreen.route(), builder: (_, _) => SignInScreen()),
         ...OnboardingRoutes.routes,
         StatefulShellRoute.indexedStack(
-          branches: [
-            InvestmentRoutes.branch,
-            StockRoutes.branch,
-            AccountRoutes.branch,
-          ],
+          branches: [InvestmentRoutes.branch, StockRoutes.branch, AccountRoutes.branch],
           builder: (context, state, navigationShell) {
             return AppContainer(navigationShell: navigationShell);
           },

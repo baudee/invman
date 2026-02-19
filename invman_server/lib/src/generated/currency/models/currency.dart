@@ -15,8 +15,7 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import '../../currency/models/currency_rate.dart' as _i2;
 import 'package:invman_server/src/generated/protocol.dart' as _i3;
 
-abstract class Currency
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class Currency implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Currency._({
     this.id,
     required this.code,
@@ -79,8 +78,7 @@ abstract class Currency
       '__className__': 'Currency',
       if (id != null) 'id': id,
       'code': code,
-      if (rates != null)
-        'rates': rates?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
+      if (rates != null) 'rates': rates?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
     };
   }
 
@@ -139,9 +137,7 @@ class _CurrencyImpl extends Currency {
     return Currency(
       id: id is int? ? id : this.id,
       code: code ?? this.code,
-      rates: rates is List<_i2.CurrencyRate>?
-          ? rates
-          : this.rates?.map((e0) => e0.copyWith()).toList(),
+      rates: rates is List<_i2.CurrencyRate>? ? rates : this.rates?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }
@@ -179,8 +175,7 @@ class CurrencyTable extends _i1.Table<int?> {
       field: Currency.t.id,
       foreignField: _i2.CurrencyRate.t.currencyId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) =>
-          _i2.CurrencyRateTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) => _i2.CurrencyRateTable(tableRelation: foreignTableRelation),
     );
     return ___rates!;
   }
@@ -192,8 +187,7 @@ class CurrencyTable extends _i1.Table<int?> {
       field: Currency.t.id,
       foreignField: _i2.CurrencyRate.t.currencyId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) =>
-          _i2.CurrencyRateTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) => _i2.CurrencyRateTable(tableRelation: foreignTableRelation),
     );
     _rates = _i1.ManyRelation<_i2.CurrencyRateTable>(
       tableWithRelations: relationTable,
@@ -538,9 +532,7 @@ class CurrencyAttachRepository {
       throw ArgumentError.notNull('currency.id');
     }
 
-    var $currencyRate = currencyRate
-        .map((e) => e.copyWith(currencyId: currency.id))
-        .toList();
+    var $currencyRate = currencyRate.map((e) => e.copyWith(currencyId: currency.id)).toList();
     await session.db.update<_i2.CurrencyRate>(
       $currencyRate,
       columns: [_i2.CurrencyRate.t.currencyId],
@@ -593,9 +585,7 @@ class CurrencyDetachRepository {
       throw ArgumentError.notNull('currencyRate.id');
     }
 
-    var $currencyRate = currencyRate
-        .map((e) => e.copyWith(currencyId: null))
-        .toList();
+    var $currencyRate = currencyRate.map((e) => e.copyWith(currencyId: null)).toList();
     await session.db.update<_i2.CurrencyRate>(
       $currencyRate,
       columns: [_i2.CurrencyRate.t.currencyId],

@@ -9,10 +9,7 @@ class InvestmentRepository {
 
   const InvestmentRepository(this.client);
 
-  Future<Either<String, List<Investment>>> list({
-    required int page,
-    required int limit,
-  }) async {
+  Future<Either<String, List<Investment>>> list({required int page, required int limit}) async {
     return safeCall(() async {
       return right(await client.investment.list());
     });

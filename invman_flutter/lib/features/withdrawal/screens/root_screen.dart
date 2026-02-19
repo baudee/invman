@@ -20,8 +20,7 @@ class WithdrawalRuleRootScreen extends HookWidget {
         controller: controller,
         itemBuilder: (rule) => WithdrawalRuleTileComponent(
           rule: rule,
-          onTap: () =>
-              router.pushRelative(WithdrawalRuleDetailScreen.route(rule.id)),
+          onTap: () => router.pushRelative(WithdrawalRuleDetailScreen.route(rule.id)),
         ),
       ),
       floatingActionButton: FloatingActionButton(

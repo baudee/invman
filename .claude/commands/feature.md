@@ -16,7 +16,7 @@ $ARGUMENTS
 1. Read the team definition at `.claude/teams/feature-team.md`
 2. Follow the workflow defined there: Brainstorm → Plan → Implement → Review → Commit
 3. Use TodoWrite to track progress through each phase
-4. Get user approval before brainstorm and plan phases
+4. Get user approval before brainstorm, plan and commit phases
 
 ## Agent Mapping
 

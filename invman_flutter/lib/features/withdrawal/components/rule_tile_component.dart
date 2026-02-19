@@ -9,13 +9,7 @@ class WithdrawalRuleTileComponent extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
   final Widget? trailing;
 
-  const WithdrawalRuleTileComponent({
-    super.key,
-    required this.rule,
-    this.onTap,
-    this.contentPadding,
-    this.trailing,
-  });
+  const WithdrawalRuleTileComponent({super.key, required this.rule, this.onTap, this.contentPadding, this.trailing});
 
   @override
   Widget build(BuildContext context) {
@@ -25,17 +19,11 @@ class WithdrawalRuleTileComponent extends StatelessWidget {
       contentPadding: contentPadding,
       leading: CircleAvatar(
         backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
-        child: Icon(
-          Icons.rule,
-          color: theme.colorScheme.primary,
-          size: UIConstants.iconMd,
-        ),
+        child: Icon(Icons.rule, color: theme.colorScheme.primary, size: UIConstants.iconMd),
       ),
       title: Text(rule.name),
       trailing: trailing,
-      subtitle: Text(
-        '${S.of(context).withdrawal_currency_percentage}: ${rule.currencyChangePercentage}%',
-      ),
+      subtitle: Text('${S.of(context).withdrawal_currency_percentage}: ${rule.currencyChangePercentage}%'),
       onTap: onTap,
     );
   }

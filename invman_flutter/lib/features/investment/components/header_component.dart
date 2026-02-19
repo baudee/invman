@@ -22,10 +22,7 @@ class InvestmentHeaderComponent extends HookWidget {
       padding: const EdgeInsets.all(UIConstants.spacingXxl),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            theme.colorScheme.primary,
-            theme.colorScheme.primary.withValues(alpha: 0.8),
-          ],
+          colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.8)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -50,9 +47,7 @@ class InvestmentHeaderComponent extends HookWidget {
           ),
           const SizedBox(height: UIConstants.spacingSm),
           Text(
-            (investment.withdrawAmount ?? 0).toStringPrice(
-              authManager.currencyCode,
-            ),
+            (investment.withdrawAmount ?? 0).toStringPrice(authManager.currencyCode),
             style: theme.textTheme.displaySmall?.copyWith(
               color: theme.colorScheme.onPrimary,
               fontWeight: FontWeight.w300,
@@ -68,29 +63,21 @@ class InvestmentHeaderComponent extends HookWidget {
                 child: _buildInfoColumn(
                   context,
                   S.of(context).investment_invested,
-                  (investment.investAmount).toStringPrice(
-                    authManager.currencyCode,
-                  ),
+                  (investment.investAmount).toStringPrice(authManager.currencyCode),
                 ),
               ),
               Expanded(
                 child: _buildInfoColumn(
                   context,
                   S.of(context).investment_return,
-                  investment.percent.isNaN
-                      ? '-'
-                      : '${investment.percent.toStringAsFixed(1)}%',
+                  investment.percent.isNaN ? '-' : '${investment.percent.toStringAsFixed(1)}%',
                 ),
               ),
               Expanded(
                 child: _buildInfoColumn(
                   context,
                   S.of(context).investment_return,
-                  investment.percent.isNaN
-                      ? '-'
-                      : investment.amountDifference.toStringPrice(
-                          authManager.currencyCode,
-                        ),
+                  investment.percent.isNaN ? '-' : investment.amountDifference.toStringPrice(authManager.currencyCode),
                 ),
               ),
             ],
@@ -114,10 +101,7 @@ class InvestmentHeaderComponent extends HookWidget {
         const SizedBox(height: UIConstants.spacingXs),
         Text(
           value,
-          style: theme.textTheme.titleSmall?.copyWith(
-            color: theme.colorScheme.onPrimary,
-            fontWeight: FontWeight.w600,
-          ),
+          style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.onPrimary, fontWeight: FontWeight.w600),
         ),
       ],
     );

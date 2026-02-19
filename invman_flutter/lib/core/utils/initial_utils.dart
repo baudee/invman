@@ -2,13 +2,7 @@ import 'package:invman_client/invman_client.dart';
 
 class InitialUtils {
   static Stock getStock() {
-    return Stock(
-      symbol: '',
-      shortName: '',
-      longName: '',
-      quoteType: StockType.ticker,
-      currencyId: 0,
-    );
+    return Stock(symbol: '', shortName: '', longName: '', quoteType: StockType.ticker, currencyId: 0);
   }
 
   static Transfer getTransfer() {
@@ -26,13 +20,7 @@ class InitialUtils {
   }
 
   static WithdrawalFee getWithdrawalFee({required int ruleId}) {
-    return WithdrawalFee(
-      id: 0,
-      fixed: 0.0,
-      percent: 0.0,
-      minimum: 0.0,
-      ruleId: ruleId,
-    );
+    return WithdrawalFee(id: 0, fixed: 0.0, percent: 0.0, minimum: 0.0, ruleId: ruleId);
   }
 
   // Investment

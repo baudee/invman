@@ -24,11 +24,9 @@ import 'package:invman_client/src/protocol/investment/models/investment.dart'
 import 'package:invman_client/src/protocol/stock/models/stock.dart' as _i8;
 import 'package:invman_client/src/protocol/transfer/models/transfer.dart'
     as _i9;
-import 'package:invman_client/src/protocol/withdrawal/models/withdrawal_fee.dart'
-    as _i10;
 import 'package:invman_client/src/protocol/withdrawal/models/withdrawal_rule.dart'
-    as _i11;
-import 'protocol.dart' as _i12;
+    as _i10;
+import 'protocol.dart' as _i11;
 
 /// {@category Endpoint}
 class EndpointAccount extends _i1.EndpointRef {
@@ -389,45 +387,16 @@ class EndpointTransfer extends _i1.EndpointRef {
 }
 
 /// {@category Endpoint}
-class EndpointWithdrawalFee extends _i1.EndpointRef {
-  EndpointWithdrawalFee(_i1.EndpointCaller caller) : super(caller);
-
-  @override
-  String get name => 'withdrawalFee';
-
-  _i2.Future<_i10.WithdrawalFee> retrieve(int id) =>
-      caller.callServerEndpoint<_i10.WithdrawalFee>(
-        'withdrawalFee',
-        'retrieve',
-        {'id': id},
-      );
-
-  _i2.Future<_i10.WithdrawalFee> save(_i10.WithdrawalFee fee) =>
-      caller.callServerEndpoint<_i10.WithdrawalFee>(
-        'withdrawalFee',
-        'save',
-        {'fee': fee},
-      );
-
-  _i2.Future<_i10.WithdrawalFee> delete(int id) =>
-      caller.callServerEndpoint<_i10.WithdrawalFee>(
-        'withdrawalFee',
-        'delete',
-        {'id': id},
-      );
-}
-
-/// {@category Endpoint}
 class EndpointWithdrawalRule extends _i1.EndpointRef {
   EndpointWithdrawalRule(_i1.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'withdrawalRule';
 
-  _i2.Future<List<_i11.WithdrawalRule>> list({
+  _i2.Future<List<_i10.WithdrawalRule>> list({
     required int limit,
     required int page,
-  }) => caller.callServerEndpoint<List<_i11.WithdrawalRule>>(
+  }) => caller.callServerEndpoint<List<_i10.WithdrawalRule>>(
     'withdrawalRule',
     'list',
     {
@@ -436,22 +405,22 @@ class EndpointWithdrawalRule extends _i1.EndpointRef {
     },
   );
 
-  _i2.Future<_i11.WithdrawalRule> retrieve(int id) =>
-      caller.callServerEndpoint<_i11.WithdrawalRule>(
+  _i2.Future<_i10.WithdrawalRule> retrieve(int id) =>
+      caller.callServerEndpoint<_i10.WithdrawalRule>(
         'withdrawalRule',
         'retrieve',
         {'id': id},
       );
 
-  _i2.Future<_i11.WithdrawalRule> save(_i11.WithdrawalRule transfer) =>
-      caller.callServerEndpoint<_i11.WithdrawalRule>(
+  _i2.Future<_i10.WithdrawalRule> save(_i10.WithdrawalRule transfer) =>
+      caller.callServerEndpoint<_i10.WithdrawalRule>(
         'withdrawalRule',
         'save',
         {'transfer': transfer},
       );
 
-  _i2.Future<_i11.WithdrawalRule> delete(int id) =>
-      caller.callServerEndpoint<_i11.WithdrawalRule>(
+  _i2.Future<_i10.WithdrawalRule> delete(int id) =>
+      caller.callServerEndpoint<_i10.WithdrawalRule>(
         'withdrawalRule',
         'delete',
         {'id': id},
@@ -489,7 +458,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i12.Protocol(),
+         _i11.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -505,7 +474,6 @@ class Client extends _i1.ServerpodClientShared {
     investment = EndpointInvestment(this);
     stock = EndpointStock(this);
     transfer = EndpointTransfer(this);
-    withdrawalFee = EndpointWithdrawalFee(this);
     withdrawalRule = EndpointWithdrawalRule(this);
     modules = Modules(this);
   }
@@ -524,8 +492,6 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointTransfer transfer;
 
-  late final EndpointWithdrawalFee withdrawalFee;
-
   late final EndpointWithdrawalRule withdrawalRule;
 
   late final Modules modules;
@@ -539,7 +505,6 @@ class Client extends _i1.ServerpodClientShared {
     'investment': investment,
     'stock': stock,
     'transfer': transfer,
-    'withdrawalFee': withdrawalFee,
     'withdrawalRule': withdrawalRule,
   };
 

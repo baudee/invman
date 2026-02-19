@@ -1,6 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:invman_flutter/features/withdrawal/fee/fee.dart';
-import 'package:invman_flutter/features/withdrawal/rule/screens/screens.dart';
+import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
 class WithdrawalRoutes {
   static String namespace = "/withdrawals";
@@ -13,35 +12,11 @@ class WithdrawalRoutes {
       routes: [
         GoRoute(
           path: WithdrawalRuleDetailScreen.route(),
-          builder: (_, state) => WithdrawalRuleDetailScreen(
-            id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
-          ),
+          builder: (_, state) => WithdrawalRuleDetailScreen(id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0),
           routes: [
             GoRoute(
               path: WithdrawalRuleEditScreen.route(),
-              builder: (_, state) => WithdrawalRuleEditScreen(
-                id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
-              ),
-            ),
-            GoRoute(
-              path: WithdrawalFeeDetailScreen.route(),
-              builder: (_, state) => WithdrawalFeeDetailScreen(
-                id: int.tryParse(state.pathParameters['idFee'] ?? '') ?? 0,
-              ),
-              routes: [
-                GoRoute(
-                  path: WithdrawalFeeEditScreen.route(),
-                  builder: (_, state) {
-                    return WithdrawalFeeEditScreen(
-                      ruleId:
-                          int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
-                      id:
-                          int.tryParse(state.pathParameters['idFee'] ?? '') ??
-                          0,
-                    );
-                  },
-                ),
-              ],
+              builder: (_, state) => WithdrawalRuleEditScreen(id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0),
             ),
           ],
         ),
