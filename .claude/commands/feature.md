@@ -1,5 +1,5 @@
 ---
-description: Start the Feature Team to implement a feature end-to-end
+description: Create a team to implement or modify a feature end-to-end
 allowed-tools: Task, TodoWrite, Read, Glob, Grep, Edit, Write, Bash, AskUserQuestion, mcp__dart__*, mcp__serverpod__*, Skill
 ---
 

@@ -11,3 +11,8 @@ fields:
   logoUrl: String?,
   currency: Currency?, relation
   prices: List<StockPrice>?, relation(optional, name=stock_stock_prices)
+
+indexes:
+  stock_symbol_idx:
+    fields: symbol
+    unique: true
