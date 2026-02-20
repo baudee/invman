@@ -15,7 +15,8 @@ class OnboardingController extends AsyncSignal<List<Currency>> {
   late final Signal<int?> selectedCurrency = signal(null);
   late final Signal<bool> isValidating = signal(false);
 
-  OnboardingController(this._authManager, this._accountRepository, this._currencyRepository) : super(AsyncState.loading()) {
+  OnboardingController(this._authManager, this._accountRepository, this._currencyRepository)
+    : super(AsyncState.loading()) {
     setLoading();
     _currencyRepository.list().then((result) {
       result.fold((error) => setError(error), (currencies) => setValue(currencies));

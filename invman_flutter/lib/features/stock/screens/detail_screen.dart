@@ -15,8 +15,12 @@ class StockDetailScreen extends HookWidget {
   Widget build(BuildContext context) {
     final controller = useMemoized(() => getIt<StockDetailController>(param1: uuid));
     return BaseScreen(
-      appBar: AppBar(
-        title: controller.value.map(data: (stock) => Text(stock.name), error: (_, _) => null, loading: () => null),
+      appBar: BaseStateAppbar<Stock>(
+        state: controller,
+        successBuilder: (stock) => AppBar(
+          title: Text(stock.name),
+          actions: [LikeButtonComponent(stock: stock, onPressed: () => controller.toggleLike())],
+        ),
       ),
       body: BaseStateComponent<Stock>(
         state: controller,

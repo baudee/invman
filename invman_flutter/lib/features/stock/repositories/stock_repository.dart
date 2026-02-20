@@ -20,4 +20,18 @@ class StockRepository {
       return right(await client.stock.retrieve(uuid));
     });
   }
+
+  Future<Either<String, void>> like(UuidValue stockId) async {
+    return safeCall(() async {
+      await client.stock.like(stockId);
+      return right(null);
+    });
+  }
+
+  Future<Either<String, void>> unlike(UuidValue stockId) async {
+    return safeCall(() async {
+      await client.stock.unlike(stockId);
+      return right(null);
+    });
+  }
 }

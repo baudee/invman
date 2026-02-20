@@ -14,10 +14,10 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../../stock/models/stock_type.dart' as _i2;
 import '../../currency/models/currency.dart' as _i3;
-import 'package:invman_server/src/generated/protocol.dart' as _i4;
+import '../../stock/models/stock_like.dart' as _i4;
+import 'package:invman_server/src/generated/protocol.dart' as _i5;
 
-abstract class Stock
-    implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
+abstract class Stock implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
   Stock._({
     _i1.UuidValue? id,
     required this.symbol,
@@ -28,6 +28,7 @@ abstract class Stock
     DateTime? updatedAt,
     required this.currencyId,
     this.currency,
+    this.likes,
   }) : id = id ?? _i1.Uuid().v4obj(),
        price = price ?? 0.0,
        updatedAt = updatedAt ?? DateTime.now();
@@ -42,13 +43,12 @@ abstract class Stock
     DateTime? updatedAt,
     required int currencyId,
     _i3.Currency? currency,
+    List<_i4.StockLike>? likes,
   }) = _StockImpl;
 
   factory Stock.fromJson(Map<String, dynamic> jsonSerialization) {
     return Stock(
-      id: jsonSerialization['id'] == null
-          ? null
-          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null ? null : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       symbol: jsonSerialization['symbol'] as String,
       name: jsonSerialization['name'] as String,
       quoteType: _i2.StockType.fromJson(
@@ -62,8 +62,13 @@ abstract class Stock
       currencyId: jsonSerialization['currencyId'] as int,
       currency: jsonSerialization['currency'] == null
           ? null
-          : _i4.Protocol().deserialize<_i3.Currency>(
+          : _i5.Protocol().deserialize<_i3.Currency>(
               jsonSerialization['currency'],
+            ),
+      likes: jsonSerialization['likes'] == null
+          ? null
+          : _i5.Protocol().deserialize<List<_i4.StockLike>>(
+              jsonSerialization['likes'],
             ),
     );
   }
@@ -91,6 +96,8 @@ abstract class Stock
 
   _i3.Currency? currency;
 
+  List<_i4.StockLike>? likes;
+
   @override
   _i1.Table<_i1.UuidValue> get table => t;
 
@@ -107,6 +114,7 @@ abstract class Stock
     DateTime? updatedAt,
     int? currencyId,
     _i3.Currency? currency,
+    List<_i4.StockLike>? likes,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -121,6 +129,7 @@ abstract class Stock
       'updatedAt': updatedAt.toJson(),
       'currencyId': currencyId,
       if (currency != null) 'currency': currency?.toJson(),
+      if (likes != null) 'likes': likes?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -137,11 +146,18 @@ abstract class Stock
       'updatedAt': updatedAt.toJson(),
       'currencyId': currencyId,
       if (currency != null) 'currency': currency?.toJsonForProtocol(),
+      if (likes != null) 'likes': likes?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
     };
   }
 
-  static StockInclude include({_i3.CurrencyInclude? currency}) {
-    return StockInclude._(currency: currency);
+  static StockInclude include({
+    _i3.CurrencyInclude? currency,
+    _i4.StockLikeIncludeList? likes,
+  }) {
+    return StockInclude._(
+      currency: currency,
+      likes: likes,
+    );
   }
 
   static StockIncludeList includeList({
@@ -183,6 +199,7 @@ class _StockImpl extends Stock {
     DateTime? updatedAt,
     required int currencyId,
     _i3.Currency? currency,
+    List<_i4.StockLike>? likes,
   }) : super._(
          id: id,
          symbol: symbol,
@@ -193,6 +210,7 @@ class _StockImpl extends Stock {
          updatedAt: updatedAt,
          currencyId: currencyId,
          currency: currency,
+         likes: likes,
        );
 
   /// Returns a shallow copy of this [Stock]
@@ -209,6 +227,7 @@ class _StockImpl extends Stock {
     DateTime? updatedAt,
     int? currencyId,
     Object? currency = _Undefined,
+    Object? likes = _Undefined,
   }) {
     return Stock(
       id: id ?? this.id,
@@ -219,9 +238,8 @@ class _StockImpl extends Stock {
       price: price ?? this.price,
       updatedAt: updatedAt ?? this.updatedAt,
       currencyId: currencyId ?? this.currencyId,
-      currency: currency is _i3.Currency?
-          ? currency
-          : this.currency?.copyWith(),
+      currency: currency is _i3.Currency? ? currency : this.currency?.copyWith(),
+      likes: likes is List<_i4.StockLike>? ? likes : this.likes?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }
@@ -256,11 +274,10 @@ class StockUpdateTable extends _i1.UpdateTable<StockTable> {
     value,
   );
 
-  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
-      _i1.ColumnValue(
-        table.updatedAt,
-        value,
-      );
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) => _i1.ColumnValue(
+    table.updatedAt,
+    value,
+  );
 
   _i1.ColumnValue<int, int> currencyId(int value) => _i1.ColumnValue(
     table.currencyId,
@@ -320,6 +337,10 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
 
   _i3.CurrencyTable? _currency;
 
+  _i4.StockLikeTable? ___likes;
+
+  _i1.ManyRelation<_i4.StockLikeTable>? _likes;
+
   _i3.CurrencyTable get currency {
     if (_currency != null) return _currency!;
     _currency = _i1.createRelationTable(
@@ -327,10 +348,39 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
       field: Stock.t.currencyId,
       foreignField: _i3.Currency.t.id,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) =>
-          _i3.CurrencyTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) => _i3.CurrencyTable(tableRelation: foreignTableRelation),
     );
     return _currency!;
+  }
+
+  _i4.StockLikeTable get __likes {
+    if (___likes != null) return ___likes!;
+    ___likes = _i1.createRelationTable(
+      relationFieldName: '__likes',
+      field: Stock.t.id,
+      foreignField: _i4.StockLike.t.stockId,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) => _i4.StockLikeTable(tableRelation: foreignTableRelation),
+    );
+    return ___likes!;
+  }
+
+  _i1.ManyRelation<_i4.StockLikeTable> get likes {
+    if (_likes != null) return _likes!;
+    var relationTable = _i1.createRelationTable(
+      relationFieldName: 'likes',
+      field: Stock.t.id,
+      foreignField: _i4.StockLike.t.stockId,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) => _i4.StockLikeTable(tableRelation: foreignTableRelation),
+    );
+    _likes = _i1.ManyRelation<_i4.StockLikeTable>(
+      tableWithRelations: relationTable,
+      table: _i4.StockLikeTable(
+        tableRelation: relationTable.tableRelation!.lastRelation,
+      ),
+    );
+    return _likes!;
   }
 
   @override
@@ -350,19 +400,31 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
     if (relationField == 'currency') {
       return currency;
     }
+    if (relationField == 'likes') {
+      return __likes;
+    }
     return null;
   }
 }
 
 class StockInclude extends _i1.IncludeObject {
-  StockInclude._({_i3.CurrencyInclude? currency}) {
+  StockInclude._({
+    _i3.CurrencyInclude? currency,
+    _i4.StockLikeIncludeList? likes,
+  }) {
     _currency = currency;
+    _likes = likes;
   }
 
   _i3.CurrencyInclude? _currency;
 
+  _i4.StockLikeIncludeList? _likes;
+
   @override
-  Map<String, _i1.Include?> get includes => {'currency': _currency};
+  Map<String, _i1.Include?> get includes => {
+    'currency': _currency,
+    'likes': _likes,
+  };
 
   @override
   _i1.Table<_i1.UuidValue> get table => Stock.t;
@@ -391,7 +453,13 @@ class StockIncludeList extends _i1.IncludeList {
 class StockRepository {
   const StockRepository._();
 
+  final attach = const StockAttachRepository._();
+
   final attachRow = const StockAttachRowRepository._();
+
+  final detach = const StockDetachRepository._();
+
+  final detachRow = const StockDetachRowRepository._();
 
   /// Returns a list of [Stock]s matching the given query parameters.
   ///
@@ -649,6 +717,33 @@ class StockRepository {
   }
 }
 
+class StockAttachRepository {
+  const StockAttachRepository._();
+
+  /// Creates a relation between this [Stock] and the given [StockLike]s
+  /// by setting each [StockLike]'s foreign key `stockId` to refer to this [Stock].
+  Future<void> likes(
+    _i1.Session session,
+    Stock stock,
+    List<_i4.StockLike> stockLike, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (stockLike.any((e) => e.id == null)) {
+      throw ArgumentError.notNull('stockLike.id');
+    }
+    if (stock.id == null) {
+      throw ArgumentError.notNull('stock.id');
+    }
+
+    var $stockLike = stockLike.map((e) => e.copyWith(stockId: stock.id)).toList();
+    await session.db.update<_i4.StockLike>(
+      $stockLike,
+      columns: [_i4.StockLike.t.stockId],
+      transaction: transaction,
+    );
+  }
+}
+
 class StockAttachRowRepository {
   const StockAttachRowRepository._();
 
@@ -671,6 +766,81 @@ class StockAttachRowRepository {
     await session.db.updateRow<Stock>(
       $stock,
       columns: [Stock.t.currencyId],
+      transaction: transaction,
+    );
+  }
+
+  /// Creates a relation between this [Stock] and the given [StockLike]
+  /// by setting the [StockLike]'s foreign key `stockId` to refer to this [Stock].
+  Future<void> likes(
+    _i1.Session session,
+    Stock stock,
+    _i4.StockLike stockLike, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (stockLike.id == null) {
+      throw ArgumentError.notNull('stockLike.id');
+    }
+    if (stock.id == null) {
+      throw ArgumentError.notNull('stock.id');
+    }
+
+    var $stockLike = stockLike.copyWith(stockId: stock.id);
+    await session.db.updateRow<_i4.StockLike>(
+      $stockLike,
+      columns: [_i4.StockLike.t.stockId],
+      transaction: transaction,
+    );
+  }
+}
+
+class StockDetachRepository {
+  const StockDetachRepository._();
+
+  /// Detaches the relation between this [Stock] and the given [StockLike]
+  /// by setting the [StockLike]'s foreign key `stockId` to `null`.
+  ///
+  /// This removes the association between the two models without deleting
+  /// the related record.
+  Future<void> likes(
+    _i1.Session session,
+    List<_i4.StockLike> stockLike, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (stockLike.any((e) => e.id == null)) {
+      throw ArgumentError.notNull('stockLike.id');
+    }
+
+    var $stockLike = stockLike.map((e) => e.copyWith(stockId: null)).toList();
+    await session.db.update<_i4.StockLike>(
+      $stockLike,
+      columns: [_i4.StockLike.t.stockId],
+      transaction: transaction,
+    );
+  }
+}
+
+class StockDetachRowRepository {
+  const StockDetachRowRepository._();
+
+  /// Detaches the relation between this [Stock] and the given [StockLike]
+  /// by setting the [StockLike]'s foreign key `stockId` to `null`.
+  ///
+  /// This removes the association between the two models without deleting
+  /// the related record.
+  Future<void> likes(
+    _i1.Session session,
+    _i4.StockLike stockLike, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (stockLike.id == null) {
+      throw ArgumentError.notNull('stockLike.id');
+    }
+
+    var $stockLike = stockLike.copyWith(stockId: null);
+    await session.db.updateRow<_i4.StockLike>(
+      $stockLike,
+      columns: [_i4.StockLike.t.stockId],
       transaction: transaction,
     );
   }

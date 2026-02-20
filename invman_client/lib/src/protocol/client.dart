@@ -321,6 +321,20 @@ class EndpointStock extends _i1.EndpointRef {
   @override
   String get name => 'stock';
 
+  _i2.Future<void> like(_i1.UuidValue stockId) =>
+      caller.callServerEndpoint<void>(
+        'stock',
+        'like',
+        {'stockId': stockId},
+      );
+
+  _i2.Future<void> unlike(_i1.UuidValue stockId) =>
+      caller.callServerEndpoint<void>(
+        'stock',
+        'unlike',
+        {'stockId': stockId},
+      );
+
   _i2.Future<_i8.Stock> retrieve(_i1.UuidValue uuid) =>
       caller.callServerEndpoint<_i8.Stock>(
         'stock',

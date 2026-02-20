@@ -64,8 +64,11 @@ Read the relevant skill file when working on a related task.
 - `skills/verification/verify-flutter.md` — Skill: Verify Flutter
 
 **Agents:**
-- `agents/executor.md` — Agent: Executor
+- `agents/dev.md` — Agent: Developer
+- `agents/brainstormer.md` — Agent: Brainstormer
+- `agents/pm.md` — Agent: Product Manager
 - `agents/reviewer.md` — Agent: Reviewer
+- `agents/debugger.md` — Agent: Debugger
 
 ## Project Structure
 

@@ -24,9 +24,7 @@ class StockTileComponent extends StatelessWidget {
         ),
       ),
       title: Text(stock.name),
-      subtitle: Text(
-        '${stock.symbol} - ${stock.quoteType.name} - ${stock.price.toStringPrice(stock.currency?.code)}',
-      ),
+      subtitle: Text('${stock.symbol} - ${stock.quoteType.name} - ${stock.price.toStringPrice(stock.currency?.code)}'),
       trailing: trailing,
       onTap: onTap != null ? () => onTap!(stock) : null,
     );

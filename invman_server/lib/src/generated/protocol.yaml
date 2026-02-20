@@ -19,6 +19,8 @@ investment:
   - delete:
   - retrieve:
 stock:
+  - like:
+  - unlike:
   - retrieve:
   - search:
 transfer:

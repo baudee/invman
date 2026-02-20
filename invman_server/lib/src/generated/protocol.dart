@@ -12,35 +12,31 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'package:serverpod/protocol.dart' as _i2;
-import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
-    as _i3;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
-    as _i4;
+import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart' as _i3;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart' as _i4;
 import 'account/models/account.dart' as _i5;
 import 'core/exceptions/error_code.dart' as _i6;
 import 'core/exceptions/server_exception.dart' as _i7;
 import 'currency/models/currency.dart' as _i8;
 import 'investment/models/investment.dart' as _i9;
 import 'stock/models/stock.dart' as _i10;
-import 'stock/models/stock_type.dart' as _i11;
-import 'transfer/models/transfer.dart' as _i12;
-import 'withdrawal/models/withdrawal_fee.dart' as _i13;
-import 'withdrawal/models/withdrawal_rule.dart' as _i14;
-import 'package:invman_server/src/generated/currency/models/currency.dart'
-    as _i15;
-import 'package:invman_server/src/generated/investment/models/investment.dart'
-    as _i16;
-import 'package:invman_server/src/generated/stock/models/stock.dart' as _i17;
-import 'package:invman_server/src/generated/transfer/models/transfer.dart'
-    as _i18;
-import 'package:invman_server/src/generated/withdrawal/models/withdrawal_rule.dart'
-    as _i19;
+import 'stock/models/stock_like.dart' as _i11;
+import 'stock/models/stock_type.dart' as _i12;
+import 'transfer/models/transfer.dart' as _i13;
+import 'withdrawal/models/withdrawal_fee.dart' as _i14;
+import 'withdrawal/models/withdrawal_rule.dart' as _i15;
+import 'package:invman_server/src/generated/currency/models/currency.dart' as _i16;
+import 'package:invman_server/src/generated/investment/models/investment.dart' as _i17;
+import 'package:invman_server/src/generated/stock/models/stock.dart' as _i18;
+import 'package:invman_server/src/generated/transfer/models/transfer.dart' as _i19;
+import 'package:invman_server/src/generated/withdrawal/models/withdrawal_rule.dart' as _i20;
 export 'account/models/account.dart';
 export 'core/exceptions/error_code.dart';
 export 'core/exceptions/server_exception.dart';
 export 'currency/models/currency.dart';
 export 'investment/models/investment.dart';
 export 'stock/models/stock.dart';
+export 'stock/models/stock_like.dart';
 export 'stock/models/stock_type.dart';
 export 'transfer/models/transfer.dart';
 export 'withdrawal/models/withdrawal_fee.dart';
@@ -428,6 +424,95 @@ class Protocol extends _i1.SerializationManagerServer {
       managed: true,
     ),
     _i2.TableDefinition(
+      name: 'stock_like',
+      dartName: 'StockLike',
+      schema: 'public',
+      module: 'invman',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'stock_like_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'stockId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'stock_like_fk_0',
+          columns: ['userId'],
+          referenceTable: 'serverpod_auth_core_user',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.cascade,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'stock_like_fk_1',
+          columns: ['stockId'],
+          referenceTable: 'stock',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.cascade,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'stock_like_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'stock_like_user_stock_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'stockId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
       name: 'transfer',
       dartName: 'Transfer',
       schema: 'public',
@@ -693,17 +778,20 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i10.Stock) {
       return _i10.Stock.fromJson(data) as T;
     }
-    if (t == _i11.StockType) {
-      return _i11.StockType.fromJson(data) as T;
+    if (t == _i11.StockLike) {
+      return _i11.StockLike.fromJson(data) as T;
     }
-    if (t == _i12.Transfer) {
-      return _i12.Transfer.fromJson(data) as T;
+    if (t == _i12.StockType) {
+      return _i12.StockType.fromJson(data) as T;
     }
-    if (t == _i13.WithdrawalFee) {
-      return _i13.WithdrawalFee.fromJson(data) as T;
+    if (t == _i13.Transfer) {
+      return _i13.Transfer.fromJson(data) as T;
     }
-    if (t == _i14.WithdrawalRule) {
-      return _i14.WithdrawalRule.fromJson(data) as T;
+    if (t == _i14.WithdrawalFee) {
+      return _i14.WithdrawalFee.fromJson(data) as T;
+    }
+    if (t == _i15.WithdrawalRule) {
+      return _i15.WithdrawalRule.fromJson(data) as T;
     }
     if (t == _i1.getType<_i5.Account?>()) {
       return (data != null ? _i5.Account.fromJson(data) : null) as T;
@@ -723,65 +811,53 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i10.Stock?>()) {
       return (data != null ? _i10.Stock.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i11.StockType?>()) {
-      return (data != null ? _i11.StockType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i11.StockLike?>()) {
+      return (data != null ? _i11.StockLike.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i12.Transfer?>()) {
-      return (data != null ? _i12.Transfer.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i12.StockType?>()) {
+      return (data != null ? _i12.StockType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i13.WithdrawalFee?>()) {
-      return (data != null ? _i13.WithdrawalFee.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i13.Transfer?>()) {
+      return (data != null ? _i13.Transfer.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i14.WithdrawalRule?>()) {
-      return (data != null ? _i14.WithdrawalRule.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i14.WithdrawalFee?>()) {
+      return (data != null ? _i14.WithdrawalFee.fromJson(data) : null) as T;
     }
-    if (t == List<_i12.Transfer>) {
-      return (data as List).map((e) => deserialize<_i12.Transfer>(e)).toList()
-          as T;
+    if (t == _i1.getType<_i15.WithdrawalRule?>()) {
+      return (data != null ? _i15.WithdrawalRule.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<List<_i12.Transfer>?>()) {
-      return (data != null
-              ? (data as List)
-                    .map((e) => deserialize<_i12.Transfer>(e))
-                    .toList()
-              : null)
-          as T;
+    if (t == List<_i13.Transfer>) {
+      return (data as List).map((e) => deserialize<_i13.Transfer>(e)).toList() as T;
     }
-    if (t == List<_i13.WithdrawalFee>) {
-      return (data as List)
-              .map((e) => deserialize<_i13.WithdrawalFee>(e))
-              .toList()
-          as T;
+    if (t == _i1.getType<List<_i13.Transfer>?>()) {
+      return (data != null ? (data as List).map((e) => deserialize<_i13.Transfer>(e)).toList() : null) as T;
     }
-    if (t == _i1.getType<List<_i13.WithdrawalFee>?>()) {
-      return (data != null
-              ? (data as List)
-                    .map((e) => deserialize<_i13.WithdrawalFee>(e))
-                    .toList()
-              : null)
-          as T;
+    if (t == List<_i11.StockLike>) {
+      return (data as List).map((e) => deserialize<_i11.StockLike>(e)).toList() as T;
     }
-    if (t == List<_i15.Currency>) {
-      return (data as List).map((e) => deserialize<_i15.Currency>(e)).toList()
-          as T;
+    if (t == _i1.getType<List<_i11.StockLike>?>()) {
+      return (data != null ? (data as List).map((e) => deserialize<_i11.StockLike>(e)).toList() : null) as T;
     }
-    if (t == List<_i16.Investment>) {
-      return (data as List).map((e) => deserialize<_i16.Investment>(e)).toList()
-          as T;
+    if (t == List<_i14.WithdrawalFee>) {
+      return (data as List).map((e) => deserialize<_i14.WithdrawalFee>(e)).toList() as T;
     }
-    if (t == List<_i17.Stock>) {
-      return (data as List).map((e) => deserialize<_i17.Stock>(e)).toList()
-          as T;
+    if (t == _i1.getType<List<_i14.WithdrawalFee>?>()) {
+      return (data != null ? (data as List).map((e) => deserialize<_i14.WithdrawalFee>(e)).toList() : null) as T;
     }
-    if (t == List<_i18.Transfer>) {
-      return (data as List).map((e) => deserialize<_i18.Transfer>(e)).toList()
-          as T;
+    if (t == List<_i16.Currency>) {
+      return (data as List).map((e) => deserialize<_i16.Currency>(e)).toList() as T;
     }
-    if (t == List<_i19.WithdrawalRule>) {
-      return (data as List)
-              .map((e) => deserialize<_i19.WithdrawalRule>(e))
-              .toList()
-          as T;
+    if (t == List<_i17.Investment>) {
+      return (data as List).map((e) => deserialize<_i17.Investment>(e)).toList() as T;
+    }
+    if (t == List<_i18.Stock>) {
+      return (data as List).map((e) => deserialize<_i18.Stock>(e)).toList() as T;
+    }
+    if (t == List<_i19.Transfer>) {
+      return (data as List).map((e) => deserialize<_i19.Transfer>(e)).toList() as T;
+    }
+    if (t == List<_i20.WithdrawalRule>) {
+      return (data as List).map((e) => deserialize<_i20.WithdrawalRule>(e)).toList() as T;
     }
     try {
       return _i3.Protocol().deserialize<T>(data, t);
@@ -803,10 +879,11 @@ class Protocol extends _i1.SerializationManagerServer {
       _i8.Currency => 'Currency',
       _i9.Investment => 'Investment',
       _i10.Stock => 'Stock',
-      _i11.StockType => 'StockType',
-      _i12.Transfer => 'Transfer',
-      _i13.WithdrawalFee => 'WithdrawalFee',
-      _i14.WithdrawalRule => 'WithdrawalRule',
+      _i11.StockLike => 'StockLike',
+      _i12.StockType => 'StockType',
+      _i13.Transfer => 'Transfer',
+      _i14.WithdrawalFee => 'WithdrawalFee',
+      _i15.WithdrawalRule => 'WithdrawalRule',
       _ => null,
     };
   }
@@ -833,13 +910,15 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'Investment';
       case _i10.Stock():
         return 'Stock';
-      case _i11.StockType():
+      case _i11.StockLike():
+        return 'StockLike';
+      case _i12.StockType():
         return 'StockType';
-      case _i12.Transfer():
+      case _i13.Transfer():
         return 'Transfer';
-      case _i13.WithdrawalFee():
+      case _i14.WithdrawalFee():
         return 'WithdrawalFee';
-      case _i14.WithdrawalRule():
+      case _i15.WithdrawalRule():
         return 'WithdrawalRule';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -881,17 +960,20 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'Stock') {
       return deserialize<_i10.Stock>(data['data']);
     }
+    if (dataClassName == 'StockLike') {
+      return deserialize<_i11.StockLike>(data['data']);
+    }
     if (dataClassName == 'StockType') {
-      return deserialize<_i11.StockType>(data['data']);
+      return deserialize<_i12.StockType>(data['data']);
     }
     if (dataClassName == 'Transfer') {
-      return deserialize<_i12.Transfer>(data['data']);
+      return deserialize<_i13.Transfer>(data['data']);
     }
     if (dataClassName == 'WithdrawalFee') {
-      return deserialize<_i13.WithdrawalFee>(data['data']);
+      return deserialize<_i14.WithdrawalFee>(data['data']);
     }
     if (dataClassName == 'WithdrawalRule') {
-      return deserialize<_i14.WithdrawalRule>(data['data']);
+      return deserialize<_i15.WithdrawalRule>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -937,19 +1019,20 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i9.Investment.t;
       case _i10.Stock:
         return _i10.Stock.t;
-      case _i12.Transfer:
-        return _i12.Transfer.t;
-      case _i13.WithdrawalFee:
-        return _i13.WithdrawalFee.t;
-      case _i14.WithdrawalRule:
-        return _i14.WithdrawalRule.t;
+      case _i11.StockLike:
+        return _i11.StockLike.t;
+      case _i13.Transfer:
+        return _i13.Transfer.t;
+      case _i14.WithdrawalFee:
+        return _i14.WithdrawalFee.t;
+      case _i15.WithdrawalRule:
+        return _i15.WithdrawalRule.t;
     }
     return null;
   }
 
   @override
-  List<_i2.TableDefinition> getTargetTableDefinitions() =>
-      targetTableDefinitions;
+  List<_i2.TableDefinition> getTargetTableDefinitions() => targetTableDefinitions;
 
   @override
   String getModuleName() => 'invman';

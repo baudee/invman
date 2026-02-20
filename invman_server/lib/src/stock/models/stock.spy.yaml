@@ -11,6 +11,7 @@ fields:
   price: double, defaultModel=0.0,
   updatedAt: DateTime, defaultModel=now,
   currency: Currency?, relation
+  likes: List<StockLike>?, relation(name=stock_likes)
 
 indexes:
   stock_symbol_idx:

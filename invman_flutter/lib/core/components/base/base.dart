@@ -1,4 +1,5 @@
 export 'base_state_component.dart';
+export 'base_state_appbar.dart';
 export 'base_screen.dart';
 export 'base_component.dart';
 export 'error_component.dart';

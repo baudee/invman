@@ -1,4 +1,5 @@
 import 'package:invman_server/src/generated/protocol.dart';
+import 'package:serverpod/serverpod.dart';
 
 class IncludeHelpers {
   // Withdrawal
@@ -23,9 +24,14 @@ class IncludeHelpers {
   }
 
   // Stock
-  static StockInclude stockInclude() {
+  static StockInclude stockInclude({UuidValue? userId}) {
     return Stock.include(
       currency: Currency.include(),
+      likes: userId != null
+          ? StockLike.includeList(
+              where: (t) => t.userId.equals(userId),
+            )
+          : null,
     );
   }
 
