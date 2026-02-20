@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:invman_server/src/core/services/mail/mail.dart';
-import 'package:invman_server/src/core/services/seed/seed_service.dart';
 import 'package:invman_server/src/di.dart';
 import 'package:invman_server/src/env.dart';
 import 'package:serverpod/serverpod.dart';
@@ -92,16 +91,6 @@ void run(List<String> args) async {
 
   // Start the server.
   await pod.start();
-
-  // SEED DATA
-  final session = await pod.createSession();
-  try {
-    await getIt<SeedService>().seedIfNeeded(session);
-  } catch (e) {
-    session.log('Error seeding data: $e', level: LogLevel.error);
-  } finally {
-    await session.close();
-  }
 }
 
 void _sendRegistrationCode(

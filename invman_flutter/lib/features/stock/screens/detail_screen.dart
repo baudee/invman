@@ -16,7 +16,7 @@ class StockDetailScreen extends HookWidget {
     final controller = useMemoized(() => getIt<StockDetailController>(param1: uuid));
     return BaseScreen(
       appBar: AppBar(
-        title: controller.value.map(data: (stock) => Text(stock.shortName), error: (_, _) => null, loading: () => null),
+        title: controller.value.map(data: (stock) => Text(stock.name), error: (_, _) => null, loading: () => null),
       ),
       body: BaseStateComponent<Stock>(
         state: controller,

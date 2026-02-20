@@ -8,35 +8,35 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-// ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import '../../currency/models/currency_rate.dart' as _i2;
-import 'package:invman_server/src/generated/protocol.dart' as _i3;
 
-abstract class Currency implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class Currency
+    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Currency._({
     this.id,
     required this.code,
-    this.rates,
-  });
+    double? dollarValue,
+    DateTime? updatedAt,
+  }) : dollarValue = dollarValue ?? 0.0,
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Currency({
     int? id,
     required String code,
-    List<_i2.CurrencyRate>? rates,
+    double? dollarValue,
+    DateTime? updatedAt,
   }) = _CurrencyImpl;
 
   factory Currency.fromJson(Map<String, dynamic> jsonSerialization) {
     return Currency(
       id: jsonSerialization['id'] as int?,
       code: jsonSerialization['code'] as String,
-      rates: jsonSerialization['rates'] == null
+      dollarValue: (jsonSerialization['dollarValue'] as num?)?.toDouble(),
+      updatedAt: jsonSerialization['updatedAt'] == null
           ? null
-          : _i3.Protocol().deserialize<List<_i2.CurrencyRate>>(
-              jsonSerialization['rates'],
-            ),
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 
@@ -49,7 +49,9 @@ abstract class Currency implements _i1.TableRow<int?>, _i1.ProtocolSerialization
 
   String code;
 
-  List<_i2.CurrencyRate>? rates;
+  double dollarValue;
+
+  DateTime updatedAt;
 
   @override
   _i1.Table<int?> get table => t;
@@ -60,7 +62,8 @@ abstract class Currency implements _i1.TableRow<int?>, _i1.ProtocolSerialization
   Currency copyWith({
     int? id,
     String? code,
-    List<_i2.CurrencyRate>? rates,
+    double? dollarValue,
+    DateTime? updatedAt,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -68,7 +71,8 @@ abstract class Currency implements _i1.TableRow<int?>, _i1.ProtocolSerialization
       '__className__': 'Currency',
       if (id != null) 'id': id,
       'code': code,
-      if (rates != null) 'rates': rates?.toJson(valueToJson: (v) => v.toJson()),
+      'dollarValue': dollarValue,
+      'updatedAt': updatedAt.toJson(),
     };
   }
 
@@ -78,12 +82,13 @@ abstract class Currency implements _i1.TableRow<int?>, _i1.ProtocolSerialization
       '__className__': 'Currency',
       if (id != null) 'id': id,
       'code': code,
-      if (rates != null) 'rates': rates?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
+      'dollarValue': dollarValue,
+      'updatedAt': updatedAt.toJson(),
     };
   }
 
-  static CurrencyInclude include({_i2.CurrencyRateIncludeList? rates}) {
-    return CurrencyInclude._(rates: rates);
+  static CurrencyInclude include() {
+    return CurrencyInclude._();
   }
 
   static CurrencyIncludeList includeList({
@@ -118,11 +123,13 @@ class _CurrencyImpl extends Currency {
   _CurrencyImpl({
     int? id,
     required String code,
-    List<_i2.CurrencyRate>? rates,
+    double? dollarValue,
+    DateTime? updatedAt,
   }) : super._(
          id: id,
          code: code,
-         rates: rates,
+         dollarValue: dollarValue,
+         updatedAt: updatedAt,
        );
 
   /// Returns a shallow copy of this [Currency]
@@ -132,12 +139,14 @@ class _CurrencyImpl extends Currency {
   Currency copyWith({
     Object? id = _Undefined,
     String? code,
-    Object? rates = _Undefined,
+    double? dollarValue,
+    DateTime? updatedAt,
   }) {
     return Currency(
       id: id is int? ? id : this.id,
       code: code ?? this.code,
-      rates: rates is List<_i2.CurrencyRate>? ? rates : this.rates?.map((e0) => e0.copyWith()).toList(),
+      dollarValue: dollarValue ?? this.dollarValue,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }
@@ -149,6 +158,17 @@ class CurrencyUpdateTable extends _i1.UpdateTable<CurrencyTable> {
     table.code,
     value,
   );
+
+  _i1.ColumnValue<double, double> dollarValue(double value) => _i1.ColumnValue(
+    table.dollarValue,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
 }
 
 class CurrencyTable extends _i1.Table<int?> {
@@ -158,70 +178,38 @@ class CurrencyTable extends _i1.Table<int?> {
       'code',
       this,
     );
+    dollarValue = _i1.ColumnDouble(
+      'dollarValue',
+      this,
+    );
+    updatedAt = _i1.ColumnDateTime(
+      'updatedAt',
+      this,
+    );
   }
 
   late final CurrencyUpdateTable updateTable;
 
   late final _i1.ColumnString code;
 
-  _i2.CurrencyRateTable? ___rates;
+  late final _i1.ColumnDouble dollarValue;
 
-  _i1.ManyRelation<_i2.CurrencyRateTable>? _rates;
-
-  _i2.CurrencyRateTable get __rates {
-    if (___rates != null) return ___rates!;
-    ___rates = _i1.createRelationTable(
-      relationFieldName: '__rates',
-      field: Currency.t.id,
-      foreignField: _i2.CurrencyRate.t.currencyId,
-      tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i2.CurrencyRateTable(tableRelation: foreignTableRelation),
-    );
-    return ___rates!;
-  }
-
-  _i1.ManyRelation<_i2.CurrencyRateTable> get rates {
-    if (_rates != null) return _rates!;
-    var relationTable = _i1.createRelationTable(
-      relationFieldName: 'rates',
-      field: Currency.t.id,
-      foreignField: _i2.CurrencyRate.t.currencyId,
-      tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i2.CurrencyRateTable(tableRelation: foreignTableRelation),
-    );
-    _rates = _i1.ManyRelation<_i2.CurrencyRateTable>(
-      tableWithRelations: relationTable,
-      table: _i2.CurrencyRateTable(
-        tableRelation: relationTable.tableRelation!.lastRelation,
-      ),
-    );
-    return _rates!;
-  }
+  late final _i1.ColumnDateTime updatedAt;
 
   @override
   List<_i1.Column> get columns => [
     id,
     code,
+    dollarValue,
+    updatedAt,
   ];
-
-  @override
-  _i1.Table? getRelationTable(String relationField) {
-    if (relationField == 'rates') {
-      return __rates;
-    }
-    return null;
-  }
 }
 
 class CurrencyInclude extends _i1.IncludeObject {
-  CurrencyInclude._({_i2.CurrencyRateIncludeList? rates}) {
-    _rates = rates;
-  }
-
-  _i2.CurrencyRateIncludeList? _rates;
+  CurrencyInclude._();
 
   @override
-  Map<String, _i1.Include?> get includes => {'rates': _rates};
+  Map<String, _i1.Include?> get includes => {};
 
   @override
   _i1.Table<int?> get table => Currency.t;
@@ -249,14 +237,6 @@ class CurrencyIncludeList extends _i1.IncludeList {
 
 class CurrencyRepository {
   const CurrencyRepository._();
-
-  final attach = const CurrencyAttachRepository._();
-
-  final attachRow = const CurrencyAttachRowRepository._();
-
-  final detach = const CurrencyDetachRepository._();
-
-  final detachRow = const CurrencyDetachRowRepository._();
 
   /// Returns a list of [Currency]s matching the given query parameters.
   ///
@@ -289,7 +269,6 @@ class CurrencyRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<CurrencyTable>? orderByList,
     _i1.Transaction? transaction,
-    CurrencyInclude? include,
   }) async {
     return session.db.find<Currency>(
       where: where?.call(Currency.t),
@@ -299,7 +278,6 @@ class CurrencyRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
-      include: include,
     );
   }
 
@@ -328,7 +306,6 @@ class CurrencyRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<CurrencyTable>? orderByList,
     _i1.Transaction? transaction,
-    CurrencyInclude? include,
   }) async {
     return session.db.findFirstRow<Currency>(
       where: where?.call(Currency.t),
@@ -337,7 +314,6 @@ class CurrencyRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
-      include: include,
     );
   }
 
@@ -346,12 +322,10 @@ class CurrencyRepository {
     _i1.Session session,
     int id, {
     _i1.Transaction? transaction,
-    CurrencyInclude? include,
   }) async {
     return session.db.findById<Currency>(
       id,
       transaction: transaction,
-      include: include,
     );
   }
 
@@ -509,112 +483,6 @@ class CurrencyRepository {
     return session.db.count<Currency>(
       where: where?.call(Currency.t),
       limit: limit,
-      transaction: transaction,
-    );
-  }
-}
-
-class CurrencyAttachRepository {
-  const CurrencyAttachRepository._();
-
-  /// Creates a relation between this [Currency] and the given [CurrencyRate]s
-  /// by setting each [CurrencyRate]'s foreign key `currencyId` to refer to this [Currency].
-  Future<void> rates(
-    _i1.Session session,
-    Currency currency,
-    List<_i2.CurrencyRate> currencyRate, {
-    _i1.Transaction? transaction,
-  }) async {
-    if (currencyRate.any((e) => e.id == null)) {
-      throw ArgumentError.notNull('currencyRate.id');
-    }
-    if (currency.id == null) {
-      throw ArgumentError.notNull('currency.id');
-    }
-
-    var $currencyRate = currencyRate.map((e) => e.copyWith(currencyId: currency.id)).toList();
-    await session.db.update<_i2.CurrencyRate>(
-      $currencyRate,
-      columns: [_i2.CurrencyRate.t.currencyId],
-      transaction: transaction,
-    );
-  }
-}
-
-class CurrencyAttachRowRepository {
-  const CurrencyAttachRowRepository._();
-
-  /// Creates a relation between this [Currency] and the given [CurrencyRate]
-  /// by setting the [CurrencyRate]'s foreign key `currencyId` to refer to this [Currency].
-  Future<void> rates(
-    _i1.Session session,
-    Currency currency,
-    _i2.CurrencyRate currencyRate, {
-    _i1.Transaction? transaction,
-  }) async {
-    if (currencyRate.id == null) {
-      throw ArgumentError.notNull('currencyRate.id');
-    }
-    if (currency.id == null) {
-      throw ArgumentError.notNull('currency.id');
-    }
-
-    var $currencyRate = currencyRate.copyWith(currencyId: currency.id);
-    await session.db.updateRow<_i2.CurrencyRate>(
-      $currencyRate,
-      columns: [_i2.CurrencyRate.t.currencyId],
-      transaction: transaction,
-    );
-  }
-}
-
-class CurrencyDetachRepository {
-  const CurrencyDetachRepository._();
-
-  /// Detaches the relation between this [Currency] and the given [CurrencyRate]
-  /// by setting the [CurrencyRate]'s foreign key `currencyId` to `null`.
-  ///
-  /// This removes the association between the two models without deleting
-  /// the related record.
-  Future<void> rates(
-    _i1.Session session,
-    List<_i2.CurrencyRate> currencyRate, {
-    _i1.Transaction? transaction,
-  }) async {
-    if (currencyRate.any((e) => e.id == null)) {
-      throw ArgumentError.notNull('currencyRate.id');
-    }
-
-    var $currencyRate = currencyRate.map((e) => e.copyWith(currencyId: null)).toList();
-    await session.db.update<_i2.CurrencyRate>(
-      $currencyRate,
-      columns: [_i2.CurrencyRate.t.currencyId],
-      transaction: transaction,
-    );
-  }
-}
-
-class CurrencyDetachRowRepository {
-  const CurrencyDetachRowRepository._();
-
-  /// Detaches the relation between this [Currency] and the given [CurrencyRate]
-  /// by setting the [CurrencyRate]'s foreign key `currencyId` to `null`.
-  ///
-  /// This removes the association between the two models without deleting
-  /// the related record.
-  Future<void> rates(
-    _i1.Session session,
-    _i2.CurrencyRate currencyRate, {
-    _i1.Transaction? transaction,
-  }) async {
-    if (currencyRate.id == null) {
-      throw ArgumentError.notNull('currencyRate.id');
-    }
-
-    var $currencyRate = currencyRate.copyWith(currencyId: null);
-    await session.db.updateRow<_i2.CurrencyRate>(
-      $currencyRate,
-      columns: [_i2.CurrencyRate.t.currencyId],
       transaction: transaction,
     );
   }

@@ -29,7 +29,7 @@ class InvestmentService {
   }) async {
     final stock = await stockService.retrieve(session, investment.stockId);
 
-    double amountBeforeFees = investment.quantity * (stock.currentPrice);
+    double amountBeforeFees = investment.quantity * (stock.price);
     double totalFees = 0;
 
     final withdrawalRule = investment.withdrawalRule;

@@ -5,14 +5,16 @@ table: stock
 fields:
   id: UuidValue, defaultModel=random,
   symbol: String,
-  shortName: String,
-  longName: String,
+  name: String,
   quoteType: StockType,
   logoUrl: String?,
+  price: double, defaultModel=0.0,
+  updatedAt: DateTime, defaultModel=now,
   currency: Currency?, relation
-  prices: List<StockPrice>?, relation(optional, name=stock_stock_prices)
 
 indexes:
   stock_symbol_idx:
     fields: symbol
     unique: true
+  stock_name_idx:
+    fields: name

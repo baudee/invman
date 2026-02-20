@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:invman_server/src/core/helpers/include_helpers.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
 
@@ -14,6 +15,7 @@ class StockService {
     final stock = await Stock.db.findById(
       session,
       uuid,
+      include: IncludeHelpers.stockInclude(),
       transaction: transaction,
     );
     if (stock == null) {
@@ -30,7 +32,7 @@ class StockService {
   }) async {
     return Stock.db.find(
       session,
-      where: (e) => e.shortName.ilike("%${query.trim()}%") | e.longName.ilike("%${query.trim()}%"),
+      where: (e) => e.name.ilike("%${query.trim()}%") | e.symbol.ilike("%${query.trim()}%"),
       limit: limit,
       offset: (page * limit) - limit,
     );

@@ -12,13 +12,15 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart' as _i2;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+    as _i2;
 import '../../stock/models/stock.dart' as _i3;
 import '../../withdrawal/models/withdrawal_rule.dart' as _i4;
 import '../../transfer/models/transfer.dart' as _i5;
 import 'package:invman_server/src/generated/protocol.dart' as _i6;
 
-abstract class Investment implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class Investment
+    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Investment._({
     this.id,
     required this.userId,
@@ -151,7 +153,8 @@ abstract class Investment implements _i1.TableRow<int?>, _i1.ProtocolSerializati
       if (stock != null) 'stock': stock?.toJson(),
       'withdrawalRuleId': withdrawalRuleId,
       if (withdrawalRule != null) 'withdrawalRule': withdrawalRule?.toJson(),
-      if (transfers != null) 'transfers': transfers?.toJson(valueToJson: (v) => v.toJson()),
+      if (transfers != null)
+        'transfers': transfers?.toJson(valueToJson: (v) => v.toJson()),
       'investAmount': investAmount,
       'quantity': quantity,
       'updatedAt': updatedAt.toJson(),
@@ -170,7 +173,8 @@ abstract class Investment implements _i1.TableRow<int?>, _i1.ProtocolSerializati
       'stockId': stockId.toJson(),
       if (stock != null) 'stock': stock?.toJsonForProtocol(),
       'withdrawalRuleId': withdrawalRuleId,
-      if (withdrawalRule != null) 'withdrawalRule': withdrawalRule?.toJsonForProtocol(),
+      if (withdrawalRule != null)
+        'withdrawalRule': withdrawalRule?.toJsonForProtocol(),
       if (transfers != null)
         'transfers': transfers?.toJson(
           valueToJson: (v) => v.toJsonForProtocol(),
@@ -282,12 +286,18 @@ class _InvestmentImpl extends Investment {
       stockId: stockId ?? this.stockId,
       stock: stock is _i3.Stock? ? stock : this.stock?.copyWith(),
       withdrawalRuleId: withdrawalRuleId ?? this.withdrawalRuleId,
-      withdrawalRule: withdrawalRule is _i4.WithdrawalRule? ? withdrawalRule : this.withdrawalRule?.copyWith(),
-      transfers: transfers is List<_i5.Transfer>? ? transfers : this.transfers?.map((e0) => e0.copyWith()).toList(),
+      withdrawalRule: withdrawalRule is _i4.WithdrawalRule?
+          ? withdrawalRule
+          : this.withdrawalRule?.copyWith(),
+      transfers: transfers is List<_i5.Transfer>?
+          ? transfers
+          : this.transfers?.map((e0) => e0.copyWith()).toList(),
       investAmount: investAmount ?? this.investAmount,
       quantity: quantity ?? this.quantity,
       updatedAt: updatedAt ?? this.updatedAt,
-      withdrawAmount: withdrawAmount is double? ? withdrawAmount : this.withdrawAmount,
+      withdrawAmount: withdrawAmount is double?
+          ? withdrawAmount
+          : this.withdrawAmount,
     );
   }
 }
@@ -295,20 +305,22 @@ class _InvestmentImpl extends Investment {
 class InvestmentUpdateTable extends _i1.UpdateTable<InvestmentTable> {
   InvestmentUpdateTable(super.table);
 
-  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) => _i1.ColumnValue(
-    table.userId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
 
   _i1.ColumnValue<String, String> name(String value) => _i1.ColumnValue(
     table.name,
     value,
   );
 
-  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> stockId(_i1.UuidValue value) => _i1.ColumnValue(
-    table.stockId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> stockId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.stockId,
+        value,
+      );
 
   _i1.ColumnValue<int, int> withdrawalRuleId(int value) => _i1.ColumnValue(
     table.withdrawalRuleId,
@@ -325,10 +337,11 @@ class InvestmentUpdateTable extends _i1.UpdateTable<InvestmentTable> {
     value,
   );
 
-  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) => _i1.ColumnValue(
-    table.updatedAt,
-    value,
-  );
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
 }
 
 class InvestmentTable extends _i1.Table<int?> {
@@ -400,7 +413,8 @@ class InvestmentTable extends _i1.Table<int?> {
       field: Investment.t.userId,
       foreignField: _i2.AuthUser.t.id,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i2.AuthUserTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i2.AuthUserTable(tableRelation: foreignTableRelation),
     );
     return _user!;
   }
@@ -412,7 +426,8 @@ class InvestmentTable extends _i1.Table<int?> {
       field: Investment.t.stockId,
       foreignField: _i3.Stock.t.id,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i3.StockTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i3.StockTable(tableRelation: foreignTableRelation),
     );
     return _stock!;
   }
@@ -424,7 +439,8 @@ class InvestmentTable extends _i1.Table<int?> {
       field: Investment.t.withdrawalRuleId,
       foreignField: _i4.WithdrawalRule.t.id,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i4.WithdrawalRuleTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i4.WithdrawalRuleTable(tableRelation: foreignTableRelation),
     );
     return _withdrawalRule!;
   }
@@ -436,7 +452,8 @@ class InvestmentTable extends _i1.Table<int?> {
       field: Investment.t.id,
       foreignField: _i5.Transfer.t.investmentId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i5.TransferTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i5.TransferTable(tableRelation: foreignTableRelation),
     );
     return ___transfers!;
   }
@@ -448,7 +465,8 @@ class InvestmentTable extends _i1.Table<int?> {
       field: Investment.t.id,
       foreignField: _i5.Transfer.t.investmentId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i5.TransferTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i5.TransferTable(tableRelation: foreignTableRelation),
     );
     _transfers = _i1.ManyRelation<_i5.TransferTable>(
       tableWithRelations: relationTable,
@@ -827,7 +845,9 @@ class InvestmentAttachRepository {
       throw ArgumentError.notNull('investment.id');
     }
 
-    var $transfer = transfer.map((e) => e.copyWith(investmentId: investment.id)).toList();
+    var $transfer = transfer
+        .map((e) => e.copyWith(investmentId: investment.id))
+        .toList();
     await session.db.update<_i5.Transfer>(
       $transfer,
       columns: [_i5.Transfer.t.investmentId],
@@ -949,7 +969,9 @@ class InvestmentDetachRepository {
       throw ArgumentError.notNull('transfer.id');
     }
 
-    var $transfer = transfer.map((e) => e.copyWith(investmentId: null)).toList();
+    var $transfer = transfer
+        .map((e) => e.copyWith(investmentId: null))
+        .toList();
     await session.db.update<_i5.Transfer>(
       $transfer,
       columns: [_i5.Transfer.t.investmentId],

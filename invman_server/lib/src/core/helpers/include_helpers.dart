@@ -22,33 +22,17 @@ class IncludeHelpers {
     );
   }
 
-  // Currency
-  static CurrencyInclude currencyInclude() {
-    return Currency.include(
-      rates: CurrencyRate.includeList(
-        orderBy: (e) => e.timestamp,
-        orderDescending: true,
-        limit: 1,
-      ),
-    );
-  }
-
   // Stock
   static StockInclude stockInclude() {
     return Stock.include(
-      currency: currencyInclude(),
-      prices: StockPrice.includeList(
-        orderBy: (e) => e.timestamp,
-        orderDescending: true,
-        limit: 1,
-      ),
+      currency: Currency.include(),
     );
   }
 
   // Account
   static AccountInclude accountInclude() {
     return Account.include(
-      currency: currencyInclude(),
+      currency: Currency.include(),
     );
   }
 }

@@ -13,18 +13,30 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
 enum StockType implements _i1.SerializableModel {
-  ticker,
+  equity,
   etf,
-  crypto;
+  crypto,
+  fund,
+  moneyMarket,
+  commodity,
+  indice;
 
   static StockType fromJson(String name) {
     switch (name) {
-      case 'ticker':
-        return StockType.ticker;
+      case 'equity':
+        return StockType.equity;
       case 'etf':
         return StockType.etf;
       case 'crypto':
         return StockType.crypto;
+      case 'fund':
+        return StockType.fund;
+      case 'moneyMarket':
+        return StockType.moneyMarket;
+      case 'commodity':
+        return StockType.commodity;
+      case 'indice':
+        return StockType.indice;
       default:
         throw ArgumentError('Value "$name" cannot be converted to "StockType"');
     }

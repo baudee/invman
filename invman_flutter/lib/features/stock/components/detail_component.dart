@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
-import 'package:invman_flutter/features/stock/stock.dart';
 
 class StockDetailComponent extends StatelessWidget {
   final Stock stock;
@@ -45,7 +44,7 @@ class StockDetailComponent extends StatelessWidget {
                 ),
                 const SizedBox(height: UIConstants.spacingLg),
                 Text(
-                  stock.currentPrice.toStringPrice(stock.currency?.code),
+                  stock.price.toStringPrice(stock.currency?.code),
                   style: theme.textTheme.displayMedium?.copyWith(
                     color: theme.colorScheme.onPrimary,
                     fontWeight: FontWeight.w300,

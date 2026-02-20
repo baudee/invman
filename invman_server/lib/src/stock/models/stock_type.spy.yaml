@@ -1,6 +1,10 @@
 enum: StockType
 serialized: byName
 values:
-  - ticker
+  - equity
   - etf
   - crypto
+  - fund
+  - moneyMarket
+  - commodity
+  - indice

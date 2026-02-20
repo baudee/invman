@@ -1,5 +1,4 @@
 import 'package:injectable/injectable.dart';
-import 'package:invman_server/src/core/helpers/helpers.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
 
@@ -19,7 +18,6 @@ class CurrencyService {
     final currency = await Currency.db.findById(
       session,
       id,
-      include: IncludeHelpers.currencyInclude(),
       transaction: transaction,
     );
 
@@ -35,13 +33,13 @@ class CurrencyService {
     required Currency? from,
     required Currency? to,
   }) async {
-    final fromRate = from?.rates?.firstOrNull;
-    final toRate = to?.rates?.firstOrNull;
+    final fromRate = from?.dollarValue;
+    final toRate = to?.dollarValue;
 
-    if (fromRate == null || toRate == null) {
+    if (fromRate == null || toRate == null || fromRate == 0 || toRate == 0) {
       throw ServerException(errorCode: ErrorCode.notFound);
     }
 
-    return fromRate.dollarValue / toRate.dollarValue;
+    return fromRate / toRate;
   }
 }

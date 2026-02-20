@@ -32,6 +32,14 @@ server/test:
 	cd $(PROJECT_NAME)_server && dart analyze
 	cd $(PROJECT_NAME)_server && dart test
 
+server/populate:
+	@if [ -z "$(env)" ]; then \
+		echo "Usage: make server/populate env=<environment>"; \
+		echo "Valid environments: development, staging, production"; \
+		exit 1; \
+	fi
+	cd $(PROJECT_NAME)_server && dart scripts/populate/populate.dart $(env)
+
 # Flutter app
 app/build:
 	cd $(PROJECT_NAME)_flutter && flutter pub get

@@ -11,31 +11,31 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import '../../currency/models/currency_rate.dart' as _i2;
-import 'package:invman_client/src/protocol/protocol.dart' as _i3;
 
 abstract class Currency implements _i1.SerializableModel {
   Currency._({
     this.id,
     required this.code,
-    this.rates,
-  });
+    double? dollarValue,
+    DateTime? updatedAt,
+  }) : dollarValue = dollarValue ?? 0.0,
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Currency({
     int? id,
     required String code,
-    List<_i2.CurrencyRate>? rates,
+    double? dollarValue,
+    DateTime? updatedAt,
   }) = _CurrencyImpl;
 
   factory Currency.fromJson(Map<String, dynamic> jsonSerialization) {
     return Currency(
       id: jsonSerialization['id'] as int?,
       code: jsonSerialization['code'] as String,
-      rates: jsonSerialization['rates'] == null
+      dollarValue: (jsonSerialization['dollarValue'] as num?)?.toDouble(),
+      updatedAt: jsonSerialization['updatedAt'] == null
           ? null
-          : _i3.Protocol().deserialize<List<_i2.CurrencyRate>>(
-              jsonSerialization['rates'],
-            ),
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 
@@ -46,7 +46,9 @@ abstract class Currency implements _i1.SerializableModel {
 
   String code;
 
-  List<_i2.CurrencyRate>? rates;
+  double dollarValue;
+
+  DateTime updatedAt;
 
   /// Returns a shallow copy of this [Currency]
   /// with some or all fields replaced by the given arguments.
@@ -54,7 +56,8 @@ abstract class Currency implements _i1.SerializableModel {
   Currency copyWith({
     int? id,
     String? code,
-    List<_i2.CurrencyRate>? rates,
+    double? dollarValue,
+    DateTime? updatedAt,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -62,7 +65,8 @@ abstract class Currency implements _i1.SerializableModel {
       '__className__': 'Currency',
       if (id != null) 'id': id,
       'code': code,
-      if (rates != null) 'rates': rates?.toJson(valueToJson: (v) => v.toJson()),
+      'dollarValue': dollarValue,
+      'updatedAt': updatedAt.toJson(),
     };
   }
 
@@ -78,11 +82,13 @@ class _CurrencyImpl extends Currency {
   _CurrencyImpl({
     int? id,
     required String code,
-    List<_i2.CurrencyRate>? rates,
+    double? dollarValue,
+    DateTime? updatedAt,
   }) : super._(
          id: id,
          code: code,
-         rates: rates,
+         dollarValue: dollarValue,
+         updatedAt: updatedAt,
        );
 
   /// Returns a shallow copy of this [Currency]
@@ -92,14 +98,14 @@ class _CurrencyImpl extends Currency {
   Currency copyWith({
     Object? id = _Undefined,
     String? code,
-    Object? rates = _Undefined,
+    double? dollarValue,
+    DateTime? updatedAt,
   }) {
     return Currency(
       id: id is int? ? id : this.id,
       code: code ?? this.code,
-      rates: rates is List<_i2.CurrencyRate>?
-          ? rates
-          : this.rates?.map((e0) => e0.copyWith()).toList(),
+      dollarValue: dollarValue ?? this.dollarValue,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }

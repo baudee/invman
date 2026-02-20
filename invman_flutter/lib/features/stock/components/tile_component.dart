@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/core/core.dart';
-import 'package:invman_flutter/features/stock/utils/extensions.dart';
 
 class StockTileComponent extends StatelessWidget {
   final Stock stock;
@@ -24,9 +23,9 @@ class StockTileComponent extends StatelessWidget {
           style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.bold, fontSize: 14),
         ),
       ),
-      title: Text(stock.shortName),
+      title: Text(stock.name),
       subtitle: Text(
-        '${stock.symbol} - ${stock.quoteType.name} - ${stock.currentPrice.toStringPrice(stock.currency?.code)}',
+        '${stock.symbol} - ${stock.quoteType.name} - ${stock.price.toStringPrice(stock.currency?.code)}',
       ),
       trailing: trailing,
       onTap: onTap != null ? () => onTap!(stock) : null,

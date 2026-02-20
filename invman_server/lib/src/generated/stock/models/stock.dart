@@ -14,54 +14,56 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../../stock/models/stock_type.dart' as _i2;
 import '../../currency/models/currency.dart' as _i3;
-import '../../stock/models/stock_price.dart' as _i4;
-import 'package:invman_server/src/generated/protocol.dart' as _i5;
+import 'package:invman_server/src/generated/protocol.dart' as _i4;
 
-abstract class Stock implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
+abstract class Stock
+    implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
   Stock._({
     _i1.UuidValue? id,
     required this.symbol,
-    required this.shortName,
-    required this.longName,
+    required this.name,
     required this.quoteType,
     this.logoUrl,
+    double? price,
+    DateTime? updatedAt,
     required this.currencyId,
     this.currency,
-    this.prices,
-  }) : id = id ?? _i1.Uuid().v4obj();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       price = price ?? 0.0,
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Stock({
     _i1.UuidValue? id,
     required String symbol,
-    required String shortName,
-    required String longName,
+    required String name,
     required _i2.StockType quoteType,
     String? logoUrl,
+    double? price,
+    DateTime? updatedAt,
     required int currencyId,
     _i3.Currency? currency,
-    List<_i4.StockPrice>? prices,
   }) = _StockImpl;
 
   factory Stock.fromJson(Map<String, dynamic> jsonSerialization) {
     return Stock(
-      id: jsonSerialization['id'] == null ? null : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       symbol: jsonSerialization['symbol'] as String,
-      shortName: jsonSerialization['shortName'] as String,
-      longName: jsonSerialization['longName'] as String,
+      name: jsonSerialization['name'] as String,
       quoteType: _i2.StockType.fromJson(
         (jsonSerialization['quoteType'] as String),
       ),
       logoUrl: jsonSerialization['logoUrl'] as String?,
+      price: (jsonSerialization['price'] as num?)?.toDouble(),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
       currencyId: jsonSerialization['currencyId'] as int,
       currency: jsonSerialization['currency'] == null
           ? null
-          : _i5.Protocol().deserialize<_i3.Currency>(
+          : _i4.Protocol().deserialize<_i3.Currency>(
               jsonSerialization['currency'],
-            ),
-      prices: jsonSerialization['prices'] == null
-          ? null
-          : _i5.Protocol().deserialize<List<_i4.StockPrice>>(
-              jsonSerialization['prices'],
             ),
     );
   }
@@ -75,19 +77,19 @@ abstract class Stock implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSeriali
 
   String symbol;
 
-  String shortName;
-
-  String longName;
+  String name;
 
   _i2.StockType quoteType;
 
   String? logoUrl;
 
+  double price;
+
+  DateTime updatedAt;
+
   int currencyId;
 
   _i3.Currency? currency;
-
-  List<_i4.StockPrice>? prices;
 
   @override
   _i1.Table<_i1.UuidValue> get table => t;
@@ -98,13 +100,13 @@ abstract class Stock implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSeriali
   Stock copyWith({
     _i1.UuidValue? id,
     String? symbol,
-    String? shortName,
-    String? longName,
+    String? name,
     _i2.StockType? quoteType,
     String? logoUrl,
+    double? price,
+    DateTime? updatedAt,
     int? currencyId,
     _i3.Currency? currency,
-    List<_i4.StockPrice>? prices,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -112,13 +114,13 @@ abstract class Stock implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSeriali
       '__className__': 'Stock',
       'id': id.toJson(),
       'symbol': symbol,
-      'shortName': shortName,
-      'longName': longName,
+      'name': name,
       'quoteType': quoteType.toJson(),
       if (logoUrl != null) 'logoUrl': logoUrl,
+      'price': price,
+      'updatedAt': updatedAt.toJson(),
       'currencyId': currencyId,
       if (currency != null) 'currency': currency?.toJson(),
-      if (prices != null) 'prices': prices?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -128,24 +130,18 @@ abstract class Stock implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSeriali
       '__className__': 'Stock',
       'id': id.toJson(),
       'symbol': symbol,
-      'shortName': shortName,
-      'longName': longName,
+      'name': name,
       'quoteType': quoteType.toJson(),
       if (logoUrl != null) 'logoUrl': logoUrl,
+      'price': price,
+      'updatedAt': updatedAt.toJson(),
       'currencyId': currencyId,
       if (currency != null) 'currency': currency?.toJsonForProtocol(),
-      if (prices != null) 'prices': prices?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
     };
   }
 
-  static StockInclude include({
-    _i3.CurrencyInclude? currency,
-    _i4.StockPriceIncludeList? prices,
-  }) {
-    return StockInclude._(
-      currency: currency,
-      prices: prices,
-    );
+  static StockInclude include({_i3.CurrencyInclude? currency}) {
+    return StockInclude._(currency: currency);
   }
 
   static StockIncludeList includeList({
@@ -180,23 +176,23 @@ class _StockImpl extends Stock {
   _StockImpl({
     _i1.UuidValue? id,
     required String symbol,
-    required String shortName,
-    required String longName,
+    required String name,
     required _i2.StockType quoteType,
     String? logoUrl,
+    double? price,
+    DateTime? updatedAt,
     required int currencyId,
     _i3.Currency? currency,
-    List<_i4.StockPrice>? prices,
   }) : super._(
          id: id,
          symbol: symbol,
-         shortName: shortName,
-         longName: longName,
+         name: name,
          quoteType: quoteType,
          logoUrl: logoUrl,
+         price: price,
+         updatedAt: updatedAt,
          currencyId: currencyId,
          currency: currency,
-         prices: prices,
        );
 
   /// Returns a shallow copy of this [Stock]
@@ -206,24 +202,26 @@ class _StockImpl extends Stock {
   Stock copyWith({
     _i1.UuidValue? id,
     String? symbol,
-    String? shortName,
-    String? longName,
+    String? name,
     _i2.StockType? quoteType,
     Object? logoUrl = _Undefined,
+    double? price,
+    DateTime? updatedAt,
     int? currencyId,
     Object? currency = _Undefined,
-    Object? prices = _Undefined,
   }) {
     return Stock(
       id: id ?? this.id,
       symbol: symbol ?? this.symbol,
-      shortName: shortName ?? this.shortName,
-      longName: longName ?? this.longName,
+      name: name ?? this.name,
       quoteType: quoteType ?? this.quoteType,
       logoUrl: logoUrl is String? ? logoUrl : this.logoUrl,
+      price: price ?? this.price,
+      updatedAt: updatedAt ?? this.updatedAt,
       currencyId: currencyId ?? this.currencyId,
-      currency: currency is _i3.Currency? ? currency : this.currency?.copyWith(),
-      prices: prices is List<_i4.StockPrice>? ? prices : this.prices?.map((e0) => e0.copyWith()).toList(),
+      currency: currency is _i3.Currency?
+          ? currency
+          : this.currency?.copyWith(),
     );
   }
 }
@@ -236,13 +234,8 @@ class StockUpdateTable extends _i1.UpdateTable<StockTable> {
     value,
   );
 
-  _i1.ColumnValue<String, String> shortName(String value) => _i1.ColumnValue(
-    table.shortName,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> longName(String value) => _i1.ColumnValue(
-    table.longName,
+  _i1.ColumnValue<String, String> name(String value) => _i1.ColumnValue(
+    table.name,
     value,
   );
 
@@ -258,6 +251,17 @@ class StockUpdateTable extends _i1.UpdateTable<StockTable> {
     value,
   );
 
+  _i1.ColumnValue<double, double> price(double value) => _i1.ColumnValue(
+    table.price,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+
   _i1.ColumnValue<int, int> currencyId(int value) => _i1.ColumnValue(
     table.currencyId,
     value,
@@ -271,12 +275,8 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
       'symbol',
       this,
     );
-    shortName = _i1.ColumnString(
-      'shortName',
-      this,
-    );
-    longName = _i1.ColumnString(
-      'longName',
+    name = _i1.ColumnString(
+      'name',
       this,
     );
     quoteType = _i1.ColumnEnum(
@@ -286,6 +286,14 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
     );
     logoUrl = _i1.ColumnString(
       'logoUrl',
+      this,
+    );
+    price = _i1.ColumnDouble(
+      'price',
+      this,
+    );
+    updatedAt = _i1.ColumnDateTime(
+      'updatedAt',
       this,
     );
     currencyId = _i1.ColumnInt(
@@ -298,21 +306,19 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
 
   late final _i1.ColumnString symbol;
 
-  late final _i1.ColumnString shortName;
-
-  late final _i1.ColumnString longName;
+  late final _i1.ColumnString name;
 
   late final _i1.ColumnEnum<_i2.StockType> quoteType;
 
   late final _i1.ColumnString logoUrl;
 
+  late final _i1.ColumnDouble price;
+
+  late final _i1.ColumnDateTime updatedAt;
+
   late final _i1.ColumnInt currencyId;
 
   _i3.CurrencyTable? _currency;
-
-  _i4.StockPriceTable? ___prices;
-
-  _i1.ManyRelation<_i4.StockPriceTable>? _prices;
 
   _i3.CurrencyTable get currency {
     if (_currency != null) return _currency!;
@@ -321,49 +327,21 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
       field: Stock.t.currencyId,
       foreignField: _i3.Currency.t.id,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i3.CurrencyTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i3.CurrencyTable(tableRelation: foreignTableRelation),
     );
     return _currency!;
-  }
-
-  _i4.StockPriceTable get __prices {
-    if (___prices != null) return ___prices!;
-    ___prices = _i1.createRelationTable(
-      relationFieldName: '__prices',
-      field: Stock.t.id,
-      foreignField: _i4.StockPrice.t.stockId,
-      tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i4.StockPriceTable(tableRelation: foreignTableRelation),
-    );
-    return ___prices!;
-  }
-
-  _i1.ManyRelation<_i4.StockPriceTable> get prices {
-    if (_prices != null) return _prices!;
-    var relationTable = _i1.createRelationTable(
-      relationFieldName: 'prices',
-      field: Stock.t.id,
-      foreignField: _i4.StockPrice.t.stockId,
-      tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i4.StockPriceTable(tableRelation: foreignTableRelation),
-    );
-    _prices = _i1.ManyRelation<_i4.StockPriceTable>(
-      tableWithRelations: relationTable,
-      table: _i4.StockPriceTable(
-        tableRelation: relationTable.tableRelation!.lastRelation,
-      ),
-    );
-    return _prices!;
   }
 
   @override
   List<_i1.Column> get columns => [
     id,
     symbol,
-    shortName,
-    longName,
+    name,
     quoteType,
     logoUrl,
+    price,
+    updatedAt,
     currencyId,
   ];
 
@@ -372,31 +350,19 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
     if (relationField == 'currency') {
       return currency;
     }
-    if (relationField == 'prices') {
-      return __prices;
-    }
     return null;
   }
 }
 
 class StockInclude extends _i1.IncludeObject {
-  StockInclude._({
-    _i3.CurrencyInclude? currency,
-    _i4.StockPriceIncludeList? prices,
-  }) {
+  StockInclude._({_i3.CurrencyInclude? currency}) {
     _currency = currency;
-    _prices = prices;
   }
 
   _i3.CurrencyInclude? _currency;
 
-  _i4.StockPriceIncludeList? _prices;
-
   @override
-  Map<String, _i1.Include?> get includes => {
-    'currency': _currency,
-    'prices': _prices,
-  };
+  Map<String, _i1.Include?> get includes => {'currency': _currency};
 
   @override
   _i1.Table<_i1.UuidValue> get table => Stock.t;
@@ -425,13 +391,7 @@ class StockIncludeList extends _i1.IncludeList {
 class StockRepository {
   const StockRepository._();
 
-  final attach = const StockAttachRepository._();
-
   final attachRow = const StockAttachRowRepository._();
-
-  final detach = const StockDetachRepository._();
-
-  final detachRow = const StockDetachRowRepository._();
 
   /// Returns a list of [Stock]s matching the given query parameters.
   ///
@@ -689,33 +649,6 @@ class StockRepository {
   }
 }
 
-class StockAttachRepository {
-  const StockAttachRepository._();
-
-  /// Creates a relation between this [Stock] and the given [StockPrice]s
-  /// by setting each [StockPrice]'s foreign key `stockId` to refer to this [Stock].
-  Future<void> prices(
-    _i1.Session session,
-    Stock stock,
-    List<_i4.StockPrice> stockPrice, {
-    _i1.Transaction? transaction,
-  }) async {
-    if (stockPrice.any((e) => e.id == null)) {
-      throw ArgumentError.notNull('stockPrice.id');
-    }
-    if (stock.id == null) {
-      throw ArgumentError.notNull('stock.id');
-    }
-
-    var $stockPrice = stockPrice.map((e) => e.copyWith(stockId: stock.id)).toList();
-    await session.db.update<_i4.StockPrice>(
-      $stockPrice,
-      columns: [_i4.StockPrice.t.stockId],
-      transaction: transaction,
-    );
-  }
-}
-
 class StockAttachRowRepository {
   const StockAttachRowRepository._();
 
@@ -738,81 +671,6 @@ class StockAttachRowRepository {
     await session.db.updateRow<Stock>(
       $stock,
       columns: [Stock.t.currencyId],
-      transaction: transaction,
-    );
-  }
-
-  /// Creates a relation between this [Stock] and the given [StockPrice]
-  /// by setting the [StockPrice]'s foreign key `stockId` to refer to this [Stock].
-  Future<void> prices(
-    _i1.Session session,
-    Stock stock,
-    _i4.StockPrice stockPrice, {
-    _i1.Transaction? transaction,
-  }) async {
-    if (stockPrice.id == null) {
-      throw ArgumentError.notNull('stockPrice.id');
-    }
-    if (stock.id == null) {
-      throw ArgumentError.notNull('stock.id');
-    }
-
-    var $stockPrice = stockPrice.copyWith(stockId: stock.id);
-    await session.db.updateRow<_i4.StockPrice>(
-      $stockPrice,
-      columns: [_i4.StockPrice.t.stockId],
-      transaction: transaction,
-    );
-  }
-}
-
-class StockDetachRepository {
-  const StockDetachRepository._();
-
-  /// Detaches the relation between this [Stock] and the given [StockPrice]
-  /// by setting the [StockPrice]'s foreign key `stockId` to `null`.
-  ///
-  /// This removes the association between the two models without deleting
-  /// the related record.
-  Future<void> prices(
-    _i1.Session session,
-    List<_i4.StockPrice> stockPrice, {
-    _i1.Transaction? transaction,
-  }) async {
-    if (stockPrice.any((e) => e.id == null)) {
-      throw ArgumentError.notNull('stockPrice.id');
-    }
-
-    var $stockPrice = stockPrice.map((e) => e.copyWith(stockId: null)).toList();
-    await session.db.update<_i4.StockPrice>(
-      $stockPrice,
-      columns: [_i4.StockPrice.t.stockId],
-      transaction: transaction,
-    );
-  }
-}
-
-class StockDetachRowRepository {
-  const StockDetachRowRepository._();
-
-  /// Detaches the relation between this [Stock] and the given [StockPrice]
-  /// by setting the [StockPrice]'s foreign key `stockId` to `null`.
-  ///
-  /// This removes the association between the two models without deleting
-  /// the related record.
-  Future<void> prices(
-    _i1.Session session,
-    _i4.StockPrice stockPrice, {
-    _i1.Transaction? transaction,
-  }) async {
-    if (stockPrice.id == null) {
-      throw ArgumentError.notNull('stockPrice.id');
-    }
-
-    var $stockPrice = stockPrice.copyWith(stockId: null);
-    await session.db.updateRow<_i4.StockPrice>(
-      $stockPrice,
-      columns: [_i4.StockPrice.t.stockId],
       transaction: transaction,
     );
   }

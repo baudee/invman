@@ -110,18 +110,11 @@ class WithdrawalRuleService {
 
     if (incomingFees.isEmpty) return;
 
-    final feesToInsert = incomingFees.map((f) => f.copyWith(id: null, ruleId: null)).toList();
+    final feesToInsert = incomingFees.map((f) => f.copyWith(id: null, ruleId: rule.id)).toList();
 
-    final insertedFees = await WithdrawalFee.db.insert(
+    await WithdrawalFee.db.insert(
       session,
       feesToInsert,
-      transaction: transaction,
-    );
-
-    await WithdrawalRule.db.attach.fees(
-      session,
-      rule,
-      insertedFees,
       transaction: transaction,
     );
   }

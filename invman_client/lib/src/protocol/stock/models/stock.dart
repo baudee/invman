@@ -13,32 +13,33 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../../stock/models/stock_type.dart' as _i2;
 import '../../currency/models/currency.dart' as _i3;
-import '../../stock/models/stock_price.dart' as _i4;
-import 'package:invman_client/src/protocol/protocol.dart' as _i5;
+import 'package:invman_client/src/protocol/protocol.dart' as _i4;
 
 abstract class Stock implements _i1.SerializableModel {
   Stock._({
     _i1.UuidValue? id,
     required this.symbol,
-    required this.shortName,
-    required this.longName,
+    required this.name,
     required this.quoteType,
     this.logoUrl,
+    double? price,
+    DateTime? updatedAt,
     required this.currencyId,
     this.currency,
-    this.prices,
-  }) : id = id ?? _i1.Uuid().v4obj();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       price = price ?? 0.0,
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Stock({
     _i1.UuidValue? id,
     required String symbol,
-    required String shortName,
-    required String longName,
+    required String name,
     required _i2.StockType quoteType,
     String? logoUrl,
+    double? price,
+    DateTime? updatedAt,
     required int currencyId,
     _i3.Currency? currency,
-    List<_i4.StockPrice>? prices,
   }) = _StockImpl;
 
   factory Stock.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -47,22 +48,20 @@ abstract class Stock implements _i1.SerializableModel {
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       symbol: jsonSerialization['symbol'] as String,
-      shortName: jsonSerialization['shortName'] as String,
-      longName: jsonSerialization['longName'] as String,
+      name: jsonSerialization['name'] as String,
       quoteType: _i2.StockType.fromJson(
         (jsonSerialization['quoteType'] as String),
       ),
       logoUrl: jsonSerialization['logoUrl'] as String?,
+      price: (jsonSerialization['price'] as num?)?.toDouble(),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
       currencyId: jsonSerialization['currencyId'] as int,
       currency: jsonSerialization['currency'] == null
           ? null
-          : _i5.Protocol().deserialize<_i3.Currency>(
+          : _i4.Protocol().deserialize<_i3.Currency>(
               jsonSerialization['currency'],
-            ),
-      prices: jsonSerialization['prices'] == null
-          ? null
-          : _i5.Protocol().deserialize<List<_i4.StockPrice>>(
-              jsonSerialization['prices'],
             ),
     );
   }
@@ -72,19 +71,19 @@ abstract class Stock implements _i1.SerializableModel {
 
   String symbol;
 
-  String shortName;
-
-  String longName;
+  String name;
 
   _i2.StockType quoteType;
 
   String? logoUrl;
 
+  double price;
+
+  DateTime updatedAt;
+
   int currencyId;
 
   _i3.Currency? currency;
-
-  List<_i4.StockPrice>? prices;
 
   /// Returns a shallow copy of this [Stock]
   /// with some or all fields replaced by the given arguments.
@@ -92,13 +91,13 @@ abstract class Stock implements _i1.SerializableModel {
   Stock copyWith({
     _i1.UuidValue? id,
     String? symbol,
-    String? shortName,
-    String? longName,
+    String? name,
     _i2.StockType? quoteType,
     String? logoUrl,
+    double? price,
+    DateTime? updatedAt,
     int? currencyId,
     _i3.Currency? currency,
-    List<_i4.StockPrice>? prices,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -106,14 +105,13 @@ abstract class Stock implements _i1.SerializableModel {
       '__className__': 'Stock',
       'id': id.toJson(),
       'symbol': symbol,
-      'shortName': shortName,
-      'longName': longName,
+      'name': name,
       'quoteType': quoteType.toJson(),
       if (logoUrl != null) 'logoUrl': logoUrl,
+      'price': price,
+      'updatedAt': updatedAt.toJson(),
       'currencyId': currencyId,
       if (currency != null) 'currency': currency?.toJson(),
-      if (prices != null)
-        'prices': prices?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -129,23 +127,23 @@ class _StockImpl extends Stock {
   _StockImpl({
     _i1.UuidValue? id,
     required String symbol,
-    required String shortName,
-    required String longName,
+    required String name,
     required _i2.StockType quoteType,
     String? logoUrl,
+    double? price,
+    DateTime? updatedAt,
     required int currencyId,
     _i3.Currency? currency,
-    List<_i4.StockPrice>? prices,
   }) : super._(
          id: id,
          symbol: symbol,
-         shortName: shortName,
-         longName: longName,
+         name: name,
          quoteType: quoteType,
          logoUrl: logoUrl,
+         price: price,
+         updatedAt: updatedAt,
          currencyId: currencyId,
          currency: currency,
-         prices: prices,
        );
 
   /// Returns a shallow copy of this [Stock]
@@ -155,28 +153,26 @@ class _StockImpl extends Stock {
   Stock copyWith({
     _i1.UuidValue? id,
     String? symbol,
-    String? shortName,
-    String? longName,
+    String? name,
     _i2.StockType? quoteType,
     Object? logoUrl = _Undefined,
+    double? price,
+    DateTime? updatedAt,
     int? currencyId,
     Object? currency = _Undefined,
-    Object? prices = _Undefined,
   }) {
     return Stock(
       id: id ?? this.id,
       symbol: symbol ?? this.symbol,
-      shortName: shortName ?? this.shortName,
-      longName: longName ?? this.longName,
+      name: name ?? this.name,
       quoteType: quoteType ?? this.quoteType,
       logoUrl: logoUrl is String? ? logoUrl : this.logoUrl,
+      price: price ?? this.price,
+      updatedAt: updatedAt ?? this.updatedAt,
       currencyId: currencyId ?? this.currencyId,
       currency: currency is _i3.Currency?
           ? currency
           : this.currency?.copyWith(),
-      prices: prices is List<_i4.StockPrice>?
-          ? prices
-          : this.prices?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }

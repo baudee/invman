@@ -4,6 +4,7 @@ import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/core/navigation/router.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 class WithdrawalRuleDetailScreen extends HookWidget {
   final int id;
@@ -15,7 +16,7 @@ class WithdrawalRuleDetailScreen extends HookWidget {
     final controller = useMemoized(() => getIt<WithdrawalRuleDetailController>(param1: id));
     return BaseScreen(
       appBar: AppBar(
-        title: controller.value.map(data: (rule) => Text(rule.name), error: (_) => null, loading: () => null),
+        title: controller.watch(context).map(data: (rule) => Text(rule.name), error: (_) => null, loading: () => null),
         actions: [
           PopupMenuActions(
             onEdit: () async {

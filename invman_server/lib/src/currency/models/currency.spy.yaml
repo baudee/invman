@@ -4,7 +4,8 @@ table: currency
 
 fields:
   code: String
-  rates: List<CurrencyRate>?, relation(optional, name=currency_currency_rates)
+  dollarValue: double, defaultModel=0.0,
+  updatedAt: DateTime, defaultModel=now
 
 indexes:
   currency_code_idx:
