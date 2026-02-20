@@ -15,16 +15,18 @@ class WithdrawalRuleTileComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return ListTile(
-      contentPadding: contentPadding,
-      leading: CircleAvatar(
-        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
-        child: Icon(Icons.rule, color: theme.colorScheme.primary, size: UIConstants.iconMd),
+    return Material(
+      child: ListTile(
+        contentPadding: contentPadding,
+        leading: CircleAvatar(
+          backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
+          child: Icon(Icons.rule, color: theme.colorScheme.primary, size: UIConstants.iconMd),
+        ),
+        title: Text(rule.name),
+        trailing: trailing,
+        subtitle: Text('${S.of(context).withdrawal_currency_percentage}: ${rule.currencyChangePercentage}%'),
+        onTap: onTap,
       ),
-      title: Text(rule.name),
-      trailing: trailing,
-      subtitle: Text('${S.of(context).withdrawal_currency_percentage}: ${rule.currencyChangePercentage}%'),
-      onTap: onTap,
     );
   }
 }

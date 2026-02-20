@@ -17,7 +17,7 @@ GoRouter get router => getIt<GoRouter>();
 abstract class RouterModule {
   @singleton
   GoRouter router(AuthManager authManager) {
-    final initialRoute = InvestmentRootScreen.route();
+    final initialRoute = StockSearchScreen.route();
     String destination = initialRoute;
 
     return GoRouter(
@@ -27,7 +27,7 @@ abstract class RouterModule {
         GoRoute(path: SignInScreen.route(), builder: (_, _) => SignInScreen()),
         ...OnboardingRoutes.routes,
         StatefulShellRoute.indexedStack(
-          branches: [InvestmentRoutes.branch, StockRoutes.branch, AccountRoutes.branch],
+          branches: [StockRoutes.branch, InvestmentRoutes.branch, AccountRoutes.branch],
           builder: (context, state, navigationShell) {
             return AppContainer(navigationShell: navigationShell);
           },

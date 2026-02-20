@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/di.dart';
@@ -17,6 +18,10 @@ class InvestmentRootScreen extends HookWidget {
       body: InfiniteListComponent(
         controller: controller,
         itemBuilder: (investment) => InvestmentTileComponent(investment: investment),
+        noItemsFoundWidget: Text(
+          S.of(context).investment_firstCreate,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => router.pushRelative(InvestmentEditScreen.route(0)),

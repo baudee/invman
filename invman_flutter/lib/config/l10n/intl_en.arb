@@ -89,6 +89,7 @@
     "@INVESMENT---------------------------------------------------------------": {},
     "investment_title": "Investments",
     "investment_create": "Create investment",
+    "investment_firstCreate": "Create your first investment !",
     "investment_edit": "Edit investment",
     "investment_currentValue": "Current Value",
     "investment_invested": "Invested",

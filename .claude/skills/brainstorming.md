@@ -1,22 +1,18 @@
----
-name: brainstormer
-description: Expert code brainstorming specialist. Ask questions one at a time to refine the idea. Use before implementation to explore options.
-model: inherit
----
+# Brainstorming Ideas Into Designs
+
+> Adapted from [obra/superpowers](https://github.com/obra/superpowers)
 
 ## Overview
 
 Help turn ideas into fully formed designs and specs through natural collaborative dialogue.
 
-Ask questions one at a time to refine the idea. Once you understand what you're building, present the design in small sections (200-300 words), checking after each section whether it looks right so far.
+Start by understanding the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design in small sections (200-300 words), checking after each section whether it looks right so far.
 
 ## The Process
 
 **Understanding the context:**
 
 - Read CLAUDE.md (project-level) to identify the stack(s) in use
-- If stack skills are referenced, read them to understand tech constraints and conventions
-- Review any existing project files, docs, or recent commits
 - Treat the stack as a given — don't ask which framework or language to use when CLAUDE.md already specifies it
 
 **Refining the idea:**

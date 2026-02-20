@@ -13,10 +13,6 @@
 - When executing phased implementation plans, start making code changes immediately. Do NOT spend the entire session exploring the codebase without producing output. If exploration is needed, timebox it to 2-3 minutes then begin implementation.
 - Always run commands from the correct project directory. Before executing any shell command, verify the current working directory matches the target sub-project. Never mix files between sub-projects (e.g., frontend files into backend folder).
 
-## Tech Stack
-
-This project uses Serverpod for backends and Flutter for frontends, typically in a Docker Compose setup. Always assume this stack unless told otherwise.
-
 ## Communication
 
 - Be direct and concise. Skip preamble.
@@ -53,34 +49,245 @@ Do not consider a phase complete until all checks pass.
 - If you've lost track, re-read the plan or task description before continuing.
 - When starting a new task, state what you understand the goal to be before diving in.
 
-## Skills
+## Tech Stack
 
-Read the relevant skill file when working on a related task.
+This project uses Serverpod for backends and Flutter for frontends, typically in a Docker Compose setup. Always assume this stack unless told otherwise.
 
-**Skills:**
-- `skills/execution/serverpod-patterns.md` — Skill: Serverpod Patterns
-- `skills/verification/verify-serverpod.md` — Skill: Verify Serverpod
-- `skills/execution/flutter-patterns.md` — Skill: Flutter Patterns
-- `skills/verification/verify-flutter.md` — Skill: Verify Flutter
+Global structure:
+- `invman_flutter/`: Flutter frontend
+- `invman_server/`: Serverpod backend
+- `invman_client/`: Serverpod generated code to link frontend and backend
 
-**Agents:**
-- `agents/dev.md` — Agent: Developer
-- `agents/brainstormer.md` — Agent: Brainstormer
-- `agents/pm.md` — Agent: Product Manager
-- `agents/reviewer.md` — Agent: Reviewer
-- `agents/debugger.md` — Agent: Debugger
+### Serverpod Backend
+Official docs if necessary : `https://docs.serverpod.dev/`
+#### Project Structure
 
-## Project Structure
+```
+invman_server/
+├── bin/
+│   └── main.dart                    # Entry point
+├── config/
+│   ├── development.yaml             # Dev config
+│   ├── staging.yaml                 # Staging config
+│   ├── production.yaml              # Production config
+│   ├── test.yaml                    # Test config
+│   └── passwords.yaml               # Secrets storage
+├── lib/
+│   ├── server.dart                  # Server initialization & auth setup
+│   └── src/
+│       ├── generated/               # Auto-generated (DO NOT EDIT)
+│       ├── di.dart                  # DI configuration
+│       ├── di.config.dart           # Generated DI (DO NOT EDIT)
+│       ├── env.dart                 # Environment configuration
+│       ├── core/                    # Shared utilities
+│       │   ├── exceptions/          # ErrorCode, ServerException models
+│       │   ├── helpers/             # Middleware, IncludeHelpers
+│       │   └── services/            # ApiClientService, MailService
+│       └── {feature}/               # Feature modules
+│           ├── models/              # .spy.yaml model definitions
+│           ├── endpoints/           # Endpoint classes
+│           ├── business/            # Service classes
+│           └── utils/               # Feature-specific utilities
+├── migrations/                      # Database migrations
+└── test/                            # Tests
+```
 
-### Backend: Serverpod
+#### Code Generation
 
-- **Location**: `invman_server/`
-- **Stack**: Serverpod
-- **Key patterns**: See `skills/execution/serverpod-patterns.md`
+After modifying `.spy.yaml` files:
 
-### Frontend: Flutter
+```bash
+# From project root
+make server/build
+```
 
-- **Location**: `invman_flutter/`
-- **Stack**: Dart, Flutter
-- **Key patterns**: See `skills/execution/flutter-patterns.md`
+#### Endpoints
+Endpoints should always extend `Endpoint` and use `EndpointMiddleware` for consistent error handling and response formatting. Example:
 
+```dart
+class CurrencyEndpoint extends Endpoint with EndpointMiddleware {
+  @override
+  bool get requireLogin => true;
+
+  Future<List<Currency>> list(Session session) async {
+    return withMiddleware(
+      session,
+      () => getIt<CurrencyService>().list(session),
+    );
+  }
+}
+```
+
+#### Dependency Injection
+Use `getIt` and `injectable` for DI. Annotate injectable classes with `@injectable`, `@singleton`, `@lazySingleton`, etc. Then generate the DI code using `make server/build`.
+
+#### DB Transactions
+Serverpod provides a `session.db.transaction` method for handling transactions. Always use the appropriate transaction level. Link the docs if necessary: `https://docs.serverpod.dev/concepts/database/transactions`
+
+### Flutter Frontend
+dart MCP accessible
+
+#### Project Structure
+
+```
+lib/
+├── main.dart                          # App entry, DI init, MaterialApp
+├── di.dart & di.config.dart          # GetIt + Injectable setup
+├── env.dart                          # Environment/flavor config
+├── config/
+│   ├── l10n/                         # ARB localization files
+│   ├── theme/                        # Material 3 ThemeData
+│   └── generated/                    # Generated l10n code
+├── core/
+│   ├── models/                       # Enums, shared domain models
+│   ├── components/                   # Base UI components
+│   │   ├── base/                    # BaseScreen, BaseStateComponent
+│   │   ├── buttons/                 # Custom button components
+│   │   ├── infinite_list/           # Pagination wrapper
+│   │   └── appbar/                  # Custom app bars
+│   ├── controllers/                  # Base controller classes
+│   │   ├── pagination_controller.dart
+│   │   ├── detail_controller.dart
+│   │   └── commands/                # Reusable command patterns
+│   ├── repositories/                 # Shared helpers (safeCall)
+│   ├── sources/                      # Data sources (storage)
+│   ├── modules/                      # DI modules
+│   ├── navigation/                   # GoRouter config
+│   └── utils/
+│       ├── constants/               # UI constants
+│       ├── extensions/              # Utility extensions
+│       ├── ui_utils/                # Toast, dialog utilities
+│       └── validation_utils.dart
+├── features/
+│   └── {feature}/
+│       ├── screens/                 # Full-page widgets
+│       ├── controllers/             # Feature state management
+│       ├── repositories/            # API calls via Serverpod client
+│       ├── components/              # Feature-specific widgets
+│       ├── models/                  # Feature-specific models (if any)
+│       └── routes.dart              # GoRouter branch definition
+```
+
+#### Models
+Always use the Serverpod client models for data coming from the backend.
+
+#### Repositories
+Repositories wrap Serverpod client calls and handle errors with `safeCall()`.
+
+```dart
+@lazySingleton
+class InvestmentRepository {
+  final Client client;
+
+  const InvestmentRepository(this.client);
+
+  Future<Either<String, Investment>> retrieve(int id) async {
+    return safeCall(() async {
+      return right(await client.investment.retrieve(id));
+    });
+  }
+
+  ...
+}
+```
+
+**Conventions:**
+- Return `Either<String, T>` — `left` for error message, `right` for success
+- Use `safeCall()` to wrap all API calls
+- One repository per feature
+- Mark with `@lazySingleton` for DI registration
+
+#### Controllers
+Always use base controllers for detail and pagination screens.
+
+```dart
+import 'package:fpdart/fpdart.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+
+abstract class DetailController<K, T> extends AsyncSignal<T> {
+  final K id;
+
+  DetailController(this.id) : super(AsyncState.loading()) {
+    _fetch();
+  }
+
+  ...
+}
+
+```dart
+import 'package:fpdart/fpdart.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+
+abstract class PaginationController<T> {
+  final Signal<PagingState<int, T>> state = signal(PagingState());
+
+  PaginationController() {
+    fetchNextPage();
+  }
+
+  ...
+}
+```
+
+Custom controllers can be made for other porpose, but signals should always be used for state management.
+
+#### Dependency Injection
+Use `getIt` and `injectable` for DI. Annotate injectable classes with `@injectable`, `@singleton`, `@lazySingleton`, etc. Then generate the DI code using `make app/build`.
+
+#### Screens
+Always use the BaseScreen component for consistent layout :
+
+```dart
+class BaseScreen extends StatelessWidget {
+  final PreferredSizeWidget? appBar;
+  final PreferredSizeWidget? appBarMd;
+  final PreferredSizeWidget? appBarLg;
+
+  ...
+}
+```
+
+Then for the body, if the controller of the component is an AsyncSignal, use BaseStateComponent to handle loading and error states:
+
+```dart
+class BaseStateComponent<T> extends StatelessWidget {
+  final Widget Function(T data) successBuilder;
+  final AsyncSignal<T> state;
+
+  const BaseStateComponent({super.key, required this.state, required this.successBuilder});
+
+  @override
+  Widget build(BuildContext context) {
+    return state
+        .watch(context)
+        .map(
+          data: (data) => successBuilder(data),
+          error: (error, _) => ErrorComponent(error: error, handleRefresh: () => state.refresh()),
+          loading: () => const LoadingComponent(),
+        );
+  }
+}
+```
+
+If you need a custom app bar that also depends on the same controller, you can use BaseStateAppbar:
+
+```dart
+class BaseStateAppbar<T> extends StatelessWidget implements PreferredSizeWidget {
+  final AsyncSignal<T> state;
+  final PreferredSizeWidget Function(T data) successBuilder;
+  final double height;
+
+  const BaseStateAppbar({super.key, required this.state, required this.successBuilder, this.height = kToolbarHeight});
+
+  @override
+  Size get preferredSize => Size.fromHeight(height);
+
+  @override
+  Widget build(BuildContext context) {
+    return state
+        .watch(context)
+        .map(data: (data) => successBuilder(data), error: (error, _) => AppBar(), loading: () => AppBar());
+  }
+}
+```
