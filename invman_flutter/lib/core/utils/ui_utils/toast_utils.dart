@@ -8,9 +8,12 @@ class ToastUtils {
     }
     final context = rootNavigatorKey.currentContext;
     if (context != null && context.mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(text), backgroundColor: success ? null : Colors.red));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(text, style: TextStyle(color: success ? null : Colors.white)),
+          backgroundColor: success ? null : Colors.red,
+        ),
+      );
     }
   }
 }

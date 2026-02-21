@@ -29,8 +29,6 @@ class InitialUtils {
       id: 0,
       userId: UuidValue.fromString(Namespace.nil.value),
       name: '',
-      withdrawalRuleId: 0,
-      stock: InitialUtils.getStock(),
       investAmount: 0,
       stockId: UuidValue.fromString(Namespace.nil.value),
       withdrawAmount: 0,

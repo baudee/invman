@@ -12,11 +12,13 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart' as _i2;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+    as _i2;
 import '../../withdrawal/models/withdrawal_fee.dart' as _i3;
 import 'package:invman_server/src/generated/protocol.dart' as _i4;
 
-abstract class WithdrawalRule implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class WithdrawalRule
+    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   WithdrawalRule._({
     this.id,
     required this.userId,
@@ -43,7 +45,8 @@ abstract class WithdrawalRule implements _i1.TableRow<int?>, _i1.ProtocolSeriali
           ? null
           : _i4.Protocol().deserialize<_i2.AuthUser>(jsonSerialization['user']),
       name: jsonSerialization['name'] as String,
-      currencyChangePercentage: (jsonSerialization['currencyChangePercentage'] as num).toDouble(),
+      currencyChangePercentage:
+          (jsonSerialization['currencyChangePercentage'] as num).toDouble(),
       fees: jsonSerialization['fees'] == null
           ? null
           : _i4.Protocol().deserialize<List<_i3.WithdrawalFee>>(
@@ -105,7 +108,8 @@ abstract class WithdrawalRule implements _i1.TableRow<int?>, _i1.ProtocolSeriali
       if (user != null) 'user': user?.toJsonForProtocol(),
       'name': name,
       'currencyChangePercentage': currencyChangePercentage,
-      if (fees != null) 'fees': fees?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
+      if (fees != null)
+        'fees': fees?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
     };
   }
 
@@ -181,8 +185,11 @@ class _WithdrawalRuleImpl extends WithdrawalRule {
       userId: userId ?? this.userId,
       user: user is _i2.AuthUser? ? user : this.user?.copyWith(),
       name: name ?? this.name,
-      currencyChangePercentage: currencyChangePercentage ?? this.currencyChangePercentage,
-      fees: fees is List<_i3.WithdrawalFee>? ? fees : this.fees?.map((e0) => e0.copyWith()).toList(),
+      currencyChangePercentage:
+          currencyChangePercentage ?? this.currencyChangePercentage,
+      fees: fees is List<_i3.WithdrawalFee>?
+          ? fees
+          : this.fees?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }
@@ -190,24 +197,27 @@ class _WithdrawalRuleImpl extends WithdrawalRule {
 class WithdrawalRuleUpdateTable extends _i1.UpdateTable<WithdrawalRuleTable> {
   WithdrawalRuleUpdateTable(super.table);
 
-  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) => _i1.ColumnValue(
-    table.userId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
 
   _i1.ColumnValue<String, String> name(String value) => _i1.ColumnValue(
     table.name,
     value,
   );
 
-  _i1.ColumnValue<double, double> currencyChangePercentage(double value) => _i1.ColumnValue(
-    table.currencyChangePercentage,
-    value,
-  );
+  _i1.ColumnValue<double, double> currencyChangePercentage(double value) =>
+      _i1.ColumnValue(
+        table.currencyChangePercentage,
+        value,
+      );
 }
 
 class WithdrawalRuleTable extends _i1.Table<int?> {
-  WithdrawalRuleTable({super.tableRelation}) : super(tableName: 'withdrawal_rule') {
+  WithdrawalRuleTable({super.tableRelation})
+    : super(tableName: 'withdrawal_rule') {
     updateTable = WithdrawalRuleUpdateTable(this);
     userId = _i1.ColumnUuid(
       'userId',
@@ -244,7 +254,8 @@ class WithdrawalRuleTable extends _i1.Table<int?> {
       field: WithdrawalRule.t.userId,
       foreignField: _i2.AuthUser.t.id,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i2.AuthUserTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i2.AuthUserTable(tableRelation: foreignTableRelation),
     );
     return _user!;
   }
@@ -256,7 +267,8 @@ class WithdrawalRuleTable extends _i1.Table<int?> {
       field: WithdrawalRule.t.id,
       foreignField: _i3.WithdrawalFee.t.ruleId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i3.WithdrawalFeeTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i3.WithdrawalFeeTable(tableRelation: foreignTableRelation),
     );
     return ___fees!;
   }
@@ -268,7 +280,8 @@ class WithdrawalRuleTable extends _i1.Table<int?> {
       field: WithdrawalRule.t.id,
       foreignField: _i3.WithdrawalFee.t.ruleId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i3.WithdrawalFeeTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i3.WithdrawalFeeTable(tableRelation: foreignTableRelation),
     );
     _fees = _i1.ManyRelation<_i3.WithdrawalFeeTable>(
       tableWithRelations: relationTable,
@@ -623,7 +636,9 @@ class WithdrawalRuleAttachRepository {
       throw ArgumentError.notNull('withdrawalRule.id');
     }
 
-    var $withdrawalFee = withdrawalFee.map((e) => e.copyWith(ruleId: withdrawalRule.id)).toList();
+    var $withdrawalFee = withdrawalFee
+        .map((e) => e.copyWith(ruleId: withdrawalRule.id))
+        .toList();
     await session.db.update<_i3.WithdrawalFee>(
       $withdrawalFee,
       columns: [_i3.WithdrawalFee.t.ruleId],

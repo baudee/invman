@@ -8,10 +8,10 @@ class InvestmentEndpoint extends Endpoint with EndpointMiddleware {
   @override
   bool get requireLogin => true;
 
-  Future<List<Investment>> list(Session session) async {
+  Future<List<Investment>> list(Session session, {int limit = 10, int page = 1}) async {
     return withMiddleware(
       session,
-      () => getIt<InvestmentService>().list(session),
+      () => getIt<InvestmentService>().list(session, limit: limit, page: page),
     );
   }
 

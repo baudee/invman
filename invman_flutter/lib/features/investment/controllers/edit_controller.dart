@@ -45,7 +45,7 @@ class InvestmentEditController extends AsyncSignal<Investment> {
 
   void setStock(Stock stock) {
     if (value case AsyncData(value: final investment)) {
-      setValue(investment.copyWith(stock: stock));
+      setValue(investment.copyWith(stock: stock, stockId: stock.id));
     }
   }
 
@@ -55,11 +55,7 @@ class InvestmentEditController extends AsyncSignal<Investment> {
         return (false, S.current.error_fixToContinue);
       }
 
-      if (investment.withdrawalRuleId == 0) {
-        return (false, S.current.error_selectWithdrawalRule);
-      }
-
-      if (investment.stock == null) {
+      if (investment.stockId == UuidValue.fromString(Namespace.nil.value)) {
         return (false, S.current.error_selectStock);
       }
 

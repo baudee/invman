@@ -64,13 +64,19 @@ class InvestmentService {
     return investment;
   }
 
-  Future<List<Investment>> list(Session session) async {
+  Future<List<Investment>> list(
+    Session session, {
+    required int limit,
+    required int page,
+  }) async {
     final sessionUserId = (session.authenticated)!.authUserId;
 
     final investments = await Investment.db.find(
       session,
       where: (e) => e.userId.equals(sessionUserId),
       include: IncludeHelpers.investmentInclude(),
+      limit: limit,
+      offset: (page * limit) - limit,
     );
 
     for (var i = 0; i < investments.length; i++) {
@@ -86,17 +92,20 @@ class InvestmentService {
   }
 
   Future<Investment> save(Session session, Investment investment) async {
-    if (investment.name.isEmpty || investment.stock == null) {
+    if (investment.name.isEmpty ||
+        investment.withdrawalRuleId == 0 ||
+        investment.stockId == UuidValue.fromString(Namespace.nil.value)) {
       throw ServerException(errorCode: ErrorCode.badRequest);
     }
-
     return session.db.transaction(
       (transaction) async {
-        await withdrawalRuleService.retrieve(
-          session,
-          investment.withdrawalRuleId,
-          transaction: transaction,
-        );
+        if (investment.withdrawalRuleId != null) {
+          await withdrawalRuleService.retrieve(
+            session,
+            investment.withdrawalRuleId!,
+            transaction: transaction,
+          );
+        }
         final stock = await stockService.retrieve(
           session,
           investment.stockId,

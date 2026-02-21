@@ -285,12 +285,17 @@ class EndpointInvestment extends _i1.EndpointRef {
   @override
   String get name => 'investment';
 
-  _i2.Future<List<_i7.Investment>> list() =>
-      caller.callServerEndpoint<List<_i7.Investment>>(
-        'investment',
-        'list',
-        {},
-      );
+  _i2.Future<List<_i7.Investment>> list({
+    required int limit,
+    required int page,
+  }) => caller.callServerEndpoint<List<_i7.Investment>>(
+    'investment',
+    'list',
+    {
+      'limit': limit,
+      'page': page,
+    },
+  );
 
   _i2.Future<_i7.Investment> save(_i7.Investment investment) =>
       caller.callServerEndpoint<_i7.Investment>(

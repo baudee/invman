@@ -6,7 +6,7 @@ fields:
   user: module:serverpod_auth_core:AuthUser?, relation(onDelete=Cascade)
   name: String
   stock: Stock?, relation
-  withdrawalRule : WithdrawalRule?, relation
+  withdrawalRule : WithdrawalRule?, relation(optional)
   transfers: List<Transfer>?, relation(optional, name=investment_transfers)
   investAmount: double, default=0.0
   quantity: double, default=0.0

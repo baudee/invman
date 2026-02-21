@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/core/navigation/router.dart';
 import 'package:invman_flutter/di.dart';
@@ -14,39 +15,24 @@ class InvestmentDetailScreen extends HookWidget {
   Widget build(BuildContext context) {
     final controller = useMemoized(() => getIt<InvestmentDetailController>(param1: id));
     return BaseScreen(
-      appBar: AppBar(
-        title: controller.value.map(
-          data: (investment) => Text(investment.name),
-          error: (_) => null,
-          loading: () => null,
+      appBar: BaseStateAppbar<Investment>(
+        state: controller,
+        successBuilder: (investment) => AppBar(
+          title: Text(investment.name),
+          actions: [
+            PopupMenuActions(
+              onEdit: () async {
+                await router.pushRelative(InvestmentEditScreen.route());
+                controller.reload();
+              },
+              onDelete: () async {
+                final (success, message) = await controller.delete();
+                router.pop();
+                ToastUtils.message(message, success: success);
+              },
+            ),
+          ],
         ),
-        actions: [
-          PopupMenuButton<int>(
-            icon: const Icon(Icons.more_vert),
-            onSelected: (value) async {
-              switch (value) {
-                case 0:
-                  router.pushRelative(InvestmentEditScreen.route(id));
-                  break;
-                case 1:
-                  final (success, message) = await controller.delete();
-                  ToastUtils.message(message, success: success);
-                  if (success) router.pop();
-                  break;
-              }
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 0,
-                child: ListTile(leading: Icon(Icons.edit), title: Text('Edit')),
-              ),
-              const PopupMenuItem(
-                value: 1,
-                child: ListTile(leading: Icon(Icons.delete), title: Text('Delete')),
-              ),
-            ],
-          ),
-        ],
       ),
       body: BaseStateComponent(
         state: controller,

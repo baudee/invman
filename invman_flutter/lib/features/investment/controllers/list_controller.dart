@@ -6,12 +6,14 @@ import 'package:invman_flutter/features/investment/repositories/investment_repos
 
 @injectable
 class InvestmentListController extends PaginationController<Investment> {
-  final InvestmentRepository _service;
+  final InvestmentRepository _repository;
 
-  InvestmentListController(this._service);
+  InvestmentListController(this._repository) : super() {
+    _repository.invalidation.subscribe((_) => refresh());
+  }
 
   @override
   Future<Either<String, List<Investment>>> fetchPage(int page) {
-    return _service.list(page: page, limit: 10);
+    return _repository.list(page: page, limit: 10);
   }
 }

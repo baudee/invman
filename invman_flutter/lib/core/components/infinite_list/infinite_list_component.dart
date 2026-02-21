@@ -39,6 +39,16 @@ class InfiniteListComponent<T> extends StatelessWidget {
         itemBuilder: (context, item, index) => Material(color: Colors.transparent, child: itemBuilder(item)),
         firstPageProgressIndicatorBuilder: (_) => const LoadingComponent(),
         newPageProgressIndicatorBuilder: (_) => const LoadingComponent(),
+        firstPageErrorIndicatorBuilder: (context) {
+          final exceptionString = state.error;
+          final String error;
+          if (exceptionString is Exception) {
+            error = exceptionString.toString().replaceFirst('Exception: ', '');
+          } else {
+            error = S.of(context).error_tryAgain;
+          }
+          return ErrorComponent(error: error, handleRefresh: controller.refresh);
+        },
         noItemsFoundIndicatorBuilder: (_) => Center(
           child:
               noItemsFoundWidget ??

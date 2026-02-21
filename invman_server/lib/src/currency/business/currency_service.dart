@@ -36,7 +36,10 @@ class CurrencyService {
     final fromRate = from?.dollarValue;
     final toRate = to?.dollarValue;
 
-    if (fromRate == null || toRate == null || fromRate == 0 || toRate == 0) {
+    // TEMPORARY
+    return 1;
+
+    if (fromRate == null || toRate == null  || toRate == 0) {
       throw ServerException(errorCode: ErrorCode.notFound);
     }
 

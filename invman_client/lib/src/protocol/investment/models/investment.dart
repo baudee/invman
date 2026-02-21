@@ -26,7 +26,7 @@ abstract class Investment implements _i1.SerializableModel {
     required this.name,
     required this.stockId,
     this.stock,
-    required this.withdrawalRuleId,
+    this.withdrawalRuleId,
     this.withdrawalRule,
     this.transfers,
     double? investAmount,
@@ -44,7 +44,7 @@ abstract class Investment implements _i1.SerializableModel {
     required String name,
     required _i1.UuidValue stockId,
     _i3.Stock? stock,
-    required int withdrawalRuleId,
+    int? withdrawalRuleId,
     _i4.WithdrawalRule? withdrawalRule,
     List<_i5.Transfer>? transfers,
     double? investAmount,
@@ -67,7 +67,7 @@ abstract class Investment implements _i1.SerializableModel {
       stock: jsonSerialization['stock'] == null
           ? null
           : _i6.Protocol().deserialize<_i3.Stock>(jsonSerialization['stock']),
-      withdrawalRuleId: jsonSerialization['withdrawalRuleId'] as int,
+      withdrawalRuleId: jsonSerialization['withdrawalRuleId'] as int?,
       withdrawalRule: jsonSerialization['withdrawalRule'] == null
           ? null
           : _i6.Protocol().deserialize<_i4.WithdrawalRule>(
@@ -102,7 +102,7 @@ abstract class Investment implements _i1.SerializableModel {
 
   _i3.Stock? stock;
 
-  int withdrawalRuleId;
+  int? withdrawalRuleId;
 
   _i4.WithdrawalRule? withdrawalRule;
 
@@ -144,7 +144,7 @@ abstract class Investment implements _i1.SerializableModel {
       'name': name,
       'stockId': stockId.toJson(),
       if (stock != null) 'stock': stock?.toJson(),
-      'withdrawalRuleId': withdrawalRuleId,
+      if (withdrawalRuleId != null) 'withdrawalRuleId': withdrawalRuleId,
       if (withdrawalRule != null) 'withdrawalRule': withdrawalRule?.toJson(),
       if (transfers != null)
         'transfers': transfers?.toJson(valueToJson: (v) => v.toJson()),
@@ -171,7 +171,7 @@ class _InvestmentImpl extends Investment {
     required String name,
     required _i1.UuidValue stockId,
     _i3.Stock? stock,
-    required int withdrawalRuleId,
+    int? withdrawalRuleId,
     _i4.WithdrawalRule? withdrawalRule,
     List<_i5.Transfer>? transfers,
     double? investAmount,
@@ -205,7 +205,7 @@ class _InvestmentImpl extends Investment {
     String? name,
     _i1.UuidValue? stockId,
     Object? stock = _Undefined,
-    int? withdrawalRuleId,
+    Object? withdrawalRuleId = _Undefined,
     Object? withdrawalRule = _Undefined,
     Object? transfers = _Undefined,
     double? investAmount,
@@ -220,7 +220,9 @@ class _InvestmentImpl extends Investment {
       name: name ?? this.name,
       stockId: stockId ?? this.stockId,
       stock: stock is _i3.Stock? ? stock : this.stock?.copyWith(),
-      withdrawalRuleId: withdrawalRuleId ?? this.withdrawalRuleId,
+      withdrawalRuleId: withdrawalRuleId is int?
+          ? withdrawalRuleId
+          : this.withdrawalRuleId,
       withdrawalRule: withdrawalRule is _i4.WithdrawalRule?
           ? withdrawalRule
           : this.withdrawalRule?.copyWith(),
