@@ -72,4 +72,33 @@ class StockService {
       offset: (page * limit) - limit,
     );
   }
+
+  Future<List<Stock>> listPopular(
+    Session session, {
+    required int limit,
+    required int page,
+  }) async {
+    return Stock.db.find(
+      session,
+      orderBy: (t) => t.investments.count(),
+      orderDescending: true,
+      limit: limit,
+      offset: (page * limit) - limit,
+    );
+  }
+
+  Future<List<Stock>> listLiked(
+    Session session, {
+    required int limit,
+    required int page,
+  }) async {
+    final userId = session.authenticated!.authUserId;
+
+    return Stock.db.find(
+      session,
+      where: (e) => e.likes.any((like) => like.userId.equals(userId)),
+      limit: limit,
+      offset: (page * limit) - limit,
+    );
+  }
 }

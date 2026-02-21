@@ -360,6 +360,30 @@ class EndpointStock extends _i1.EndpointRef {
       'page': page,
     },
   );
+
+  _i2.Future<List<_i8.Stock>> listPopular({
+    required int limit,
+    required int page,
+  }) => caller.callServerEndpoint<List<_i8.Stock>>(
+    'stock',
+    'listPopular',
+    {
+      'limit': limit,
+      'page': page,
+    },
+  );
+
+  _i2.Future<List<_i8.Stock>> listLiked({
+    required int limit,
+    required int page,
+  }) => caller.callServerEndpoint<List<_i8.Stock>>(
+    'stock',
+    'listLiked',
+    {
+      'limit': limit,
+      'page': page,
+    },
+  );
 }
 
 /// {@category Endpoint}

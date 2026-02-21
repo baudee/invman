@@ -172,6 +172,18 @@ class Protocol extends _i1.SerializationManager {
               : null)
           as T;
     }
+    if (t == List<_i6.Investment>) {
+      return (data as List).map((e) => deserialize<_i6.Investment>(e)).toList()
+          as T;
+    }
+    if (t == _i1.getType<List<_i6.Investment>?>()) {
+      return (data != null
+              ? (data as List)
+                    .map((e) => deserialize<_i6.Investment>(e))
+                    .toList()
+              : null)
+          as T;
+    }
     if (t == List<_i11.WithdrawalFee>) {
       return (data as List)
               .map((e) => deserialize<_i11.WithdrawalFee>(e))

@@ -14,7 +14,8 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../../stock/models/stock_type.dart' as _i2;
 import '../../currency/models/currency.dart' as _i3;
 import '../../stock/models/stock_like.dart' as _i4;
-import 'package:invman_client/src/protocol/protocol.dart' as _i5;
+import '../../investment/models/investment.dart' as _i5;
+import 'package:invman_client/src/protocol/protocol.dart' as _i6;
 
 abstract class Stock implements _i1.SerializableModel {
   Stock._({
@@ -28,6 +29,7 @@ abstract class Stock implements _i1.SerializableModel {
     required this.currencyId,
     this.currency,
     this.likes,
+    this.investments,
   }) : id = id ?? _i1.Uuid().v4obj(),
        price = price ?? 0.0,
        updatedAt = updatedAt ?? DateTime.now();
@@ -43,6 +45,7 @@ abstract class Stock implements _i1.SerializableModel {
     required int currencyId,
     _i3.Currency? currency,
     List<_i4.StockLike>? likes,
+    List<_i5.Investment>? investments,
   }) = _StockImpl;
 
   factory Stock.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -63,13 +66,18 @@ abstract class Stock implements _i1.SerializableModel {
       currencyId: jsonSerialization['currencyId'] as int,
       currency: jsonSerialization['currency'] == null
           ? null
-          : _i5.Protocol().deserialize<_i3.Currency>(
+          : _i6.Protocol().deserialize<_i3.Currency>(
               jsonSerialization['currency'],
             ),
       likes: jsonSerialization['likes'] == null
           ? null
-          : _i5.Protocol().deserialize<List<_i4.StockLike>>(
+          : _i6.Protocol().deserialize<List<_i4.StockLike>>(
               jsonSerialization['likes'],
+            ),
+      investments: jsonSerialization['investments'] == null
+          ? null
+          : _i6.Protocol().deserialize<List<_i5.Investment>>(
+              jsonSerialization['investments'],
             ),
     );
   }
@@ -95,6 +103,8 @@ abstract class Stock implements _i1.SerializableModel {
 
   List<_i4.StockLike>? likes;
 
+  List<_i5.Investment>? investments;
+
   /// Returns a shallow copy of this [Stock]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -109,6 +119,7 @@ abstract class Stock implements _i1.SerializableModel {
     int? currencyId,
     _i3.Currency? currency,
     List<_i4.StockLike>? likes,
+    List<_i5.Investment>? investments,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -124,6 +135,8 @@ abstract class Stock implements _i1.SerializableModel {
       'currencyId': currencyId,
       if (currency != null) 'currency': currency?.toJson(),
       if (likes != null) 'likes': likes?.toJson(valueToJson: (v) => v.toJson()),
+      if (investments != null)
+        'investments': investments?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -147,6 +160,7 @@ class _StockImpl extends Stock {
     required int currencyId,
     _i3.Currency? currency,
     List<_i4.StockLike>? likes,
+    List<_i5.Investment>? investments,
   }) : super._(
          id: id,
          symbol: symbol,
@@ -158,6 +172,7 @@ class _StockImpl extends Stock {
          currencyId: currencyId,
          currency: currency,
          likes: likes,
+         investments: investments,
        );
 
   /// Returns a shallow copy of this [Stock]
@@ -175,6 +190,7 @@ class _StockImpl extends Stock {
     int? currencyId,
     Object? currency = _Undefined,
     Object? likes = _Undefined,
+    Object? investments = _Undefined,
   }) {
     return Stock(
       id: id ?? this.id,
@@ -191,6 +207,9 @@ class _StockImpl extends Stock {
       likes: likes is List<_i4.StockLike>?
           ? likes
           : this.likes?.map((e0) => e0.copyWith()).toList(),
+      investments: investments is List<_i5.Investment>?
+          ? investments
+          : this.investments?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }

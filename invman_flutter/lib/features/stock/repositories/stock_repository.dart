@@ -34,4 +34,16 @@ class StockRepository {
       return right(null);
     });
   }
+
+  Future<Either<String, List<Stock>>> listPopular({int limit = 10, int page = 1}) async {
+    return safeCall(() async {
+      return right(await client.stock.listPopular(limit: limit, page: page));
+    });
+  }
+
+  Future<Either<String, List<Stock>>> listLiked({int limit = 10, int page = 1}) async {
+    return safeCall(() async {
+      return right(await client.stock.listLiked(limit: limit, page: page));
+    });
+  }
 }

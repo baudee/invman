@@ -17,7 +17,7 @@ GoRouter get router => getIt<GoRouter>();
 abstract class RouterModule {
   @singleton
   GoRouter router(AuthManager authManager) {
-    final initialRoute = StockSearchScreen.route();
+    final initialRoute = StockRootScreen.route();
     String destination = initialRoute;
 
     return GoRouter(

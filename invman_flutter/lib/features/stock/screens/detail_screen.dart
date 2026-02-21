@@ -19,7 +19,17 @@ class StockDetailScreen extends HookWidget {
         state: controller,
         successBuilder: (stock) => AppBar(
           title: Text(stock.name),
-          actions: [LikeButtonComponent(stock: stock, onPressed: () => controller.toggleLike())],
+          actions: [
+            LikeButtonComponent(
+              stock: stock,
+              onPressed: () async {
+                final error = await controller.toggleLike();
+                if (error != null) {
+                  ToastUtils.message(error, success: false);
+                }
+              },
+            ),
+          ],
         ),
       ),
       body: BaseStateComponent<Stock>(

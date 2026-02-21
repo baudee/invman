@@ -1,3 +1,6 @@
-export 'list_controller.dart';
-export 'search_controller.dart';
 export 'detail_controller.dart';
+export 'liked_list_controller.dart';
+export 'list_controller.dart';
+export 'popular_list_controller.dart';
+export 'root_controller.dart';
+export 'search_controller.dart';

@@ -23,6 +23,8 @@ stock:
   - unlike:
   - retrieve:
   - search:
+  - listPopular:
+  - listLiked:
 transfer:
   - retrieve:
   - save:

@@ -12,6 +12,7 @@ fields:
   updatedAt: DateTime, defaultModel=now,
   currency: Currency?, relation
   likes: List<StockLike>?, relation(name=stock_likes)
+  investments: List<Investment>?, relation(name=stock_investments)
 
 indexes:
   stock_symbol_idx:

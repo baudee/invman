@@ -45,4 +45,34 @@ class StockEndpoint extends Endpoint with EndpointMiddleware {
       ),
     );
   }
+
+  Future<List<Stock>> listPopular(
+    Session session, {
+    int limit = 10,
+    int page = 1,
+  }) async {
+    return withMiddleware(
+      session,
+      () => getIt<StockService>().listPopular(
+        session,
+        limit: limit,
+        page: page,
+      ),
+    );
+  }
+
+  Future<List<Stock>> listLiked(
+    Session session, {
+    int limit = 10,
+    int page = 1,
+  }) async {
+    return withMiddleware(
+      session,
+      () => getIt<StockService>().listLiked(
+        session,
+        limit: limit,
+        page: page,
+      ),
+    );
+  }
 }
