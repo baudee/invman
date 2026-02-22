@@ -11,6 +11,7 @@ class Env {
   late final String mailjetApiKeyPrivate;
   late final String mailjetApiKeyPublic;
   late final String mailjetEmailSender;
+  late final String geminiApiKey;
 
   Env() {
     env = DotEnv(includePlatformEnvironment: true)..load();
@@ -34,6 +35,9 @@ class Env {
     mailjetApiKeyPrivate = getVarFromKey('MAILJET_API_KEY_PRIVATE');
     mailjetApiKeyPublic = getVarFromKey('MAILJET_API_KEY_PUBLIC');
     mailjetEmailSender = getVarFromKey('MAILJET_EMAIL_SENDER');
+
+    // Gemini
+    geminiApiKey = getVarFromKey('GEMINI_API_KEY');
   }
 
   String getVarFromKey(String key) {

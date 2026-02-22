@@ -48,11 +48,7 @@ class InvestmentService {
 
     final accountCurrency = (await accountService.retrieve(session)).currency;
     if (accountCurrency?.id != stock.currency?.id) {
-      double change = await currencyService.change(
-        session,
-        from: stock.currency,
-        to: accountCurrency,
-      );
+      double change = await currencyService.change(session, fromId: stock.currencyId, toId: accountCurrency?.id);
       change = change - (withdrawalRule?.currencyChangePercentage ?? 0) / 100;
       actualAmount *= change;
     }

@@ -18,7 +18,8 @@ import '../../stock/models/stock_like.dart' as _i4;
 import '../../investment/models/investment.dart' as _i5;
 import 'package:invman_server/src/generated/protocol.dart' as _i6;
 
-abstract class Stock implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
+abstract class Stock
+    implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
   Stock._({
     _i1.UuidValue? id,
     required this.symbol,
@@ -51,7 +52,9 @@ abstract class Stock implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSeriali
 
   factory Stock.fromJson(Map<String, dynamic> jsonSerialization) {
     return Stock(
-      id: jsonSerialization['id'] == null ? null : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       symbol: jsonSerialization['symbol'] as String,
       name: jsonSerialization['name'] as String,
       quoteType: _i2.StockType.fromJson(
@@ -141,7 +144,8 @@ abstract class Stock implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSeriali
       'currencyId': currencyId,
       if (currency != null) 'currency': currency?.toJson(),
       if (likes != null) 'likes': likes?.toJson(valueToJson: (v) => v.toJson()),
-      if (investments != null) 'investments': investments?.toJson(valueToJson: (v) => v.toJson()),
+      if (investments != null)
+        'investments': investments?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -158,7 +162,8 @@ abstract class Stock implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSeriali
       'updatedAt': updatedAt.toJson(),
       'currencyId': currencyId,
       if (currency != null) 'currency': currency?.toJsonForProtocol(),
-      if (likes != null) 'likes': likes?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
+      if (likes != null)
+        'likes': likes?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
       if (investments != null)
         'investments': investments?.toJson(
           valueToJson: (v) => v.toJsonForProtocol(),
@@ -259,8 +264,12 @@ class _StockImpl extends Stock {
       price: price ?? this.price,
       updatedAt: updatedAt ?? this.updatedAt,
       currencyId: currencyId ?? this.currencyId,
-      currency: currency is _i3.Currency? ? currency : this.currency?.copyWith(),
-      likes: likes is List<_i4.StockLike>? ? likes : this.likes?.map((e0) => e0.copyWith()).toList(),
+      currency: currency is _i3.Currency?
+          ? currency
+          : this.currency?.copyWith(),
+      likes: likes is List<_i4.StockLike>?
+          ? likes
+          : this.likes?.map((e0) => e0.copyWith()).toList(),
       investments: investments is List<_i5.Investment>?
           ? investments
           : this.investments?.map((e0) => e0.copyWith()).toList(),
@@ -298,10 +307,11 @@ class StockUpdateTable extends _i1.UpdateTable<StockTable> {
     value,
   );
 
-  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) => _i1.ColumnValue(
-    table.updatedAt,
-    value,
-  );
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
 
   _i1.ColumnValue<int, int> currencyId(int value) => _i1.ColumnValue(
     table.currencyId,
@@ -376,7 +386,8 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
       field: Stock.t.currencyId,
       foreignField: _i3.Currency.t.id,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i3.CurrencyTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i3.CurrencyTable(tableRelation: foreignTableRelation),
     );
     return _currency!;
   }
@@ -388,7 +399,8 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
       field: Stock.t.id,
       foreignField: _i4.StockLike.t.stockId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i4.StockLikeTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i4.StockLikeTable(tableRelation: foreignTableRelation),
     );
     return ___likes!;
   }
@@ -400,7 +412,8 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
       field: Stock.t.id,
       foreignField: _i5.Investment.t.stockId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i5.InvestmentTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i5.InvestmentTable(tableRelation: foreignTableRelation),
     );
     return ___investments!;
   }
@@ -412,7 +425,8 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
       field: Stock.t.id,
       foreignField: _i4.StockLike.t.stockId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i4.StockLikeTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i4.StockLikeTable(tableRelation: foreignTableRelation),
     );
     _likes = _i1.ManyRelation<_i4.StockLikeTable>(
       tableWithRelations: relationTable,
@@ -430,7 +444,8 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
       field: Stock.t.id,
       foreignField: _i5.Investment.t.stockId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i5.InvestmentTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i5.InvestmentTable(tableRelation: foreignTableRelation),
     );
     _investments = _i1.ManyRelation<_i5.InvestmentTable>(
       tableWithRelations: relationTable,
@@ -801,7 +816,9 @@ class StockAttachRepository {
       throw ArgumentError.notNull('stock.id');
     }
 
-    var $stockLike = stockLike.map((e) => e.copyWith(stockId: stock.id)).toList();
+    var $stockLike = stockLike
+        .map((e) => e.copyWith(stockId: stock.id))
+        .toList();
     await session.db.update<_i4.StockLike>(
       $stockLike,
       columns: [_i4.StockLike.t.stockId],
@@ -824,7 +841,9 @@ class StockAttachRepository {
       throw ArgumentError.notNull('stock.id');
     }
 
-    var $investment = investment.map((e) => e.copyWith(stockId: stock.id)).toList();
+    var $investment = investment
+        .map((e) => e.copyWith(stockId: stock.id))
+        .toList();
     await session.db.update<_i5.Investment>(
       $investment,
       columns: [_i5.Investment.t.stockId],

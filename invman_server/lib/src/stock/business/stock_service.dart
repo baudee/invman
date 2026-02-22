@@ -1,12 +1,15 @@
 import 'package:injectable/injectable.dart';
+import 'package:invman_server/src/core/core.dart';
 import 'package:invman_server/src/core/helpers/include_helpers.dart';
 import 'package:invman_server/src/generated/protocol.dart';
+import 'package:invman_server/src/stock/stock.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 
 @injectable
 class StockService {
-  StockService();
+  final StockCurrentValuesSource currentValuesSource;
+  StockService(this.currentValuesSource);
 
   Future<void> like(Session session, UuidValue stockId) async {
     final userId = (session.authenticated)!.authUserId;
@@ -47,7 +50,7 @@ class StockService {
     Transaction? transaction,
   }) async {
     final userId = session.authenticated!.authUserId;
-    final stock = await Stock.db.findById(
+    Stock? stock = await Stock.db.findById(
       session,
       uuid,
       include: IncludeHelpers.stockInclude(userId: userId),
@@ -56,6 +59,24 @@ class StockService {
     if (stock == null) {
       throw ServerException(errorCode: ErrorCode.notFound);
     }
+
+    // Last update is more than X day ago, update the price
+    if (stock.updatedAt.isBefore(DateTime.now().subtract(const Duration(days: cacheDurationDays)))) {
+      final (double currentValue, DateTime timestamp) = await currentValuesSource.getCurrentValue(
+        stock.symbol,
+        stock.name,
+      );
+
+      stock = await Stock.db.updateRow(
+        session,
+        stock.copyWith(
+          price: currentValue,
+          updatedAt: timestamp,
+        ),
+        transaction: transaction,
+      );
+    }
+
     return stock;
   }
 
