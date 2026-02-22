@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.invman_flutter"
+    namespace = "ch.valentinbaudin.rimawari"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -20,14 +20,29 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.invman_flutter"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+    }
+
+    flavorDimensions += "environment"
+    productFlavors {
+        create("develop") {
+            dimension = "environment"
+            applicationId = "ch.valentinbaudin.rimawari.dev"
+            resValue("string", "app_name", "Rimawari Dev")
+        }
+        create("staging") {
+            dimension = "environment"
+            applicationId = "ch.valentinbaudin.rimawari.staging"
+            resValue("string", "app_name", "Rimawari Staging")
+        }
+        create("production") {
+            dimension = "environment"
+            applicationId = "ch.valentinbaudin.rimawari"
+            resValue("string", "app_name", "Rimawari")
+        }
     }
 
     buildTypes {

@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: "InvMan",
+      title: AppConstants.appName,
       theme: AppTheme.light().themeData,
       darkTheme: AppTheme.dark().themeData,
       themeMode: getIt<UserPreferencesManager>().theme.watch(context),

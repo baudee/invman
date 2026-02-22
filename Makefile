@@ -47,7 +47,7 @@ app/build:
 	cd $(PROJECT_NAME)_flutter && dart run intl_utils:generate
 
 app/run:
-	cd $(PROJECT_NAME)_flutter && flutter run --dart-define-from-file=.env
+	cd $(PROJECT_NAME)_flutter && flutter run --flavor develop --dart-define-from-file=.env
 
 app/test:
 	cd $(PROJECT_NAME)_flutter && dart fix --apply

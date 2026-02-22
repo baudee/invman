@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 
 enum Flavor { develop, staging, production }
@@ -9,19 +10,15 @@ class Env {
   late final String sentryDsn;
 
   Env() {
-    switch (const String.fromEnvironment("APP_FLAVOR")) {
+    switch (appFlavor) {
       case 'develop':
         flavor = Flavor.develop;
-        break;
       case 'staging':
         flavor = Flavor.staging;
-        break;
       case 'production':
         flavor = Flavor.production;
-        break;
       default:
         flavor = Flavor.develop;
-        break;
     }
 
     const stringBaseUrl = String.fromEnvironment("BASE_URL");

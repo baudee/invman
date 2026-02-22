@@ -5,6 +5,15 @@ class LoadingComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: CircularProgressIndicator());
+    return Center(
+      child: Image.asset(
+        'assets/images/loading.gif',
+        width: 50,
+        height: 50,
+        errorBuilder: (context, error, stackTrace) {
+          return const CircularProgressIndicator();
+        },
+      ),
+    );
   }
 }

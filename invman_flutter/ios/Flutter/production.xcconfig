@@ -1,0 +1,3 @@
+// Production flavor configuration
+PRODUCT_BUNDLE_IDENTIFIER = ch.valentinbaudin.rimawari
+APP_DISPLAY_NAME = Rimawari

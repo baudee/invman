@@ -164,7 +164,7 @@ Future<void> _populateCurrencies(Connection connection) async {
 
     await connection.execute(
       Sql.named(
-        'INSERT INTO currency (code, "dollarValue", "timestamp", "updatedAt") VALUES (@code, -1.0, NOW() - INTERVAL \'1 day\', NOW() - INTERVAL \'1 day\')',
+        'INSERT INTO currency (code, "dollarValue", "timestamp", "updatedAt") VALUES (@code, 1.0, NOW() - INTERVAL \'1 day\', NOW() - INTERVAL \'1 day\')',
       ),
       parameters: {'code': code},
     );

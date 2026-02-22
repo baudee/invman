@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
@@ -15,7 +14,7 @@ class StockRootScreen extends HookWidget {
     final controller = useMemoized(() => getIt<StockRootController>());
 
     return BaseScreen(
-      appBar: AppBar(title: Text(S.of(context).stock_title)),
+      appBar: AppBar(title: Text(AppConstants.appName)),
       body: StockRootComponent(controller: controller),
     );
   }
