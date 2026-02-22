@@ -6,11 +6,7 @@ class SectionHeaderComponent extends StatelessWidget {
   final String title;
   final VoidCallback? onSeeAll;
 
-  const SectionHeaderComponent({
-    super.key,
-    required this.title,
-    this.onSeeAll,
-  });
+  const SectionHeaderComponent({super.key, required this.title, this.onSeeAll});
 
   @override
   Widget build(BuildContext context) {
@@ -21,17 +17,8 @@ class SectionHeaderComponent extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            title,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          if (onSeeAll != null)
-            TextButton(
-              onPressed: onSeeAll,
-              child: Text(S.of(context).core_seeAll),
-            ),
+          Text(title, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+          if (onSeeAll != null) TextButton(onPressed: onSeeAll, child: Text(S.of(context).core_seeAll)),
         ],
       ),
     );

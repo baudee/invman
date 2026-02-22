@@ -12,20 +12,22 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 
-abstract class Currency
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class Currency implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Currency._({
     this.id,
     required this.code,
     double? dollarValue,
+    DateTime? timestamp,
     DateTime? updatedAt,
   }) : dollarValue = dollarValue ?? 0.0,
+       timestamp = timestamp ?? DateTime.now(),
        updatedAt = updatedAt ?? DateTime.now();
 
   factory Currency({
     int? id,
     required String code,
     double? dollarValue,
+    DateTime? timestamp,
     DateTime? updatedAt,
   }) = _CurrencyImpl;
 
@@ -34,6 +36,9 @@ abstract class Currency
       id: jsonSerialization['id'] as int?,
       code: jsonSerialization['code'] as String,
       dollarValue: (jsonSerialization['dollarValue'] as num?)?.toDouble(),
+      timestamp: jsonSerialization['timestamp'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['timestamp']),
       updatedAt: jsonSerialization['updatedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
@@ -51,6 +56,8 @@ abstract class Currency
 
   double dollarValue;
 
+  DateTime timestamp;
+
   DateTime updatedAt;
 
   @override
@@ -63,6 +70,7 @@ abstract class Currency
     int? id,
     String? code,
     double? dollarValue,
+    DateTime? timestamp,
     DateTime? updatedAt,
   });
   @override
@@ -72,6 +80,7 @@ abstract class Currency
       if (id != null) 'id': id,
       'code': code,
       'dollarValue': dollarValue,
+      'timestamp': timestamp.toJson(),
       'updatedAt': updatedAt.toJson(),
     };
   }
@@ -83,6 +92,7 @@ abstract class Currency
       if (id != null) 'id': id,
       'code': code,
       'dollarValue': dollarValue,
+      'timestamp': timestamp.toJson(),
       'updatedAt': updatedAt.toJson(),
     };
   }
@@ -124,11 +134,13 @@ class _CurrencyImpl extends Currency {
     int? id,
     required String code,
     double? dollarValue,
+    DateTime? timestamp,
     DateTime? updatedAt,
   }) : super._(
          id: id,
          code: code,
          dollarValue: dollarValue,
+         timestamp: timestamp,
          updatedAt: updatedAt,
        );
 
@@ -140,12 +152,14 @@ class _CurrencyImpl extends Currency {
     Object? id = _Undefined,
     String? code,
     double? dollarValue,
+    DateTime? timestamp,
     DateTime? updatedAt,
   }) {
     return Currency(
       id: id is int? ? id : this.id,
       code: code ?? this.code,
       dollarValue: dollarValue ?? this.dollarValue,
+      timestamp: timestamp ?? this.timestamp,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
@@ -164,11 +178,15 @@ class CurrencyUpdateTable extends _i1.UpdateTable<CurrencyTable> {
     value,
   );
 
-  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
-      _i1.ColumnValue(
-        table.updatedAt,
-        value,
-      );
+  _i1.ColumnValue<DateTime, DateTime> timestamp(DateTime value) => _i1.ColumnValue(
+    table.timestamp,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) => _i1.ColumnValue(
+    table.updatedAt,
+    value,
+  );
 }
 
 class CurrencyTable extends _i1.Table<int?> {
@@ -180,6 +198,10 @@ class CurrencyTable extends _i1.Table<int?> {
     );
     dollarValue = _i1.ColumnDouble(
       'dollarValue',
+      this,
+    );
+    timestamp = _i1.ColumnDateTime(
+      'timestamp',
       this,
     );
     updatedAt = _i1.ColumnDateTime(
@@ -194,6 +216,8 @@ class CurrencyTable extends _i1.Table<int?> {
 
   late final _i1.ColumnDouble dollarValue;
 
+  late final _i1.ColumnDateTime timestamp;
+
   late final _i1.ColumnDateTime updatedAt;
 
   @override
@@ -201,6 +225,7 @@ class CurrencyTable extends _i1.Table<int?> {
     id,
     code,
     dollarValue,
+    timestamp,
     updatedAt,
   ];
 }

@@ -32,21 +32,23 @@ class StockRootComponent extends StatelessWidget {
         ),
         BaseStateComponent(
           state: controller.likedStocks,
-          successBuilder: (liked) => Column(
-            children: [
-              const SizedBox(height: UIConstants.spacingXxl),
-              SectionHeaderComponent(
-                title: S.of(context).stock_liked,
-                onSeeAll: () => router.push(LikedStocksScreen.route()),
-              ),
-              HorizontalListComponent<Stock>(
-                items: liked,
-                height: 120,
-                itemBuilder: (stock) =>
-                    StockCardComponent(stock: stock, onTap: () => router.push(StockDetailScreen.route(stock.id))),
-              ),
-            ],
-          ),
+          successBuilder: (liked) => liked.isNotEmpty
+              ? Column(
+                  children: [
+                    const SizedBox(height: UIConstants.spacingXxl),
+                    SectionHeaderComponent(
+                      title: S.of(context).stock_liked,
+                      onSeeAll: () => router.push(LikedStocksScreen.route()),
+                    ),
+                    HorizontalListComponent<Stock>(
+                      items: liked,
+                      height: 120,
+                      itemBuilder: (stock) =>
+                          StockCardComponent(stock: stock, onTap: () => router.push(StockDetailScreen.route(stock.id))),
+                    ),
+                  ],
+                )
+              : const SizedBox(),
         ),
       ],
     );

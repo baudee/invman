@@ -25,6 +25,7 @@ abstract class Stock implements _i1.SerializableModel {
     required this.quoteType,
     this.logoUrl,
     double? price,
+    DateTime? timestamp,
     DateTime? updatedAt,
     required this.currencyId,
     this.currency,
@@ -32,6 +33,7 @@ abstract class Stock implements _i1.SerializableModel {
     this.investments,
   }) : id = id ?? _i1.Uuid().v4obj(),
        price = price ?? 0.0,
+       timestamp = timestamp ?? DateTime.now(),
        updatedAt = updatedAt ?? DateTime.now();
 
   factory Stock({
@@ -41,6 +43,7 @@ abstract class Stock implements _i1.SerializableModel {
     required _i2.StockType quoteType,
     String? logoUrl,
     double? price,
+    DateTime? timestamp,
     DateTime? updatedAt,
     required int currencyId,
     _i3.Currency? currency,
@@ -60,6 +63,9 @@ abstract class Stock implements _i1.SerializableModel {
       ),
       logoUrl: jsonSerialization['logoUrl'] as String?,
       price: (jsonSerialization['price'] as num?)?.toDouble(),
+      timestamp: jsonSerialization['timestamp'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['timestamp']),
       updatedAt: jsonSerialization['updatedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
@@ -95,6 +101,8 @@ abstract class Stock implements _i1.SerializableModel {
 
   double price;
 
+  DateTime timestamp;
+
   DateTime updatedAt;
 
   int currencyId;
@@ -115,6 +123,7 @@ abstract class Stock implements _i1.SerializableModel {
     _i2.StockType? quoteType,
     String? logoUrl,
     double? price,
+    DateTime? timestamp,
     DateTime? updatedAt,
     int? currencyId,
     _i3.Currency? currency,
@@ -131,6 +140,7 @@ abstract class Stock implements _i1.SerializableModel {
       'quoteType': quoteType.toJson(),
       if (logoUrl != null) 'logoUrl': logoUrl,
       'price': price,
+      'timestamp': timestamp.toJson(),
       'updatedAt': updatedAt.toJson(),
       'currencyId': currencyId,
       if (currency != null) 'currency': currency?.toJson(),
@@ -156,6 +166,7 @@ class _StockImpl extends Stock {
     required _i2.StockType quoteType,
     String? logoUrl,
     double? price,
+    DateTime? timestamp,
     DateTime? updatedAt,
     required int currencyId,
     _i3.Currency? currency,
@@ -168,6 +179,7 @@ class _StockImpl extends Stock {
          quoteType: quoteType,
          logoUrl: logoUrl,
          price: price,
+         timestamp: timestamp,
          updatedAt: updatedAt,
          currencyId: currencyId,
          currency: currency,
@@ -186,6 +198,7 @@ class _StockImpl extends Stock {
     _i2.StockType? quoteType,
     Object? logoUrl = _Undefined,
     double? price,
+    DateTime? timestamp,
     DateTime? updatedAt,
     int? currencyId,
     Object? currency = _Undefined,
@@ -199,6 +212,7 @@ class _StockImpl extends Stock {
       quoteType: quoteType ?? this.quoteType,
       logoUrl: logoUrl is String? ? logoUrl : this.logoUrl,
       price: price ?? this.price,
+      timestamp: timestamp ?? this.timestamp,
       updatedAt: updatedAt ?? this.updatedAt,
       currencyId: currencyId ?? this.currencyId,
       currency: currency is _i3.Currency?

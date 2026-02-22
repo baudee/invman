@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:injectable/injectable.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/account/account.dart';
+import 'package:invman_flutter/features/app_settings/app_settings.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/onboarding/onboarding.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
@@ -24,6 +25,8 @@ abstract class RouterModule {
       initialLocation: initialRoute,
       navigatorKey: rootNavigatorKey,
       routes: [
+        GoRoute(path: MaintenanceScreen.route(), builder: (_, _) => const MaintenanceScreen()),
+        GoRoute(path: UpdateRequiredScreen.route(), builder: (_, _) => const UpdateRequiredScreen()),
         GoRoute(path: SignInScreen.route(), builder: (_, _) => SignInScreen()),
         ...OnboardingRoutes.routes,
         StatefulShellRoute.indexedStack(
@@ -35,9 +38,24 @@ abstract class RouterModule {
       ],
       refreshListenable: authManager.state,
       redirect: (context, state) {
+        final appSettingsStatus = getIt<AppSettingsManager>().status.value;
+        final location = state.matchedLocation;
+
+        // App settings routes are terminal - no redirect from them
+        if (location == MaintenanceScreen.route() || location == UpdateRequiredScreen.route()) {
+          return null;
+        }
+
+        // Block access if maintenance or update required
+        if (appSettingsStatus == AppSettingsStatus.maintenance) {
+          return MaintenanceScreen.route();
+        }
+        if (appSettingsStatus == AppSettingsStatus.updateRequired) {
+          return UpdateRequiredScreen.route();
+        }
+
         final isLoggedIn = authManager.isLoggedIn.value;
         final isOnboarded = authManager.isOnboarded.value;
-        final location = state.matchedLocation;
 
         final isGoingToLogin = location == SignInScreen.route();
         final isGoingToOnboarding = location == OnboardingRootScreen.route();

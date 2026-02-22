@@ -1,6 +1,5 @@
 import 'package:injectable/injectable.dart';
 import 'package:invman_server/src/core/core.dart';
-import 'package:invman_server/src/core/helpers/include_helpers.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:invman_server/src/stock/stock.dart';
 import 'package:serverpod/serverpod.dart';
@@ -71,7 +70,8 @@ class StockService {
         session,
         stock.copyWith(
           price: currentValue,
-          updatedAt: timestamp,
+          timestamp: timestamp,
+          updatedAt: DateTime.now(),
         ),
         transaction: transaction,
       );

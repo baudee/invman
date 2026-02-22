@@ -9,6 +9,7 @@ fields:
   quoteType: StockType,
   logoUrl: String?,
   price: double, defaultModel=0.0,
+  timestamp: DateTime, defaultModel=now,
   updatedAt: DateTime, defaultModel=now,
   currency: Currency?, relation
   likes: List<StockLike>?, relation(name=stock_likes)

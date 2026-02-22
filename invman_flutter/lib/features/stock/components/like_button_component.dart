@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:invman_client/invman_client.dart';
-import 'package:invman_flutter/features/stock/extensions/extensions.dart';
+import 'package:invman_flutter/features/stock/stock.dart';
 
 class LikeButtonComponent extends StatelessWidget {
   final Stock stock;

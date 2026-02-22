@@ -19,12 +19,20 @@ Future<void> main(List<String> args) async {
   final connection = await _connectToDatabase(config, passwords);
 
   try {
+    await _populateAppSettings(connection);
     await _populateCurrencies(connection);
     await _populateStocks(connection);
     print('Database population completed successfully.');
   } finally {
     await connection.close();
   }
+}
+
+Future<void> _populateAppSettings(Connection connection) async {
+  await connection.execute('''
+    INSERT INTO app_settings ("maintenanceMode", "minVersion", "appStoreUrl", "playStoreUrl")
+    VALUES (false, '1.0.0', NULL, NULL)
+  ''');
 }
 
 String _parseEnvironment(List<String> args) {
@@ -155,7 +163,9 @@ Future<void> _populateCurrencies(Connection connection) async {
     }
 
     await connection.execute(
-      Sql.named('INSERT INTO currency (code, "dollarValue", "updatedAt") VALUES (@code, 0.0, NOW())'),
+      Sql.named(
+        'INSERT INTO currency (code, "dollarValue", "timestamp", "updatedAt") VALUES (@code, -1.0, NOW() - INTERVAL \'1 day\', NOW() - INTERVAL \'1 day\')',
+      ),
       parameters: {'code': code},
     );
     insertedCount++;
@@ -285,8 +295,8 @@ Future<void> _populateStockFile(
 
     await connection.execute(
       Sql.named('''
-        INSERT INTO stock (id, symbol, "name", "quoteType", "logoUrl", "price", "updatedAt", "currencyId")
-        VALUES (gen_random_uuid(), @symbol, @name, @quoteType, @logoUrl, 0.0, NOW(), @currencyId)
+        INSERT INTO stock (id, symbol, "name", "quoteType", "logoUrl", "price", "timestamp", "updatedAt", "currencyId")
+        VALUES (gen_random_uuid(), @symbol, @name, @quoteType, @logoUrl, -1.0, NOW() - INTERVAL '1 day', NOW() - INTERVAL '1 day', @currencyId)
       '''),
       parameters: {
         'symbol': symbol,

@@ -5,6 +5,7 @@ table: currency
 fields:
   code: String
   dollarValue: double, defaultModel=0.0,
+  timestamp: DateTime, defaultModel=now
   updatedAt: DateTime, defaultModel=now
 
 indexes:

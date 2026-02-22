@@ -18,8 +18,7 @@ import '../../stock/models/stock_like.dart' as _i4;
 import '../../investment/models/investment.dart' as _i5;
 import 'package:invman_server/src/generated/protocol.dart' as _i6;
 
-abstract class Stock
-    implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
+abstract class Stock implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
   Stock._({
     _i1.UuidValue? id,
     required this.symbol,
@@ -27,6 +26,7 @@ abstract class Stock
     required this.quoteType,
     this.logoUrl,
     double? price,
+    DateTime? timestamp,
     DateTime? updatedAt,
     required this.currencyId,
     this.currency,
@@ -34,6 +34,7 @@ abstract class Stock
     this.investments,
   }) : id = id ?? _i1.Uuid().v4obj(),
        price = price ?? 0.0,
+       timestamp = timestamp ?? DateTime.now(),
        updatedAt = updatedAt ?? DateTime.now();
 
   factory Stock({
@@ -43,6 +44,7 @@ abstract class Stock
     required _i2.StockType quoteType,
     String? logoUrl,
     double? price,
+    DateTime? timestamp,
     DateTime? updatedAt,
     required int currencyId,
     _i3.Currency? currency,
@@ -52,9 +54,7 @@ abstract class Stock
 
   factory Stock.fromJson(Map<String, dynamic> jsonSerialization) {
     return Stock(
-      id: jsonSerialization['id'] == null
-          ? null
-          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null ? null : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       symbol: jsonSerialization['symbol'] as String,
       name: jsonSerialization['name'] as String,
       quoteType: _i2.StockType.fromJson(
@@ -62,6 +62,9 @@ abstract class Stock
       ),
       logoUrl: jsonSerialization['logoUrl'] as String?,
       price: (jsonSerialization['price'] as num?)?.toDouble(),
+      timestamp: jsonSerialization['timestamp'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['timestamp']),
       updatedAt: jsonSerialization['updatedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
@@ -101,6 +104,8 @@ abstract class Stock
 
   double price;
 
+  DateTime timestamp;
+
   DateTime updatedAt;
 
   int currencyId;
@@ -124,6 +129,7 @@ abstract class Stock
     _i2.StockType? quoteType,
     String? logoUrl,
     double? price,
+    DateTime? timestamp,
     DateTime? updatedAt,
     int? currencyId,
     _i3.Currency? currency,
@@ -140,12 +146,12 @@ abstract class Stock
       'quoteType': quoteType.toJson(),
       if (logoUrl != null) 'logoUrl': logoUrl,
       'price': price,
+      'timestamp': timestamp.toJson(),
       'updatedAt': updatedAt.toJson(),
       'currencyId': currencyId,
       if (currency != null) 'currency': currency?.toJson(),
       if (likes != null) 'likes': likes?.toJson(valueToJson: (v) => v.toJson()),
-      if (investments != null)
-        'investments': investments?.toJson(valueToJson: (v) => v.toJson()),
+      if (investments != null) 'investments': investments?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -159,11 +165,11 @@ abstract class Stock
       'quoteType': quoteType.toJson(),
       if (logoUrl != null) 'logoUrl': logoUrl,
       'price': price,
+      'timestamp': timestamp.toJson(),
       'updatedAt': updatedAt.toJson(),
       'currencyId': currencyId,
       if (currency != null) 'currency': currency?.toJsonForProtocol(),
-      if (likes != null)
-        'likes': likes?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
+      if (likes != null) 'likes': likes?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
       if (investments != null)
         'investments': investments?.toJson(
           valueToJson: (v) => v.toJsonForProtocol(),
@@ -219,6 +225,7 @@ class _StockImpl extends Stock {
     required _i2.StockType quoteType,
     String? logoUrl,
     double? price,
+    DateTime? timestamp,
     DateTime? updatedAt,
     required int currencyId,
     _i3.Currency? currency,
@@ -231,6 +238,7 @@ class _StockImpl extends Stock {
          quoteType: quoteType,
          logoUrl: logoUrl,
          price: price,
+         timestamp: timestamp,
          updatedAt: updatedAt,
          currencyId: currencyId,
          currency: currency,
@@ -249,6 +257,7 @@ class _StockImpl extends Stock {
     _i2.StockType? quoteType,
     Object? logoUrl = _Undefined,
     double? price,
+    DateTime? timestamp,
     DateTime? updatedAt,
     int? currencyId,
     Object? currency = _Undefined,
@@ -262,14 +271,11 @@ class _StockImpl extends Stock {
       quoteType: quoteType ?? this.quoteType,
       logoUrl: logoUrl is String? ? logoUrl : this.logoUrl,
       price: price ?? this.price,
+      timestamp: timestamp ?? this.timestamp,
       updatedAt: updatedAt ?? this.updatedAt,
       currencyId: currencyId ?? this.currencyId,
-      currency: currency is _i3.Currency?
-          ? currency
-          : this.currency?.copyWith(),
-      likes: likes is List<_i4.StockLike>?
-          ? likes
-          : this.likes?.map((e0) => e0.copyWith()).toList(),
+      currency: currency is _i3.Currency? ? currency : this.currency?.copyWith(),
+      likes: likes is List<_i4.StockLike>? ? likes : this.likes?.map((e0) => e0.copyWith()).toList(),
       investments: investments is List<_i5.Investment>?
           ? investments
           : this.investments?.map((e0) => e0.copyWith()).toList(),
@@ -307,11 +313,15 @@ class StockUpdateTable extends _i1.UpdateTable<StockTable> {
     value,
   );
 
-  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
-      _i1.ColumnValue(
-        table.updatedAt,
-        value,
-      );
+  _i1.ColumnValue<DateTime, DateTime> timestamp(DateTime value) => _i1.ColumnValue(
+    table.timestamp,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) => _i1.ColumnValue(
+    table.updatedAt,
+    value,
+  );
 
   _i1.ColumnValue<int, int> currencyId(int value) => _i1.ColumnValue(
     table.currencyId,
@@ -343,6 +353,10 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
       'price',
       this,
     );
+    timestamp = _i1.ColumnDateTime(
+      'timestamp',
+      this,
+    );
     updatedAt = _i1.ColumnDateTime(
       'updatedAt',
       this,
@@ -365,6 +379,8 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
 
   late final _i1.ColumnDouble price;
 
+  late final _i1.ColumnDateTime timestamp;
+
   late final _i1.ColumnDateTime updatedAt;
 
   late final _i1.ColumnInt currencyId;
@@ -386,8 +402,7 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
       field: Stock.t.currencyId,
       foreignField: _i3.Currency.t.id,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) =>
-          _i3.CurrencyTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) => _i3.CurrencyTable(tableRelation: foreignTableRelation),
     );
     return _currency!;
   }
@@ -399,8 +414,7 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
       field: Stock.t.id,
       foreignField: _i4.StockLike.t.stockId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) =>
-          _i4.StockLikeTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) => _i4.StockLikeTable(tableRelation: foreignTableRelation),
     );
     return ___likes!;
   }
@@ -412,8 +426,7 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
       field: Stock.t.id,
       foreignField: _i5.Investment.t.stockId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) =>
-          _i5.InvestmentTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) => _i5.InvestmentTable(tableRelation: foreignTableRelation),
     );
     return ___investments!;
   }
@@ -425,8 +438,7 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
       field: Stock.t.id,
       foreignField: _i4.StockLike.t.stockId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) =>
-          _i4.StockLikeTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) => _i4.StockLikeTable(tableRelation: foreignTableRelation),
     );
     _likes = _i1.ManyRelation<_i4.StockLikeTable>(
       tableWithRelations: relationTable,
@@ -444,8 +456,7 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
       field: Stock.t.id,
       foreignField: _i5.Investment.t.stockId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) =>
-          _i5.InvestmentTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) => _i5.InvestmentTable(tableRelation: foreignTableRelation),
     );
     _investments = _i1.ManyRelation<_i5.InvestmentTable>(
       tableWithRelations: relationTable,
@@ -464,6 +475,7 @@ class StockTable extends _i1.Table<_i1.UuidValue> {
     quoteType,
     logoUrl,
     price,
+    timestamp,
     updatedAt,
     currencyId,
   ];
@@ -816,9 +828,7 @@ class StockAttachRepository {
       throw ArgumentError.notNull('stock.id');
     }
 
-    var $stockLike = stockLike
-        .map((e) => e.copyWith(stockId: stock.id))
-        .toList();
+    var $stockLike = stockLike.map((e) => e.copyWith(stockId: stock.id)).toList();
     await session.db.update<_i4.StockLike>(
       $stockLike,
       columns: [_i4.StockLike.t.stockId],
@@ -841,9 +851,7 @@ class StockAttachRepository {
       throw ArgumentError.notNull('stock.id');
     }
 
-    var $investment = investment
-        .map((e) => e.copyWith(stockId: stock.id))
-        .toList();
+    var $investment = investment.map((e) => e.copyWith(stockId: stock.id)).toList();
     await session.db.update<_i5.Investment>(
       $investment,
       columns: [_i5.Investment.t.stockId],

@@ -17,14 +17,17 @@ abstract class Currency implements _i1.SerializableModel {
     this.id,
     required this.code,
     double? dollarValue,
+    DateTime? timestamp,
     DateTime? updatedAt,
   }) : dollarValue = dollarValue ?? 0.0,
+       timestamp = timestamp ?? DateTime.now(),
        updatedAt = updatedAt ?? DateTime.now();
 
   factory Currency({
     int? id,
     required String code,
     double? dollarValue,
+    DateTime? timestamp,
     DateTime? updatedAt,
   }) = _CurrencyImpl;
 
@@ -33,6 +36,9 @@ abstract class Currency implements _i1.SerializableModel {
       id: jsonSerialization['id'] as int?,
       code: jsonSerialization['code'] as String,
       dollarValue: (jsonSerialization['dollarValue'] as num?)?.toDouble(),
+      timestamp: jsonSerialization['timestamp'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['timestamp']),
       updatedAt: jsonSerialization['updatedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
@@ -48,6 +54,8 @@ abstract class Currency implements _i1.SerializableModel {
 
   double dollarValue;
 
+  DateTime timestamp;
+
   DateTime updatedAt;
 
   /// Returns a shallow copy of this [Currency]
@@ -57,6 +65,7 @@ abstract class Currency implements _i1.SerializableModel {
     int? id,
     String? code,
     double? dollarValue,
+    DateTime? timestamp,
     DateTime? updatedAt,
   });
   @override
@@ -66,6 +75,7 @@ abstract class Currency implements _i1.SerializableModel {
       if (id != null) 'id': id,
       'code': code,
       'dollarValue': dollarValue,
+      'timestamp': timestamp.toJson(),
       'updatedAt': updatedAt.toJson(),
     };
   }
@@ -83,11 +93,13 @@ class _CurrencyImpl extends Currency {
     int? id,
     required String code,
     double? dollarValue,
+    DateTime? timestamp,
     DateTime? updatedAt,
   }) : super._(
          id: id,
          code: code,
          dollarValue: dollarValue,
+         timestamp: timestamp,
          updatedAt: updatedAt,
        );
 
@@ -99,12 +111,14 @@ class _CurrencyImpl extends Currency {
     Object? id = _Undefined,
     String? code,
     double? dollarValue,
+    DateTime? timestamp,
     DateTime? updatedAt,
   }) {
     return Currency(
       id: id is int? ? id : this.id,
       code: code ?? this.code,
       dollarValue: dollarValue ?? this.dollarValue,
+      timestamp: timestamp ?? this.timestamp,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }

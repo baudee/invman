@@ -12,31 +12,27 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'package:serverpod/protocol.dart' as _i2;
-import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
-    as _i3;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
-    as _i4;
+import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart' as _i3;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart' as _i4;
 import 'account/models/account.dart' as _i5;
-import 'core/exceptions/error_code.dart' as _i6;
-import 'core/exceptions/server_exception.dart' as _i7;
-import 'currency/models/currency.dart' as _i8;
-import 'investment/models/investment.dart' as _i9;
-import 'stock/models/stock.dart' as _i10;
-import 'stock/models/stock_like.dart' as _i11;
-import 'stock/models/stock_type.dart' as _i12;
-import 'transfer/models/transfer.dart' as _i13;
-import 'withdrawal/models/withdrawal_fee.dart' as _i14;
-import 'withdrawal/models/withdrawal_rule.dart' as _i15;
-import 'package:invman_server/src/generated/currency/models/currency.dart'
-    as _i16;
-import 'package:invman_server/src/generated/investment/models/investment.dart'
-    as _i17;
-import 'package:invman_server/src/generated/stock/models/stock.dart' as _i18;
-import 'package:invman_server/src/generated/transfer/models/transfer.dart'
-    as _i19;
-import 'package:invman_server/src/generated/withdrawal/models/withdrawal_rule.dart'
-    as _i20;
+import 'app_settings/models/app_settings.dart' as _i6;
+import 'core/exceptions/error_code.dart' as _i7;
+import 'core/exceptions/server_exception.dart' as _i8;
+import 'currency/models/currency.dart' as _i9;
+import 'investment/models/investment.dart' as _i10;
+import 'stock/models/stock.dart' as _i11;
+import 'stock/models/stock_like.dart' as _i12;
+import 'stock/models/stock_type.dart' as _i13;
+import 'transfer/models/transfer.dart' as _i14;
+import 'withdrawal/models/withdrawal_fee.dart' as _i15;
+import 'withdrawal/models/withdrawal_rule.dart' as _i16;
+import 'package:invman_server/src/generated/currency/models/currency.dart' as _i17;
+import 'package:invman_server/src/generated/investment/models/investment.dart' as _i18;
+import 'package:invman_server/src/generated/stock/models/stock.dart' as _i19;
+import 'package:invman_server/src/generated/transfer/models/transfer.dart' as _i20;
+import 'package:invman_server/src/generated/withdrawal/models/withdrawal_rule.dart' as _i21;
 export 'account/models/account.dart';
+export 'app_settings/models/app_settings.dart';
 export 'core/exceptions/error_code.dart';
 export 'core/exceptions/server_exception.dart';
 export 'currency/models/currency.dart';
@@ -135,6 +131,62 @@ class Protocol extends _i1.SerializationManagerServer {
       managed: true,
     ),
     _i2.TableDefinition(
+      name: 'app_settings',
+      dartName: 'AppSettings',
+      schema: 'public',
+      module: 'invman',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'app_settings_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'maintenanceMode',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+        _i2.ColumnDefinition(
+          name: 'minVersion',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'appStoreUrl',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'playStoreUrl',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'app_settings_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
       name: 'currency',
       dartName: 'Currency',
       schema: 'public',
@@ -158,6 +210,12 @@ class Protocol extends _i1.SerializationManagerServer {
           columnType: _i2.ColumnType.doublePrecision,
           isNullable: false,
           dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'timestamp',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
         ),
         _i2.ColumnDefinition(
           name: 'updatedAt',
@@ -360,6 +418,12 @@ class Protocol extends _i1.SerializationManagerServer {
           columnType: _i2.ColumnType.doublePrecision,
           isNullable: false,
           dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'timestamp',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
         ),
         _i2.ColumnDefinition(
           name: 'updatedAt',
@@ -769,140 +833,113 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i5.Account) {
       return _i5.Account.fromJson(data) as T;
     }
-    if (t == _i6.ErrorCode) {
-      return _i6.ErrorCode.fromJson(data) as T;
+    if (t == _i6.AppSettings) {
+      return _i6.AppSettings.fromJson(data) as T;
     }
-    if (t == _i7.ServerException) {
-      return _i7.ServerException.fromJson(data) as T;
+    if (t == _i7.ErrorCode) {
+      return _i7.ErrorCode.fromJson(data) as T;
     }
-    if (t == _i8.Currency) {
-      return _i8.Currency.fromJson(data) as T;
+    if (t == _i8.ServerException) {
+      return _i8.ServerException.fromJson(data) as T;
     }
-    if (t == _i9.Investment) {
-      return _i9.Investment.fromJson(data) as T;
+    if (t == _i9.Currency) {
+      return _i9.Currency.fromJson(data) as T;
     }
-    if (t == _i10.Stock) {
-      return _i10.Stock.fromJson(data) as T;
+    if (t == _i10.Investment) {
+      return _i10.Investment.fromJson(data) as T;
     }
-    if (t == _i11.StockLike) {
-      return _i11.StockLike.fromJson(data) as T;
+    if (t == _i11.Stock) {
+      return _i11.Stock.fromJson(data) as T;
     }
-    if (t == _i12.StockType) {
-      return _i12.StockType.fromJson(data) as T;
+    if (t == _i12.StockLike) {
+      return _i12.StockLike.fromJson(data) as T;
     }
-    if (t == _i13.Transfer) {
-      return _i13.Transfer.fromJson(data) as T;
+    if (t == _i13.StockType) {
+      return _i13.StockType.fromJson(data) as T;
     }
-    if (t == _i14.WithdrawalFee) {
-      return _i14.WithdrawalFee.fromJson(data) as T;
+    if (t == _i14.Transfer) {
+      return _i14.Transfer.fromJson(data) as T;
     }
-    if (t == _i15.WithdrawalRule) {
-      return _i15.WithdrawalRule.fromJson(data) as T;
+    if (t == _i15.WithdrawalFee) {
+      return _i15.WithdrawalFee.fromJson(data) as T;
+    }
+    if (t == _i16.WithdrawalRule) {
+      return _i16.WithdrawalRule.fromJson(data) as T;
     }
     if (t == _i1.getType<_i5.Account?>()) {
       return (data != null ? _i5.Account.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i6.ErrorCode?>()) {
-      return (data != null ? _i6.ErrorCode.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i6.AppSettings?>()) {
+      return (data != null ? _i6.AppSettings.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i7.ServerException?>()) {
-      return (data != null ? _i7.ServerException.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i7.ErrorCode?>()) {
+      return (data != null ? _i7.ErrorCode.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i8.Currency?>()) {
-      return (data != null ? _i8.Currency.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i8.ServerException?>()) {
+      return (data != null ? _i8.ServerException.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i9.Investment?>()) {
-      return (data != null ? _i9.Investment.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i9.Currency?>()) {
+      return (data != null ? _i9.Currency.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i10.Stock?>()) {
-      return (data != null ? _i10.Stock.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i10.Investment?>()) {
+      return (data != null ? _i10.Investment.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i11.StockLike?>()) {
-      return (data != null ? _i11.StockLike.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i11.Stock?>()) {
+      return (data != null ? _i11.Stock.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i12.StockType?>()) {
-      return (data != null ? _i12.StockType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i12.StockLike?>()) {
+      return (data != null ? _i12.StockLike.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i13.Transfer?>()) {
-      return (data != null ? _i13.Transfer.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i13.StockType?>()) {
+      return (data != null ? _i13.StockType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i14.WithdrawalFee?>()) {
-      return (data != null ? _i14.WithdrawalFee.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i14.Transfer?>()) {
+      return (data != null ? _i14.Transfer.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i15.WithdrawalRule?>()) {
-      return (data != null ? _i15.WithdrawalRule.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i15.WithdrawalFee?>()) {
+      return (data != null ? _i15.WithdrawalFee.fromJson(data) : null) as T;
     }
-    if (t == List<_i13.Transfer>) {
-      return (data as List).map((e) => deserialize<_i13.Transfer>(e)).toList()
-          as T;
+    if (t == _i1.getType<_i16.WithdrawalRule?>()) {
+      return (data != null ? _i16.WithdrawalRule.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<List<_i13.Transfer>?>()) {
-      return (data != null
-              ? (data as List)
-                    .map((e) => deserialize<_i13.Transfer>(e))
-                    .toList()
-              : null)
-          as T;
+    if (t == List<_i14.Transfer>) {
+      return (data as List).map((e) => deserialize<_i14.Transfer>(e)).toList() as T;
     }
-    if (t == List<_i11.StockLike>) {
-      return (data as List).map((e) => deserialize<_i11.StockLike>(e)).toList()
-          as T;
+    if (t == _i1.getType<List<_i14.Transfer>?>()) {
+      return (data != null ? (data as List).map((e) => deserialize<_i14.Transfer>(e)).toList() : null) as T;
     }
-    if (t == _i1.getType<List<_i11.StockLike>?>()) {
-      return (data != null
-              ? (data as List)
-                    .map((e) => deserialize<_i11.StockLike>(e))
-                    .toList()
-              : null)
-          as T;
+    if (t == List<_i12.StockLike>) {
+      return (data as List).map((e) => deserialize<_i12.StockLike>(e)).toList() as T;
     }
-    if (t == List<_i9.Investment>) {
-      return (data as List).map((e) => deserialize<_i9.Investment>(e)).toList()
-          as T;
+    if (t == _i1.getType<List<_i12.StockLike>?>()) {
+      return (data != null ? (data as List).map((e) => deserialize<_i12.StockLike>(e)).toList() : null) as T;
     }
-    if (t == _i1.getType<List<_i9.Investment>?>()) {
-      return (data != null
-              ? (data as List)
-                    .map((e) => deserialize<_i9.Investment>(e))
-                    .toList()
-              : null)
-          as T;
+    if (t == List<_i10.Investment>) {
+      return (data as List).map((e) => deserialize<_i10.Investment>(e)).toList() as T;
     }
-    if (t == List<_i14.WithdrawalFee>) {
-      return (data as List)
-              .map((e) => deserialize<_i14.WithdrawalFee>(e))
-              .toList()
-          as T;
+    if (t == _i1.getType<List<_i10.Investment>?>()) {
+      return (data != null ? (data as List).map((e) => deserialize<_i10.Investment>(e)).toList() : null) as T;
     }
-    if (t == _i1.getType<List<_i14.WithdrawalFee>?>()) {
-      return (data != null
-              ? (data as List)
-                    .map((e) => deserialize<_i14.WithdrawalFee>(e))
-                    .toList()
-              : null)
-          as T;
+    if (t == List<_i15.WithdrawalFee>) {
+      return (data as List).map((e) => deserialize<_i15.WithdrawalFee>(e)).toList() as T;
     }
-    if (t == List<_i16.Currency>) {
-      return (data as List).map((e) => deserialize<_i16.Currency>(e)).toList()
-          as T;
+    if (t == _i1.getType<List<_i15.WithdrawalFee>?>()) {
+      return (data != null ? (data as List).map((e) => deserialize<_i15.WithdrawalFee>(e)).toList() : null) as T;
     }
-    if (t == List<_i17.Investment>) {
-      return (data as List).map((e) => deserialize<_i17.Investment>(e)).toList()
-          as T;
+    if (t == List<_i17.Currency>) {
+      return (data as List).map((e) => deserialize<_i17.Currency>(e)).toList() as T;
     }
-    if (t == List<_i18.Stock>) {
-      return (data as List).map((e) => deserialize<_i18.Stock>(e)).toList()
-          as T;
+    if (t == List<_i18.Investment>) {
+      return (data as List).map((e) => deserialize<_i18.Investment>(e)).toList() as T;
     }
-    if (t == List<_i19.Transfer>) {
-      return (data as List).map((e) => deserialize<_i19.Transfer>(e)).toList()
-          as T;
+    if (t == List<_i19.Stock>) {
+      return (data as List).map((e) => deserialize<_i19.Stock>(e)).toList() as T;
     }
-    if (t == List<_i20.WithdrawalRule>) {
-      return (data as List)
-              .map((e) => deserialize<_i20.WithdrawalRule>(e))
-              .toList()
-          as T;
+    if (t == List<_i20.Transfer>) {
+      return (data as List).map((e) => deserialize<_i20.Transfer>(e)).toList() as T;
+    }
+    if (t == List<_i21.WithdrawalRule>) {
+      return (data as List).map((e) => deserialize<_i21.WithdrawalRule>(e)).toList() as T;
     }
     try {
       return _i3.Protocol().deserialize<T>(data, t);
@@ -919,16 +956,17 @@ class Protocol extends _i1.SerializationManagerServer {
   static String? getClassNameForType(Type type) {
     return switch (type) {
       _i5.Account => 'Account',
-      _i6.ErrorCode => 'ErrorCode',
-      _i7.ServerException => 'ServerException',
-      _i8.Currency => 'Currency',
-      _i9.Investment => 'Investment',
-      _i10.Stock => 'Stock',
-      _i11.StockLike => 'StockLike',
-      _i12.StockType => 'StockType',
-      _i13.Transfer => 'Transfer',
-      _i14.WithdrawalFee => 'WithdrawalFee',
-      _i15.WithdrawalRule => 'WithdrawalRule',
+      _i6.AppSettings => 'AppSettings',
+      _i7.ErrorCode => 'ErrorCode',
+      _i8.ServerException => 'ServerException',
+      _i9.Currency => 'Currency',
+      _i10.Investment => 'Investment',
+      _i11.Stock => 'Stock',
+      _i12.StockLike => 'StockLike',
+      _i13.StockType => 'StockType',
+      _i14.Transfer => 'Transfer',
+      _i15.WithdrawalFee => 'WithdrawalFee',
+      _i16.WithdrawalRule => 'WithdrawalRule',
       _ => null,
     };
   }
@@ -945,25 +983,27 @@ class Protocol extends _i1.SerializationManagerServer {
     switch (data) {
       case _i5.Account():
         return 'Account';
-      case _i6.ErrorCode():
+      case _i6.AppSettings():
+        return 'AppSettings';
+      case _i7.ErrorCode():
         return 'ErrorCode';
-      case _i7.ServerException():
+      case _i8.ServerException():
         return 'ServerException';
-      case _i8.Currency():
+      case _i9.Currency():
         return 'Currency';
-      case _i9.Investment():
+      case _i10.Investment():
         return 'Investment';
-      case _i10.Stock():
+      case _i11.Stock():
         return 'Stock';
-      case _i11.StockLike():
+      case _i12.StockLike():
         return 'StockLike';
-      case _i12.StockType():
+      case _i13.StockType():
         return 'StockType';
-      case _i13.Transfer():
+      case _i14.Transfer():
         return 'Transfer';
-      case _i14.WithdrawalFee():
+      case _i15.WithdrawalFee():
         return 'WithdrawalFee';
-      case _i15.WithdrawalRule():
+      case _i16.WithdrawalRule():
         return 'WithdrawalRule';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -990,35 +1030,38 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'Account') {
       return deserialize<_i5.Account>(data['data']);
     }
+    if (dataClassName == 'AppSettings') {
+      return deserialize<_i6.AppSettings>(data['data']);
+    }
     if (dataClassName == 'ErrorCode') {
-      return deserialize<_i6.ErrorCode>(data['data']);
+      return deserialize<_i7.ErrorCode>(data['data']);
     }
     if (dataClassName == 'ServerException') {
-      return deserialize<_i7.ServerException>(data['data']);
+      return deserialize<_i8.ServerException>(data['data']);
     }
     if (dataClassName == 'Currency') {
-      return deserialize<_i8.Currency>(data['data']);
+      return deserialize<_i9.Currency>(data['data']);
     }
     if (dataClassName == 'Investment') {
-      return deserialize<_i9.Investment>(data['data']);
+      return deserialize<_i10.Investment>(data['data']);
     }
     if (dataClassName == 'Stock') {
-      return deserialize<_i10.Stock>(data['data']);
+      return deserialize<_i11.Stock>(data['data']);
     }
     if (dataClassName == 'StockLike') {
-      return deserialize<_i11.StockLike>(data['data']);
+      return deserialize<_i12.StockLike>(data['data']);
     }
     if (dataClassName == 'StockType') {
-      return deserialize<_i12.StockType>(data['data']);
+      return deserialize<_i13.StockType>(data['data']);
     }
     if (dataClassName == 'Transfer') {
-      return deserialize<_i13.Transfer>(data['data']);
+      return deserialize<_i14.Transfer>(data['data']);
     }
     if (dataClassName == 'WithdrawalFee') {
-      return deserialize<_i14.WithdrawalFee>(data['data']);
+      return deserialize<_i15.WithdrawalFee>(data['data']);
     }
     if (dataClassName == 'WithdrawalRule') {
-      return deserialize<_i15.WithdrawalRule>(data['data']);
+      return deserialize<_i16.WithdrawalRule>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -1058,27 +1101,28 @@ class Protocol extends _i1.SerializationManagerServer {
     switch (t) {
       case _i5.Account:
         return _i5.Account.t;
-      case _i8.Currency:
-        return _i8.Currency.t;
-      case _i9.Investment:
-        return _i9.Investment.t;
-      case _i10.Stock:
-        return _i10.Stock.t;
-      case _i11.StockLike:
-        return _i11.StockLike.t;
-      case _i13.Transfer:
-        return _i13.Transfer.t;
-      case _i14.WithdrawalFee:
-        return _i14.WithdrawalFee.t;
-      case _i15.WithdrawalRule:
-        return _i15.WithdrawalRule.t;
+      case _i6.AppSettings:
+        return _i6.AppSettings.t;
+      case _i9.Currency:
+        return _i9.Currency.t;
+      case _i10.Investment:
+        return _i10.Investment.t;
+      case _i11.Stock:
+        return _i11.Stock.t;
+      case _i12.StockLike:
+        return _i12.StockLike.t;
+      case _i14.Transfer:
+        return _i14.Transfer.t;
+      case _i15.WithdrawalFee:
+        return _i15.WithdrawalFee.t;
+      case _i16.WithdrawalRule:
+        return _i16.WithdrawalRule.t;
     }
     return null;
   }
 
   @override
-  List<_i2.TableDefinition> getTargetTableDefinitions() =>
-      targetTableDefinitions;
+  List<_i2.TableDefinition> getTargetTableDefinitions() => targetTableDefinitions;
 
   @override
   String getModuleName() => 'invman';

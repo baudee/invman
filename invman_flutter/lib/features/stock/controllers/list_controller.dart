@@ -7,11 +7,27 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @injectable
 class StockSearchListController extends PaginationController<Stock> {
+  final query = Signal<String>('');
+
   final StockRepository _service;
 
-  final FlutterSignal<String> query = signal("");
+  EffectCleanup? _cleanup;
+  String _lastQuery = '';
 
-  StockSearchListController(this._service);
+  StockSearchListController(this._service) {
+    _lastQuery = query.value;
+    _cleanup = effect(() {
+      final q = query.value;
+      if (q != _lastQuery) {
+        _lastQuery = q;
+        refresh();
+      }
+    });
+  }
+
+  void dispose() {
+    _cleanup?.call();
+  }
 
   @override
   Future<Either<String, List<Stock>>> fetchPage(int page) {

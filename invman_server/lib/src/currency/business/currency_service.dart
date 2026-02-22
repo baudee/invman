@@ -36,7 +36,8 @@ class CurrencyService {
         session,
         currency.copyWith(
           dollarValue: currentValue,
-          updatedAt: timestamp,
+          timestamp: timestamp,
+          updatedAt: DateTime.now(),
         ),
         transaction: transaction,
       );

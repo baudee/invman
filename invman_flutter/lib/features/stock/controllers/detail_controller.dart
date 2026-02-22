@@ -3,9 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/controllers/detail_controller.dart';
-import 'package:invman_flutter/core/utils/ui_utils/toast_utils.dart';
-import 'package:invman_flutter/features/stock/extensions/extensions.dart';
-import 'package:invman_flutter/features/stock/repositories/stock_repository.dart';
+import 'package:invman_flutter/features/stock/stock.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 @injectable

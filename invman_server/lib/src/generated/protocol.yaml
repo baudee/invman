@@ -1,6 +1,8 @@
 account:
   - retrieve:
   - save:
+appSettings:
+  - get:
 emailIdp:
   - login:
   - startRegistration:

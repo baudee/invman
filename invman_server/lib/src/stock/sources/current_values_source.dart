@@ -13,7 +13,8 @@ class StockCurrentValuesSourceImpl implements StockCurrentValuesSource {
 
   @override
   Future<(double, DateTime)> getCurrentValue(String symbol, String name) async {
-    final prompt = '''
+    final prompt =
+        '''
 Search for the current market price of $name (symbol: $symbol).
 Return the price in USD and the timestamp of when this price was recorded.
 The timestamp should be in ISO 8601 format and include at least the hour.

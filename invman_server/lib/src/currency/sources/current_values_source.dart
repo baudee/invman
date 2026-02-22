@@ -13,7 +13,8 @@ class CurrencyCurrentValuesSourceImpl implements CurrencyCurrentValuesSource {
 
   @override
   Future<(double, DateTime)> getCurrentValue(String code) async {
-    final prompt = '''
+    final prompt =
+        '''
 Search for the current exchange rate of $code to USD.
 Return the rate and the timestamp of when this rate was recorded.
 The timestamp should be in ISO 8601 format and include at least the hour.

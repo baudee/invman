@@ -20,10 +20,8 @@ class LikedStocksScreen extends HookWidget {
       appBar: AppBar(title: Text(S.of(context).stock_liked)),
       body: InfiniteListComponent<Stock>(
         controller: controller,
-        itemBuilder: (stock) => StockTileComponent(
-          stock: stock,
-          onTap: (_) => router.push(StockDetailScreen.route(stock.id)),
-        ),
+        itemBuilder: (stock) =>
+            StockTileComponent(stock: stock, onTap: (_) => router.push(StockDetailScreen.route(stock.id))),
       ),
     );
   }

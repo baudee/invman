@@ -18,10 +18,7 @@ class InvestmentRootScreen extends HookWidget {
       body: InfiniteListComponent(
         controller: controller,
         itemBuilder: (investment) => InvestmentTileComponent(investment: investment),
-        noItemsFoundWidget: Text(
-          S.of(context).investment_firstCreate,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        noItemsFoundWidget: Text(S.of(context).investment_firstCreate, style: Theme.of(context).textTheme.titleMedium),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => router.pushRelative(InvestmentEditScreen.route(0)),
