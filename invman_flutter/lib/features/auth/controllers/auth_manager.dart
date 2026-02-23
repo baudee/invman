@@ -1,17 +1,17 @@
-import 'package:injectable/injectable.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/repositories/user_preferences_repository.dart';
+import 'package:invman_flutter/env.dart';
 import 'package:invman_flutter/features/account/account.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-@singleton
 class AuthManager {
   final AccountRepository _accountService;
   final UserPreferencesRepository _preferencesRepository;
   final Client _client;
+  final Env _env;
 
   final FlutterSignal<AuthState> state = signal<AuthState>(AuthStateBooting());
   late final FlutterComputed<bool> isLoggedIn = computed(
@@ -35,14 +35,16 @@ class AuthManager {
     required AccountRepository accountService,
     required UserPreferencesRepository preferencesRepository,
     required Client client,
+    required Env env,
   }) : _accountService = accountService,
        _preferencesRepository = preferencesRepository,
-       _client = client;
+       _client = client,
+       _env = env;
 
-  @PostConstruct()
   Future<void> init() async {
     state.value = AuthStateBooting();
     await _client.auth.initialize();
+    await _client.auth.initializeGoogleSignIn(serverClientId: _env.googleServerClientId);
 
     _client.auth.authInfoListenable.addListener(() async {
       if (!_client.auth.isAuthenticated) {

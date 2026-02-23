@@ -15,6 +15,7 @@ class SignInScreen extends StatelessWidget {
       body: SignInWidget(
         client: getIt<Client>(),
         onError: (error) => ToastUtils.message(error.toString(), success: false),
+        disableAnonymousSignInWidget: false,
       ),
     );
   }

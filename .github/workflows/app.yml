@@ -104,11 +104,11 @@ jobs:
       - name: Create .env File
         run: |
           echo "BASE_URL=${{ vars.BASE_URL }}" > .env
-          echo "APP_FLAVOR=production" >> .env
 
       - name: Decode Keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystore.jks
+          less android/app/keystore.jks
           
       - name: Create key.properties
         run: |
@@ -116,6 +116,7 @@ jobs:
           echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
           echo "keyAlias=upload" >> android/key.properties
           echo "storeFile=keystore.jks" >> android/key.properties
+          less android/key.properties
         
       - name: Build APK
         run: flutter build apk --release --dart-define-from-file .env

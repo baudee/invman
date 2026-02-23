@@ -12,11 +12,13 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart' as _i2;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+    as _i2;
 import '../../stock/models/stock.dart' as _i3;
 import 'package:invman_server/src/generated/protocol.dart' as _i4;
 
-abstract class StockLike implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class StockLike
+    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   StockLike._({
     this.id,
     required this.userId,
@@ -192,20 +194,23 @@ class _StockLikeImpl extends StockLike {
 class StockLikeUpdateTable extends _i1.UpdateTable<StockLikeTable> {
   StockLikeUpdateTable(super.table);
 
-  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) => _i1.ColumnValue(
-    table.userId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
 
-  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> stockId(_i1.UuidValue value) => _i1.ColumnValue(
-    table.stockId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> stockId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.stockId,
+        value,
+      );
 
-  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) => _i1.ColumnValue(
-    table.createdAt,
-    value,
-  );
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
 }
 
 class StockLikeTable extends _i1.Table<int?> {
@@ -245,7 +250,8 @@ class StockLikeTable extends _i1.Table<int?> {
       field: StockLike.t.userId,
       foreignField: _i2.AuthUser.t.id,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i2.AuthUserTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i2.AuthUserTable(tableRelation: foreignTableRelation),
     );
     return _user!;
   }
@@ -257,7 +263,8 @@ class StockLikeTable extends _i1.Table<int?> {
       field: StockLike.t.stockId,
       foreignField: _i3.Stock.t.id,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i3.StockTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i3.StockTable(tableRelation: foreignTableRelation),
     );
     return _stock!;
   }

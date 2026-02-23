@@ -17,15 +17,9 @@ class MaintenanceScreen extends StatelessWidget {
           children: [
             Icon(Icons.build_rounded, size: 80, color: Theme.of(context).colorScheme.primary),
             const SizedBox(height: UIConstants.spacingXxl),
-            Text(
-              S.of(context).appSettings_maintenanceTitle,
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
+            Text(S.of(context).appSettings_maintenanceTitle, style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: UIConstants.spacingMd),
-            Text(
-              S.of(context).appSettings_maintenanceSubtitle,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
+            Text(S.of(context).appSettings_maintenanceSubtitle, style: Theme.of(context).textTheme.bodyLarge),
           ],
         ),
       ),

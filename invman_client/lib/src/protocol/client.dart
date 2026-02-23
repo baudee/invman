@@ -240,6 +240,45 @@ class EndpointEmailIdp extends _i5.EndpointEmailIdpBase {
       'newPassword': newPassword,
     },
   );
+
+  @override
+  _i2.Future<bool> hasAccount() => caller.callServerEndpoint<bool>(
+    'emailIdp',
+    'hasAccount',
+    {},
+  );
+}
+
+/// {@category Endpoint}
+class EndpointGoogleIdp extends _i5.EndpointGoogleIdpBase {
+  EndpointGoogleIdp(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'googleIdp';
+
+  /// Validates a Google ID token and either logs in the associated user or
+  /// creates a new user account if the Google account ID is not yet known.
+  ///
+  /// If a new user is created an associated [UserProfile] is also created.
+  @override
+  _i2.Future<_i6.AuthSuccess> login({
+    required String idToken,
+    required String? accessToken,
+  }) => caller.callServerEndpoint<_i6.AuthSuccess>(
+    'googleIdp',
+    'login',
+    {
+      'idToken': idToken,
+      'accessToken': accessToken,
+    },
+  );
+
+  @override
+  _i2.Future<bool> hasAccount() => caller.callServerEndpoint<bool>(
+    'googleIdp',
+    'hasAccount',
+    {},
+  );
 }
 
 /// By extending [RefreshJwtTokensEndpoint], the JWT token refresh endpoint
@@ -530,6 +569,7 @@ class Client extends _i1.ServerpodClientShared {
     account = EndpointAccount(this);
     appSettings = EndpointAppSettings(this);
     emailIdp = EndpointEmailIdp(this);
+    googleIdp = EndpointGoogleIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
     currency = EndpointCurrency(this);
     investment = EndpointInvestment(this);
@@ -544,6 +584,8 @@ class Client extends _i1.ServerpodClientShared {
   late final EndpointAppSettings appSettings;
 
   late final EndpointEmailIdp emailIdp;
+
+  late final EndpointGoogleIdp googleIdp;
 
   late final EndpointJwtRefresh jwtRefresh;
 
@@ -564,6 +606,7 @@ class Client extends _i1.ServerpodClientShared {
     'account': account,
     'appSettings': appSettings,
     'emailIdp': emailIdp,
+    'googleIdp': googleIdp,
     'jwtRefresh': jwtRefresh,
     'currency': currency,
     'investment': investment,

@@ -12,9 +12,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 void main() async {
   // DEPENDENCY INJECTION
-  configureDependencies();
-
-  await getIt.allReady();
+  await configureDependencies();
 
   final env = getIt<Env>();
   if (env.sentryDsn.isNotEmpty) {

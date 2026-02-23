@@ -7,6 +7,7 @@ enum Flavor { develop, staging, production }
 class Env {
   late final Flavor flavor;
   late final String baseUrl;
+  late final String googleServerClientId;
   late final String sentryDsn;
 
   Env() {
@@ -21,20 +22,24 @@ class Env {
         flavor = Flavor.develop;
     }
 
-    const stringBaseUrl = String.fromEnvironment("BASE_URL");
-    if (stringBaseUrl.isEmpty && flavor == Flavor.develop) {
-      baseUrl = "http://localhost:8080/";
-    } else if (stringBaseUrl.isEmpty) {
-      throw Exception("BASE_URL is not set");
+    const String stringSentryDsn = String.fromEnvironment("SENTRY_DSN");
+    if (flavor != Flavor.develop) {
+      sentryDsn = _checkIfEmpty("SENTRY_DSN", stringSentryDsn);
     } else {
-      baseUrl = stringBaseUrl;
+      sentryDsn = "";
     }
 
-    const stringSentryDsn = String.fromEnvironment("SENTRY_DSN");
-    if (stringSentryDsn.isEmpty && flavor != Flavor.develop) {
-      throw Exception("SENTRY_DSN is not set for ${flavor.name} environment");
-    } else {
-      sentryDsn = stringSentryDsn;
+    const String stringBaseUrl = String.fromEnvironment("BASE_URL");
+    baseUrl = _checkIfEmpty("BASE_URL", stringBaseUrl);
+
+    const String stringGoogleServerClientId = String.fromEnvironment("GOOGLE_SERVER_CLIENT_ID");
+    googleServerClientId = _checkIfEmpty("GOOGLE_SERVER_CLIENT_ID", stringGoogleServerClientId);
+  }
+
+  String _checkIfEmpty(String key, String value) {
+    if (value.isEmpty) {
+      throw Exception("Environment variable $key not set.");
     }
+    return value;
   }
 }

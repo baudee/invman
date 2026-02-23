@@ -31,7 +31,7 @@ abstract class Stock implements _i1.SerializableModel {
     this.currency,
     this.likes,
     this.investments,
-  }) : id = id ?? _i1.Uuid().v4obj(),
+  }) : id = id ?? const _i1.Uuid().v4obj(),
        price = price ?? 0.0,
        timestamp = timestamp ?? DateTime.now(),
        updatedAt = updatedAt ?? DateTime.now();

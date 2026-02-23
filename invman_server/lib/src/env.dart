@@ -32,15 +32,15 @@ class Env {
     }
 
     // Mailjet
-    mailjetApiKeyPrivate = getVarFromKey('MAILJET_API_KEY_PRIVATE');
-    mailjetApiKeyPublic = getVarFromKey('MAILJET_API_KEY_PUBLIC');
-    mailjetEmailSender = getVarFromKey('MAILJET_EMAIL_SENDER');
+    mailjetApiKeyPrivate = _getVarFromKey('MAILJET_API_KEY_PRIVATE');
+    mailjetApiKeyPublic = _getVarFromKey('MAILJET_API_KEY_PUBLIC');
+    mailjetEmailSender = _getVarFromKey('MAILJET_EMAIL_SENDER');
 
     // Gemini
-    geminiApiKey = getVarFromKey('GEMINI_API_KEY');
+    geminiApiKey = _getVarFromKey('GEMINI_API_KEY');
   }
 
-  String getVarFromKey(String key) {
+  String _getVarFromKey(String key) {
     if (env[key] == null) {
       throw Exception("$key not set in environment.");
     }
