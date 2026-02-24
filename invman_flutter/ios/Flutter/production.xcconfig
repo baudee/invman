@@ -2,7 +2,3 @@
 PRODUCT_BUNDLE_IDENTIFIER = ch.valentinbaudin.rimawari
 APP_DISPLAY_NAME = Rimawari
 
-// Google Sign-In (replace with your iOS and Server client IDs from Google Cloud Console)
-GOOGLE_IOS_CLIENT_ID = YOUR_IOS_CLIENT_ID.apps.googleusercontent.com
-GOOGLE_SERVER_CLIENT_ID = YOUR_SERVER_CLIENT_ID.apps.googleusercontent.com
-GOOGLE_IOS_URL_SCHEME = com.googleusercontent.apps.YOUR_IOS_CLIENT_ID

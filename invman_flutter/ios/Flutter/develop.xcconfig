@@ -2,6 +2,3 @@
 PRODUCT_BUNDLE_IDENTIFIER = ch.valentinbaudin.rimawari.dev
 APP_DISPLAY_NAME = Rimawari Dev
 
-GOOGLE_IOS_CLIENT_ID = 630651862472-8vv8k1fkdta36f832n18jb3070mag2oe.apps.googleusercontent.com
-GOOGLE_SERVER_CLIENT_ID = 630651862472-vu6f9u8kp9fld26o7q6eoaq267oja1hs.apps.googleusercontent.com
-GOOGLE_IOS_URL_SCHEME = com.googleusercontent.apps.630651862472-8vv8k1fkdta36f832n18jb3070mag2oe

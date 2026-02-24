@@ -12,9 +12,6 @@ emailIdp:
   - verifyPasswordResetCode:
   - finishPasswordReset:
   - hasAccount:
-googleIdp:
-  - login:
-  - hasAccount:
 jwtRefresh:
   - refreshAccessToken:
 currency:

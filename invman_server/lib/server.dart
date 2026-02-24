@@ -29,11 +29,6 @@ void run(List<String> args) async {
         sendRegistrationVerificationCode: _sendRegistrationCode,
         sendPasswordResetVerificationCode: _sendPasswordResetCode,
       ),
-      GoogleIdpConfig(
-        clientSecret: GoogleClientSecret.fromJsonString(
-          pod.getPassword('googleClientSecret')!,
-        ),
-      ),
     ],
     authUsersConfig: AuthUsersConfig(
       onAfterAuthUserCreated: (session, authUser, {required transaction}) async {
