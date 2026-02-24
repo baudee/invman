@@ -11,7 +11,10 @@ class AccountRootScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
-      appBar: AppBar(title: Text(S.of(context).account_title)),
+      appBar: AppBar(
+        leading: Padding(padding: const EdgeInsets.all(8.0), child: Image.asset("assets/images/logo.png")),
+        title: Text(S.of(context).account_title),
+      ),
       body: AccountRootComponent(),
     );
   }

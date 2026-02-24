@@ -10,7 +10,8 @@ import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
 class InvestmentDetailComponent extends StatelessWidget {
   final Investment investment;
-  const InvestmentDetailComponent({super.key, required this.investment});
+  final InvestmentDetailController controller;
+  const InvestmentDetailComponent({super.key, required this.investment, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +33,9 @@ class InvestmentDetailComponent extends StatelessWidget {
               ],
             ),
           ElevatedButton(
-            onPressed: () {
-              router.pushRelative(TransferRootScreen.route());
+            onPressed: () async {
+              await router.pushRelative(TransferRootScreen.route());
+              controller.reload();
             },
             style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 0)),
             child: Text(S.of(context).transfer_title),

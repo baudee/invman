@@ -54,9 +54,9 @@ class UserPreferencesRepository {
   ThemeMode getTheme() {
     final savedTheme = _storage.getString(UserPreferencesRepository.themeKey);
     if (savedTheme != null) {
-      return ThemeMode.values.firstWhere((e) => e.name == savedTheme, orElse: () => ThemeMode.system);
+      return ThemeMode.values.firstWhere((e) => e.name == savedTheme, orElse: () => ThemeMode.dark);
     }
-    return ThemeMode.system;
+    return ThemeMode.dark;
   }
 
   Future<Either<String, ThemeMode>> setTheme(ThemeMode theme) async {

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/features/stock/stock.dart';
 
 class StockDetailComponent extends StatelessWidget {
   final Stock stock;
@@ -9,109 +11,34 @@ class StockDetailComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return SingleChildScrollView(
       child: Column(
         children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(UIConstants.spacingXxl),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.8)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(UIConstants.radiusLg),
-              boxShadow: [
-                BoxShadow(
-                  color: theme.shadowColor.withValues(alpha: 0.1),
-                  blurRadius: UIConstants.elevationXl,
-                  offset: const Offset(0, UIConstants.elevationSm * 2),
-                ),
-              ],
-            ),
+          StockHeaderComponent(stock: stock),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: UIConstants.appHorizontalPadding),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  stock.symbol,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: theme.colorScheme.onPrimary.withValues(alpha: 0.9),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: UIConstants.spacingLg),
-                Text(
-                  stock.price.toStringPrice(stock.currency?.code),
-                  style: theme.textTheme.displayMedium?.copyWith(
-                    color: theme.colorScheme.onPrimary,
-                    fontWeight: FontWeight.w300,
-                    letterSpacing: -1,
-                  ),
+                const SizedBox(height: UIConstants.spacingXl),
+                SectionHeaderComponent(title: S.of(context).stock_info),
+                const SizedBox(height: UIConstants.spacingSm),
+                ListTile(
+                  leading: Icon(Icons.attach_money, color: Theme.of(context).colorScheme.primary),
+                  title: Text(S.of(context).investment_currency),
+                  trailing: Text(stock.currency?.code ?? '-'),
                 ),
                 const SizedBox(height: UIConstants.spacingSm),
-                Text(
-                  S.of(context).investment_currentValue,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onPrimary.withValues(alpha: 0.9),
-                    fontWeight: FontWeight.w500,
-                  ),
+                ListTile(
+                  leading: Icon(Icons.category, color: Theme.of(context).colorScheme.primary),
+                  title: Text(S.of(context).investment_quoteType),
+                  trailing: Text(S.of(context).stock_type(stock.quoteType.name)),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(height: UIConstants.spacingXxl),
-          _buildDetailCard(context, S.of(context).investment_currency, stock.currency?.code ?? '-', Icons.attach_money),
-          const SizedBox(height: UIConstants.spacingMd),
-          _buildDetailCard(context, S.of(context).investment_quoteType, stock.quoteType.name, Icons.category),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDetailCard(BuildContext context, String label, String value, IconData icon) {
-    final theme = Theme.of(context);
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(UIConstants.spacingLg),
-      decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-        boxShadow: [
-          BoxShadow(
-            color: theme.shadowColor.withValues(alpha: 0.1),
-            blurRadius: UIConstants.elevationMd,
-            offset: const Offset(0, UIConstants.elevationSm),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(UIConstants.spacingSm),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-            ),
-            child: Icon(icon, color: theme.colorScheme.primary, size: UIConstants.iconMd),
-          ),
-          const SizedBox(width: UIConstants.spacingLg),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
-                    fontWeight: FontWeight.w500,
-                  ),
+                const SizedBox(height: UIConstants.spacingSm),
+                ListTile(
+                  leading: Icon(Icons.update, color: Theme.of(context).colorScheme.primary),
+                  title: Text(S.of(context).core_lastUpdate),
+                  trailing: Text(DateFormat.yMMMd().add_jm().format(stock.updatedAt.toLocal())),
                 ),
-                const SizedBox(height: UIConstants.spacingXs),
-                Text(value, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
               ],
             ),
           ),

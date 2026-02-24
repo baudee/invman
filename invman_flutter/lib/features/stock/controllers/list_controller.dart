@@ -31,6 +31,9 @@ class StockSearchListController extends PaginationController<Stock> {
 
   @override
   Future<Either<String, List<Stock>>> fetchPage(int page) {
+    if (query.value.isEmpty) {
+      return Future.value(const Right([]));
+    }
     return _service.search(query: query.value, page: page, limit: 10);
   }
 }

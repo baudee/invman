@@ -12,6 +12,9 @@ class BaseScreen extends StatelessWidget {
 
   final FloatingActionButton? floatingActionButton;
   final Widget? bottomNavigationBar;
+  final bool noPadding;
+  final bool extendBodyBehindAppBar;
+  final bool noTopSafeArea;
 
   const BaseScreen({
     super.key,
@@ -23,6 +26,9 @@ class BaseScreen extends StatelessWidget {
     this.appBarLg,
     this.floatingActionButton,
     this.bottomNavigationBar,
+    this.noPadding = false,
+    this.extendBodyBehindAppBar = false,
+    this.noTopSafeArea = false,
   });
 
   @override
@@ -41,16 +47,25 @@ class BaseScreen extends StatelessWidget {
       ScreenSize.lg => bodyLg ?? bodyMd ?? body,
     };
 
+    Widget bodyContent = noPadding
+        ? currentBody
+        : Padding(
+            padding: const EdgeInsets.symmetric(horizontal: UIConstants.appHorizontalPadding),
+            child: currentBody,
+          );
+
+    if (!noTopSafeArea) {
+      bodyContent = SafeArea(top: true, bottom: true, child: bodyContent);
+    } else {
+      bodyContent = SafeArea(top: false, bottom: true, child: bodyContent);
+    }
+
     return Scaffold(
       appBar: currentAppBar,
+      extendBodyBehindAppBar: extendBodyBehindAppBar,
       floatingActionButton: floatingActionButton,
       bottomNavigationBar: bottomNavigationBar,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: UIConstants.appHorizontalPadding),
-          child: currentBody,
-        ),
-      ),
+      body: bodyContent,
     );
   }
 }

@@ -14,60 +14,49 @@ class GeminiClient {
   GeminiClient(this._env);
 
   Future<Map<String, dynamic>?> prompt(String prompt) async {
-    try {
-      final body = {
-        'contents': [
-          {
-            'parts': [
-              {'text': prompt},
-            ],
-          },
-        ],
-        'tools': [
-          {'google_search': {}},
-        ],
-      };
+    final body = {
+      'contents': [
+        {
+          'parts': [
+            {'text': prompt},
+          ],
+        },
+      ],
+      'tools': [
+        {'google_search': {}},
+      ],
+    };
 
-      print("BODY: _____________________________________________________");
-      print(body);
+    final response = await ApiClientService.post(
+      url: _baseUrl,
+      path: '/v1beta/models/$_model:generateContent',
+      queryParameters: {'key': _env.geminiApiKey},
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    );
 
-      final response = await ApiClientService.post(
-        url: _baseUrl,
-        path: '/v1beta/models/$_model:generateContent',
-        queryParameters: {'key': _env.geminiApiKey},
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(body),
-      );
-
-      print("RESPONSE: _____________________________________________________");
-      print(jsonEncode(response));
-
-      final jsonResponse = response as Map<String, dynamic>;
-      final candidates = jsonResponse['candidates'] as List<dynamic>?;
-      if (candidates == null || candidates.isEmpty) {
-        return null;
-      }
-
-      final content = candidates[0]['content'] as Map<String, dynamic>?;
-      if (content == null) {
-        return null;
-      }
-
-      final parts = content['parts'] as List<dynamic>?;
-      if (parts == null || parts.isEmpty) {
-        return null;
-      }
-
-      final text = parts[0]['text'] as String?;
-      if (text == null) {
-        return null;
-      }
-
-      return _extractJson(text);
-    } catch (e) {
-      print("GEMINI ERROR: $e");
+    final jsonResponse = response as Map<String, dynamic>;
+    final candidates = jsonResponse['candidates'] as List<dynamic>?;
+    if (candidates == null || candidates.isEmpty) {
       return null;
     }
+
+    final content = candidates[0]['content'] as Map<String, dynamic>?;
+    if (content == null) {
+      return null;
+    }
+
+    final parts = content['parts'] as List<dynamic>?;
+    if (parts == null || parts.isEmpty) {
+      return null;
+    }
+
+    final text = parts[0]['text'] as String?;
+    if (text == null) {
+      return null;
+    }
+
+    return _extractJson(text);
   }
 
   Map<String, dynamic>? _extractJson(String text) {

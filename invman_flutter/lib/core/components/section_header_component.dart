@@ -17,7 +17,7 @@ class SectionHeaderComponent extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+          Text(title, style: theme.textTheme.titleMedium),
           if (onSeeAll != null) TextButton(onPressed: onSeeAll, child: Text(S.of(context).core_seeAll)),
         ],
       ),

@@ -43,7 +43,7 @@ class TransferEditController extends AsyncSignal<Transfer> {
 
   void setTransferDate(DateTime date) {
     if (value case AsyncData(value: final transfer)) {
-      setValue(transfer.copyWith(createdAt: date));
+      setValue(transfer.copyWith(createdAt: date.toUtc()));
     }
   }
 

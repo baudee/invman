@@ -43,6 +43,7 @@ class InvestmentRoutes {
         ],
       ),
       GoRoute(path: WithdrawalRuleSelectScreen.route(), builder: (_, _) => const WithdrawalRuleSelectScreen()),
+      ...WithdrawalRoutes.routes,
     ],
   );
 }

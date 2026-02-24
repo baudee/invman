@@ -89,6 +89,8 @@ class StockService {
     return Stock.db.find(
       session,
       where: (e) => e.name.ilike("%${query.trim()}%") | e.symbol.ilike("%${query.trim()}%"),
+      orderBy: (t) => t.investments.count(),
+      orderDescending: true,
       limit: limit,
       offset: (page * limit) - limit,
     );

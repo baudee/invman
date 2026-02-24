@@ -6,4 +6,5 @@ export 'search_placeholder_component.dart';
 export 'select_tile_component.dart';
 export 'tile_component.dart';
 export 'avatar_component.dart';
+export 'header_component.dart';
 export 'root_component.dart';

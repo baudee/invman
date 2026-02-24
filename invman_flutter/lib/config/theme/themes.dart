@@ -20,6 +20,13 @@ class AppTheme {
     );
   }
 
+  static CardThemeData _cardTheme(ColorScheme colorScheme) {
+    return CardThemeData(
+      color: colorScheme.surfaceContainerLow,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(UIConstants.radiusMd)),
+    );
+  }
+
   static final _buttonStyle = ButtonStyle(
     padding: WidgetStateProperty.all(
       const EdgeInsets.symmetric(horizontal: UIConstants.spacingXl, vertical: UIConstants.spacingLg),
@@ -34,14 +41,30 @@ class AppTheme {
 
   static final _textButtonTheme = TextButtonThemeData(style: _buttonStyle);
 
+  static const _boldWeight = FontWeight.w600;
+
+  static TextTheme _textTheme(TextTheme base) {
+    return base.copyWith(
+      headlineLarge: base.headlineLarge?.copyWith(fontWeight: _boldWeight),
+      headlineMedium: base.headlineMedium?.copyWith(fontWeight: _boldWeight),
+      headlineSmall: base.headlineSmall?.copyWith(fontWeight: _boldWeight),
+      titleLarge: base.titleLarge?.copyWith(fontWeight: _boldWeight),
+      titleMedium: base.titleMedium?.copyWith(fontWeight: _boldWeight),
+      titleSmall: base.titleSmall?.copyWith(fontWeight: _boldWeight),
+    );
+  }
+
   static ThemeData _buildTheme(Brightness brightness) {
     final colorScheme = ColorScheme.fromSeed(seedColor: _seedColor, brightness: brightness);
+    final baseTextTheme = brightness == Brightness.light ? ThemeData.light().textTheme : ThemeData.dark().textTheme;
 
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
       colorScheme: colorScheme,
+      textTheme: _textTheme(baseTextTheme),
       searchBarTheme: _searchBarTheme,
+      cardTheme: _cardTheme(colorScheme),
       listTileTheme: _listTileTheme(colorScheme),
       elevatedButtonTheme: _elevatedButtonTheme,
       filledButtonTheme: _filledButtonTheme,

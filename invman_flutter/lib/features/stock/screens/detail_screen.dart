@@ -15,10 +15,14 @@ class StockDetailScreen extends HookWidget {
   Widget build(BuildContext context) {
     final controller = useMemoized(() => getIt<StockDetailController>(param1: uuid));
     return BaseScreen(
+      noPadding: true,
+      extendBodyBehindAppBar: true,
+      noTopSafeArea: true,
       appBar: BaseStateAppbar<Stock>(
         state: controller,
         successBuilder: (stock) => AppBar(
-          title: Text(stock.name),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           actions: [
             LikeButtonComponent(
               stock: stock,

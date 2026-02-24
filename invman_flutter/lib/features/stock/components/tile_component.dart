@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:invman_client/invman_client.dart';
-import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
 
 class StockTileComponent extends StatelessWidget {
@@ -17,7 +17,7 @@ class StockTileComponent extends StatelessWidget {
       contentPadding: contentPadding,
       leading: AvatarComponent(stock: stock),
       title: Text(stock.name),
-      subtitle: Text('${stock.symbol} - ${stock.quoteType.name} - ${stock.price.toStringPrice(stock.currency?.code)}'),
+      subtitle: Text('${stock.symbol} - ${S.of(context).stock_type(stock.quoteType.name)}'),
       trailing: trailing,
       onTap: onTap != null ? () => onTap!(stock) : null,
     );

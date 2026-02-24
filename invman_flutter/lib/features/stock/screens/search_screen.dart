@@ -14,7 +14,13 @@ class StockSearchScreen extends HookWidget {
   Widget build(BuildContext context) {
     final controller = useMemoized(() => getIt<StockSearchListController>());
     return BaseScreen(
-      appBar: AppBar(title: StockSearchComponent(controller: controller)),
+      appBar: AppBar(
+        title: StockSearchComponent(controller: controller),
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(UIConstants.spacingMd),
+          child: SizedBox.shrink(),
+        ),
+      ),
       body: InfiniteListComponent(
         refreshIndicator: false,
         controller: controller,

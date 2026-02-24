@@ -7,12 +7,14 @@ import 'package:invman_flutter/features/transfer/repositories/transfer_repositor
 @injectable
 class TransferListController extends PaginationController<Transfer> {
   final int investmentId;
-  final TransferRepository _service;
+  final TransferRepository _repository;
 
-  TransferListController(@factoryParam this.investmentId, this._service);
+  TransferListController(@factoryParam this.investmentId, this._repository) : super() {
+    _repository.invalidation.subscribe((_) => refresh());
+  }
 
   @override
   Future<Either<String, List<Transfer>>> fetchPage(int page) {
-    return _service.list(investmentId, page: page, limit: 10);
+    return _repository.list(investmentId, page: page, limit: 10);
   }
 }
