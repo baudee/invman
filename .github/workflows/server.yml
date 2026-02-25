@@ -1,16 +1,26 @@
 name: Server Workflow
 
 permissions:
-  contents: write  # Aligns with reusable workflow requirements
+  contents: write
+  packages: write
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
 
 on:
-  push:
+  pull_request:
+    branches:
+      - main
     paths:
-      - 'invman_server/**'  
+      - 'invman_server/**'
+  push:
+    branches:
+      - main
+    paths:
+      - 'invman_server/**'
+    tags:
+      - 'v*'
 
 env:
   REGISTRY: ghcr.io
@@ -44,13 +54,13 @@ jobs:
         with:
           channel: 'stable'
           flutter-version: ${{ env.FLUTTER_VERSION }}
-          cache: true 
+          cache: true
 
       - name: 🔧 Install dependencies
         run: |
           dart pub get
           dart pub global activate serverpod_cli ${{ env.SERVERPOD_VERSION }}
-      
+
       - name: ✨ Serverpod generate
         run: |
           serverpod generate
@@ -66,6 +76,7 @@ jobs:
             --packages=.dart_tool/package_config.json
 
       - name: 📄 Report code coverage
+        if: github.event_name == 'pull_request'
         uses: romeovs/lcov-reporter-action@v0.3.1
         with:
           lcov-file: coverage/lcov.info
@@ -73,7 +84,7 @@ jobs:
           title: 'Backend Coverage Report'
 
   build-and-push-image:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
     needs: unit_tests_and_coverage
 
     runs-on: ubuntu-latest
@@ -81,10 +92,6 @@ jobs:
     defaults:
       run:
         working-directory: ${{env.WORK_DIR}}
-
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - name: Checkout repository
@@ -95,13 +102,13 @@ jobs:
         with:
           channel: 'stable'
           flutter-version: ${{ env.FLUTTER_VERSION }}
-          cache: true 
+          cache: true
 
       - name: 🔧 Install dependencies
         run: |
           dart pub get
           dart pub global activate serverpod_cli ${{ env.SERVERPOD_VERSION }}
-      
+
       - name: ✨ Serverpod generate
         run: |
           serverpod generate
@@ -113,29 +120,40 @@ jobs:
           fileName: 'passwords.yaml'
           fileDir: ${{env.WORK_DIR}}/config/
           encodedString: ${{ secrets.PASSWORDS_BASE64 }}
-      
+
       - name: Create .env File
         run: |
           echo "YFIN_BASE_URL=${{ vars.YFIN_BASE_URL }}" > .env
 
       - name: Log in to the Container registry
-        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Extract version from tag
+        id: version
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+            echo "tag=${VERSION}" >> $GITHUB_OUTPUT
+            echo "is_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "tag=latest" >> $GITHUB_OUTPUT
+            echo "is_release=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        uses: docker/build-push-action@v5
         with:
           context: ${{env.WORK_DIR}}
           push: true
-          tags:
-            ghcr.io/baudee/invman:latest
+          tags: ghcr.io/baudee/invman:${{ steps.version.outputs.tag }}
           labels: ${{ steps.meta.outputs.labels }}
