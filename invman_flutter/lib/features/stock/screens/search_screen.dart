@@ -16,10 +16,7 @@ class StockSearchScreen extends HookWidget {
     return BaseScreen(
       appBar: AppBar(
         title: StockSearchComponent(controller: controller),
-        bottom: const PreferredSize(
-          preferredSize: Size.fromHeight(UIConstants.spacingMd),
-          child: SizedBox.shrink(),
-        ),
+        bottom: const PreferredSize(preferredSize: Size.fromHeight(UIConstants.spacingMd), child: SizedBox.shrink()),
       ),
       body: InfiniteListComponent(
         refreshIndicator: false,

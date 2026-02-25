@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:invman_client/invman_client.dart';
-import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/utils/utils.dart';
 import 'package:invman_flutter/features/stock/components/components.dart';
 
@@ -21,14 +20,10 @@ class StockHeaderComponent extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            theme.colorScheme.inversePrimary.withValues(alpha: 0.4),
-            theme.colorScheme.inversePrimary.withValues(alpha: 0.1),
-          ],
+          colors: [theme.colorScheme.primaryContainer, theme.scaffoldBackgroundColor],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(UIConstants.radiusXl)),
       ),
       child: Row(
         children: [

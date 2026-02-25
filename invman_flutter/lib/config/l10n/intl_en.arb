@@ -71,6 +71,8 @@
     "stock_popular": "Popular Stocks",
     "stock_liked": "Your Favorites",
     "stock_info": "Stock Information",
+    "stock_selection": "Stock Selection",
+    "stock": "Stock",
     "stock_type": "{type, select, equity{Equity} etf{ETF} crypto{Crypto} fund{Fund} moneyMarket{Money Market} commodity{Commodity} indice{Index} other{{type}}}",
     "@TRANSFER---------------------------------------------------------------": {},
     "transfer_title": "Transfers",
@@ -82,6 +84,7 @@
     "transfer_amount": "Amount of the transfer",
     "transfer_quantity": "Stock quantity",
     "transfer_addInvestment": "Add investment",
+    "transfer_date": "Transfer Date",
     "@WITHDRAWAL---------------------------------------------------------------": {},
     "withdrawal_title": "Withdrawal rules",
     "withdrawal_create": "Create withdrawal rule",
@@ -97,6 +100,8 @@
     "withdrawal_currency_percentage": "Currency change percentage",
     "withdrawal_addRule": "Add withdrawal rule",
     "withdrawal_fees": "Fees",
+    "withdrawal_selection": "Withdrawal Rule Selection",
+    "withdrawal": "Withdrawal Rule",
     "@INVESMENT---------------------------------------------------------------": {},
     "investment_title": "Investments",
     "investment_create": "Create investment",
@@ -113,5 +118,8 @@
     "investment_symbol": "Symbol",
     "investment_currency": "Currency",
     "investment_quoteType": "Quote Type",
-    "investment_value": "Value"
+    "investment_value": "Value",
+    "investment_totalBalance": "Balance",
+    "investment_totalGain": "Gain",
+    "investment_thisMonth": "this month"
 }

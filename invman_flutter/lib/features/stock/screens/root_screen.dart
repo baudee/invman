@@ -16,7 +16,8 @@ class StockRootScreen extends HookWidget {
     return BaseScreen(
       appBar: AppBar(
         leading: Padding(padding: const EdgeInsets.all(8.0), child: Image.asset("assets/images/logo.png")),
-        title: Text(AppConstants.appName, style: Theme.of(context).textTheme.headlineMedium)),
+        title: Text(AppConstants.appName, style: Theme.of(context).textTheme.headlineLarge),
+      ),
       body: StockRootComponent(controller: controller),
     );
   }

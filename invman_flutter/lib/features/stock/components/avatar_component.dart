@@ -27,9 +27,10 @@ class AvatarComponent extends StatelessWidget {
                   stock.logoUrl!,
                   errorBuilder: (context, error, stackTrace) {
                     return noLogoText;
-                },
-              )
-            : noLogoText,),
+                  },
+                )
+              : noLogoText,
+        ),
       ),
     );
   }

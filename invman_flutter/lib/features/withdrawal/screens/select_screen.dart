@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/components/components.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
-import 'package:invman_flutter/core/utils/utils.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 

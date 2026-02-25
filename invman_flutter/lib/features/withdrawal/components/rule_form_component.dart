@@ -17,44 +17,43 @@ class WithdrawalRuleFormComponent extends StatelessWidget {
 
     return Form(
       key: controller.formKey,
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextFormField(
-              controller: controller.nameController,
-              validator: (value) => ValidationUtils.formValidatorNotEmpty(value, l10n.core_name),
-              decoration: InputDecoration(label: Text(l10n.core_name)),
-            ),
-            TextFormField(
-              controller: controller.currencyChangePercentageController,
-              validator: (value) => ValidationUtils.formValidatorDouble(value),
-              decoration: InputDecoration(label: Text(l10n.withdrawal_currency_percentage), suffixText: "%"),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: UIConstants.spacingXl),
-            _buildFeesSection(context, l10n, theme),
-            const SizedBox(height: UIConstants.spacingLg),
-            SaveButton(
-              onPressed: () async {
-                final isCreate = controller.id == 0;
-                final (success, message) = await controller.submit();
-                ToastUtils.message(message, success: success);
-                if (success) {
-                  if (isCreate) {
-                    final savedRule = controller.value.value!;
-                    final currentPath = router.state.uri.path;
-                    final basePath = currentPath.replaceAll(RegExp(r'/\d+/edit$'), '');
-                    router.pushReplacement('$basePath/${savedRule.id}');
-                  } else {
-                    router.pop();
-                  }
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextFormField(
+            controller: controller.nameController,
+            validator: (value) => ValidationUtils.formValidatorNotEmpty(value, l10n.core_name),
+            decoration: InputDecoration(label: Text(l10n.core_name)),
+          ),
+          TextFormField(
+            controller: controller.currencyChangePercentageController,
+            validator: (value) => ValidationUtils.formValidatorDouble(value),
+            decoration: InputDecoration(label: Text(l10n.withdrawal_currency_percentage), suffixText: "%"),
+            keyboardType: TextInputType.number,
+          ),
+          const SizedBox(height: UIConstants.spacingXl),
+          _buildFeesSection(context, l10n, theme),
+          Spacer(),
+          SaveButton(
+            onPressed: () async {
+              final isCreate = controller.id == 0;
+              final (success, message) = await controller.submit();
+              ToastUtils.message(message, success: success);
+              if (success) {
+                if (isCreate) {
+                  final savedRule = controller.value.value!;
+                  final currentPath = router.state.uri.path;
+                  final basePath = currentPath.replaceAll(RegExp(r'/\d+/edit$'), '');
+                  router.pushReplacement('$basePath/${savedRule.id}');
+                } else {
+                  router.pop();
                 }
-              },
-            ),
-          ],
-        ),
+              }
+            },
+          ),
+          const SizedBox(height: UIConstants.spacingMd),
+        ],
       ),
     );
   }

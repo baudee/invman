@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/components/components.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
@@ -18,46 +19,46 @@ class TransferFormComponent extends HookWidget {
 
     return Form(
       key: controller.formKey,
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormField(
-              controller: controller.amountController,
-              validator: (value) => ValidationUtils.formValidatorDouble(value),
-              decoration: InputDecoration(
-                label: Text(S.of(context).transfer_amount),
-                suffixText: authManager.currencyCode,
-              ),
-              keyboardType: TextInputType.number,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextFormField(
+            controller: controller.amountController,
+            validator: (value) => ValidationUtils.formValidatorDouble(value),
+            decoration: InputDecoration(
+              label: Text(S.of(context).transfer_amount),
+              suffixText: authManager.currencyCode,
             ),
-            TextFormField(
-              controller: controller.quantityController,
-              validator: (value) => ValidationUtils.formValidatorDouble(value),
-              decoration: InputDecoration(
-                label: Text(S.of(context).transfer_quantity),
-                suffixText: authManager.currencyCode,
-              ),
-              keyboardType: TextInputType.number,
+            keyboardType: TextInputType.number,
+          ),
+          TextFormField(
+            controller: controller.quantityController,
+            validator: (value) => ValidationUtils.formValidatorDouble(value),
+            decoration: InputDecoration(
+              label: Text(S.of(context).transfer_quantity),
+              suffixText: authManager.currencyCode,
             ),
-            CalendarDatePicker(
-              initialDate: controller.value.requireValue.createdAt,
-              firstDate: DateTime(1970),
-              lastDate: DateTime.now(),
-              onDateChanged: (date) => {controller.setTransferDate(date)},
-            ),
-            SizedBox(height: 16),
-            SaveButton(
-              onPressed: () async {
-                final (success, message) = await controller.submit();
-                ToastUtils.message(message, success: success);
-                if (success) {
-                  router.pop();
-                }
-              },
-            ),
-          ],
-        ),
+            keyboardType: TextInputType.number,
+          ),
+          SectionHeaderComponent(title: S.of(context).transfer_date),
+          CalendarDatePicker(
+            initialDate: controller.value.requireValue.createdAt,
+            firstDate: DateTime(1970),
+            lastDate: DateTime.now(),
+            onDateChanged: (date) => {controller.setTransferDate(date)},
+          ),
+          Spacer(),
+          SaveButton(
+            onPressed: () async {
+              final (success, message) = await controller.submit();
+              ToastUtils.message(message, success: success);
+              if (success) {
+                router.pop();
+              }
+            },
+          ),
+          SizedBox(height: UIConstants.spacingMd),
+        ],
       ),
     );
   }

@@ -1,1 +1,1 @@
-const int cacheDurationDays = 1;
+const int cacheDurationDays = 2;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/transfer/transfer.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
@@ -22,7 +23,10 @@ class InvestmentRoutes {
             routes: [
               GoRoute(
                 path: InvestmentEditScreen.route(),
-                builder: (_, state) => InvestmentEditScreen(id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0),
+                builder: (_, state) => InvestmentEditScreen(
+                  id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
+                  stock: state.extra as Stock?,
+                ),
               ),
               GoRoute(
                 path: TransferRootScreen.route(),
