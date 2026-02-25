@@ -5,7 +5,7 @@ import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/features/investment/models/investment_ext.dart';
 
 class InvestmentHeaderContent extends StatelessWidget {
-  final Investment investment;
+  final Investment? investment;
   final String currencyCode;
 
   const InvestmentHeaderContent({super.key, required this.investment, required this.currencyCode});
@@ -38,12 +38,15 @@ class InvestmentHeaderContent extends StatelessWidget {
                 Text(S.of(context).investment_totalBalance.toUpperCase(), style: theme.textTheme.labelSmall),
                 const SizedBox(height: UIConstants.spacingXs),
                 Text(
-                  investment.withdrawAmount?.toStringPrice(currencyCode) ?? "—",
+                  investment?.withdrawAmount?.toStringPrice(currencyCode) ?? "—",
                   style: theme.textTheme.headlineLarge,
                 ),
                 const SizedBox(height: UIConstants.spacingSm),
-                _PercentBadge(percent: investment.percent, color: investment.percentColor),
-                const SizedBox(height: UIConstants.spacingMd),
+                _PercentBadge(
+                  percent: investment?.percent ?? 0,
+                  color: investment?.percentColor ?? theme.colorScheme.primary,
+                ),
+                const SizedBox(height: UIConstants.spacingSm),
                 _StatsRow(investment: investment, currencyCode: currencyCode),
               ],
             ),
@@ -55,7 +58,7 @@ class InvestmentHeaderContent extends StatelessWidget {
 }
 
 class InvestmentHeaderComponent extends SliverPersistentHeaderDelegate {
-  final Investment investment;
+  final Investment? investment;
   final String currencyCode;
   final double height;
 
@@ -78,7 +81,7 @@ class InvestmentHeaderComponent extends SliverPersistentHeaderDelegate {
 }
 
 class _StatsRow extends StatelessWidget {
-  final Investment investment;
+  final Investment? investment;
   final String currencyCode;
 
   const _StatsRow({required this.investment, required this.currencyCode});
@@ -89,13 +92,13 @@ class _StatsRow extends StatelessWidget {
       children: [
         _StatCard(
           label: S.of(context).investment_invested.toUpperCase(),
-          value: investment.investAmount.toStringPrice(currencyCode),
+          value: investment?.investAmount.toStringPrice(currencyCode) ?? "—",
         ),
         const SizedBox(width: UIConstants.spacingMd),
         _StatCard(
           label: S.of(context).investment_totalGain.toUpperCase(),
-          value: investment.amountDifference.toStringPrice(currencyCode),
-          color: investment.percentColor,
+          value: investment?.amountDifference.toStringPrice(currencyCode) ?? "—",
+          color: investment?.percentColor ?? Theme.of(context).colorScheme.primary,
         ),
       ],
     );
@@ -123,7 +126,6 @@ class _StatCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(label, style: theme.textTheme.labelSmall),
-                const SizedBox(height: UIConstants.spacingXs),
                 Text(value, style: theme.textTheme.titleSmall?.copyWith(color: color)),
               ],
             ),
@@ -145,7 +147,7 @@ class _PercentBadge extends StatelessWidget {
     final isPositive = percent >= 0;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: UIConstants.spacingMd, vertical: UIConstants.spacingSm),
+      padding: const EdgeInsets.symmetric(horizontal: UIConstants.spacingSm, vertical: UIConstants.spacingXs),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(UIConstants.radiusXl),

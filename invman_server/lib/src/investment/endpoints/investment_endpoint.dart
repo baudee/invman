@@ -35,4 +35,11 @@ class InvestmentEndpoint extends Endpoint with EndpointMiddleware {
       () => getIt<InvestmentService>().retrieve(session, id),
     );
   }
+
+  Future<Investment> total(Session session) async {
+    return withMiddleware(
+      session,
+      () => getIt<InvestmentService>().total(session),
+    );
+  }
 }

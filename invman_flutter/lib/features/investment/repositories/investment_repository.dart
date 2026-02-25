@@ -42,4 +42,10 @@ class InvestmentRepository {
       return right(await client.investment.retrieve(id));
     });
   }
+
+  Future<Either<String, Investment>> total() async {
+    return safeCall(() async {
+      return right(await client.investment.total());
+    });
+  }
 }

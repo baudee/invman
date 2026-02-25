@@ -21,6 +21,7 @@ investment:
   - save:
   - delete:
   - retrieve:
+  - total:
 stock:
   - like:
   - unlike:

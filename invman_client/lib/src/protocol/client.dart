@@ -341,6 +341,13 @@ class EndpointInvestment extends _i1.EndpointRef {
         'retrieve',
         {'id': id},
       );
+
+  _i2.Future<_i8.Investment> total() =>
+      caller.callServerEndpoint<_i8.Investment>(
+        'investment',
+        'total',
+        {},
+      );
 }
 
 /// {@category Endpoint}

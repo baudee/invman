@@ -87,6 +87,37 @@ class InvestmentService {
     return investments;
   }
 
+  Future<Investment> total(Session session) async {
+    final sessionUserId = (session.authenticated)!.authUserId;
+
+    final investments = await Investment.db.find(
+      session,
+      where: (e) => e.userId.equals(sessionUserId),
+      include: IncludeHelpers.investmentInclude(),
+    );
+
+    double totalInvestAmount = 0;
+    double totalWithdrawAmount = 0;
+    for (final investment in investments) {
+      final cleanInvestment = await _addWithdrawAmountAndStock(
+        session,
+        investment: investment,
+      );
+      totalInvestAmount += cleanInvestment.investAmount;
+      totalWithdrawAmount += cleanInvestment.withdrawAmount ?? 0;
+    }
+
+    return Investment(
+      userId: UuidValue.fromString(Namespace.nil.value),
+      name: 'TOTAL',
+      withdrawalRuleId: 0,
+      stock: null,
+      investAmount: totalInvestAmount,
+      withdrawAmount: totalWithdrawAmount,
+      stockId: UuidValue.fromString(Namespace.nil.value),
+    );
+  }
+
   Future<Investment> save(Session session, Investment investment) async {
     if (investment.name.isEmpty ||
         investment.withdrawalRuleId == 0 ||

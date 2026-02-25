@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:invman_client/invman_client.dart';
-import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/di.dart';
@@ -27,7 +24,10 @@ class InvestmentRootScreen extends HookWidget {
         child: const Icon(Icons.add),
       ),
       body: RefreshIndicator(
-        onRefresh: controller.refresh,
+        onRefresh: () async {
+          controller.refresh();
+          controller.loadTotal();
+        },
         edgeOffset: headerHeight,
         child: CustomScrollView(
           slivers: [
@@ -35,13 +35,7 @@ class InvestmentRootScreen extends HookWidget {
               pinned: true,
               delegate: InvestmentHeaderComponent(
                 height: headerHeight,
-                investment: Investment(
-                  userId: UuidValue.raw("jhg"),
-                  name: "Investment Name",
-                  stockId: UuidValue.raw("jhg"),
-                  investAmount: 100,
-                  withdrawAmount: 110,
-                ),
+                investment: controller.total.watch(context),
                 currencyCode: authManager.currencyCode,
               ),
             ),

@@ -449,6 +449,16 @@ class Endpoints extends _i1.EndpointDispatch {
                     params['id'],
                   ),
         ),
+        'total': _i1.MethodConnector(
+          name: 'total',
+          params: {},
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['investment'] as _i7.InvestmentEndpoint)
+                  .total(session),
+        ),
       },
     );
     connectors['stock'] = _i1.EndpointConnector(
