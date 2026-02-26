@@ -26,11 +26,9 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   WORK_DIR: invman_server
-  SERVERPOD_VERSION: 3.1.1
-  FLUTTER_VERSION: 3.38.x
 
 jobs:
-  unit_tests_and_coverage:
+  test:
     runs-on: ubuntu-latest
 
     defaults:
@@ -41,8 +39,16 @@ jobs:
       - name: 🛠️ Checkout code
         uses: actions/checkout@v3
 
+      - name: 📋 Extract versions from pubspec.yaml
+        id: versions
+        run: |
+          SERVERPOD_VERSION=$(grep "serverpod:" pubspec.yaml | head -1 | sed 's/.*serverpod: //')
+          echo "serverpod=${SERVERPOD_VERSION}" >> $GITHUB_OUTPUT
+          # Get Flutter version from the Flutter app pubspec
+          FLUTTER_VERSION=$(grep "flutter:" ../invman_flutter/pubspec.yaml | grep -v "sdk:" | head -1 | sed 's/.*flutter: //')
+          echo "flutter=${FLUTTER_VERSION}" >> $GITHUB_OUTPUT
+
       - name: Write password file
-        id: write_file
         uses: timheuer/base64-to-file@v1.2
         with:
           fileName: 'passwords.yaml'
@@ -53,21 +59,25 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: ${{ env.FLUTTER_VERSION }}
+          flutter-version: ${{ steps.versions.outputs.flutter }}
           cache: true
 
-      - name: 🔧 Install dependencies
+      - name: 🔧 Build (matching Makefile server/build)
         run: |
           dart pub get
-          dart pub global activate serverpod_cli ${{ env.SERVERPOD_VERSION }}
-
-      - name: ✨ Serverpod generate
-        run: |
+          dart run build_runner build --delete-conflicting-outputs
+          dart pub global activate serverpod_cli ${{ steps.versions.outputs.serverpod }}
           serverpod generate
 
-      - name: ▶️ Run tests with coverage
+      - name: ✅ Run tests (matching Makefile server/test)
         run: |
+          dart fix --apply
+          dart format .
+          dart analyze
           dart test -x integration --coverage=coverage
+
+      - name: 📊 Generate coverage report
+        run: |
           dart pub global activate coverage
           dart pub global run coverage:format_coverage \
             --lcov \
@@ -85,7 +95,7 @@ jobs:
 
   build-and-push-image:
     if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
-    needs: unit_tests_and_coverage
+    needs: test
 
     runs-on: ubuntu-latest
 
@@ -97,24 +107,29 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: 📋 Extract versions from pubspec.yaml
+        id: versions
+        run: |
+          SERVERPOD_VERSION=$(grep "serverpod:" pubspec.yaml | head -1 | sed 's/.*serverpod: //')
+          echo "serverpod=${SERVERPOD_VERSION}" >> $GITHUB_OUTPUT
+          FLUTTER_VERSION=$(grep "flutter:" ../invman_flutter/pubspec.yaml | grep -v "sdk:" | head -1 | sed 's/.*flutter: //')
+          echo "flutter=${FLUTTER_VERSION}" >> $GITHUB_OUTPUT
+
       - name: ⚙️ Install Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: ${{ env.FLUTTER_VERSION }}
+          flutter-version: ${{ steps.versions.outputs.flutter }}
           cache: true
 
-      - name: 🔧 Install dependencies
+      - name: 🔧 Build (matching Makefile server/build)
         run: |
           dart pub get
-          dart pub global activate serverpod_cli ${{ env.SERVERPOD_VERSION }}
-
-      - name: ✨ Serverpod generate
-        run: |
+          dart run build_runner build --delete-conflicting-outputs
+          dart pub global activate serverpod_cli ${{ steps.versions.outputs.serverpod }}
           serverpod generate
 
       - name: Write password file
-        id: write_file
         uses: timheuer/base64-to-file@v1.2
         with:
           fileName: 'passwords.yaml'
@@ -138,10 +153,8 @@ jobs:
           if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
             VERSION=${GITHUB_REF#refs/tags/v}
             echo "tag=${VERSION}" >> $GITHUB_OUTPUT
-            echo "is_release=true" >> $GITHUB_OUTPUT
           else
             echo "tag=latest" >> $GITHUB_OUTPUT
-            echo "is_release=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Extract metadata (tags, labels) for Docker
