@@ -61,8 +61,7 @@ jobs:
 
       - name: ✅ Run tests (matching Makefile app/test)
         run: |
-          dart fix --apply
-          dart format .
+          dart format --set-exit-if-changed .
           dart analyze
           flutter test --coverage
 

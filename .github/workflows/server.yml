@@ -71,8 +71,7 @@ jobs:
 
       - name: ✅ Run tests (matching Makefile server/test)
         run: |
-          dart fix --apply
-          dart format .
+          dart format --set-exit-if-changed .
           dart analyze
           dart test -x integration --coverage=coverage
 

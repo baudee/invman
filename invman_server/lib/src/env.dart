@@ -35,7 +35,6 @@ class Env {
     mailjetApiKeyPrivate = _getVarFromKey('MAILJET_API_KEY_PRIVATE');
     mailjetApiKeyPublic = _getVarFromKey('MAILJET_API_KEY_PUBLIC');
     mailjetEmailSender = _getVarFromKey('MAILJET_EMAIL_SENDER');
-
     // Gemini
     geminiApiKey = _getVarFromKey('GEMINI_API_KEY');
   }
