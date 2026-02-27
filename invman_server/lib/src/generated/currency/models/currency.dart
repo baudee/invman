@@ -12,8 +12,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 
-abstract class Currency
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class Currency implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Currency._({
     this.id,
     required this.code,
@@ -179,17 +178,15 @@ class CurrencyUpdateTable extends _i1.UpdateTable<CurrencyTable> {
     value,
   );
 
-  _i1.ColumnValue<DateTime, DateTime> timestamp(DateTime value) =>
-      _i1.ColumnValue(
-        table.timestamp,
-        value,
-      );
+  _i1.ColumnValue<DateTime, DateTime> timestamp(DateTime value) => _i1.ColumnValue(
+    table.timestamp,
+    value,
+  );
 
-  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
-      _i1.ColumnValue(
-        table.updatedAt,
-        value,
-      );
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) => _i1.ColumnValue(
+    table.updatedAt,
+    value,
+  );
 }
 
 class CurrencyTable extends _i1.Table<int?> {

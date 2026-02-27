@@ -6,7 +6,6 @@ import 'package:invman_server/src/env.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 import 'package:serverpod_auth_idp_server/providers/email.dart';
-import 'package:serverpod_auth_idp_server/providers/google.dart';
 
 import 'src/generated/endpoints.dart';
 import 'src/generated/protocol.dart';
