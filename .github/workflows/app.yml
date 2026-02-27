@@ -55,7 +55,7 @@ jobs:
           sudo apt-get update
           sudo apt-get -y install lcov
 
-      - name: 🔧 Build (code generation)
+      - name: 🔧 Build
         run: |
           flutter pub get
           dart run build_runner build --delete-conflicting-outputs
@@ -131,7 +131,7 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           echo "${{ secrets.PROVISIONING_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/distribution.mobileprovision
 
-      - name: 🔧 Build (code generation, matching Makefile app/build)
+      - name: 🔧 Build
         run: |
           flutter pub get
           dart run build_runner build --delete-conflicting-outputs

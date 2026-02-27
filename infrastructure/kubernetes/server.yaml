@@ -33,9 +33,10 @@ spec:
       labels:
         app: rimawari-server
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       containers:
         - name: server
-          # Change the tag to deploy a specific version (e.g., v1.0.0)
           image: ghcr.io/baudee/rimawari:latest
           imagePullPolicy: Always
           ports:
