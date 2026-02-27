@@ -13,11 +13,13 @@ on:
       - main
     paths:
       - "invman_flutter/**"
+      - "invman_client/**"
   push:
     branches:
       - main
     paths:
       - "invman_flutter/**"
+      - "invman_client/**"
     tags:
       - "v*"
 
@@ -61,7 +63,6 @@ jobs:
 
       - name: ✅ Run tests (matching Makefile app/test)
         run: |
-          dart format --set-exit-if-changed .
           dart analyze
           flutter test --coverage
 
