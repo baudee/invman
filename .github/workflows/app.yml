@@ -119,12 +119,12 @@ jobs:
           flutter-version: ${{ steps.flutter_version.outputs.version }}
           cache: true
 
-      - name: 🔑 Install Apple Certificate
-        uses: apple-actions/import-codesign-certs@v2
-        with:
-          p12-file-base64: ${{ secrets.P12_DIST_CERT }}
-          p12-password: ${{ secrets.P12_PASSWORD }}
-          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+      #- name: 🔑 Install Apple Certificate
+      #  uses: apple-actions/import-codesign-certs@v2
+      #  with:
+      #    p12-file-base64: ${{ secrets.P12_DIST_CERT }}
+      #    p12-password: ${{ secrets.P12_PASSWORD }}
+      #    keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
 
       - name: 📱 Install Provisioning Profile
         run: |
