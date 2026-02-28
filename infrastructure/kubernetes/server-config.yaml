@@ -6,23 +6,12 @@ metadata:
 data:
   mailjetApiKeyPublic: "c20de179490741bae3c078d941d67d2f"
   mailjetEmailSender: "noreply@valentinbaudin.ch"
+  cacheDurationDays: "2"
 
   production.yaml: |
     apiServer:
       port: 8080
       publicHost: api-rimawari.simonbraillard.com
-      publicPort: 443
-      publicScheme: https
-
-    insightsServer:
-      port: 8081
-      publicHost: insights-rimawari.simonbraillard.com
-      publicPort: 443
-      publicScheme: https
-
-    webServer:
-      port: 8082
-      publicHost: app-rimawari.simonbraillard.com
       publicPort: 443
       publicScheme: https
 

@@ -42,12 +42,24 @@ CREATE TABLE "account" (
 CREATE INDEX "account_user_idx" ON "account" USING btree ("userId");
 
 --
+-- Class AppSettings as table app_settings
+--
+CREATE TABLE "app_settings" (
+    "id" bigserial PRIMARY KEY,
+    "maintenanceMode" boolean NOT NULL,
+    "minVersion" text NOT NULL,
+    "appStoreUrl" text,
+    "playStoreUrl" text
+);
+
+--
 -- Class Currency as table currency
 --
 CREATE TABLE "currency" (
     "id" bigserial PRIMARY KEY,
     "code" text NOT NULL,
     "dollarValue" double precision NOT NULL,
+    "timestamp" timestamp without time zone NOT NULL,
     "updatedAt" timestamp without time zone NOT NULL
 );
 
@@ -81,6 +93,7 @@ CREATE TABLE "stock" (
     "quoteType" text NOT NULL,
     "logoUrl" text,
     "price" double precision NOT NULL,
+    "timestamp" timestamp without time zone NOT NULL,
     "updatedAt" timestamp without time zone NOT NULL,
     "currencyId" bigint NOT NULL
 );
@@ -341,8 +354,18 @@ CREATE TABLE "serverpod_session_log" (
 
 -- Indexes
 CREATE INDEX "serverpod_session_log_serverid_idx" ON "serverpod_session_log" USING btree ("serverId");
+CREATE INDEX "serverpod_session_log_time_idx" ON "serverpod_session_log" USING btree ("time");
 CREATE INDEX "serverpod_session_log_touched_idx" ON "serverpod_session_log" USING btree ("touched");
 CREATE INDEX "serverpod_session_log_isopen_idx" ON "serverpod_session_log" USING btree ("isOpen");
+
+--
+-- Class AnonymousAccount as table serverpod_auth_idp_anonymous_account
+--
+CREATE TABLE "serverpod_auth_idp_anonymous_account" (
+    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid_v7(),
+    "authUserId" uuid NOT NULL,
+    "createdAt" timestamp without time zone NOT NULL
+);
 
 --
 -- Class AppleAccount as table serverpod_auth_idp_apple_account
@@ -418,6 +441,20 @@ CREATE TABLE "serverpod_auth_idp_firebase_account" (
 
 -- Indexes
 CREATE UNIQUE INDEX "serverpod_auth_firebase_account_user_identifier" ON "serverpod_auth_idp_firebase_account" USING btree ("userIdentifier");
+
+--
+-- Class GitHubAccount as table serverpod_auth_idp_github_account
+--
+CREATE TABLE "serverpod_auth_idp_github_account" (
+    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid_v7(),
+    "authUserId" uuid NOT NULL,
+    "userIdentifier" text NOT NULL,
+    "email" text,
+    "created" timestamp without time zone NOT NULL
+);
+
+-- Indexes
+CREATE UNIQUE INDEX "serverpod_auth_github_account_user_identifier" ON "serverpod_auth_idp_github_account" USING btree ("userIdentifier");
 
 --
 -- Class GoogleAccount as table serverpod_auth_idp_google_account
@@ -680,6 +717,16 @@ ALTER TABLE ONLY "serverpod_query_log"
     ON UPDATE NO ACTION;
 
 --
+-- Foreign relations for "serverpod_auth_idp_anonymous_account" table
+--
+ALTER TABLE ONLY "serverpod_auth_idp_anonymous_account"
+    ADD CONSTRAINT "serverpod_auth_idp_anonymous_account_fk_0"
+    FOREIGN KEY("authUserId")
+    REFERENCES "serverpod_auth_core_user"("id")
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION;
+
+--
 -- Foreign relations for "serverpod_auth_idp_apple_account" table
 --
 ALTER TABLE ONLY "serverpod_auth_idp_apple_account"
@@ -742,6 +789,16 @@ ALTER TABLE ONLY "serverpod_auth_idp_email_account_request"
 --
 ALTER TABLE ONLY "serverpod_auth_idp_firebase_account"
     ADD CONSTRAINT "serverpod_auth_idp_firebase_account_fk_0"
+    FOREIGN KEY("authUserId")
+    REFERENCES "serverpod_auth_core_user"("id")
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION;
+
+--
+-- Foreign relations for "serverpod_auth_idp_github_account" table
+--
+ALTER TABLE ONLY "serverpod_auth_idp_github_account"
+    ADD CONSTRAINT "serverpod_auth_idp_github_account_fk_0"
     FOREIGN KEY("authUserId")
     REFERENCES "serverpod_auth_core_user"("id")
     ON DELETE CASCADE
@@ -818,33 +875,33 @@ ALTER TABLE ONLY "serverpod_auth_core_session"
 -- MIGRATION VERSION FOR invman
 --
 INSERT INTO "serverpod_migrations" ("module", "version", "timestamp")
-    VALUES ('invman', '20260221092515940', now())
+    VALUES ('invman', '20260228195611362', now())
     ON CONFLICT ("module")
-    DO UPDATE SET "version" = '20260221092515940', "timestamp" = now();
+    DO UPDATE SET "version" = '20260228195611362', "timestamp" = now();
 
 --
 -- MIGRATION VERSION FOR serverpod
 --
 INSERT INTO "serverpod_migrations" ("module", "version", "timestamp")
-    VALUES ('serverpod', '20251208110333922-v3-0-0', now())
+    VALUES ('serverpod', '20260129180959368', now())
     ON CONFLICT ("module")
-    DO UPDATE SET "version" = '20251208110333922-v3-0-0', "timestamp" = now();
+    DO UPDATE SET "version" = '20260129180959368', "timestamp" = now();
 
 --
 -- MIGRATION VERSION FOR serverpod_auth_idp
 --
 INSERT INTO "serverpod_migrations" ("module", "version", "timestamp")
-    VALUES ('serverpod_auth_idp', '20260109031533194', now())
+    VALUES ('serverpod_auth_idp', '20260129181124635', now())
     ON CONFLICT ("module")
-    DO UPDATE SET "version" = '20260109031533194', "timestamp" = now();
+    DO UPDATE SET "version" = '20260129181124635', "timestamp" = now();
 
 --
 -- MIGRATION VERSION FOR serverpod_auth_core
 --
 INSERT INTO "serverpod_migrations" ("module", "version", "timestamp")
-    VALUES ('serverpod_auth_core', '20251208110412389-v3-0-0', now())
+    VALUES ('serverpod_auth_core', '20260129181112269', now())
     ON CONFLICT ("module")
-    DO UPDATE SET "version" = '20251208110412389-v3-0-0', "timestamp" = now();
+    DO UPDATE SET "version" = '20260129181112269', "timestamp" = now();
 
 
 COMMIT;

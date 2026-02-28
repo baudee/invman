@@ -15,7 +15,8 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import '../../investment/models/investment.dart' as _i2;
 import 'package:invman_server/src/generated/protocol.dart' as _i3;
 
-abstract class Transfer implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class Transfer
+    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Transfer._({
     this.id,
     required this.investmentId,
@@ -172,7 +173,9 @@ class _TransferImpl extends Transfer {
     return Transfer(
       id: id is int? ? id : this.id,
       investmentId: investmentId ?? this.investmentId,
-      investment: investment is _i2.Investment? ? investment : this.investment?.copyWith(),
+      investment: investment is _i2.Investment?
+          ? investment
+          : this.investment?.copyWith(),
       quantity: quantity ?? this.quantity,
       amount: amount ?? this.amount,
       createdAt: createdAt ?? this.createdAt,
@@ -198,10 +201,11 @@ class TransferUpdateTable extends _i1.UpdateTable<TransferTable> {
     value,
   );
 
-  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) => _i1.ColumnValue(
-    table.createdAt,
-    value,
-  );
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
 }
 
 class TransferTable extends _i1.Table<int?> {
@@ -245,7 +249,8 @@ class TransferTable extends _i1.Table<int?> {
       field: Transfer.t.investmentId,
       foreignField: _i2.Investment.t.id,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i2.InvestmentTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i2.InvestmentTable(tableRelation: foreignTableRelation),
     );
     return _investment!;
   }

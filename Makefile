@@ -54,3 +54,22 @@ app/test:
 	cd $(PROJECT_NAME)_flutter && dart format .
 	cd $(PROJECT_NAME)_flutter && dart analyze
 	cd $(PROJECT_NAME)_flutter && flutter test
+
+
+# Kubernetes commands
+NAMESPACE := production
+infra/server/logs:
+	kubectl logs -n $(NAMESPACE) deployment/rimawari-server -f   
+
+infra/db/logs:
+	kubectl logs -n $(NAMESPACE) statefulset/rimawari-postgresql -f
+
+infra/db/forward:
+	kubectl port-forward -n $(NAMESPACE) statefulset/rimawari-postgresql 5432:5432  
+
+infra/redis/logs:
+	kubectl logs -n $(NAMESPACE) statefulset/rimawari-redis -f
+
+infra/apply:
+	kubectl apply -f infrastructure/kubernetes 
+	

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:invman_flutter/core/core.dart';
 
 class AppTheme {
@@ -62,7 +63,7 @@ class AppTheme {
       useMaterial3: true,
       brightness: brightness,
       colorScheme: colorScheme,
-      textTheme: _textTheme(baseTextTheme),
+      textTheme: _textTheme(GoogleFonts.interTextTheme(baseTextTheme)),
       searchBarTheme: _searchBarTheme,
       cardTheme: _cardTheme(colorScheme),
       listTileTheme: _listTileTheme(colorScheme),

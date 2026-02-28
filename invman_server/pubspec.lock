@@ -626,7 +626,7 @@ packages:
     source: hosted
     version: "3.3.1"
   serverpod_auth_core_server:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: serverpod_auth_core_server
       sha256: adad4f6557b7b016cdef0552ed03d67c7c04e5caa5b90e5892206d5cc8a2e1f5

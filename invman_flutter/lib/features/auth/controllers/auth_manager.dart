@@ -11,7 +11,6 @@ class AuthManager {
   final AccountRepository _accountService;
   final UserPreferencesRepository _preferencesRepository;
   final Client _client;
-  final Env _env;
 
   final FlutterSignal<AuthState> state = signal<AuthState>(AuthStateBooting());
   late final FlutterComputed<bool> isLoggedIn = computed(
@@ -38,13 +37,11 @@ class AuthManager {
     required Env env,
   }) : _accountService = accountService,
        _preferencesRepository = preferencesRepository,
-       _client = client,
-       _env = env;
+       _client = client;
 
   Future<void> init() async {
     state.value = AuthStateBooting();
     await _client.auth.initialize();
-    await _client.auth.initializeGoogleSignIn(serverClientId: _env.googleServerClientId);
 
     _client.auth.authInfoListenable.addListener(() async {
       if (!_client.auth.isAuthenticated) {

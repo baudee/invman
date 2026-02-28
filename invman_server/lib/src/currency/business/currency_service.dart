@@ -1,13 +1,14 @@
 import 'package:injectable/injectable.dart';
-import 'package:invman_server/src/core/core.dart';
 import 'package:invman_server/src/currency/currency.dart';
+import 'package:invman_server/src/env.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
 
 @injectable
 class CurrencyService {
   final CurrencyCurrentValuesSource currentValuesSource;
-  CurrencyService(this.currentValuesSource);
+  final Env env;
+  CurrencyService(this.currentValuesSource, this.env);
 
   Future<List<Currency>> list(Session session) async {
     return Currency.db.find(session, orderBy: (c) => c.code);
@@ -29,7 +30,7 @@ class CurrencyService {
     }
 
     // Last update is more than X day ago, update the value
-    if (currency.updatedAt.isBefore(DateTime.now().subtract(const Duration(days: cacheDurationDays)))) {
+    if (currency.updatedAt.isBefore(DateTime.now().subtract(Duration(days: env.cacheDurationDays)))) {
       final (double currentValue, DateTime timestamp) = await currentValuesSource.getCurrentValue(currency.code);
 
       currency = await Currency.db.updateRow(

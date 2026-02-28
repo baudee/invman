@@ -7,7 +7,6 @@ enum Flavor { develop, staging, production }
 class Env {
   late final Flavor flavor;
   late final String baseUrl;
-  late final String googleServerClientId;
   late final String sentryDsn;
 
   Env() {
@@ -31,9 +30,6 @@ class Env {
 
     const String stringBaseUrl = String.fromEnvironment("BASE_URL");
     baseUrl = _checkIfEmpty("BASE_URL", stringBaseUrl);
-
-    const String stringGoogleServerClientId = String.fromEnvironment("GOOGLE_SERVER_CLIENT_ID");
-    googleServerClientId = _checkIfEmpty("GOOGLE_SERVER_CLIENT_ID", stringGoogleServerClientId);
   }
 
   String _checkIfEmpty(String key, String value) {

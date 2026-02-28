@@ -37,7 +37,7 @@ spec:
         - name: ghcr-secret
       containers:
         - name: server
-          image: ghcr.io/baudee/rimawari:latest
+          image: ghcr.io/baudee/invman:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -108,6 +108,12 @@ spec:
                 secretKeyRef:
                   name: rimawari-server-secrets
                   key: geminiApiKey
+            # App config
+            - name: CACHE_DURATION_DAYS
+              valueFrom:
+                configMapKeyRef:
+                  name: rimawari-server-config
+                  key: cacheDurationDays
           volumeMounts:
             - name: config
               mountPath: /config/production.yaml
@@ -121,14 +127,12 @@ spec:
               memory: "512Mi"
               cpu: "500m"
           livenessProbe:
-            httpGet:
-              path: /health
+            tcpSocket:
               port: 8080
             initialDelaySeconds: 30
             periodSeconds: 10
           readinessProbe:
-            httpGet:
-              path: /health
+            tcpSocket:
               port: 8080
             initialDelaySeconds: 5
             periodSeconds: 10
