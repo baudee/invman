@@ -119,12 +119,12 @@ jobs:
           flutter-version: ${{ steps.flutter_version.outputs.version }}
           cache: true
 
-      #- name: 🔑 Install Apple Certificate
-      #  uses: apple-actions/import-codesign-certs@v2
-      #  with:
-      #    p12-file-base64: ${{ secrets.P12_DIST_CERT }}
-      #    p12-password: ${{ secrets.P12_PASSWORD }}
-      #    keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+      - name: 🔑 Install Apple Certificate
+        uses: apple-actions/import-codesign-certs@v2
+        with:
+          p12-file-base64: ${{ secrets.P12_DIST_CERT }}
+          p12-password: ${{ secrets.P12_PASSWORD }}
+          keychain-password: "randompassword" # Fixed password since the keychain is temporary
 
       - name: 📱 Install Provisioning Profile
         run: |
@@ -190,17 +190,6 @@ jobs:
             invman_flutter/build/app/outputs/bundle/productionRelease/app-production-release.aab
             invman_flutter/build/ios/ipa/*.ipa
           if-no-files-found: error
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            invman_flutter/build/app/outputs/flutter-apk/app-production-release.apk
-            invman_flutter/build/app/outputs/bundle/productionRelease/app-production-release.aab
-            invman_flutter/build/ios/ipa/*.ipa
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # iOS TestFlight Upload
       - name: Find IPA file
