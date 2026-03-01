@@ -48,13 +48,6 @@ jobs:
           FLUTTER_VERSION=$(grep "flutter:" ../invman_flutter/pubspec.yaml | grep -v "sdk:" | head -1 | sed 's/.*flutter: //')
           echo "flutter=${FLUTTER_VERSION}" >> $GITHUB_OUTPUT
 
-      - name: Write password file
-        uses: timheuer/base64-to-file@v1.2
-        with:
-          fileName: 'passwords.yaml'
-          fileDir: ${{env.WORK_DIR}}/config/
-          encodedString: ${{ secrets.PASSWORDS_BASE64 }}
-
       - name: ⚙️ Install Flutter
         uses: subosito/flutter-action@v2
         with:

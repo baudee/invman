@@ -61,7 +61,7 @@ jobs:
           dart run build_runner build --delete-conflicting-outputs
           dart run intl_utils:generate
 
-      - name: ✅ Run tests (matching Makefile app/test)
+      - name:  Run tests
         run: |
           dart analyze
           flutter test --coverage
