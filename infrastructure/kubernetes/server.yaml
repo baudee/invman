@@ -37,7 +37,7 @@ spec:
         - name: ghcr-secret
       containers:
         - name: server
-          image: ghcr.io/baudee/invman:latest
+          image: ghcr.io/baudee/invman:0.0.1
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

@@ -70,8 +70,8 @@ flutter_intl:
   output_dir: lib/config/generated
 
 flutter_native_splash:
-  background_image: assets/images/splash_background.png
-  fullscreen: true              
+  background_image: splash_sources/splash_background.png
+  fullscreen: true
   android_12:
     color: "#7F7B8B"
-    image: assets/images/splash_background_android_12.png    
+    image: assets/images/app_icon.png    

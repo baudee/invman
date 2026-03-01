@@ -9,10 +9,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - api-rimawari.simonbraillard.com
+        - api-rimawari.kube.simonbraillard.com
       secretName: rimawari-tls
   rules:
-    - host: api-rimawari.simonbraillard.com
+    - host: api-rimawari.kube.simonbraillard.com
       http:
         paths:
           - path: /
