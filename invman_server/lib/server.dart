@@ -48,8 +48,9 @@ void _sendRegistrationCode(
   required String verificationCode,
   required Transaction? transaction,
 }) {
-  session.log('[EmailIdp] Registration code ($email): $verificationCode');
-  if (getIt<Env>().flavor != Flavor.develop) {
+  if (getIt<Env>().flavor == Flavor.develop) {
+    session.log('[EmailIdp] Registration code ($email): $verificationCode');
+  } else {
     getIt<MailServiceInterface>().sendEmail(
       to: email,
       subject: 'Your registration verification code',
@@ -65,8 +66,9 @@ void _sendPasswordResetCode(
   required String verificationCode,
   required Transaction? transaction,
 }) {
-  session.log('[EmailIdp] Password reset code ($email): $verificationCode');
-  if (getIt<Env>().flavor != Flavor.develop) {
+  if (getIt<Env>().flavor == Flavor.develop) {
+    session.log('[EmailIdp] Password reset code ($email): $verificationCode');
+  } else {
     getIt<MailServiceInterface>().sendEmail(
       to: email,
       subject: 'Your password reset verification code',

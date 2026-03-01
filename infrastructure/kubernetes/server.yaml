@@ -109,6 +109,11 @@ spec:
                   name: rimawari-server-secrets
                   key: geminiApiKey
             # App config
+            - name: APP_FLAVOR
+              valueFrom:
+                configMapKeyRef:
+                  name: rimawari-server-config
+                  key: appFlavor
             - name: CACHE_DURATION_DAYS
               valueFrom:
                 configMapKeyRef:
