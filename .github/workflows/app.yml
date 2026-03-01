@@ -177,6 +177,7 @@ jobs:
         run: |
           flutter build ipa --release \
             --flavor production \
+            --export-options-plist=ios/ExportOptions.plist \
             --dart-define-from-file .env \
             --build-name=${{ steps.version.outputs.version }} \
             --build-number=${{ steps.version.outputs.build_number }}
