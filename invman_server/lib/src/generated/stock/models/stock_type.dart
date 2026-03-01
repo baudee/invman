@@ -19,7 +19,8 @@ enum StockType implements _i1.SerializableModel {
   fund,
   moneyMarket,
   commodity,
-  indice;
+  indice
+  ;
 
   static StockType fromJson(String name) {
     switch (name) {

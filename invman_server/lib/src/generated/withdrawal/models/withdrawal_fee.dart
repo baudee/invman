@@ -15,8 +15,7 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import '../../withdrawal/models/withdrawal_rule.dart' as _i2;
 import 'package:invman_server/src/generated/protocol.dart' as _i3;
 
-abstract class WithdrawalFee
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class WithdrawalFee implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   WithdrawalFee._({
     this.id,
     double? fixed,
@@ -206,8 +205,7 @@ class WithdrawalFeeUpdateTable extends _i1.UpdateTable<WithdrawalFeeTable> {
 }
 
 class WithdrawalFeeTable extends _i1.Table<int?> {
-  WithdrawalFeeTable({super.tableRelation})
-    : super(tableName: 'withdrawal_fee') {
+  WithdrawalFeeTable({super.tableRelation}) : super(tableName: 'withdrawal_fee') {
     updateTable = WithdrawalFeeUpdateTable(this);
     fixed = _i1.ColumnDouble(
       'fixed',
@@ -249,8 +247,7 @@ class WithdrawalFeeTable extends _i1.Table<int?> {
       field: WithdrawalFee.t.ruleId,
       foreignField: _i2.WithdrawalRule.t.id,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) =>
-          _i2.WithdrawalRuleTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) => _i2.WithdrawalRuleTable(tableRelation: foreignTableRelation),
     );
     return _rule!;
   }
