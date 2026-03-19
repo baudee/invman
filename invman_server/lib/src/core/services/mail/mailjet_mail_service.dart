@@ -3,8 +3,11 @@ import 'dart:convert';
 import 'package:injectable/injectable.dart';
 import 'package:invman_server/src/core/services/api_client/api_client_service.dart';
 import 'package:invman_server/src/core/services/mail/mail.dart';
+import 'package:invman_server/src/di.dart';
 import 'package:invman_server/src/env.dart';
 
+@staging
+@production
 @Injectable(as: MailServiceInterface)
 class MailjetMailService implements MailServiceInterface {
   final String _apiKeyPublic;

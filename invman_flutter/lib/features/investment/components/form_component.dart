@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/components/components.dart';
-import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/core/utils/utils.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
@@ -39,10 +39,13 @@ class InvestmentFormComponent extends StatelessWidget {
           Spacer(),
           SaveButton(
             onPressed: () async {
+              final router = GoRouter.of(context);
               final (success, message) = await controller.submit();
-              ToastUtils.message(message, success: success);
               if (success) {
-                router.pop();
+                final id = controller.state.value.requireValue.id!;
+                router.pushReplacement(InvestmentDetailScreen.route(id));
+              } else {
+                ToastUtils.message(message, success: success);
               }
             },
           ),

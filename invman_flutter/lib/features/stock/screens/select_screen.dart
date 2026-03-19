@@ -8,7 +8,8 @@ import 'package:invman_flutter/features/stock/stock.dart';
 class StockSelectScreen extends HookWidget {
   const StockSelectScreen({super.key});
 
-  static String route() => "${StockRoutes.namespace}/select";
+  static const pathSegment = 'select';
+  static String route() => '${StockRoutes.namespace}/$pathSegment';
 
   @override
   Widget build(BuildContext context) {

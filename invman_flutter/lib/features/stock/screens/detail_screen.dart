@@ -9,7 +9,8 @@ class StockDetailScreen extends HookWidget {
   final UuidValue uuid;
   const StockDetailScreen({super.key, required this.uuid});
 
-  static String route([UuidValue? uuid]) => "${StockRoutes.namespace}/${uuid ?? ':uuid'}";
+  static const pathSegment = ':uuid';
+  static String route(UuidValue uuid) => '${StockRoutes.namespace}/$uuid';
 
   @override
   Widget build(BuildContext context) {

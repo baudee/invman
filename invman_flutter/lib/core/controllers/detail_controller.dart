@@ -24,11 +24,10 @@ abstract class DetailController<K, T> implements Disposable {
 
   Future<Either<String, T>> retrieve(K id);
 
-  @protected 
+  @protected
   void updateState(T newState) {
     _state.value = AsyncState.data(newState);
   }
-
 
   @override
   void onDispose() {

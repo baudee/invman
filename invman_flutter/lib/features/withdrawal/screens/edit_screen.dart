@@ -8,7 +8,8 @@ import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 class WithdrawalRuleEditScreen extends HookWidget {
   final int id;
   const WithdrawalRuleEditScreen({super.key, required this.id});
-  static String route([int? id]) => id == null ? "/edit" : "/$id/edit";
+  static const pathSegment = 'edit';
+  static String route(int id) => '${WithdrawalRoutes.namespace}/$id/$pathSegment';
 
   @override
   Widget build(BuildContext context) {

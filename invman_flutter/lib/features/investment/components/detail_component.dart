@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
-import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/stock/components/tile_component.dart';
@@ -80,8 +80,8 @@ class InvestmentDetailComponent extends StatelessWidget {
                     const SizedBox(height: UIConstants.spacingLg),
                     ElevatedButton(
                       onPressed: () async {
-                        await router.pushRelative(TransferRootScreen.route());
-                        controller.reload();
+                        await context.push(TransferRootScreen.route(investment.id!));
+                        if (context.mounted) controller.reload();
                       },
                       style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 0)),
                       child: Text(S.of(context).transfer_title),
@@ -102,10 +102,11 @@ class InvestmentDetailComponent extends StatelessWidget {
                 const BackButton(),
                 PopupMenuActions(
                   onEdit: () async {
-                    await router.pushRelative(InvestmentEditScreen.route());
-                    controller.reload();
+                    await context.push(InvestmentEditScreen.route(investment.id!));
+                    if (context.mounted) controller.reload();
                   },
                   onDelete: () async {
+                    final router = GoRouter.of(context);
                     final (success, message) = await controller.delete();
                     router.pop();
                     ToastUtils.message(message, success: success);

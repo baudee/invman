@@ -10,14 +10,19 @@ class StockRoutes {
   static StatefulShellBranch branch = StatefulShellBranch(
     navigatorKey: shellNavigatorKey,
     routes: [
-      GoRoute(path: StockRootScreen.route(), builder: (_, _) => const StockRootScreen()),
-      GoRoute(path: StockSearchScreen.route(), builder: (_, _) => const StockSearchScreen()),
-      GoRoute(path: StockSelectScreen.route(), builder: (_, _) => const StockSelectScreen()),
-      GoRoute(path: PopularStocksScreen.route(), builder: (_, _) => const PopularStocksScreen()),
-      GoRoute(path: LikedStocksScreen.route(), builder: (_, _) => const LikedStocksScreen()),
       GoRoute(
-        path: StockDetailScreen.route(),
-        builder: (_, state) => StockDetailScreen(uuid: UuidValue.fromString(state.pathParameters['uuid'] ?? '')),
+        path: StockRootScreen.pathSegment,
+        builder: (_, _) => const StockRootScreen(),
+        routes: [
+          GoRoute(path: StockSearchScreen.pathSegment, builder: (_, _) => const StockSearchScreen()),
+          GoRoute(path: StockSelectScreen.pathSegment, builder: (_, _) => const StockSelectScreen()),
+          GoRoute(path: PopularStocksScreen.pathSegment, builder: (_, _) => const PopularStocksScreen()),
+          GoRoute(path: LikedStocksScreen.pathSegment, builder: (_, _) => const LikedStocksScreen()),
+          GoRoute(
+            path: StockDetailScreen.pathSegment,
+            builder: (_, state) => StockDetailScreen(uuid: UuidValue.fromString(state.pathParameters['uuid'] ?? '')),
+          ),
+        ],
       ),
     ],
   );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/core/core.dart';
-import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
@@ -10,7 +10,8 @@ import 'package:signals_flutter/signals_flutter.dart';
 class InvestmentRootScreen extends HookWidget {
   const InvestmentRootScreen({super.key});
 
-  static String route() => InvestmentRoutes.namespace;
+  static const pathSegment = '/investments';
+  static String route() => pathSegment;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class InvestmentRootScreen extends HookWidget {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () => router.pushRelative(InvestmentEditScreen.route(0)),
+        onPressed: () => context.push(InvestmentEditScreen.route(0)),
         child: const Icon(Icons.add),
       ),
       body: RefreshIndicator(

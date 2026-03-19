@@ -8,13 +8,13 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @injectable
 class StockDetailController extends DetailController<UuidValue, Stock> {
-  final StockRepository _service;
+  final StockRepository _repository;
 
-  StockDetailController(@factoryParam super.id, this._service);
+  StockDetailController(@factoryParam super.id, this._repository);
 
   @override
   Future<Either<String, Stock>> retrieve(UuidValue id) {
-    return _service.retrieve(id);
+    return _repository.retrieve(id);
   }
 
   Future<String?> toggleLike() async {
@@ -27,7 +27,7 @@ class StockDetailController extends DetailController<UuidValue, Stock> {
           : [StockLike(userId: UuidValue.fromString(Namespace.nil.value), stockId: stock.id)];
       updateState(stock.copyWith(likes: optimisticLikes));
 
-      final result = wasLiked ? await _service.unlike(stock.id) : await _service.like(stock.id);
+      final result = wasLiked ? await _repository.unlike(stock.id) : await _repository.like(stock.id);
 
       return result.fold((error) {
         updateState(stock.copyWith(likes: previousLikes));

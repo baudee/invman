@@ -6,15 +6,15 @@ class WithdrawalRoutes {
 
   static final routes = [
     GoRoute(
-      path: WithdrawalRuleRootScreen.route(),
+      path: WithdrawalRuleRootScreen.pathSegment,
       builder: (_, _) => WithdrawalRuleRootScreen(),
       routes: [
         GoRoute(
-          path: WithdrawalRuleDetailScreen.route(),
+          path: WithdrawalRuleDetailScreen.pathSegment,
           builder: (_, state) => WithdrawalRuleDetailScreen(id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0),
           routes: [
             GoRoute(
-              path: WithdrawalRuleEditScreen.route(),
+              path: WithdrawalRuleEditScreen.pathSegment,
               builder: (_, state) => WithdrawalRuleEditScreen(id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0),
             ),
           ],

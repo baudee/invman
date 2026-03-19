@@ -2,12 +2,18 @@ import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/core/core.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
-@injectable
+@lazySingleton
 class StockRepository {
   final Client client;
 
-  const StockRepository(this.client);
+  final _invalidationLikedStocks = signal(false);
+  ReadonlySignal<bool> get invalidationLikedStocks => _invalidationLikedStocks;
+
+  void _notifyLikeChange() => _invalidationLikedStocks.value = !_invalidationLikedStocks.value;
+
+  StockRepository(this.client);
 
   Future<Either<String, List<Stock>>> search({required String query, int limit = 10, int page = 1}) async {
     return safeCall(() async {
@@ -24,6 +30,7 @@ class StockRepository {
   Future<Either<String, void>> like(UuidValue stockId) async {
     return safeCall(() async {
       await client.stock.like(stockId);
+      _notifyLikeChange();
       return right(null);
     });
   }
@@ -31,6 +38,7 @@ class StockRepository {
   Future<Either<String, void>> unlike(UuidValue stockId) async {
     return safeCall(() async {
       await client.stock.unlike(stockId);
+      _notifyLikeChange();
       return right(null);
     });
   }

@@ -12,7 +12,7 @@ void run(List<String> args) async {
   final pod = Serverpod(args, Protocol(), Endpoints());
 
   // DEPENDENCY INJECTION
-  configureDependencies();
+  configureDependencies(pod.runMode);
 
   pod.initializeAuthServices(
     tokenManagerBuilders: [

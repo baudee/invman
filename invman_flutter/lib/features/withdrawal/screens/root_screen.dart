@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
-import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
 class WithdrawalRuleRootScreen extends HookWidget {
   const WithdrawalRuleRootScreen({super.key});
 
-  static String route() => WithdrawalRoutes.namespace;
+  static const pathSegment = '/withdrawals';
+  static String route() => pathSegment;
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +21,11 @@ class WithdrawalRuleRootScreen extends HookWidget {
         controller: controller,
         itemBuilder: (rule) => WithdrawalRuleTileComponent(
           rule: rule,
-          onTap: () => router.pushRelative(WithdrawalRuleDetailScreen.route(rule.id)),
+          onTap: () => context.push(WithdrawalRuleDetailScreen.route(rule.id!)),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => router.pushRelative(WithdrawalRuleEditScreen.route(0)),
+        onPressed: () => context.push(WithdrawalRuleEditScreen.route(0)),
         child: Icon(Icons.add),
       ),
     );

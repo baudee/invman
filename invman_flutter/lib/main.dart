@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
-import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/config/theme/themes.dart';
@@ -63,9 +63,7 @@ class MyApp extends StatelessWidget {
       ],
       supportedLocales: SupportedLanguage.values.map((e) => Locale.fromSubtags(languageCode: e.languageCode)).toList(),
       debugShowCheckedModeBanner: false,
-      routeInformationProvider: router.routeInformationProvider,
-      routerDelegate: router.routerDelegate,
-      routeInformationParser: router.routeInformationParser,
+      routerConfig: getIt<GoRouter>(),
     );
   }
 }

@@ -8,7 +8,8 @@ import 'package:invman_flutter/features/investment/investment.dart';
 class InvestmentDetailScreen extends HookWidget {
   final int id;
   const InvestmentDetailScreen({super.key, required this.id});
-  static String route([int? id]) => "/${id ?? ':id'}";
+  static const pathSegment = ':id';
+  static String route(int id) => '${InvestmentRoutes.namespace}/$id';
 
   @override
   Widget build(BuildContext context) {

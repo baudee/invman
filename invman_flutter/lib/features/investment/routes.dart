@@ -14,27 +14,27 @@ class InvestmentRoutes {
     navigatorKey: shellNavigatorKey,
     routes: [
       GoRoute(
-        path: InvestmentRootScreen.route(),
+        path: InvestmentRootScreen.pathSegment,
         builder: (_, _) => InvestmentRootScreen(),
         routes: [
           GoRoute(
-            path: InvestmentDetailScreen.route(),
+            path: InvestmentDetailScreen.pathSegment,
             builder: (_, state) => InvestmentDetailScreen(id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0),
             routes: [
               GoRoute(
-                path: InvestmentEditScreen.route(),
+                path: InvestmentEditScreen.pathSegment,
                 builder: (_, state) => InvestmentEditScreen(
                   id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
                   stock: state.extra as Stock?,
                 ),
               ),
               GoRoute(
-                path: TransferRootScreen.route(),
+                path: TransferRootScreen.pathSegment,
                 builder: (_, state) =>
                     TransferRootScreen(investmentId: int.tryParse(state.pathParameters['id'] ?? '') ?? 0),
                 routes: [
                   GoRoute(
-                    path: TransferEditScreen.route(),
+                    path: TransferEditScreen.pathSegment,
                     builder: (_, state) => TransferEditScreen(
                       id: int.tryParse(state.pathParameters['transferId'] ?? '') ?? 0,
                       investmentId: int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
@@ -46,7 +46,7 @@ class InvestmentRoutes {
           ),
         ],
       ),
-      GoRoute(path: WithdrawalRuleSelectScreen.route(), builder: (_, _) => const WithdrawalRuleSelectScreen()),
+      GoRoute(path: WithdrawalRuleSelectScreen.pathSegment, builder: (_, _) => const WithdrawalRuleSelectScreen()),
       ...WithdrawalRoutes.routes,
     ],
   );

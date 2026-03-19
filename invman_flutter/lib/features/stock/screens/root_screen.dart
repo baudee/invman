@@ -7,7 +7,8 @@ import 'package:invman_flutter/features/stock/stock.dart';
 class StockRootScreen extends HookWidget {
   const StockRootScreen({super.key});
 
-  static String route() => StockRoutes.namespace;
+  static const pathSegment = '/stocks';
+  static String route() => pathSegment;
 
   @override
   Widget build(BuildContext context) {

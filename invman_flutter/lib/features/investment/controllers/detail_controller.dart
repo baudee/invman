@@ -16,5 +16,4 @@ class InvestmentDetailController extends DetailController<int, Investment> {
   }
 
   Future<(bool, String?)> delete() => DeleteCommand(onExecute: () => _service.delete(id)).execute();
-  
 }

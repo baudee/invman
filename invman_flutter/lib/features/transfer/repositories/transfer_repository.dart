@@ -11,7 +11,7 @@ class TransferRepository {
   TransferRepository(this.client);
 
   final _invalidation = signal(false);
-  Signal<bool> get invalidation => _invalidation;
+  ReadonlySignal<bool> get invalidation => _invalidation;
 
   void _notifyChange() => _invalidation.value = !_invalidation.value;
 

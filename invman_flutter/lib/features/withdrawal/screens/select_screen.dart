@@ -3,14 +3,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/components/components.dart';
-import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
 class WithdrawalRuleSelectScreen extends HookWidget {
   const WithdrawalRuleSelectScreen({super.key});
 
-  static String route() => "${WithdrawalRoutes.namespace}/select";
+  static const pathSegment = '/investments/select';
+  static String route() => pathSegment;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class WithdrawalRuleSelectScreen extends HookWidget {
         itemBuilder: (rule) => WithdrawalRuleTileComponent(rule: rule, onTap: () => context.pop(rule)),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => router.push("/withdrawals/0/edit"),
+        onPressed: () => context.push(WithdrawalRuleEditScreen.route(0)),
         child: Icon(Icons.add),
       ),
     );
