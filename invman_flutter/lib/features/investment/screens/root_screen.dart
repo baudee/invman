@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
@@ -15,13 +15,13 @@ class InvestmentRootScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = useMemoized(() => getIt<InvestmentListController>());
+    final controller = useController(() => getIt<InvestmentListController>());
     final authManager = getIt<AuthManager>();
     final headerHeight = 260.0;
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push(InvestmentEditScreen.route(0)),
+        onPressed: () => router.push(InvestmentEditScreen.route(0)),
         child: const Icon(Icons.add),
       ),
       body: RefreshIndicator(
@@ -31,6 +31,7 @@ class InvestmentRootScreen extends HookWidget {
         },
         edgeOffset: headerHeight,
         child: CustomScrollView(
+          physics: const ClampingScrollPhysics(),
           slivers: [
             SliverPersistentHeader(
               pinned: true,

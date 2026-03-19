@@ -12,6 +12,7 @@ import 'package:invman_flutter/features/auth/auth.dart';
 import 'containers/containers.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
+GoRouter get router => getIt<GoRouter>();
 
 @module
 abstract class RouterModule {

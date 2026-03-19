@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
@@ -22,11 +22,10 @@ class WithdrawalRuleDetailScreen extends HookWidget {
           actions: [
             PopupMenuActions(
               onEdit: () async {
-                await context.push(WithdrawalRuleEditScreen.route(id));
-                if (context.mounted) controller.reload();
+                await router.push(WithdrawalRuleEditScreen.route(id));
+                controller.reload();
               },
               onDelete: () async {
-                final router = GoRouter.of(context);
                 final (success, message) = await controller.delete();
                 router.pop();
                 ToastUtils.message(message, success: success);

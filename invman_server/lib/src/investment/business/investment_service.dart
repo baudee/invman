@@ -82,7 +82,7 @@ class InvestmentService {
       );
     }
 
-    investments.sort((a, b) => a.withdrawAmount!.compareTo(b.withdrawAmount!));
+    investments.sort((a, b) => b.withdrawAmount!.compareTo(a.withdrawAmount!));
 
     return investments;
   }

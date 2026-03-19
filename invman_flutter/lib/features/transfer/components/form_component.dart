@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/core/components/components.dart';
 import 'package:invman_flutter/core/utils/utils.dart';
 import 'package:invman_flutter/di.dart';
@@ -19,6 +19,7 @@ class TransferFormComponent extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         return SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: constraints.maxHeight),
             child: IntrinsicHeight(
@@ -54,7 +55,6 @@ class TransferFormComponent extends StatelessWidget {
                     const Spacer(),
                     SaveButton(
                       onPressed: () async {
-                        final router = GoRouter.of(context);
                         final (success, message) = await controller.submit();
                         ToastUtils.message(message, success: success);
                         if (success) {

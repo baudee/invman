@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/stock/components/tile_component.dart';
 import 'package:invman_flutter/features/transfer/transfer.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 class InvestmentDetailComponent extends StatelessWidget {
-  final Investment investment;
   final InvestmentDetailController controller;
   final AuthManager authManager;
   const InvestmentDetailComponent({
     super.key,
-    required this.investment,
     required this.controller,
     required this.authManager,
   });
@@ -25,9 +23,11 @@ class InvestmentDetailComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final investment = controller.state.watch(context).requireValue;
     return Stack(
       children: [
         CustomScrollView(
+          physics: const ClampingScrollPhysics(),
           slivers: [
             SliverPersistentHeader(
               pinned: true,
@@ -80,8 +80,8 @@ class InvestmentDetailComponent extends StatelessWidget {
                     const SizedBox(height: UIConstants.spacingLg),
                     ElevatedButton(
                       onPressed: () async {
-                        await context.push(TransferRootScreen.route(investment.id!));
-                        if (context.mounted) controller.reload();
+                        await router.push(TransferRootScreen.route(investment.id!));
+                        controller.reload();
                       },
                       style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 0)),
                       child: Text(S.of(context).transfer_title),
@@ -102,11 +102,10 @@ class InvestmentDetailComponent extends StatelessWidget {
                 const BackButton(),
                 PopupMenuActions(
                   onEdit: () async {
-                    await context.push(InvestmentEditScreen.route(investment.id!));
-                    if (context.mounted) controller.reload();
+                    await router.push(InvestmentEditScreen.route(investment.id!));
+                    controller.reload();
                   },
                   onDelete: () async {
-                    final router = GoRouter.of(context);
                     final (success, message) = await controller.delete();
                     router.pop();
                     ToastUtils.message(message, success: success);

@@ -23,6 +23,7 @@ class HorizontalListComponent<T> extends StatelessWidget {
     return SizedBox(
       height: height + shadowPadding,
       child: ListView.separated(
+        physics: const ClampingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         clipBehavior: Clip.none,
         padding: const EdgeInsets.symmetric(vertical: shadowPadding),

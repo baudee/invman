@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
 
@@ -23,7 +23,7 @@ class StockSearchScreen extends HookWidget {
         refreshIndicator: false,
         controller: controller,
         itemBuilder: (stock) =>
-            StockTileComponent(stock: stock, onTap: (_) => context.push(StockDetailScreen.route(stock.id))),
+            StockTileComponent(stock: stock, onTap: (_) => router.push(StockDetailScreen.route(stock.id))),
       ),
     );
   }

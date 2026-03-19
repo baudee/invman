@@ -1,4 +1,4 @@
-import 'package:injectable/injectable.dart';
+import 'package:injectable/injectable.dart' hide Order;
 import 'package:invman_server/src/core/core.dart';
 import 'package:invman_server/src/env.dart';
 import 'package:invman_server/src/generated/protocol.dart';
@@ -90,8 +90,11 @@ class StockService {
   }) async {
     return Stock.db.find(
       session,
-      where: (e) => e.name.ilike("%${query.trim()}%") | e.symbol.ilike("%${query.trim()}%"),
-      orderBy: (t) => t.investments.count(),
+      where: (e) => e.symbol.ilike("%${query.trim()}%") | e.name.ilike("%${query.trim()}%"),
+      orderByList: (t) => [
+        Order(column: t.investments.count(), orderDescending: true),
+        Order(column: t.likes.count(), orderDescending: true),
+      ],
       orderDescending: true,
       limit: limit,
       offset: (page * limit) - limit,

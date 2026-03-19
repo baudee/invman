@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
@@ -59,7 +60,7 @@ class AccountRootComponent extends StatelessWidget {
       ListTile(
         title: Text(S.of(context).withdrawal_title),
         leading: Icon(Icons.list_alt_rounded),
-        onTap: () => context.push(WithdrawalRuleRootScreen.route()),
+        onTap: () => router.push(WithdrawalRuleRootScreen.route()),
       ),
       ListTile(
         title: Text(S.of(context).account_currency),
@@ -82,6 +83,7 @@ class AccountRootComponent extends StatelessWidget {
     ];
 
     return SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
       child: Column(
         children: tiles
             .map(

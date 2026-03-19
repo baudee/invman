@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/core/components/components.dart';
 import 'package:invman_flutter/core/utils/utils.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
@@ -39,7 +39,6 @@ class InvestmentFormComponent extends StatelessWidget {
           Spacer(),
           SaveButton(
             onPressed: () async {
-              final router = GoRouter.of(context);
               final (success, message) = await controller.submit();
               if (success) {
                 final id = controller.state.value.requireValue.id!;

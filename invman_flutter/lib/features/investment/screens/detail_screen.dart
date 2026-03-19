@@ -19,8 +19,7 @@ class InvestmentDetailScreen extends HookWidget {
       body: BaseStateComponent(
         state: controller.state,
         onReload: controller.reload,
-        successBuilder: (investment) =>
-            InvestmentDetailComponent(investment: investment, controller: controller, authManager: authManager),
+        successBuilder: (_) => InvestmentDetailComponent(controller: controller, authManager: authManager),
       ),
     );
   }

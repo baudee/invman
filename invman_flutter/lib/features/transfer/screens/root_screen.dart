@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
@@ -23,7 +23,7 @@ class TransferRootScreen extends HookWidget {
         itemBuilder: (transfer) => TransferTileComponent(transfer: transfer),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push(TransferEditScreen.route(investmentId, 0)),
+        onPressed: () => router.push(TransferEditScreen.route(investmentId, 0)),
         child: Icon(Icons.add),
       ),
     );

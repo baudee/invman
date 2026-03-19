@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:invman_client/invman_client.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
 
@@ -16,7 +16,7 @@ class StockSelectTileComponent extends StatelessWidget {
         title: Text(S.of(context).stock_add),
         trailing: Icon(Icons.arrow_forward_ios),
         onTap: () async {
-          final object = await context.push(StockSelectScreen.route());
+          final object = await router.push(StockSelectScreen.route());
           if (object is Stock) {
             onStockSelected(object);
           }
@@ -27,7 +27,7 @@ class StockSelectTileComponent extends StatelessWidget {
         trailing: Icon(Icons.arrow_forward_ios),
         stock: stock!,
         onTap: (_) async {
-          final object = await context.push(StockSelectScreen.route());
+          final object = await router.push(StockSelectScreen.route());
           if (object is Stock) {
             onStockSelected(object);
           }

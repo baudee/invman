@@ -92,6 +92,8 @@ class TransferService {
       where: (e) => e.investmentId.equals(investmentId),
       limit: limit,
       offset: (page * limit) - limit,
+      orderBy: (t) => t.createdAt,
+      orderDescending: true,
     );
   }
 }

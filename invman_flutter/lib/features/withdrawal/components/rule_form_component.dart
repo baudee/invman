@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:invman_client/invman_client.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
@@ -37,7 +37,6 @@ class WithdrawalRuleFormComponent extends StatelessWidget {
           Spacer(),
           SaveButton(
             onPressed: () async {
-              final router = GoRouter.of(context);
               final isCreate = controller.id == 0;
               final (success, message) = await controller.submit();
               ToastUtils.message(message, success: success);

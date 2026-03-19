@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:invman_client/invman_client.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
@@ -33,7 +33,7 @@ class InvestmentTileComponent extends StatelessWidget {
           ),
         ],
       ),
-      onTap: () => context.push(InvestmentDetailScreen.route(investment.id!)),
+      onTap: () => router.push(InvestmentDetailScreen.route(investment.id!)),
     );
   }
 }

@@ -33,7 +33,7 @@ class InfiniteListComponent<T> extends StatelessWidget {
       fetchNextPage: controller.fetchNextPage,
       shrinkWrap: shrinkWrap,
       reverse: reverse,
-      physics: physics ?? const AlwaysScrollableScrollPhysics(),
+      physics: physics ?? const ClampingScrollPhysics(),
       separatorBuilder: (context, index) => const SizedBox(height: UIConstants.spacingXs),
       builderDelegate: PagedChildBuilderDelegate<T>(
         itemBuilder: (context, item, index) => Material(color: Colors.transparent, child: itemBuilder(item)),
