@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 
-class WithdrawalFeeTileComponent extends HookWidget {
+class WithdrawalFeeTileComponent extends StatelessWidget {
   final WithdrawalFee fee;
   final Widget? trailing;
   final VoidCallback? onTap;
@@ -15,7 +14,7 @@ class WithdrawalFeeTileComponent extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authManager = useMemoized(() => getIt<AuthManager>());
+    final authManager = getIt<AuthManager>();
     final theme = Theme.of(context);
 
     return ListTile(

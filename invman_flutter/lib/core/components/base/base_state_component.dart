@@ -4,9 +4,10 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 class BaseStateComponent<T> extends StatelessWidget {
   final Widget Function(T data) successBuilder;
-  final AsyncSignal<T> state;
+  final ReadonlySignal<AsyncState<T>> state;
+  final Function onReload;
 
-  const BaseStateComponent({super.key, required this.state, required this.successBuilder});
+  const BaseStateComponent({super.key, required this.state, required this.successBuilder, required this.onReload});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class BaseStateComponent<T> extends StatelessWidget {
         .watch(context)
         .map(
           data: (data) => successBuilder(data),
-          error: (error, _) => ErrorComponent(error: error, handleRefresh: () => state.refresh()),
+          error: (error, _) => ErrorComponent(error: error, handleRefresh: onReload),
           loading: () => const LoadingComponent(),
         );
   }

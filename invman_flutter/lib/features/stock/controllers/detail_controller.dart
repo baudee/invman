@@ -18,19 +18,19 @@ class StockDetailController extends DetailController<UuidValue, Stock> {
   }
 
   Future<String?> toggleLike() async {
-    if (value case AsyncData(value: final stock)) {
+    if (super.state.value case AsyncData(value: final stock)) {
       final wasLiked = stock.isLiked;
       final previousLikes = stock.likes;
 
       final optimisticLikes = wasLiked
           ? <StockLike>[]
           : [StockLike(userId: UuidValue.fromString(Namespace.nil.value), stockId: stock.id)];
-      setValue(stock.copyWith(likes: optimisticLikes));
+      updateState(stock.copyWith(likes: optimisticLikes));
 
       final result = wasLiked ? await _service.unlike(stock.id) : await _service.like(stock.id);
 
       return result.fold((error) {
-        setValue(stock.copyWith(likes: previousLikes));
+        updateState(stock.copyWith(likes: previousLikes));
         return error;
       }, (_) => null);
     }

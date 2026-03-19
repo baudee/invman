@@ -1044,14 +1044,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
-  signals:
-    dependency: transitive
-    description:
-      name: signals
-      sha256: "0d644f4ec8ce4862c61e3d3d1168d08a7b9b6ecbe067d4f96e26dd35287f5dcd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.3.0"
   signals_core:
     dependency: transitive
     description:
@@ -1068,14 +1060,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.3.0"
-  signals_hooks:
-    dependency: "direct main"
-    description:
-      name: signals_hooks
-      sha256: "31f561507886ae27ee9bb0ea19454417e3cf2f007c87dc11dcec12acbe95e02a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.0"
   sky_engine:
     dependency: transitive
     description: flutter

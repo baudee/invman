@@ -12,13 +12,15 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 
-abstract class AppSettings implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class AppSettings
+    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   AppSettings._({
     this.id,
     required this.maintenanceMode,
     required this.minVersion,
     this.appStoreUrl,
     this.playStoreUrl,
+    required this.symbolsUpdatedAt,
   });
 
   factory AppSettings({
@@ -27,6 +29,7 @@ abstract class AppSettings implements _i1.TableRow<int?>, _i1.ProtocolSerializat
     required String minVersion,
     String? appStoreUrl,
     String? playStoreUrl,
+    required DateTime symbolsUpdatedAt,
   }) = _AppSettingsImpl;
 
   factory AppSettings.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -36,6 +39,9 @@ abstract class AppSettings implements _i1.TableRow<int?>, _i1.ProtocolSerializat
       minVersion: jsonSerialization['minVersion'] as String,
       appStoreUrl: jsonSerialization['appStoreUrl'] as String?,
       playStoreUrl: jsonSerialization['playStoreUrl'] as String?,
+      symbolsUpdatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['symbolsUpdatedAt'],
+      ),
     );
   }
 
@@ -54,6 +60,8 @@ abstract class AppSettings implements _i1.TableRow<int?>, _i1.ProtocolSerializat
 
   String? playStoreUrl;
 
+  DateTime symbolsUpdatedAt;
+
   @override
   _i1.Table<int?> get table => t;
 
@@ -66,6 +74,7 @@ abstract class AppSettings implements _i1.TableRow<int?>, _i1.ProtocolSerializat
     String? minVersion,
     String? appStoreUrl,
     String? playStoreUrl,
+    DateTime? symbolsUpdatedAt,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -76,6 +85,7 @@ abstract class AppSettings implements _i1.TableRow<int?>, _i1.ProtocolSerializat
       'minVersion': minVersion,
       if (appStoreUrl != null) 'appStoreUrl': appStoreUrl,
       if (playStoreUrl != null) 'playStoreUrl': playStoreUrl,
+      'symbolsUpdatedAt': symbolsUpdatedAt.toJson(),
     };
   }
 
@@ -88,6 +98,7 @@ abstract class AppSettings implements _i1.TableRow<int?>, _i1.ProtocolSerializat
       'minVersion': minVersion,
       if (appStoreUrl != null) 'appStoreUrl': appStoreUrl,
       if (playStoreUrl != null) 'playStoreUrl': playStoreUrl,
+      'symbolsUpdatedAt': symbolsUpdatedAt.toJson(),
     };
   }
 
@@ -130,12 +141,14 @@ class _AppSettingsImpl extends AppSettings {
     required String minVersion,
     String? appStoreUrl,
     String? playStoreUrl,
+    required DateTime symbolsUpdatedAt,
   }) : super._(
          id: id,
          maintenanceMode: maintenanceMode,
          minVersion: minVersion,
          appStoreUrl: appStoreUrl,
          playStoreUrl: playStoreUrl,
+         symbolsUpdatedAt: symbolsUpdatedAt,
        );
 
   /// Returns a shallow copy of this [AppSettings]
@@ -148,6 +161,7 @@ class _AppSettingsImpl extends AppSettings {
     String? minVersion,
     Object? appStoreUrl = _Undefined,
     Object? playStoreUrl = _Undefined,
+    DateTime? symbolsUpdatedAt,
   }) {
     return AppSettings(
       id: id is int? ? id : this.id,
@@ -155,6 +169,7 @@ class _AppSettingsImpl extends AppSettings {
       minVersion: minVersion ?? this.minVersion,
       appStoreUrl: appStoreUrl is String? ? appStoreUrl : this.appStoreUrl,
       playStoreUrl: playStoreUrl is String? ? playStoreUrl : this.playStoreUrl,
+      symbolsUpdatedAt: symbolsUpdatedAt ?? this.symbolsUpdatedAt,
     );
   }
 }
@@ -177,10 +192,17 @@ class AppSettingsUpdateTable extends _i1.UpdateTable<AppSettingsTable> {
     value,
   );
 
-  _i1.ColumnValue<String, String> playStoreUrl(String? value) => _i1.ColumnValue(
-    table.playStoreUrl,
-    value,
-  );
+  _i1.ColumnValue<String, String> playStoreUrl(String? value) =>
+      _i1.ColumnValue(
+        table.playStoreUrl,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> symbolsUpdatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.symbolsUpdatedAt,
+        value,
+      );
 }
 
 class AppSettingsTable extends _i1.Table<int?> {
@@ -202,6 +224,10 @@ class AppSettingsTable extends _i1.Table<int?> {
       'playStoreUrl',
       this,
     );
+    symbolsUpdatedAt = _i1.ColumnDateTime(
+      'symbolsUpdatedAt',
+      this,
+    );
   }
 
   late final AppSettingsUpdateTable updateTable;
@@ -214,6 +240,8 @@ class AppSettingsTable extends _i1.Table<int?> {
 
   late final _i1.ColumnString playStoreUrl;
 
+  late final _i1.ColumnDateTime symbolsUpdatedAt;
+
   @override
   List<_i1.Column> get columns => [
     id,
@@ -221,6 +249,7 @@ class AppSettingsTable extends _i1.Table<int?> {
     minVersion,
     appStoreUrl,
     playStoreUrl,
+    symbolsUpdatedAt,
   ];
 }
 

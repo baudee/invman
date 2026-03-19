@@ -12,11 +12,12 @@ class InvestmentDetailScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = useMemoized(() => getIt<InvestmentDetailController>(param1: id));
-    final authManager = useMemoized(() => getIt<AuthManager>());
+    final controller = useController(() => getIt<InvestmentDetailController>(param1: id), [id]);
+    final authManager = getIt<AuthManager>();
     return Scaffold(
       body: BaseStateComponent(
-        state: controller,
+        state: controller.state,
+        onReload: controller.reload,
         successBuilder: (investment) =>
             InvestmentDetailComponent(investment: investment, controller: controller, authManager: authManager),
       ),

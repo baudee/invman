@@ -42,7 +42,7 @@ class WithdrawalRuleFormComponent extends StatelessWidget {
               ToastUtils.message(message, success: success);
               if (success) {
                 if (isCreate) {
-                  final savedRule = controller.value.value!;
+                  final savedRule = controller.state.watch(context).requireValue;
                   final currentPath = router.state.uri.path;
                   final basePath = currentPath.replaceAll(RegExp(r'/\d+/edit$'), '');
                   router.pushReplacement('$basePath/${savedRule.id}');

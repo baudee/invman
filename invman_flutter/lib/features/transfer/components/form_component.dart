@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/components/components.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
@@ -7,14 +6,15 @@ import 'package:invman_flutter/core/utils/utils.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/transfer/transfer.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
-class TransferFormComponent extends HookWidget {
+class TransferFormComponent extends StatelessWidget {
   final TransferEditController controller;
   const TransferFormComponent({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
-    final authManager = useMemoized(() => getIt<AuthManager>());
+    final authManager = getIt<AuthManager>();
 
     return Form(
       key: controller.formKey,
@@ -41,7 +41,7 @@ class TransferFormComponent extends HookWidget {
           ),
           SectionHeaderComponent(title: S.of(context).transfer_date),
           CalendarDatePicker(
-            initialDate: controller.value.requireValue.createdAt,
+            initialDate: controller.state.watch(context).requireValue.createdAt,
             firstDate: DateTime(1970),
             lastDate: DateTime.now(),
             onDateChanged: (date) => {controller.setTransferDate(date)},

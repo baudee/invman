@@ -13,13 +13,13 @@ class StockDetailScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = useMemoized(() => getIt<StockDetailController>(param1: uuid));
+    final controller = useController(() => getIt<StockDetailController>(param1: uuid));
     return BaseScreen(
       noPadding: true,
       extendBodyBehindAppBar: true,
       noTopSafeArea: true,
       appBar: BaseStateAppbar<Stock>(
-        state: controller,
+        state: controller.state,
         successBuilder: (stock) => AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -37,7 +37,8 @@ class StockDetailScreen extends HookWidget {
         ),
       ),
       body: BaseStateComponent<Stock>(
-        state: controller,
+        state: controller.state,
+        onReload: controller.reload,
         successBuilder: (stock) => StockDetailComponent(stock: stock),
       ),
     );

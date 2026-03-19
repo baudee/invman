@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 class BaseStateAppbar<T> extends StatelessWidget implements PreferredSizeWidget {
-  final AsyncSignal<T> state;
+  final ReadonlySignal<AsyncState<T>> state;
   final PreferredSizeWidget Function(T data) successBuilder;
   final double height;
 

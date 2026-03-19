@@ -4,7 +4,6 @@ import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/core/navigation/router.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 class WithdrawalRuleDetailScreen extends HookWidget {
   final int id;
@@ -13,26 +12,30 @@ class WithdrawalRuleDetailScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = useMemoized(() => getIt<WithdrawalRuleDetailController>(param1: id));
+    final controller = useController(() => getIt<WithdrawalRuleDetailController>(param1: id));
     return BaseScreen(
-      appBar: AppBar(
-        title: controller.watch(context).map(data: (rule) => Text(rule.name), error: (_) => null, loading: () => null),
-        actions: [
-          PopupMenuActions(
-            onEdit: () async {
-              await router.pushRelative(WithdrawalRuleEditScreen.route());
-              controller.reload();
-            },
-            onDelete: () async {
-              final (success, message) = await controller.delete();
-              router.pop();
-              ToastUtils.message(message, success: success);
-            },
-          ),
-        ],
+      appBar: BaseStateAppbar(
+        state: controller.state,
+        successBuilder: (w) => AppBar(
+          title: Text(w.name),
+          actions: [
+            PopupMenuActions(
+              onEdit: () async {
+                await router.pushRelative(WithdrawalRuleEditScreen.route());
+                controller.reload();
+              },
+              onDelete: () async {
+                final (success, message) = await controller.delete();
+                router.pop();
+                ToastUtils.message(message, success: success);
+              },
+            ),
+          ],
+        ),
       ),
       body: BaseStateComponent(
-        state: controller,
+        state: controller.state,
+        onReload: controller.reload,
         successBuilder: (rule) => WithdrawalRuleDetailComponent(rule: rule),
       ),
     );

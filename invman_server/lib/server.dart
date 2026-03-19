@@ -47,6 +47,7 @@ void _sendRegistrationCode(
   required String verificationCode,
   required Transaction? transaction,
 }) {
+  session.log('Registration verification code $verificationCode to $email', level: LogLevel.debug);
   getIt<MailServiceInterface>().sendEmail(
     to: email,
     subject: 'Your registration verification code',
@@ -61,6 +62,7 @@ void _sendPasswordResetCode(
   required String verificationCode,
   required Transaction? transaction,
 }) {
+  session.log('Password reset verification code $verificationCode to $email', level: LogLevel.debug);
   getIt<MailServiceInterface>().sendEmail(
     to: email,
     subject: 'Your password reset verification code',

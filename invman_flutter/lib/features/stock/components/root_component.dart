@@ -23,6 +23,7 @@ class StockRootComponent extends StatelessWidget {
         ),
         BaseStateComponent(
           state: controller.popularStocks,
+          onReload: controller.reload,
           successBuilder: (populars) => HorizontalListComponent<Stock>(
             items: populars,
             height: 120,
@@ -32,6 +33,7 @@ class StockRootComponent extends StatelessWidget {
         ),
         BaseStateComponent(
           state: controller.likedStocks,
+          onReload: controller.reload,
           successBuilder: (liked) => liked.isNotEmpty
               ? Column(
                   children: [

@@ -14,11 +14,12 @@ class TransferEditScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = useMemoized(() => getIt<TransferEditController>(param1: investmentId, param2: id));
+    final controller = useController(() => getIt<TransferEditController>(param1: investmentId, param2: id));
     return BaseScreen(
       appBar: AppBar(title: Text(id == 0 ? S.of(context).transfer_create : S.of(context).transfer_edit)),
       body: BaseStateComponent(
-        state: controller,
+        state: controller.state,
+        onReload: controller.reload,
         successBuilder: (_) => TransferFormComponent(controller: controller),
       ),
     );

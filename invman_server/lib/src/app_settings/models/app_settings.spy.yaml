@@ -7,3 +7,4 @@ fields:
   minVersion: String
   appStoreUrl: String?
   playStoreUrl: String?
+  symbolsUpdatedAt: DateTime

@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
@@ -7,32 +9,34 @@ import 'package:invman_flutter/features/transfer/repositories/transfer_repositor
 import 'package:signals_flutter/signals_flutter.dart';
 
 @injectable
-class TransferEditController extends AsyncSignal<Transfer> {
+class TransferEditController extends Disposable {
   final int investmentId;
   final int id;
-  final TransferRepository _service;
+  final TransferRepository _repository;
+
+  final _state = asyncSignal<Transfer>(AsyncState.loading());
+  ReadonlySignal<AsyncState<Transfer>> get state => _state;
 
   final formKey = GlobalKey<FormState>();
   final amountController = TextEditingController();
   final quantityController = TextEditingController();
 
-  TransferEditController(@factoryParam this.investmentId, @factoryParam this.id, this._service)
-    : super(AsyncState.loading()) {
+  TransferEditController(@factoryParam this.investmentId, @factoryParam this.id, this._repository) {
     _load();
   }
 
   Future<void> _load() async {
-    setLoading(value);
+    _state.value = AsyncState.loading();
     if (id == 0) {
       final initial = InitialUtils.getTransfer();
       _refreshControllers(initial);
-      setValue(initial);
+      _state.value = AsyncState.data(initial);
       return;
     }
-    final result = await _service.retrieve(id);
-    result.fold((error) => setError(error), (transfer) {
+    final result = await _repository.retrieve(id);
+    result.fold((error) => _state.value = AsyncState.error(error), (transfer) {
       _refreshControllers(transfer);
-      setValue(transfer);
+      _state.value = AsyncState.data(transfer);
     });
   }
 
@@ -42,13 +46,13 @@ class TransferEditController extends AsyncSignal<Transfer> {
   }
 
   void setTransferDate(DateTime date) {
-    if (value case AsyncData(value: final transfer)) {
-      setValue(transfer.copyWith(createdAt: date.toUtc()));
+    if (state.value case AsyncData(value: final transfer)) {
+      _state.value = AsyncState.data(transfer.copyWith(createdAt: date.toUtc()));
     }
   }
 
   Future<(bool, String?)> submit() async {
-    if (value case AsyncData(value: final transfer)) {
+    if (state.value case AsyncData(value: final transfer)) {
       if (!formKey.currentState!.validate()) {
         return (false, S.current.error_fixToContinue);
       }
@@ -68,21 +72,30 @@ class TransferEditController extends AsyncSignal<Transfer> {
         createdAt: transfer.createdAt.toUtc(),
       );
 
-      setLoading(value);
+      _state.value = AsyncState.loading();
 
-      final result = await _service.save(transferToSave);
+      final result = await _repository.save(transferToSave);
 
       return result.fold(
         (error) {
-          setValue(transferToSave);
+          _state.value = AsyncState.error(error);
           return (false, error);
         },
         (saved) {
-          setValue(saved);
+          _state.value = AsyncState.data(saved);
           return (true, S.current.core_itemSaved);
         },
       );
     }
     return (false, S.current.error_invalidState);
+  }
+
+  void reload() => _load();
+
+  @override
+  void onDispose() {
+    _state.dispose();
+    amountController.dispose();
+    quantityController.dispose();
   }
 }

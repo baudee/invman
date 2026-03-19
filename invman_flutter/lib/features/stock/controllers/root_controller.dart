@@ -6,25 +6,27 @@ import 'package:signals_flutter/signals_flutter.dart';
 @injectable
 class StockRootController {
   final StockRepository _repository;
-  final AsyncSignal<List<Stock>> popularStocks = AsyncSignal<List<Stock>>(AsyncState.loading());
-  final AsyncSignal<List<Stock>> likedStocks = AsyncSignal<List<Stock>>(AsyncState.loading());
+  final AsyncSignal<List<Stock>> _popularStocks = AsyncSignal<List<Stock>>(AsyncState.loading());
+  ReadonlySignal<AsyncState<List<Stock>>> get popularStocks => _popularStocks;
+  final AsyncSignal<List<Stock>> _likedStocks = AsyncSignal<List<Stock>>(AsyncState.loading());
+  ReadonlySignal<AsyncState<List<Stock>>> get likedStocks => _likedStocks;
 
   StockRootController(this._repository) {
     _fetch();
   }
 
   Future<void> _fetch() async {
-    popularStocks.value = AsyncState.loading();
-    likedStocks.value = AsyncState.loading();
+    _popularStocks.value = AsyncState.loading();
+    _likedStocks.value = AsyncState.loading();
 
     final popularResult = await _repository.listPopular(limit: 10, page: 1);
-    popularResult.fold((error) => popularStocks.value = AsyncState.error(error), (stocks) {
-      popularStocks.value = AsyncState.data(stocks);
+    popularResult.fold((error) => _popularStocks.value = AsyncState.error(error), (stocks) {
+      _popularStocks.value = AsyncState.data(stocks);
     });
 
     final likedResult = await _repository.listLiked(limit: 10, page: 1);
-    likedResult.fold((error) => likedStocks.value = AsyncState.error(error), (stocks) {
-      likedStocks.value = AsyncState.data(stocks);
+    likedResult.fold((error) => _likedStocks.value = AsyncState.error(error), (stocks) {
+      _likedStocks.value = AsyncState.data(stocks);
     });
   }
 

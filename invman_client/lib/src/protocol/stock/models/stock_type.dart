@@ -16,8 +16,6 @@ enum StockType implements _i1.SerializableModel {
   equity,
   etf,
   crypto,
-  fund,
-  moneyMarket,
   commodity,
   indice;
 
@@ -29,10 +27,6 @@ enum StockType implements _i1.SerializableModel {
         return StockType.etf;
       case 'crypto':
         return StockType.crypto;
-      case 'fund':
-        return StockType.fund;
-      case 'moneyMarket':
-        return StockType.moneyMarket;
       case 'commodity':
         return StockType.commodity;
       case 'indice':

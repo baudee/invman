@@ -15,7 +15,7 @@ class InvestmentRootScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final controller = useMemoized(() => getIt<InvestmentListController>());
-    final authManager = useMemoized(() => getIt<AuthManager>());
+    final authManager = getIt<AuthManager>();
     final headerHeight = 260.0;
 
     return Scaffold(

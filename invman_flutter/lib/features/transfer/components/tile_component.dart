@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
@@ -9,14 +8,14 @@ import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/transfer/transfer.dart';
 
-class TransferTileComponent extends HookWidget {
+class TransferTileComponent extends StatelessWidget {
   final Transfer transfer;
 
   const TransferTileComponent({super.key, required this.transfer});
 
   @override
   Widget build(BuildContext context) {
-    final authManager = useMemoized(() => getIt<AuthManager>());
+    final authManager = getIt<AuthManager>();
 
     return ListTile(
       title: Text(transfer.amount.toStringPrice(authManager.currencyCode)),

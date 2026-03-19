@@ -11,10 +11,11 @@ class OnboardingRootScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = useMemoized(() => getIt<OnboardingController>());
+    final controller = useController(() => getIt<OnboardingController>());
     return BaseScreen(
       body: BaseStateComponent(
-        state: controller,
+        state: controller.state,
+        onReload: controller.reload,
         successBuilder: (_) => OnboardingRootComponent(controller: controller),
       ),
     );

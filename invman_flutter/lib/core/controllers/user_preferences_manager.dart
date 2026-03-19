@@ -8,17 +8,19 @@ import 'package:intl/date_symbol_data_local.dart';
 class UserPreferencesManager {
   final UserPreferencesRepository _repository;
 
-  late final FlutterSignal<Locale> locale = signal<Locale>(_repository.getLocale());
-  late final FlutterSignal<ThemeMode> theme = signal<ThemeMode>(_repository.getTheme());
+  late final FlutterSignal<Locale> _locale = signal<Locale>(_repository.getLocale());
+  ReadonlySignal<Locale> get locale => _locale;
+  late final FlutterSignal<ThemeMode> _theme = signal<ThemeMode>(_repository.getTheme());
+  ReadonlySignal<ThemeMode> get theme => _theme;
 
   UserPreferencesManager({required UserPreferencesRepository repository}) : _repository = repository {
-    initializeDateFormatting(locale.value.toLanguageTag(), null);
+    initializeDateFormatting(_locale.value.toLanguageTag(), null);
   }
 
   Future<String?> setLocale(Locale locale) async {
     final result = await _repository.setLocale(locale);
     return result.fold((error) => error, (locale) async {
-      this.locale.value = locale;
+      _locale.value = locale;
       await initializeDateFormatting(locale.toLanguageTag(), null);
       return null;
     });
@@ -27,7 +29,7 @@ class UserPreferencesManager {
   Future<String?> setTheme(ThemeMode theme) async {
     final result = await _repository.setTheme(theme);
     return result.fold((error) => error, (theme) {
-      this.theme.value = theme;
+      _theme.value = theme;
       return null;
     });
   }

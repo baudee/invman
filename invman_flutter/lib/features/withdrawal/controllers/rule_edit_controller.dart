@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
@@ -7,9 +10,12 @@ import 'package:invman_flutter/features/withdrawal/repositories/withdrawal_rule_
 import 'package:signals_flutter/signals_flutter.dart';
 
 @injectable
-class WithdrawalRuleEditController extends AsyncSignal<WithdrawalRule> {
+class WithdrawalRuleEditController implements Disposable {
   final int id;
   final WithdrawalRuleRepository _repository;
+
+  final _state = asyncSignal<WithdrawalRule>(AsyncState.loading());
+  ReadonlySignal<AsyncState<WithdrawalRule>> get state => _state;
 
   final formKey = GlobalKey<FormState>();
   final currencyChangePercentageController = TextEditingController();
@@ -26,23 +32,23 @@ class WithdrawalRuleEditController extends AsyncSignal<WithdrawalRule> {
 
   bool get isEditingFee => _editingFeeIndex != null;
 
-  WithdrawalRuleEditController(@factoryParam this.id, this._repository) : super(AsyncState.loading()) {
+  WithdrawalRuleEditController(@factoryParam this.id, this._repository) {
     _load();
   }
 
   Future<void> _load() async {
-    setLoading(value);
+    _state.value = AsyncState.loading();
     if (id == 0) {
       final initial = InitialUtils.getWithdrawalRule();
       _refreshControllers(initial);
       fees.value = [];
-      setValue(initial);
+      _state.value = AsyncState.data(initial);
     } else {
       final result = await _repository.retrieve(id);
-      result.fold((error) => setError(error), (rule) {
+      result.fold((error) => _state.value = AsyncState.error(error), (rule) {
         _refreshControllers(rule);
         fees.value = List.from(rule.fees ?? []);
-        setValue(rule);
+        _state.value = AsyncState.data(rule);
       });
     }
   }
@@ -95,7 +101,7 @@ class WithdrawalRuleEditController extends AsyncSignal<WithdrawalRule> {
   }
 
   Future<(bool, String?)> submit() async {
-    if (value case AsyncData(value: final rule)) {
+    if (_state.value case AsyncData(value: final rule)) {
       if (!formKey.currentState!.validate()) {
         return (false, S.current.error_fixToContinue);
       }
@@ -110,21 +116,33 @@ class WithdrawalRuleEditController extends AsyncSignal<WithdrawalRule> {
         fees: fees.value,
       );
 
-      setLoading(value);
+      _state.value = AsyncState.loading();
 
       final result = await _repository.save(ruleToSave);
 
       return result.fold(
         (error) {
-          setValue(ruleToSave);
+          _state.value = AsyncState.error(error);
           return (false, error);
         },
         (saved) {
-          setValue(saved);
+          _state.value = AsyncState.data(saved);
           return (true, S.current.core_itemSaved);
         },
       );
     }
     return (false, S.current.error_invalidState);
+  }
+
+  Future<void> reload() => _load();
+
+  @override
+  FutureOr<dynamic> onDispose() {
+    _state.dispose();
+    currencyChangePercentageController.dispose();
+    nameController.dispose();
+    feePercentController.dispose();
+    feeFixedController.dispose();
+    feeMinimumController.dispose();
   }
 }
