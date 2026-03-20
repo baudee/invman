@@ -13,7 +13,7 @@ class InvestmentRepository {
   final _invalidation = signal(false);
   ReadonlySignal<bool> get invalidation => _invalidation;
 
-  void _notifyChange() => _invalidation.value = !_invalidation.value;
+  void invalidate() => _invalidation.value = !_invalidation.value;
 
   Future<Either<String, List<Investment>>> list({required int page, required int limit}) async {
     return safeCall(() async {
@@ -25,7 +25,7 @@ class InvestmentRepository {
     final result = await safeCall(() async {
       return right(await client.investment.save(investment));
     });
-    if (result.isRight()) _notifyChange();
+    if (result.isRight()) invalidate();
     return result;
   }
 
@@ -33,7 +33,7 @@ class InvestmentRepository {
     final result = await safeCall(() async {
       return right(await client.investment.delete(id));
     });
-    if (result.isRight()) _notifyChange();
+    if (result.isRight()) invalidate();
     return result;
   }
 

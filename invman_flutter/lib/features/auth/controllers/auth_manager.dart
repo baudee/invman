@@ -12,16 +12,18 @@ class AuthManager {
   final UserPreferencesRepository _preferencesRepository;
   final Client _client;
 
-  final FlutterSignal<AuthState> state = signal<AuthState>(AuthStateBooting());
-  late final FlutterComputed<bool> isLoggedIn = computed(
-    () => state.value is AuthStateSuccess || state.value is AuthStateOnboarding,
+  final FlutterSignal<AuthState> _state = signal<AuthState>(AuthStateBooting());
+  ReadonlySignal<AuthState> get state => _state;
+  late final FlutterComputed<bool> _isLoggedIn = computed(
+    () => _state.value is AuthStateSuccess || _state.value is AuthStateOnboarding,
   );
-  late final FlutterComputed<bool> isOnboarded = computed(
-    () => state.value is! AuthStateOnboarding && state.value is AuthStateSuccess,
+  ReadonlySignal<bool> get isLoggedIn => _isLoggedIn;
+  late final FlutterComputed<bool> _isOnboarded = computed(
+    () => _state.value is! AuthStateOnboarding && _state.value is AuthStateSuccess,
   );
-
-  late final FlutterComputed<Account?> account = computed(() {
-    final currentState = state.value;
+  ReadonlySignal<bool> get isOnboarded => _isOnboarded;
+  late final FlutterComputed<Account?> _account = computed(() {
+    final currentState = _state.value;
     if (currentState case AuthStateSuccess(:final account)) {
       return account;
     } else if (currentState case AuthStateOnboarding(:final account)) {
@@ -29,6 +31,7 @@ class AuthManager {
     }
     return null;
   });
+  ReadonlySignal<Account?> get account => _account;
 
   AuthManager({
     required AccountRepository accountService,
@@ -40,7 +43,7 @@ class AuthManager {
        _client = client;
 
   Future<void> init() async {
-    state.value = AuthStateBooting();
+    _state.value = AuthStateBooting();
     await _client.auth.initialize();
 
     _client.auth.authInfoListenable.addListener(() async {
@@ -83,9 +86,9 @@ class AuthManager {
       },
       (account) {
         if (account.isOnboarded()) {
-          state.value = AuthStateSuccess(account: account);
+          _state.value = AuthStateSuccess(account: account);
         } else {
-          state.value = AuthStateOnboarding(account: account);
+          _state.value = AuthStateOnboarding(account: account);
         }
         return null;
       },
@@ -93,7 +96,7 @@ class AuthManager {
   }
 
   Future<String?> logout() async {
-    if (state.value is! AuthStateSuccess) {
+    if (_state.value is! AuthStateSuccess) {
       return S.current.error_invalidState;
     }
 
@@ -107,11 +110,17 @@ class AuthManager {
   }
 
   void setCredentialsInState(String email, String password) {
-    state.value = AuthStateGuest(email: email, password: password);
+    _state.value = AuthStateGuest(email: email, password: password);
   }
 
   void resetState() {
     final email = _preferencesRepository.getEmail() ?? "";
-    state.value = AuthStateGuest(email: email);
+    _state.value = AuthStateGuest(email: email);
+  }
+
+  void replaceMe(Account account) {
+    if (_state.value case AuthStateSuccess()) {
+      _state.value = AuthStateSuccess(account: account);
+    }
   }
 }

@@ -63,7 +63,7 @@ class AppTheme {
       useMaterial3: true,
       brightness: brightness,
       colorScheme: colorScheme,
-      textTheme: _textTheme(GoogleFonts.interTextTheme(baseTextTheme)),
+      textTheme: _textTheme(GoogleFonts.googleSansTextTheme(baseTextTheme)),
       searchBarTheme: _searchBarTheme,
       cardTheme: _cardTheme(colorScheme),
       listTileTheme: _listTileTheme(colorScheme),

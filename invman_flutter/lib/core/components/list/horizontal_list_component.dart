@@ -14,19 +14,17 @@ class HorizontalListComponent<T> extends StatelessWidget {
     required this.itemBuilder,
     this.height = 120,
     this.itemWidth = 100,
-    this.spacing = UIConstants.spacingMd,
+    this.spacing = UIConstants.spacingXs,
   });
 
   @override
   Widget build(BuildContext context) {
-    const shadowPadding = UIConstants.spacingSm;
     return SizedBox(
-      height: height + shadowPadding,
+      height: height,
       child: ListView.separated(
         physics: const ClampingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         clipBehavior: Clip.none,
-        padding: const EdgeInsets.symmetric(vertical: shadowPadding),
         itemCount: items.length,
         separatorBuilder: (_, _) => SizedBox(width: spacing),
         itemBuilder: (context, index) => SizedBox(width: itemWidth, child: itemBuilder(items[index])),

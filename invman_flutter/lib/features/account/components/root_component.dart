@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/di.dart';
+import 'package:invman_flutter/features/account/account.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 class AccountRootComponent extends StatelessWidget {
-  const AccountRootComponent({super.key});
+  final AccountController controller;
+
+  const AccountRootComponent({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -62,11 +66,7 @@ class AccountRootComponent extends StatelessWidget {
         leading: Icon(Icons.list_alt_rounded),
         onTap: () => router.push(WithdrawalRuleRootScreen.route()),
       ),
-      ListTile(
-        title: Text(S.of(context).account_currency),
-        subtitle: Text(authManager.currencyCode),
-        leading: Icon(Icons.attach_money_rounded),
-      ),
+      _buildCurrencyTile(context, authManager),
       ListTile(
         title: Text(S.of(context).auth_logOut, style: TextStyle(color: Colors.red)),
         leading: Icon(Icons.logout, color: Colors.red),
@@ -94,6 +94,62 @@ class AccountRootComponent extends StatelessWidget {
             )
             .toList(),
       ),
+    );
+  }
+
+  ListTile _buildCurrencyTile(BuildContext context, AuthManager authManager) {
+    return ListTile(
+      title: Text(S.of(context).account_currency),
+      subtitle: Text(authManager.account.watch(context)?.currency?.code ?? "-"),
+      leading: Icon(Icons.attach_money_rounded),
+      trailing: controller.state
+          .watch(context)
+          .map(
+            data: (currencies) {
+              if (controller.selectedCurrency.watch(context) == null) {
+                return CircularProgressIndicator();
+              }
+              return DropdownButton<Currency>(
+                value: controller.selectedCurrency.watch(context),
+                onChanged: (value) {
+                  if (value != null) {
+                    showDialog<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text(S.of(context).account_change_currency),
+                          content: Text(S.of(context).account_change_currency_description),
+                          actions: <Widget>[
+                            FilledButton(child: Text(S.of(context).core_cancel), onPressed: () => context.pop()),
+                            TextButton(
+                              child: Text(S.of(context).core_apply),
+                              onPressed: () async {
+                                context.pop();
+                                final error = await controller.changeCurrency(value);
+                                if (error != null) {
+                                  ToastUtils.message(error, success: false);
+                                }
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
+                items: currencies
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(e.code),
+                      ),
+                    )
+                    .toList(),
+              );
+            },
+            error: (_) => null,
+            loading: () => CircularProgressIndicator(),
+          ),
     );
   }
 }

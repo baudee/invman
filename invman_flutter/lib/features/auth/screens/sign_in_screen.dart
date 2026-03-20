@@ -11,10 +11,29 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return BaseScreen(
-      body: SignInWidget(
-        client: getIt<Client>(),
-        onError: (error) => ToastUtils.message(error.toString(), success: false),
+      noPadding: true,
+      body: Column(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [theme.colorScheme.primaryContainer, theme.scaffoldBackgroundColor],
+                ),
+              ),
+            ),
+          ),
+          SignInWidget(
+            client: getIt<Client>(),
+            onError: (error) => ToastUtils.message(error.toString(), success: false),
+          ),
+          const Spacer(),
+        ],
       ),
     );
   }

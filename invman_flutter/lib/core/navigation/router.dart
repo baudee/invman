@@ -8,6 +8,7 @@ import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/onboarding/onboarding.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 import 'containers/containers.dart';
 
@@ -36,7 +37,7 @@ abstract class RouterModule {
           },
         ),
       ],
-      refreshListenable: authManager.state,
+      refreshListenable: signal(authManager.state),
       redirect: (context, state) {
         final appSettingsStatus = getIt<AppSettingsManager>().status.value;
         final location = state.matchedLocation;

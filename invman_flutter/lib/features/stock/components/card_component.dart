@@ -15,11 +15,12 @@ class StockCardComponent extends StatelessWidget {
 
     return Card(
       margin: EdgeInsets.zero,
+      elevation: 0,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(UIConstants.radiusMd),
         child: Padding(
-          padding: const EdgeInsets.all(UIConstants.spacingMd),
+          padding: const EdgeInsets.all(UIConstants.spacingSm),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

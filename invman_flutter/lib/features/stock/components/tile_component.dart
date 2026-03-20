@@ -18,7 +18,7 @@ class StockTileComponent extends StatelessWidget {
       leading: AvatarComponent(stock: stock),
       title: Text(stock.name),
       subtitle: Text('${stock.symbol} - ${S.of(context).stock_type(stock.quoteType.name)}'),
-      trailing: trailing,
+      trailing: trailing ?? Text("${stock.price.toStringAsFixed(2)} ${stock.currency?.code}"),
       onTap: onTap != null ? () => onTap!(stock) : null,
     );
   }
