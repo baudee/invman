@@ -71,5 +71,7 @@ infra/redis/logs:
 	kubectl logs -n $(NAMESPACE) statefulset/rimawari-redis -f
 
 infra/apply:
-	kubectl apply -f infrastructure/kubernetes 
-	
+	kubectl apply -f infrastructure/kubernetes
+
+infra/server/delete:
+	kubectl delete -n $(NAMESPACE) deployment/rimawari-server service/rimawari-server
