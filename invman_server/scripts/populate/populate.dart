@@ -347,7 +347,7 @@ Future<void> _populateEquities(
     parameters: {
       'symbols': symbols,
       'names': names,
-      'quoteType': StockType.equity.name,
+      'quoteType': StockType.stock.name,
       'logoUrls': logoUrls,
       'currencyIds': currencyIds,
     },

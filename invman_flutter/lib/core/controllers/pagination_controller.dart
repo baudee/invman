@@ -1,50 +1,63 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 abstract class PaginationController<T> extends Disposable {
-  final Signal<PagingState<int, T>> _state = signal(PagingState());
-  ReadonlySignal<PagingState<int, T>> get state => _state;
+  final _state = asyncSignal<List<T>>(AsyncState.loading());
+  ReadonlySignal<AsyncState<List<T>>> get state => _state;
 
-  PaginationController() {
-    fetchNextPage();
+  final _pageNumberSignal = signal(1);
+  final _isLastPageSignal = signal(false);
+  ReadonlySignal<bool> get isLastPage => _isLastPageSignal;
+  late final _eligibleForFetchingData = computed(() => !_state.value.isLoading && !_isLastPageSignal.value);
+  ReadonlySignal<bool> get eligibleForFetchingData => _eligibleForFetchingData;
+
+  final int _numberOfElementsPerRequest = 20;
+
+  PaginationController({bool fireImmediately = true}) {
+    if (fireImmediately) {
+      fetchData();
+    }
   }
 
-  Future<void> fetchNextPage() async {
-    final currentState = _state.value;
-    if (currentState.isLoading || !currentState.hasNextPage) return;
+  Future<void> fetchData() async {
+    final result = await fetchPage(_pageNumberSignal.value, _numberOfElementsPerRequest);
 
-    _state.value = currentState.copyWith(isLoading: true, error: null);
-
-    final nextKey = (currentState.keys?.lastOrNull ?? 0) + 1;
-    final result = await fetchPage(nextKey);
-
-    result.fold(
+    return result.fold(
       (error) {
-        _state.value = currentState.copyWith(error: Exception(error), isLoading: false);
+        _state.value = AsyncState.error(error);
       },
       (items) {
-        final isLastPage = items.isEmpty;
-        _state.value = currentState.copyWith(
-          pages: [...?currentState.pages, items],
-          keys: [...?currentState.keys, nextKey],
-          hasNextPage: !isLastPage,
-          isLoading: false,
-        );
+        _isLastPageSignal.value = items.length < _numberOfElementsPerRequest;
+        _pageNumberSignal.value = _pageNumberSignal.value + 1;
+        if (_state.value.hasValue) {
+          _state.value = AsyncState.data([..._state.value.value!, ...items]);
+        } else {
+          _state.value = AsyncState.data(items);
+        }
       },
     );
   }
 
   Future<void> refresh() async {
-    _state.value = PagingState();
-    await fetchNextPage();
+    _state.value = AsyncState.loading();
+    batch(() {
+      _pageNumberSignal.value = 1;
+      _isLastPageSignal.value = false;
+    });
+    fetchData();
   }
 
-  Future<Either<String, List<T>>> fetchPage(int page);
+  Future<Either<String, List<T>>> fetchPage(int page, int limit);
 
   @override
   void onDispose() {
+    print("ONDISPOES");
     _state.dispose();
+    _pageNumberSignal.dispose();
+    _isLastPageSignal.dispose();
+    dispose();
   }
+
+  void dispose() {}
 }

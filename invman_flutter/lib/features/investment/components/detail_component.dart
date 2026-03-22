@@ -8,7 +8,6 @@ import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/stock/components/tile_component.dart';
 import 'package:invman_flutter/features/transfer/transfer.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 class InvestmentDetailComponent extends StatelessWidget {
   final InvestmentDetailController controller;
@@ -23,99 +22,60 @@ class InvestmentDetailComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final investment = controller.state.watch(context).requireValue;
-    return Stack(
-      children: [
-        CustomScrollView(
-          physics: const ClampingScrollPhysics(),
-          slivers: [
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: InvestmentHeaderComponent(
-                height: headerHeight,
-                investment: investment,
-                currencyCode: authManager.currencyCode,
-              ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: UIConstants.appHorizontalPadding),
-              sliver: SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    const SizedBox(height: UIConstants.spacingSm),
-                    if (investment.stock != null)
-                      Column(
-                        spacing: UIConstants.spacingSm,
-                        children: [
-                          SectionHeaderComponent(title: S.of(context).stock),
-                          StockTileComponent(stock: investment.stock!),
-                          ListTile(
-                            leading: Icon(Icons.confirmation_number, color: Theme.of(context).colorScheme.primary),
-                            title: Text(S.of(context).investment_quantity),
-                            trailing: Text(investment.quantity.toString()),
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.update, color: Theme.of(context).colorScheme.primary),
-                            title: Text("${S.of(context).stock} ${S.of(context).core_lastUpdate}"),
-                            trailing: Text(DateFormat.yMMMd().add_jm().format(investment.stock!.updatedAt.toLocal())),
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.update, color: Theme.of(context).colorScheme.primary),
-                            title: Text("${S.of(context).account_currency} ${S.of(context).core_lastUpdate}"),
-                            trailing: authManager.currency != null
-                                ? Text(DateFormat.yMMMd().add_jm().format(authManager.currency!.updatedAt.toLocal()))
-                                : null,
-                          ),
-                        ],
-                      ),
-                    if (investment.withdrawalRule != null)
-                      Column(
-                        spacing: UIConstants.spacingSm,
-                        children: [
-                          SizedBox(height: UIConstants.spacingMd),
-                          SectionHeaderComponent(title: S.of(context).withdrawal),
-                          WithdrawalRuleTileComponent(rule: investment.withdrawalRule!),
-                        ],
-                      ),
-                    const SizedBox(height: UIConstants.spacingLg),
-                    ElevatedButton(
-                      onPressed: () async {
-                        await router.push(TransferRootScreen.route(investment.id!));
-                        controller.reload();
-                      },
-                      style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 0)),
-                      child: Text(S.of(context).transfer_title),
+    final investment = controller.state.value.requireValue;
+    return SingleChildScrollView(
+      child: Material(
+        child: Column(
+          children: [
+            InvestmentHeaderContent(investment: investment, currencyCode: authManager.currencyCode),
+            Padding(
+              padding: .symmetric(horizontal: UIConstants.appHorizontalPadding),
+              child: Column(
+                spacing: UIConstants.spacingXs,
+                children: [
+                  const SizedBox(height: UIConstants.spacingSm),
+                  if (investment.stock != null) ...[
+                    SectionHeaderComponent(title: S.of(context).stock),
+                    StockTileComponent(stock: investment.stock!),
+                    ListTile(
+                      leading: Icon(Icons.confirmation_number, color: Theme.of(context).colorScheme.primary),
+                      title: Text(S.of(context).investment_quantity),
+                      trailing: Text(investment.quantity.toString()),
                     ),
-                    const SizedBox(height: UIConstants.spacingMd),
+                    ListTile(
+                      leading: Icon(Icons.update, color: Theme.of(context).colorScheme.primary),
+                      title: Text("${S.of(context).stock} ${S.of(context).core_lastUpdate}"),
+                      trailing: Text(DateFormat.yMMMd().add_jm().format(investment.stock!.timestamp.toLocal())),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.update, color: Theme.of(context).colorScheme.primary),
+                      title: Text("${S.of(context).account_currency} ${S.of(context).core_lastUpdate}"),
+                      trailing: authManager.currency != null
+                          ? Text(DateFormat.yMMMd().add_jm().format(authManager.currency!.timestamp.toLocal()))
+                          : null,
+                    ),
                   ],
-                ),
+                  if (investment.withdrawalRule != null) ...[
+                    SizedBox(height: UIConstants.spacingMd),
+                    SectionHeaderComponent(title: S.of(context).withdrawal),
+                    WithdrawalRuleTileComponent(rule: investment.withdrawalRule!),
+                  ],
+                  const SizedBox(height: UIConstants.spacingLg),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await router.push(TransferRootScreen.route(investment.id!));
+                      controller.reload();
+                    },
+                    style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 0)),
+                    child: Text(S.of(context).transfer_title),
+                  ),
+                  const SizedBox(height: UIConstants.spacingMd),
+                ],
               ),
             ),
           ],
         ),
-        SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: UIConstants.spacingXs),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const BackButton(),
-                PopupMenuActions(
-                  onEdit: () async {
-                    await router.push(InvestmentEditScreen.route(investment.id!));
-                    controller.reload();
-                  },
-                  onDelete: () async {
-                    final (success, message) = await controller.delete();
-                    router.pop();
-                    ToastUtils.message(message, success: success);
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

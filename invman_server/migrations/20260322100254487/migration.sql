@@ -876,9 +876,9 @@ ALTER TABLE ONLY "serverpod_auth_core_session"
 -- MIGRATION VERSION FOR invman
 --
 INSERT INTO "serverpod_migrations" ("module", "version", "timestamp")
-    VALUES ('invman', '20260319084158496', now())
+    VALUES ('invman', '20260322100254487', now())
     ON CONFLICT ("module")
-    DO UPDATE SET "version" = '20260319084158496', "timestamp" = now();
+    DO UPDATE SET "version" = '20260322100254487', "timestamp" = now();
 
 --
 -- MIGRATION VERSION FOR serverpod

@@ -16,9 +16,9 @@ class StockDetailScreen extends HookWidget {
   Widget build(BuildContext context) {
     final controller = useController(() => getIt<StockDetailController>(param1: uuid));
     return BaseScreen(
-      noPadding: true,
+      usePadding: false,
       extendBodyBehindAppBar: true,
-      noTopSafeArea: true,
+      useTopSafeArea: false,
       appBar: BaseStateAppbar<Stock>(
         state: controller.state,
         successBuilder: (stock) => AppBar(

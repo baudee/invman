@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:injectable/injectable.dart';
 import 'package:invman_server/src/core/services/services.dart';
 
@@ -24,14 +26,20 @@ Respond ONLY with a JSON object in this exact format, no other text:
 {"value": <number>, "timestamp": "<ISO 8601 string>"}
 ''';
 
-    final response = await _geminiClient.prompt(prompt);
+    var response = await _geminiClient.prompt(prompt);
 
     if (response == null) {
       return (-1.0, DateTime.now());
     }
 
-    final value = response['value'];
-    final timestamp = response['timestamp'];
+    if (response.startsWith('```json')) {
+      response = response.replaceAll('```json', '').replaceAll('```', '').trim();
+    }
+
+    final json = jsonDecode(response);
+
+    final value = json['value'];
+    final timestamp = json['timestamp'];
 
     if (value == null || timestamp == null) {
       return (-1.0, DateTime.now());

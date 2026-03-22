@@ -2,6 +2,7 @@ import 'package:injectable/injectable.dart';
 import 'package:invman_server/src/account/account.dart';
 import 'package:invman_server/src/core/helpers/helpers.dart';
 import 'package:invman_server/src/currency/currency.dart';
+import 'package:invman_server/src/env.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:invman_server/src/stock/stock.dart';
 import 'package:invman_server/src/withdrawal/withdrawal.dart';
@@ -14,51 +15,15 @@ class InvestmentService {
   final CurrencyService currencyService;
   final StockService stockService;
   final WithdrawalRuleService withdrawalRuleService;
+  final Env env;
 
   InvestmentService({
     required this.accountService,
     required this.currencyService,
     required this.stockService,
     required this.withdrawalRuleService,
+    required this.env,
   });
-
-  Future<Investment> _addWithdrawAmountAndStock(
-    Session session, {
-    required Investment investment,
-    Transaction? transaction,
-  }) async {
-    final stock = await stockService.retrieve(session, investment.stockId);
-
-    double amountBeforeFees = investment.quantity * (stock.price);
-    double totalFees = 0;
-
-    final withdrawalRule = investment.withdrawalRule;
-    final feeList = withdrawalRule?.fees ?? [];
-    if (investment.quantity != 0) {
-      for (final feeRule in feeList) {
-        double fee = feeRule.fixed + amountBeforeFees * feeRule.percent / 100;
-        if (fee < feeRule.minimum) {
-          fee = feeRule.minimum;
-        }
-        totalFees += fee;
-      }
-    }
-
-    double actualAmount = amountBeforeFees - totalFees;
-
-    final accountCurrency = (await accountService.retrieve(session)).currency;
-    if (accountCurrency?.id != stock.currency?.id) {
-      double change = await currencyService.change(session, fromId: stock.currencyId, toId: accountCurrency?.id);
-      change = change - (withdrawalRule?.currencyChangePercentage ?? 0) / 100;
-      actualAmount *= change;
-    }
-
-    investment = investment.copyWith(
-      stock: stock,
-      withdrawAmount: actualAmount,
-    );
-    return investment;
-  }
 
   Future<List<Investment>> list(
     Session session, {
@@ -67,22 +32,24 @@ class InvestmentService {
   }) async {
     final sessionUserId = (session.authenticated)!.authUserId;
 
-    final investments = await Investment.db.find(
+    List<Investment> investments = await Investment.db.find(
       session,
       where: (e) => e.userId.equals(sessionUserId),
       include: IncludeHelpers.investmentInclude(),
       limit: limit,
       offset: (page * limit) - limit,
+      orderBy: (e) => e.updatedAt,
+      orderDescending: true,
     );
 
+    // Add withdrawal amount for all investments
     for (var i = 0; i < investments.length; i++) {
-      investments[i] = await _addWithdrawAmountAndStock(
+      investments[i] = await _addWithdrawAmount(
         session,
         investment: investments[i],
+        stock: investments[i].stock!,
       );
     }
-
-    investments.sort((a, b) => b.withdrawAmount!.compareTo(a.withdrawAmount!));
 
     return investments;
   }
@@ -96,15 +63,45 @@ class InvestmentService {
       include: IncludeHelpers.investmentInclude(),
     );
 
+    final investmentsUpToDate = <Investment>[];
+    final investmentsToUpdate = <Investment>[];
+    for (var i = 0; i < investments.length; i++) {
+      final investment = investments[i];
+      final stock = investment.stock;
+      if (stock!.updatedAt.isBefore(DateTime.now().subtract(Duration(days: env.cacheDurationDays)))) {
+        investmentsToUpdate.add(investment);
+      } else {
+        investmentsUpToDate.add(investment);
+      }
+    }
+
+    // Update necessary stocks
+    if (investmentsToUpdate.isNotEmpty) {
+      final stocksToUpdate = investmentsToUpdate.map((e) => e.stock!).toList();
+      final updatedStocks = await stockService.addCurrentValues(session, stocksToUpdate);
+      for (var i = 0; i < investmentsToUpdate.length; i++) {
+        final investment = investmentsToUpdate[i];
+        final correspondingUpdatedStock = updatedStocks.firstWhere((s) => s.id == investment.stockId);
+        investmentsUpToDate.add(
+          investment.copyWith(
+            stock: correspondingUpdatedStock,
+            stockId: correspondingUpdatedStock.id,
+          ),
+        );
+      }
+    }
+
+    // Add withdrawal amount for all investments
     double totalInvestAmount = 0;
     double totalWithdrawAmount = 0;
-    for (final investment in investments) {
-      final cleanInvestment = await _addWithdrawAmountAndStock(
+    for (var i = 0; i < investmentsUpToDate.length; i++) {
+      investmentsUpToDate[i] = await _addWithdrawAmount(
         session,
-        investment: investment,
+        investment: investmentsUpToDate[i],
+        stock: investmentsUpToDate[i].stock!,
       );
-      totalInvestAmount += cleanInvestment.investAmount;
-      totalWithdrawAmount += cleanInvestment.withdrawAmount ?? 0;
+      totalInvestAmount += investmentsUpToDate[i].investAmount;
+      totalWithdrawAmount += investmentsUpToDate[i].withdrawAmount ?? 0;
     }
 
     return Investment(
@@ -188,7 +185,6 @@ class InvestmentService {
     return _addWithdrawAmountAndStock(
       session,
       investment: investment,
-      transaction: transaction,
     );
   }
 
@@ -239,5 +235,50 @@ class InvestmentService {
       ),
       transaction: transaction,
     );
+  }
+
+  Future<Investment> _addWithdrawAmountAndStock(
+    Session session, {
+    required Investment investment,
+  }) async {
+    final stock = await stockService.retrieve(session, investment.stockId);
+
+    return _addWithdrawAmount(session, investment: investment, stock: stock);
+  }
+
+  Future<Investment> _addWithdrawAmount(
+    Session session, {
+    required Investment investment,
+    required Stock stock,
+  }) async {
+    double amountBeforeFees = investment.quantity * (stock.price);
+    double totalFees = 0;
+
+    final withdrawalRule = investment.withdrawalRule;
+    final feeList = withdrawalRule?.fees ?? [];
+    if (investment.quantity != 0) {
+      for (final feeRule in feeList) {
+        double fee = feeRule.fixed + amountBeforeFees * feeRule.percent / 100;
+        if (fee < feeRule.minimum) {
+          fee = feeRule.minimum;
+        }
+        totalFees += fee;
+      }
+    }
+
+    double actualAmount = amountBeforeFees - totalFees;
+
+    final accountCurrency = (await accountService.retrieve(session)).currency;
+    if (accountCurrency?.id != stock.currency?.id) {
+      double change = await currencyService.change(session, fromId: stock.currencyId, toId: accountCurrency?.id);
+      change = change - (withdrawalRule?.currencyChangePercentage ?? 0) / 100;
+      actualAmount *= change;
+    }
+
+    investment = investment.copyWith(
+      stock: stock,
+      withdrawAmount: actualAmount,
+    );
+    return investment;
   }
 }

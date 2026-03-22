@@ -8,14 +8,15 @@ import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/stock/stock.dart';
 
 class PopularStocksScreen extends HookWidget {
-  const PopularStocksScreen({super.key});
+  final StockType type;
+  const PopularStocksScreen({super.key, required this.type});
 
   static const pathSegment = 'popular';
   static String route() => '${StockRoutes.namespace}/$pathSegment';
 
   @override
   Widget build(BuildContext context) {
-    final controller = useMemoized(() => getIt<PopularStockListController>());
+    final controller = useController(() => getIt<PopularStockListController>(param1: type), [type]);
 
     return BaseScreen(
       appBar: AppBar(title: Text(S.of(context).stock_popular)),

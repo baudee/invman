@@ -8,6 +8,7 @@ import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/account/account.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 class AccountRootComponent extends StatelessWidget {
@@ -22,6 +23,7 @@ class AccountRootComponent extends StatelessWidget {
     final currentTheme = userPrefsManager.theme.watch(context);
 
     final authManager = getIt<AuthManager>();
+    final packageInfoModule = getIt<PackageInfo>();
 
     final tiles = [
       ListTile(
@@ -80,6 +82,7 @@ class AccountRootComponent extends StatelessWidget {
           }
         },
       ),
+      Text(packageInfoModule.version, style: Theme.of(context).textTheme.bodySmall)
     ];
 
     return SingleChildScrollView(

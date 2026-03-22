@@ -63,16 +63,19 @@ class StockService {
 
     // Last update is more than X day ago, update the price
     if (stock.updatedAt.isBefore(DateTime.now().subtract(Duration(days: env.cacheDurationDays)))) {
-      final (double currentValue, DateTime timestamp) = await currentValuesSource.getCurrentValue(
-        stock.symbol,
-        stock.name,
+      final currentValue = await currentValuesSource.getCurrentValue(
+        StockCurrentValueInput(
+          symbol: stock.symbol,
+          name: stock.name,
+          currencyCode: stock.currency!.code,
+        ),
       );
 
       stock = await Stock.db.updateRow(
         session,
         stock.copyWith(
-          price: currentValue,
-          timestamp: timestamp,
+          price: currentValue.value,
+          timestamp: currentValue.timestamp,
           updatedAt: DateTime.now(),
         ),
         transaction: transaction,
@@ -82,51 +85,91 @@ class StockService {
     return stock;
   }
 
-  Future<List<Stock>> search(
+  Future<List<Stock>> list(
     Session session, {
-    required String query,
+    required StockFilter filter,
     required int limit,
     required int page,
   }) async {
     return Stock.db.find(
       session,
-      where: (e) => e.symbol.ilike("%${query.trim()}%") | e.name.ilike("%${query.trim()}%"),
-      orderByList: (t) => [
+      where: _getWhereFromFilter(filter, session.authenticated!.authUserId),
+      orderByList: _getOrderListFromFilter(filter),
+      limit: limit,
+      offset: (page * limit) - limit,
+      include: Stock.include(
+        currency: Currency.include(),
+      ),
+    );
+  }
+
+  Future<List<Stock>> addCurrentValues(
+    Session session,
+    List<Stock> stocks, {
+    Transaction? transaction,
+  }) async {
+    final inputs = stocks
+        .map(
+          (stock) => StockCurrentValueInput(
+            symbol: stock.symbol,
+            name: stock.name,
+            currencyCode: stock.currency!.code,
+          ),
+        )
+        .toList();
+
+    final currentValues = await currentValuesSource.getCurrentValues(inputs);
+
+    final updatedStocks = <Stock>[];
+    for (var i = 0; i < stocks.length; i++) {
+      final stock = stocks[i];
+      final currentValue = currentValues[i];
+
+      updatedStocks.add(
+        stock.copyWith(
+          price: currentValue.value,
+          timestamp: currentValue.timestamp,
+          updatedAt: DateTime.now(),
+        ),
+      );
+    }
+
+    await Stock.db.update(
+      session,
+      updatedStocks,
+      transaction: transaction,
+    );
+
+    return updatedStocks;
+  }
+
+  Expression Function(StockTable)? _getWhereFromFilter(StockFilter filter, UuidValue userId) {
+    final List<Expression> expressions = [];
+
+    return (StockTable t) {
+      if (filter.favorite) {
+        expressions.add(t.likes.any((like) => like.userId.equals(userId)));
+      }
+
+      if (filter.query != null && filter.query!.trim().isNotEmpty) {
+        final q = "%${filter.query!.trim()}%";
+        expressions.add(t.symbol.ilike(q) | t.name.ilike(q));
+      }
+
+      if (filter.type != null) {
+        expressions.add(t.quoteType.equals(filter.type!));
+      }
+
+      return expressions.and ?? Constant.bool(true);
+    };
+  }
+
+  List<Order> Function(StockTable)? _getOrderListFromFilter(StockFilter filter) {
+    return (StockTable t) {
+      return [
         Order(column: t.investments.count(), orderDescending: true),
         Order(column: t.likes.count(), orderDescending: true),
-      ],
-      orderDescending: true,
-      limit: limit,
-      offset: (page * limit) - limit,
-    );
-  }
-
-  Future<List<Stock>> listPopular(
-    Session session, {
-    required int limit,
-    required int page,
-  }) async {
-    return Stock.db.find(
-      session,
-      orderBy: (t) => t.investments.count(),
-      orderDescending: true,
-      limit: limit,
-      offset: (page * limit) - limit,
-    );
-  }
-
-  Future<List<Stock>> listLiked(
-    Session session, {
-    required int limit,
-    required int page,
-  }) async {
-    final userId = session.authenticated!.authUserId;
-
-    return Stock.db.find(
-      session,
-      where: (e) => e.likes.any((like) => like.userId.equals(userId)),
-      limit: limit,
-      offset: (page * limit) - limit,
-    );
+      ];
+    };
   }
 }

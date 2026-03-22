@@ -40,7 +40,7 @@ class StockDetailComponent extends StatelessWidget {
                   ListTile(
                     leading: Icon(Icons.update, color: Theme.of(context).colorScheme.primary),
                     title: Text(S.of(context).core_lastUpdate),
-                    trailing: Text(DateFormat.yMMMd().add_jm().format(stock.updatedAt.toLocal())),
+                    trailing: Text(DateFormat.yMMMd().add_jm().format(stock.timestamp.toLocal())),
                   ),
                   const Spacer(),
                   ActionButton(

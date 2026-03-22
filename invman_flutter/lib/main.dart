@@ -11,6 +11,8 @@ import 'package:invman_flutter/env.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   // DEPENDENCY INJECTION
   await configureDependencies();
 
@@ -37,8 +39,6 @@ void main() async {
 }
 
 Future<void> _initializeApp() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   runApp(const MyApp());

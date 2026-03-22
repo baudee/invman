@@ -24,14 +24,16 @@ import 'package:invman_server/src/generated/account/models/account.dart'
     as _i11;
 import 'package:invman_server/src/generated/investment/models/investment.dart'
     as _i12;
-import 'package:invman_server/src/generated/transfer/models/transfer.dart'
+import 'package:invman_server/src/generated/stock/models/stock_filter.dart'
     as _i13;
-import 'package:invman_server/src/generated/withdrawal/models/withdrawal_rule.dart'
+import 'package:invman_server/src/generated/transfer/models/transfer.dart'
     as _i14;
-import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
+import 'package:invman_server/src/generated/withdrawal/models/withdrawal_rule.dart'
     as _i15;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _i16;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+    as _i17;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -519,13 +521,13 @@ class Endpoints extends _i1.EndpointDispatch {
                 params['uuid'],
               ),
         ),
-        'search': _i1.MethodConnector(
-          name: 'search',
+        'list': _i1.MethodConnector(
+          name: 'list',
           params: {
-            'query': _i1.ParameterDescription(
-              name: 'query',
-              type: _i1.getType<String>(),
-              nullable: false,
+            'filter': _i1.ParameterDescription(
+              name: 'filter',
+              type: _i1.getType<_i13.StockFilter?>(),
+              nullable: true,
             ),
             'limit': _i1.ParameterDescription(
               name: 'limit',
@@ -542,57 +544,9 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['stock'] as _i8.StockEndpoint).search(
+              ) async => (endpoints['stock'] as _i8.StockEndpoint).list(
                 session,
-                query: params['query'],
-                limit: params['limit'],
-                page: params['page'],
-              ),
-        ),
-        'listPopular': _i1.MethodConnector(
-          name: 'listPopular',
-          params: {
-            'limit': _i1.ParameterDescription(
-              name: 'limit',
-              type: _i1.getType<int>(),
-              nullable: false,
-            ),
-            'page': _i1.ParameterDescription(
-              name: 'page',
-              type: _i1.getType<int>(),
-              nullable: false,
-            ),
-          },
-          call:
-              (
-                _i1.Session session,
-                Map<String, dynamic> params,
-              ) async => (endpoints['stock'] as _i8.StockEndpoint).listPopular(
-                session,
-                limit: params['limit'],
-                page: params['page'],
-              ),
-        ),
-        'listLiked': _i1.MethodConnector(
-          name: 'listLiked',
-          params: {
-            'limit': _i1.ParameterDescription(
-              name: 'limit',
-              type: _i1.getType<int>(),
-              nullable: false,
-            ),
-            'page': _i1.ParameterDescription(
-              name: 'page',
-              type: _i1.getType<int>(),
-              nullable: false,
-            ),
-          },
-          call:
-              (
-                _i1.Session session,
-                Map<String, dynamic> params,
-              ) async => (endpoints['stock'] as _i8.StockEndpoint).listLiked(
-                session,
+                filter: params['filter'],
                 limit: params['limit'],
                 page: params['page'],
               ),
@@ -627,7 +581,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'transfer': _i1.ParameterDescription(
               name: 'transfer',
-              type: _i1.getType<_i13.Transfer>(),
+              type: _i1.getType<_i14.Transfer>(),
               nullable: false,
             ),
           },
@@ -745,7 +699,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'transfer': _i1.ParameterDescription(
               name: 'transfer',
-              type: _i1.getType<_i14.WithdrawalRule>(),
+              type: _i1.getType<_i15.WithdrawalRule>(),
               nullable: false,
             ),
           },
@@ -782,9 +736,9 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    modules['serverpod_auth_idp'] = _i15.Endpoints()
+    modules['serverpod_auth_idp'] = _i16.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i16.Endpoints()
+    modules['serverpod_auth_core'] = _i17.Endpoints()
       ..initializeEndpoints(server);
   }
 }

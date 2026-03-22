@@ -23,20 +23,21 @@ import 'core/exceptions/server_exception.dart' as _i8;
 import 'currency/models/currency.dart' as _i9;
 import 'investment/models/investment.dart' as _i10;
 import 'stock/models/stock.dart' as _i11;
-import 'stock/models/stock_like.dart' as _i12;
-import 'stock/models/stock_type.dart' as _i13;
-import 'transfer/models/transfer.dart' as _i14;
-import 'withdrawal/models/withdrawal_fee.dart' as _i15;
-import 'withdrawal/models/withdrawal_rule.dart' as _i16;
+import 'stock/models/stock_filter.dart' as _i12;
+import 'stock/models/stock_like.dart' as _i13;
+import 'stock/models/stock_type.dart' as _i14;
+import 'transfer/models/transfer.dart' as _i15;
+import 'withdrawal/models/withdrawal_fee.dart' as _i16;
+import 'withdrawal/models/withdrawal_rule.dart' as _i17;
 import 'package:invman_server/src/generated/currency/models/currency.dart'
-    as _i17;
-import 'package:invman_server/src/generated/investment/models/investment.dart'
     as _i18;
-import 'package:invman_server/src/generated/stock/models/stock.dart' as _i19;
+import 'package:invman_server/src/generated/investment/models/investment.dart'
+    as _i19;
+import 'package:invman_server/src/generated/stock/models/stock.dart' as _i20;
 import 'package:invman_server/src/generated/transfer/models/transfer.dart'
-    as _i20;
-import 'package:invman_server/src/generated/withdrawal/models/withdrawal_rule.dart'
     as _i21;
+import 'package:invman_server/src/generated/withdrawal/models/withdrawal_rule.dart'
+    as _i22;
 export 'account/models/account.dart';
 export 'app_settings/models/app_settings.dart';
 export 'core/exceptions/error_code.dart';
@@ -44,6 +45,7 @@ export 'core/exceptions/server_exception.dart';
 export 'currency/models/currency.dart';
 export 'investment/models/investment.dart';
 export 'stock/models/stock.dart';
+export 'stock/models/stock_filter.dart';
 export 'stock/models/stock_like.dart';
 export 'stock/models/stock_type.dart';
 export 'transfer/models/transfer.dart';
@@ -863,20 +865,23 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i11.Stock) {
       return _i11.Stock.fromJson(data) as T;
     }
-    if (t == _i12.StockLike) {
-      return _i12.StockLike.fromJson(data) as T;
+    if (t == _i12.StockFilter) {
+      return _i12.StockFilter.fromJson(data) as T;
     }
-    if (t == _i13.StockType) {
-      return _i13.StockType.fromJson(data) as T;
+    if (t == _i13.StockLike) {
+      return _i13.StockLike.fromJson(data) as T;
     }
-    if (t == _i14.Transfer) {
-      return _i14.Transfer.fromJson(data) as T;
+    if (t == _i14.StockType) {
+      return _i14.StockType.fromJson(data) as T;
     }
-    if (t == _i15.WithdrawalFee) {
-      return _i15.WithdrawalFee.fromJson(data) as T;
+    if (t == _i15.Transfer) {
+      return _i15.Transfer.fromJson(data) as T;
     }
-    if (t == _i16.WithdrawalRule) {
-      return _i16.WithdrawalRule.fromJson(data) as T;
+    if (t == _i16.WithdrawalFee) {
+      return _i16.WithdrawalFee.fromJson(data) as T;
+    }
+    if (t == _i17.WithdrawalRule) {
+      return _i17.WithdrawalRule.fromJson(data) as T;
     }
     if (t == _i1.getType<_i5.Account?>()) {
       return (data != null ? _i5.Account.fromJson(data) : null) as T;
@@ -899,41 +904,44 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i11.Stock?>()) {
       return (data != null ? _i11.Stock.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i12.StockLike?>()) {
-      return (data != null ? _i12.StockLike.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i12.StockFilter?>()) {
+      return (data != null ? _i12.StockFilter.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i13.StockType?>()) {
-      return (data != null ? _i13.StockType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i13.StockLike?>()) {
+      return (data != null ? _i13.StockLike.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i14.Transfer?>()) {
-      return (data != null ? _i14.Transfer.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i14.StockType?>()) {
+      return (data != null ? _i14.StockType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i15.WithdrawalFee?>()) {
-      return (data != null ? _i15.WithdrawalFee.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i15.Transfer?>()) {
+      return (data != null ? _i15.Transfer.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i16.WithdrawalRule?>()) {
-      return (data != null ? _i16.WithdrawalRule.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i16.WithdrawalFee?>()) {
+      return (data != null ? _i16.WithdrawalFee.fromJson(data) : null) as T;
     }
-    if (t == List<_i14.Transfer>) {
-      return (data as List).map((e) => deserialize<_i14.Transfer>(e)).toList()
+    if (t == _i1.getType<_i17.WithdrawalRule?>()) {
+      return (data != null ? _i17.WithdrawalRule.fromJson(data) : null) as T;
+    }
+    if (t == List<_i15.Transfer>) {
+      return (data as List).map((e) => deserialize<_i15.Transfer>(e)).toList()
           as T;
     }
-    if (t == _i1.getType<List<_i14.Transfer>?>()) {
+    if (t == _i1.getType<List<_i15.Transfer>?>()) {
       return (data != null
               ? (data as List)
-                    .map((e) => deserialize<_i14.Transfer>(e))
+                    .map((e) => deserialize<_i15.Transfer>(e))
                     .toList()
               : null)
           as T;
     }
-    if (t == List<_i12.StockLike>) {
-      return (data as List).map((e) => deserialize<_i12.StockLike>(e)).toList()
+    if (t == List<_i13.StockLike>) {
+      return (data as List).map((e) => deserialize<_i13.StockLike>(e)).toList()
           as T;
     }
-    if (t == _i1.getType<List<_i12.StockLike>?>()) {
+    if (t == _i1.getType<List<_i13.StockLike>?>()) {
       return (data != null
               ? (data as List)
-                    .map((e) => deserialize<_i12.StockLike>(e))
+                    .map((e) => deserialize<_i13.StockLike>(e))
                     .toList()
               : null)
           as T;
@@ -950,39 +958,39 @@ class Protocol extends _i1.SerializationManagerServer {
               : null)
           as T;
     }
-    if (t == List<_i15.WithdrawalFee>) {
+    if (t == List<_i16.WithdrawalFee>) {
       return (data as List)
-              .map((e) => deserialize<_i15.WithdrawalFee>(e))
+              .map((e) => deserialize<_i16.WithdrawalFee>(e))
               .toList()
           as T;
     }
-    if (t == _i1.getType<List<_i15.WithdrawalFee>?>()) {
+    if (t == _i1.getType<List<_i16.WithdrawalFee>?>()) {
       return (data != null
               ? (data as List)
-                    .map((e) => deserialize<_i15.WithdrawalFee>(e))
+                    .map((e) => deserialize<_i16.WithdrawalFee>(e))
                     .toList()
               : null)
           as T;
     }
-    if (t == List<_i17.Currency>) {
-      return (data as List).map((e) => deserialize<_i17.Currency>(e)).toList()
+    if (t == List<_i18.Currency>) {
+      return (data as List).map((e) => deserialize<_i18.Currency>(e)).toList()
           as T;
     }
-    if (t == List<_i18.Investment>) {
-      return (data as List).map((e) => deserialize<_i18.Investment>(e)).toList()
+    if (t == List<_i19.Investment>) {
+      return (data as List).map((e) => deserialize<_i19.Investment>(e)).toList()
           as T;
     }
-    if (t == List<_i19.Stock>) {
-      return (data as List).map((e) => deserialize<_i19.Stock>(e)).toList()
+    if (t == List<_i20.Stock>) {
+      return (data as List).map((e) => deserialize<_i20.Stock>(e)).toList()
           as T;
     }
-    if (t == List<_i20.Transfer>) {
-      return (data as List).map((e) => deserialize<_i20.Transfer>(e)).toList()
+    if (t == List<_i21.Transfer>) {
+      return (data as List).map((e) => deserialize<_i21.Transfer>(e)).toList()
           as T;
     }
-    if (t == List<_i21.WithdrawalRule>) {
+    if (t == List<_i22.WithdrawalRule>) {
       return (data as List)
-              .map((e) => deserialize<_i21.WithdrawalRule>(e))
+              .map((e) => deserialize<_i22.WithdrawalRule>(e))
               .toList()
           as T;
     }
@@ -1007,11 +1015,12 @@ class Protocol extends _i1.SerializationManagerServer {
       _i9.Currency => 'Currency',
       _i10.Investment => 'Investment',
       _i11.Stock => 'Stock',
-      _i12.StockLike => 'StockLike',
-      _i13.StockType => 'StockType',
-      _i14.Transfer => 'Transfer',
-      _i15.WithdrawalFee => 'WithdrawalFee',
-      _i16.WithdrawalRule => 'WithdrawalRule',
+      _i12.StockFilter => 'StockFilter',
+      _i13.StockLike => 'StockLike',
+      _i14.StockType => 'StockType',
+      _i15.Transfer => 'Transfer',
+      _i16.WithdrawalFee => 'WithdrawalFee',
+      _i17.WithdrawalRule => 'WithdrawalRule',
       _ => null,
     };
   }
@@ -1040,15 +1049,17 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'Investment';
       case _i11.Stock():
         return 'Stock';
-      case _i12.StockLike():
+      case _i12.StockFilter():
+        return 'StockFilter';
+      case _i13.StockLike():
         return 'StockLike';
-      case _i13.StockType():
+      case _i14.StockType():
         return 'StockType';
-      case _i14.Transfer():
+      case _i15.Transfer():
         return 'Transfer';
-      case _i15.WithdrawalFee():
+      case _i16.WithdrawalFee():
         return 'WithdrawalFee';
-      case _i16.WithdrawalRule():
+      case _i17.WithdrawalRule():
         return 'WithdrawalRule';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -1093,20 +1104,23 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'Stock') {
       return deserialize<_i11.Stock>(data['data']);
     }
+    if (dataClassName == 'StockFilter') {
+      return deserialize<_i12.StockFilter>(data['data']);
+    }
     if (dataClassName == 'StockLike') {
-      return deserialize<_i12.StockLike>(data['data']);
+      return deserialize<_i13.StockLike>(data['data']);
     }
     if (dataClassName == 'StockType') {
-      return deserialize<_i13.StockType>(data['data']);
+      return deserialize<_i14.StockType>(data['data']);
     }
     if (dataClassName == 'Transfer') {
-      return deserialize<_i14.Transfer>(data['data']);
+      return deserialize<_i15.Transfer>(data['data']);
     }
     if (dataClassName == 'WithdrawalFee') {
-      return deserialize<_i15.WithdrawalFee>(data['data']);
+      return deserialize<_i16.WithdrawalFee>(data['data']);
     }
     if (dataClassName == 'WithdrawalRule') {
-      return deserialize<_i16.WithdrawalRule>(data['data']);
+      return deserialize<_i17.WithdrawalRule>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -1154,14 +1168,14 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i10.Investment.t;
       case _i11.Stock:
         return _i11.Stock.t;
-      case _i12.StockLike:
-        return _i12.StockLike.t;
-      case _i14.Transfer:
-        return _i14.Transfer.t;
-      case _i15.WithdrawalFee:
-        return _i15.WithdrawalFee.t;
-      case _i16.WithdrawalRule:
-        return _i16.WithdrawalRule.t;
+      case _i13.StockLike:
+        return _i13.StockLike.t;
+      case _i15.Transfer:
+        return _i15.Transfer.t;
+      case _i16.WithdrawalFee:
+        return _i16.WithdrawalFee.t;
+      case _i17.WithdrawalRule:
+        return _i17.WithdrawalRule.t;
     }
     return null;
   }

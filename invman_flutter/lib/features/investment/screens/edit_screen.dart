@@ -12,7 +12,7 @@ class InvestmentEditScreen extends HookWidget {
   const InvestmentEditScreen({super.key, required this.id, this.stock});
 
   static const pathSegment = 'edit';
-  static String route(int id) => '${InvestmentRoutes.namespace}/$id/$pathSegment';
+  static String route(int id) => '${InvestmentRootScreen.pathSegment}/$id/$pathSegment';
 
   @override
   Widget build(BuildContext context) {

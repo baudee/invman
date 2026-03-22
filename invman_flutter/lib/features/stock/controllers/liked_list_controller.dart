@@ -15,7 +15,7 @@ class LikedStockListController extends PaginationController<Stock> {
   }
 
   @override
-  Future<Either<String, List<Stock>>> fetchPage(int page) {
-    return _repository.listLiked(page: page, limit: 10);
+  Future<Either<String, List<Stock>>> fetchPage(int page, int limit) {
+    return _repository.list(filter: StockFilter(favorite: true), page: page, limit: limit);
   }
 }

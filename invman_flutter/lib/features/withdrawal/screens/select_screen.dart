@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
+import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
-import 'package:invman_flutter/core/components/components.dart';
 import 'package:invman_flutter/di.dart';
+import 'package:invman_flutter/features/investment/screens/screens.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
 class WithdrawalRuleSelectScreen extends HookWidget {
   const WithdrawalRuleSelectScreen({super.key});
 
-  static const pathSegment = '/investments/select';
-  static String route() => pathSegment;
+  static const pathSegment = 'select';
+  static String route() => '${InvestmentRootScreen.pathSegment}/$pathSegment';
 
   @override
   Widget build(BuildContext context) {
-    final controller = useMemoized(() => getIt<WithdrawalRuleListController>());
+    final controller = useController(() => getIt<WithdrawalRuleListController>());
     return BaseScreen(
       appBar: AppBar(title: Text(S.of(context).withdrawal_title)),
       body: InfiniteListComponent(

@@ -15,12 +15,6 @@ class StockRepository {
 
   StockRepository(this.client);
 
-  Future<Either<String, List<Stock>>> search({required String query, int limit = 10, int page = 1}) async {
-    return safeCall(() async {
-      return right(await client.stock.search(query: query, limit: limit, page: page));
-    });
-  }
-
   Future<Either<String, Stock>> retrieve(UuidValue uuid) async {
     return safeCall(() async {
       return right(await client.stock.retrieve(uuid));
@@ -43,15 +37,9 @@ class StockRepository {
     });
   }
 
-  Future<Either<String, List<Stock>>> listPopular({int limit = 10, int page = 1}) async {
+  Future<Either<String, List<Stock>>> list({StockFilter? filter, int limit = 10, int page = 1}) async {
     return safeCall(() async {
-      return right(await client.stock.listPopular(limit: limit, page: page));
-    });
-  }
-
-  Future<Either<String, List<Stock>>> listLiked({int limit = 10, int page = 1}) async {
-    return safeCall(() async {
-      return right(await client.stock.listLiked(limit: limit, page: page));
+      return right(await client.stock.list(filter: filter, limit: limit, page: page));
     });
   }
 }

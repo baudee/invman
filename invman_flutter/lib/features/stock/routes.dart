@@ -16,7 +16,25 @@ class StockRoutes {
         routes: [
           GoRoute(path: StockSearchScreen.pathSegment, builder: (_, _) => const StockSearchScreen()),
           GoRoute(path: StockSelectScreen.pathSegment, builder: (_, _) => const StockSelectScreen()),
-          GoRoute(path: PopularStocksScreen.pathSegment, builder: (_, _) => const PopularStocksScreen()),
+          GoRoute(
+            path: PopularStocksScreen.pathSegment,
+            builder: (_, state) {
+              StockType type;
+              if (state.extra != null) {
+                if (state.extra is StockType) {
+                  type = state.extra as StockType;
+                } else {
+                  type = StockType.stock;
+                }
+              } else {
+                type = StockType.stock;
+              }
+
+              return PopularStocksScreen(
+                type: type,
+              );
+            },
+          ),
           GoRoute(path: LikedStocksScreen.pathSegment, builder: (_, _) => const LikedStocksScreen()),
           GoRoute(
             path: StockDetailScreen.pathSegment,

@@ -5,7 +5,6 @@ import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 class InvestmentRootScreen extends HookWidget {
   const InvestmentRootScreen({super.key});
@@ -17,43 +16,17 @@ class InvestmentRootScreen extends HookWidget {
   Widget build(BuildContext context) {
     final controller = useController(() => getIt<InvestmentListController>());
     final authManager = getIt<AuthManager>();
-    final headerHeight = 260.0;
 
-    return Scaffold(
+    return BaseScreen(
+      usePadding: false,
+      useTopSafeArea: false,
       floatingActionButton: FloatingActionButton(
         onPressed: () => router.push(InvestmentEditScreen.route(0)),
         child: const Icon(Icons.add),
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          controller.refresh();
-          controller.loadTotal();
-        },
-        edgeOffset: headerHeight,
-        child: CustomScrollView(
-          physics: const ClampingScrollPhysics(),
-          slivers: [
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: InvestmentHeaderComponent(
-                height: headerHeight,
-                investment: controller.total.watch(context),
-                currencyCode: authManager.currencyCode,
-              ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.only(
-                top: UIConstants.spacingMd,
-                left: UIConstants.appHorizontalPadding,
-                right: UIConstants.appHorizontalPadding,
-              ),
-              sliver: InfiniteSliverListComponent(
-                controller: controller,
-                itemBuilder: (investment) => InvestmentTileComponent(investment: investment),
-              ),
-            ),
-          ],
-        ),
+      body: InvestmentRootComponent(
+        controller: controller,
+        currencyCode: authManager.currencyCode,
       ),
     );
   }

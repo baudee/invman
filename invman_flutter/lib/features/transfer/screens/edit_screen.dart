@@ -13,7 +13,7 @@ class TransferEditScreen extends HookWidget {
 
   static const pathSegment = ':transferId/edit';
   static String route(int investmentId, int transferId) =>
-      '${InvestmentRoutes.namespace}/$investmentId/${TransferRootScreen.pathSegment}/$transferId/edit';
+      '${InvestmentRootScreen.pathSegment}/$investmentId/${TransferRootScreen.pathSegment}/$transferId/edit';
 
   @override
   Widget build(BuildContext context) {

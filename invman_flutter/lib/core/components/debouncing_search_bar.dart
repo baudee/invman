@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:invman_flutter/core/core.dart';
 
 class DebouncingSearchBar extends StatefulWidget {
   final bool autoFocus;
@@ -28,16 +29,19 @@ class _DebouncingSearchBarState extends State<DebouncingSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    return SearchBar(
-      controller: widget.controller,
-      autoFocus: widget.autoFocus,
-      hintText: widget.hintText,
-      onChanged: (value) {
-        if (_debounce?.isActive ?? false) _debounce!.cancel();
-        _debounce = Timer(Duration(milliseconds: widget.debounceMs), () {
-          widget.onChanged(value);
-        });
-      },
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: UIConstants.spacingXxl),
+      child: SearchBar(
+        controller: widget.controller,
+        autoFocus: widget.autoFocus,
+        hintText: widget.hintText,
+        onChanged: (value) {
+          if (_debounce?.isActive ?? false) _debounce!.cancel();
+          _debounce = Timer(Duration(milliseconds: widget.debounceMs), () {
+            widget.onChanged(value);
+          });
+        },
+      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/core/components/components.dart';
@@ -15,6 +16,7 @@ class InvestmentFormComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final investment = controller.state.watch(context).requireValue;
+    final shouldNotPopAfterSave = controller.id == 0 && investment.stockId != UuidValue.fromString(Namespace.nil.value);
     return Form(
       key: controller.formKey,
       child: Column(
@@ -42,7 +44,13 @@ class InvestmentFormComponent extends StatelessWidget {
               final (success, message) = await controller.submit();
               if (success) {
                 final id = controller.state.value.requireValue.id!;
-                router.pushReplacement(InvestmentDetailScreen.route(id));
+                if (shouldNotPopAfterSave) {
+                  // From Stock detail page
+                  router.pushReplacement(InvestmentDetailScreen.route(id));
+                } else {
+                  // From Investment list page
+                  router.pop();
+                }
               } else {
                 ToastUtils.message(message, success: success);
               }

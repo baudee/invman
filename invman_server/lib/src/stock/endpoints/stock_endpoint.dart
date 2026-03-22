@@ -29,47 +29,17 @@ class StockEndpoint extends Endpoint with EndpointMiddleware {
     );
   }
 
-  Future<List<Stock>> search(
+  Future<List<Stock>> list(
     Session session, {
-    required String query,
+    StockFilter? filter,
     int limit = 10,
     int page = 1,
   }) async {
     return withMiddleware(
       session,
-      () => getIt<StockService>().search(
+      () => getIt<StockService>().list(
         session,
-        query: query,
-        limit: limit,
-        page: page,
-      ),
-    );
-  }
-
-  Future<List<Stock>> listPopular(
-    Session session, {
-    int limit = 10,
-    int page = 1,
-  }) async {
-    return withMiddleware(
-      session,
-      () => getIt<StockService>().listPopular(
-        session,
-        limit: limit,
-        page: page,
-      ),
-    );
-  }
-
-  Future<List<Stock>> listLiked(
-    Session session, {
-    int limit = 10,
-    int page = 1,
-  }) async {
-    return withMiddleware(
-      session,
-      () => getIt<StockService>().listLiked(
-        session,
+        filter: filter ?? StockFilter(),
         limit: limit,
         page: page,
       ),

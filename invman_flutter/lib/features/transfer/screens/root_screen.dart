@@ -12,7 +12,7 @@ class TransferRootScreen extends HookWidget {
   const TransferRootScreen({super.key, required this.investmentId});
 
   static const pathSegment = 'transfers';
-  static String route(int investmentId) => '${InvestmentRoutes.namespace}/$investmentId/$pathSegment';
+  static String route(int investmentId) => '${InvestmentRootScreen.pathSegment}/$investmentId/$pathSegment';
 
   @override
   Widget build(BuildContext context) {

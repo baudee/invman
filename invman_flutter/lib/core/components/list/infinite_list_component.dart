@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -12,6 +11,7 @@ class InfiniteListComponent<T> extends StatelessWidget {
   final bool refreshIndicator;
   final ScrollPhysics? physics;
   final Widget? noItemsFoundWidget;
+  final int _nextPageTrigger = 5;
 
   const InfiniteListComponent({
     super.key,
@@ -26,41 +26,58 @@ class InfiniteListComponent<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = controller.state.watch(context);
+    return BaseStateComponent(
+      state: controller.state,
+      successBuilder: (_) => RefreshIndicator(
+        onRefresh: controller.refresh,
+        child: Builder(
+          builder: (context) {
+            final items = controller.state.value.requireValue;
+            if (items.isEmpty && controller.isLastPage.watch(context)) {
+              return CustomScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                slivers: [
+                  SliverFillRemaining(
+                    child: Center(
+                      child:
+                          noItemsFoundWidget ??
+                          Text(S.of(context).core_noItemsFound, style: Theme.of(context).textTheme.titleMedium),
+                    ),
+                  ),
+                ],
+              );
+            }
 
-    final listView = PagedListView<int, T>.separated(
-      state: state,
-      fetchNextPage: controller.fetchNextPage,
-      shrinkWrap: shrinkWrap,
-      reverse: reverse,
-      physics: physics ?? const ClampingScrollPhysics(),
-      separatorBuilder: (context, index) => const SizedBox(height: UIConstants.spacingXs),
-      builderDelegate: PagedChildBuilderDelegate<T>(
-        itemBuilder: (context, item, index) => Material(color: Colors.transparent, child: itemBuilder(item)),
-        firstPageProgressIndicatorBuilder: (_) => const LoadingComponent(),
-        newPageProgressIndicatorBuilder: (_) => const LoadingComponent(),
-        firstPageErrorIndicatorBuilder: (context) {
-          final exceptionString = state.error;
-          final String error;
-          if (exceptionString is Exception) {
-            error = exceptionString.toString().replaceFirst('Exception: ', '');
-          } else {
-            error = S.of(context).error_tryAgain;
-          }
-          return ErrorComponent(error: error, handleRefresh: controller.refresh);
-        },
-        noItemsFoundIndicatorBuilder: (_) => Center(
-          child:
-              noItemsFoundWidget ??
-              Text(S.of(context).core_noItemsFound, style: Theme.of(context).textTheme.titleMedium),
+            return ListView.separated(
+              shrinkWrap: shrinkWrap,
+              reverse: reverse,
+              physics: physics ?? const AlwaysScrollableScrollPhysics(),
+              separatorBuilder: (context, index) => const SizedBox(height: UIConstants.spacingXs),
+              itemCount:
+                  controller.state.watch(context).requireValue.length + (controller.isLastPage.watch(context) ? 0 : 1),
+              itemBuilder: (context, index) {
+                if (index == (items.length - _nextPageTrigger) && controller.eligibleForFetchingData.value) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    controller.fetchData();
+                  });
+                }
+
+                if (index == items.length) {
+                  return const SizedBox.shrink();
+                }
+
+                return Column(
+                  children: [
+                    if (index == 0 || (items.length == index + 1)) const SizedBox(height: UIConstants.spacingXs),
+                    Material(color: Colors.transparent, child: itemBuilder(items[index])),
+                  ],
+                );
+              },
+            );
+          },
         ),
       ),
+      onReload: controller.refresh,
     );
-
-    if (refreshIndicator) {
-      return RefreshIndicator(onRefresh: controller.refresh, child: listView);
-    } else {
-      return listView;
-    }
   }
 }

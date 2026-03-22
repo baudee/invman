@@ -14,7 +14,7 @@ class SignInScreen extends StatelessWidget {
     final theme = Theme.of(context);
 
     return BaseScreen(
-      noPadding: true,
+      usePadding: false,
       body: Column(
         children: [
           Expanded(

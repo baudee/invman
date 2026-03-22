@@ -2,7 +2,7 @@ import 'package:invman_client/invman_client.dart';
 
 class InitialUtils {
   static Stock getStock() {
-    return Stock(symbol: '', name: '', quoteType: StockType.equity, currencyId: 0);
+    return Stock(symbol: '', name: '', quoteType: StockType.stock, currencyId: 0);
   }
 
   static Transfer getTransfer() {

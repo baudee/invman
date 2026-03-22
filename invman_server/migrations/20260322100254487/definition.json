@@ -3815,7 +3815,7 @@
     {
       "__className__": "serverpod.DatabaseMigrationVersion",
       "module": "invman",
-      "version": "20260319084158496"
+      "version": "20260322100254487"
     },
     {
       "__className__": "serverpod.DatabaseMigrationVersion",

@@ -13,7 +13,7 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
 enum StockType implements _i1.SerializableModel {
-  equity,
+  stock,
   etf,
   crypto,
   commodity,
@@ -21,8 +21,8 @@ enum StockType implements _i1.SerializableModel {
 
   static StockType fromJson(String name) {
     switch (name) {
-      case 'equity':
-        return StockType.equity;
+      case 'stock':
+        return StockType.stock;
       case 'etf':
         return StockType.etf;
       case 'crypto':

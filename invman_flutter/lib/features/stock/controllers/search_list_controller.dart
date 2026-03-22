@@ -9,12 +9,12 @@ import 'package:signals_flutter/signals_flutter.dart';
 class StockSearchListController extends PaginationController<Stock> {
   final query = Signal<String>('');
 
-  final StockRepository _service;
+  final StockRepository _repository;
 
   EffectCleanup? _cleanup;
   String _lastQuery = '';
 
-  StockSearchListController(this._service) {
+  StockSearchListController(this._repository) {
     _lastQuery = query.value;
     _cleanup = effect(() {
       final q = query.value;
@@ -25,15 +25,20 @@ class StockSearchListController extends PaginationController<Stock> {
     });
   }
 
+  @override
   void dispose() {
     _cleanup?.call();
   }
 
   @override
-  Future<Either<String, List<Stock>>> fetchPage(int page) {
+  Future<Either<String, List<Stock>>> fetchPage(int page, int limit) {
     if (query.value.isEmpty) {
       return Future.value(const Right([]));
     }
-    return _service.search(query: query.value, page: page, limit: 10);
+    return _repository.list(
+      filter: StockFilter(query: query.value),
+      page: page,
+      limit: limit,
+    );
   }
 }

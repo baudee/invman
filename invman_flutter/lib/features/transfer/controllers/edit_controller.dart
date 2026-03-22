@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/transfer/repositories/transfer_repository.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
@@ -12,7 +13,8 @@ import 'package:signals_flutter/signals_flutter.dart';
 class TransferEditController extends Disposable {
   final int investmentId;
   final int id;
-  final TransferRepository _repository;
+  final TransferRepository _transferRepository;
+  final InvestmentRepository _investmentRepository;
 
   final _state = asyncSignal<Transfer>(AsyncState.loading());
   ReadonlySignal<AsyncState<Transfer>> get state => _state;
@@ -21,7 +23,12 @@ class TransferEditController extends Disposable {
   final amountController = TextEditingController();
   final quantityController = TextEditingController();
 
-  TransferEditController(@factoryParam this.investmentId, @factoryParam this.id, this._repository) {
+  TransferEditController(
+    @factoryParam this.investmentId,
+    @factoryParam this.id,
+    this._transferRepository,
+    this._investmentRepository,
+  ) {
     _load();
   }
 
@@ -33,7 +40,7 @@ class TransferEditController extends Disposable {
       _state.value = AsyncState.data(initial);
       return;
     }
-    final result = await _repository.retrieve(id);
+    final result = await _transferRepository.retrieve(id);
     result.fold((error) => _state.value = AsyncState.error(error), (transfer) {
       _refreshControllers(transfer);
       _state.value = AsyncState.data(transfer);
@@ -74,7 +81,7 @@ class TransferEditController extends Disposable {
 
       _state.value = AsyncState.loading();
 
-      final result = await _repository.save(transferToSave);
+      final result = await _transferRepository.save(transferToSave);
 
       return result.fold(
         (error) {
@@ -83,6 +90,7 @@ class TransferEditController extends Disposable {
         },
         (saved) {
           _state.value = AsyncState.data(saved);
+          _investmentRepository.invalidate();
           return (true, S.current.core_itemSaved);
         },
       );

@@ -14,7 +14,7 @@ class TransferListController extends PaginationController<Transfer> {
   }
 
   @override
-  Future<Either<String, List<Transfer>>> fetchPage(int page) {
-    return _repository.list(investmentId, page: page, limit: 10);
+  Future<Either<String, List<Transfer>>> fetchPage(int page, int limit) {
+    return _repository.list(investmentId, page: page, limit: limit);
   }
 }

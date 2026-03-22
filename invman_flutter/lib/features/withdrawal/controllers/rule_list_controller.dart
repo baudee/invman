@@ -13,7 +13,7 @@ class WithdrawalRuleListController extends PaginationController<WithdrawalRule> 
   }
 
   @override
-  Future<Either<String, List<WithdrawalRule>>> fetchPage(int page) {
-    return _repository.list(page: page, limit: 10);
+  Future<Either<String, List<WithdrawalRule>>> fetchPage(int page, int limit) {
+    return _repository.list(page: page, limit: limit);
   }
 }

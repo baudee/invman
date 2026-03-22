@@ -6,8 +6,6 @@ import 'package:invman_flutter/features/transfer/transfer.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
 class InvestmentRoutes {
-  static String namespace = "/investments";
-  static String namespaceTransfer = "/transfers";
   static final shellNavigatorKey = GlobalKey<NavigatorState>(debugLabel: "Investment Shell");
 
   static StatefulShellBranch branch = StatefulShellBranch(
@@ -17,6 +15,10 @@ class InvestmentRoutes {
         path: InvestmentRootScreen.pathSegment,
         builder: (_, _) => InvestmentRootScreen(),
         routes: [
+          GoRoute(
+            path: WithdrawalRuleSelectScreen.pathSegment,
+            builder: (_, _) => const WithdrawalRuleSelectScreen(),
+          ),
           GoRoute(
             path: InvestmentDetailScreen.pathSegment,
             builder: (_, state) => InvestmentDetailScreen(id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0),
@@ -46,7 +48,6 @@ class InvestmentRoutes {
           ),
         ],
       ),
-      GoRoute(path: WithdrawalRuleSelectScreen.pathSegment, builder: (_, _) => const WithdrawalRuleSelectScreen()),
       ...WithdrawalRoutes.routes,
     ],
   );

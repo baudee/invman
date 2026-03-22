@@ -13,7 +13,7 @@ class StockSearchScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = useMemoized(() => getIt<StockSearchListController>());
+    final controller = useController(() => getIt<StockSearchListController>());
     return BaseScreen(
       appBar: AppBar(
         title: StockSearchComponent(controller: controller),
