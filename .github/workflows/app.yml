@@ -167,6 +167,19 @@ jobs:
           echo "keyAlias=upload" >> android/key.properties
           echo "storeFile=keystore.jks" >> android/key.properties
 
+      - name: Verify signing setup
+        run: |
+          echo "Checking signing configuration..."
+          if [ ! -f android/key.properties ]; then
+            echo "ERROR: key.properties not found"
+            exit 1
+          fi
+          if [ ! -f android/app/keystore.jks ]; then
+            echo "ERROR: keystore.jks not found"
+            exit 1
+          fi
+          echo "Signing configuration OK"
+
       - name: Build Release APK & App Bundle
         run: |
           flutter build apk --release \
@@ -179,6 +192,18 @@ jobs:
             --dart-define-from-file .env \
             --build-name=${{ steps.version.outputs.version }} \
             --build-number=${{ steps.version.outputs.build_number }}
+
+      - name: Verify release signing
+        run: |
+          echo "Verifying APK is release-signed..."
+          APK_PATH="build/app/outputs/flutter-apk/app-production-release.apk"
+          SIGNER_INFO=$(jarsigner -verify -verbose -certs "$APK_PATH" 2>&1 | head -20)
+          if echo "$SIGNER_INFO" | grep -q "Android Debug"; then
+            echo "ERROR: APK is signed with debug key!"
+            echo "$SIGNER_INFO"
+            exit 1
+          fi
+          echo "APK is properly release-signed"
 
       - name: Upload Android Artifacts
         uses: actions/upload-artifact@v4

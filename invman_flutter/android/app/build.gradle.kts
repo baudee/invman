@@ -8,9 +8,10 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-val keystorePropertiesFile = rootProject.file("app/key.properties")
+val keystorePropertiesFile = rootProject.file("key.properties")
 val keystoreProperties = Properties()
-if (keystorePropertiesFile.exists()) {
+val hasReleaseSigningConfig = keystorePropertiesFile.exists()
+if (hasReleaseSigningConfig) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
@@ -36,7 +37,7 @@ android {
     }
 
     signingConfigs {
-        if (keystorePropertiesFile.exists()) {
+        if (hasReleaseSigningConfig) {
             create("release") {
                 keyAlias = keystoreProperties["keyAlias"] as String
                 keyPassword = keystoreProperties["keyPassword"] as String
@@ -62,14 +63,19 @@ android {
             dimension = "environment"
             applicationId = "ch.valentinbaudin.rimawari"
             resValue("string", "app_name", "Rimawari")
+            // Production release builds require proper signing
+            if (!hasReleaseSigningConfig) {
+                println("WARNING: No key.properties found. Production release builds will fail.")
+            }
         }
     }
 
     buildTypes {
         release {
-            signingConfig = if (keystorePropertiesFile.exists()) {
+            signingConfig = if (hasReleaseSigningConfig) {
                 signingConfigs.getByName("release")
             } else {
+                // Allow debug signing for develop/staging, but production will fail at build time
                 signingConfigs.getByName("debug")
             }
         }
