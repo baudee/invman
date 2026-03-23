@@ -1,2 +1,39 @@
-example:
-  - hello:
+account:
+  - retrieve:
+  - save:
+appSettings:
+  - get:
+emailIdp:
+  - login:
+  - startRegistration:
+  - verifyRegistrationCode:
+  - finishRegistration:
+  - startPasswordReset:
+  - verifyPasswordResetCode:
+  - finishPasswordReset:
+  - hasAccount:
+jwtRefresh:
+  - refreshAccessToken:
+currency:
+  - list:
+investment:
+  - list:
+  - save:
+  - delete:
+  - retrieve:
+  - total:
+stock:
+  - like:
+  - unlike:
+  - retrieve:
+  - list:
+transfer:
+  - retrieve:
+  - save:
+  - delete:
+  - list:
+withdrawalRule:
+  - list:
+  - retrieve:
+  - save:
+  - delete:

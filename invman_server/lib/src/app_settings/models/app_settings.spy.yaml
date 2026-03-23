@@ -1,0 +1,10 @@
+class: AppSettings
+
+table: app_settings
+
+fields:
+  maintenanceMode: bool
+  minVersion: String
+  appStoreUrl: String?
+  playStoreUrl: String?
+  symbolsUpdatedAt: DateTime

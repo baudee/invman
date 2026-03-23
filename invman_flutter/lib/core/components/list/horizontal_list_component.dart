@@ -1,0 +1,34 @@
+import 'package:flutter/material.dart';
+import 'package:invman_flutter/core/utils/constants/ui_constants.dart';
+
+class HorizontalListComponent<T> extends StatelessWidget {
+  final List<T> items;
+  final Widget Function(T item) itemBuilder;
+  final double height;
+  final double itemWidth;
+  final double spacing;
+
+  const HorizontalListComponent({
+    super.key,
+    required this.items,
+    required this.itemBuilder,
+    this.height = 120,
+    this.itemWidth = 100,
+    this.spacing = UIConstants.spacingXs,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: height,
+      child: ListView.separated(
+        physics: const ClampingScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        clipBehavior: Clip.none,
+        itemCount: items.length,
+        separatorBuilder: (_, _) => SizedBox(width: spacing),
+        itemBuilder: (context, index) => SizedBox(width: itemWidth, child: itemBuilder(items[index])),
+      ),
+    );
+  }
+}

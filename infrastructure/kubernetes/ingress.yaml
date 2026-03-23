@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rimawari-server
+  namespace: production
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - api-rimawari.kube.simonbraillard.com
+      secretName: rimawari-tls
+  rules:
+    - host: api-rimawari.kube.simonbraillard.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: rimawari-server
+                port:
+                  number: 8080

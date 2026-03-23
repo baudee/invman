@@ -1,0 +1,9 @@
+class: WithdrawalFee
+
+table: withdrawal_fee
+
+fields:
+  fixed: double, default=0.0
+  percent: double, default=0.0
+  minimum: double, default=0.0
+  rule: WithdrawalRule?, relation(onDelete=Cascade, name=rule_fees)

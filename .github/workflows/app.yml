@@ -1,0 +1,222 @@
+name: App Workflow
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "invman_flutter/**"
+      - "invman_client/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "invman_flutter/**"
+      - "invman_client/**"
+    tags:
+      - "v*"
+
+env:
+  WORK_DIR: invman_flutter
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{env.WORK_DIR}}
+
+    steps:
+      - name: 🛠️ Checkout code
+        uses: actions/checkout@v3
+
+      - name: 📋 Extract Flutter version from pubspec.yaml
+        id: flutter_version
+        run: |
+          FLUTTER_VERSION=$(grep "flutter:" pubspec.yaml | grep -v "sdk:" | head -1 | sed 's/.*flutter: //')
+          echo "version=${FLUTTER_VERSION}" >> $GITHUB_OUTPUT
+
+      - name: ⚙️ Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          flutter-version: ${{ steps.flutter_version.outputs.version }}
+          cache: true
+
+      - name: ⚙️ Install LCOV
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install lcov
+
+      - name: 🔧 Build
+        run: |
+          flutter pub get
+          dart run build_runner build --delete-conflicting-outputs
+          dart run intl_utils:generate
+
+      - name:  Run tests
+        run: |
+          dart analyze
+          flutter test --coverage
+
+      - name: 📄 Report code coverage
+        if: github.event_name == 'pull_request'
+        uses: romeovs/lcov-reporter-action@v0.3.1
+        with:
+          lcov-file: invman_flutter/coverage/lcov.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          title: "Frontend Coverage Report"
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: test
+    runs-on: macos-latest
+
+    defaults:
+      run:
+        working-directory: ${{env.WORK_DIR}}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 📋 Extract Flutter version from pubspec.yaml
+        id: flutter_version
+        run: |
+          FLUTTER_VERSION=$(grep "flutter:" pubspec.yaml | grep -v "sdk:" | head -1 | sed 's/.*flutter: //')
+          echo "version=${FLUTTER_VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          # Convert version to build number (e.g., 1.2.3 -> 1002003)
+          IFS='.' read -ra PARTS <<< "$VERSION"
+          MAJOR=${PARTS[0]:-0}
+          MINOR=${PARTS[1]:-0}
+          PATCH=${PARTS[2]:-0}
+          BUILD_NUMBER=$((MAJOR * 1000000 + MINOR * 1000 + PATCH))
+          echo "build_number=${BUILD_NUMBER}" >> $GITHUB_OUTPUT
+
+      - name: Set Up Java
+        uses: actions/setup-java@v3.12.0
+        with:
+          distribution: "oracle"
+          java-version: "17"
+
+      - name: ⚙️ Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          flutter-version: ${{ steps.flutter_version.outputs.version }}
+          cache: true
+
+      - name: 🔑 Install Apple Certificate
+        uses: apple-actions/import-codesign-certs@v2
+        with:
+          p12-file-base64: ${{ secrets.P12_DIST_CERT }}
+          p12-password: ${{ secrets.P12_PASSWORD }}
+          keychain-password: "randompassword" # Fixed password since the keychain is temporary
+
+      - name: 📱 Install Provisioning Profile
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "${{ secrets.PROVISIONING_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/distribution.mobileprovision
+
+      - name: 🔧 Build
+        run: |
+          flutter pub get
+          dart run build_runner build --delete-conflicting-outputs
+          dart run intl_utils:generate
+
+      - name: Install CocoaPods
+        run: |
+          cd ios
+          pod install --repo-update
+
+      - name: Create .env File
+        run: |
+          echo "BASE_URL=${{ vars.BASE_URL }}" > .env
+          echo "SENTRY_DSN"=${{ vars.SENTRY_DSN }} >> .env
+
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystore.jks
+
+      - name: Create key.properties
+        run: |
+          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > android/key.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=upload" >> android/key.properties
+          echo "storeFile=keystore.jks" >> android/key.properties
+
+      - name: Build Release APK
+        run: |
+          flutter build apk --release \
+            --flavor production \
+            --dart-define-from-file .env \
+            --build-name=${{ steps.version.outputs.version }} \
+            --build-number=${{ steps.version.outputs.build_number }}
+
+      - name: Build Release App Bundle
+        run: |
+          flutter build appbundle --release \
+            --flavor production \
+            --dart-define-from-file .env \
+            --build-name=${{ steps.version.outputs.version }} \
+            --build-number=${{ steps.version.outputs.build_number }}
+
+      - name: Build Release IPA
+        run: |
+          flutter build ipa --release \
+            --flavor production \
+            --export-options-plist=ios/ExportOptions.plist \
+            --dart-define-from-file .env \
+            --build-name=${{ steps.version.outputs.version }} \
+            --build-number=${{ steps.version.outputs.build_number }}
+
+      - name: Upload Release Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Release-${{ steps.version.outputs.version }}
+          path: |
+            invman_flutter/build/app/outputs/flutter-apk/app-production-release.apk
+            invman_flutter/build/app/outputs/bundle/productionRelease/app-production-release.aab
+            invman_flutter/build/ios/ipa/*.ipa
+          if-no-files-found: error
+
+      # iOS TestFlight Upload
+      - name: Find IPA file
+        if: ${{ vars.ENABLE_TESTFLIGHT == 'true' }}
+        id: find_ipa
+        run: |
+          IPA_PATH=$(find build/ios/ipa -name "*.ipa" -type f | head -1)
+          echo "ipa_path=${IPA_PATH}" >> $GITHUB_OUTPUT
+
+      - name: Upload to TestFlight
+        if: ${{ vars.ENABLE_TESTFLIGHT == 'true' }}
+        uses: apple-actions/upload-testflight-build@v1
+        with:
+          app-path: invman_flutter/${{ steps.find_ipa.outputs.ipa_path }}
+          issuer-id: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          api-key-id: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          api-private-key: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+
+      # Google Play Internal Testing Upload
+      - name: Upload to Play Store (Internal Testing)
+        if: ${{ vars.ENABLE_PLAY_STORE == 'true' }}
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
+          packageName: ch.valentinbaudin.rimawari
+          releaseFiles: invman_flutter/build/app/outputs/bundle/productionRelease/app-production-release.aab
+          track: internal
+          status: completed

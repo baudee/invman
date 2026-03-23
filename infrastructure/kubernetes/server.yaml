@@ -1,0 +1,142 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rimawari-server
+  namespace: production
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: api
+    - port: 8081
+      targetPort: 8081
+      name: insights
+    - port: 8082
+      targetPort: 8082
+      name: web
+  selector:
+    app: rimawari-server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rimawari-server
+  namespace: production
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rimawari-server
+  template:
+    metadata:
+      labels:
+        app: rimawari-server
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: server
+          image: ghcr.io/baudee/invman:0.0.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: api
+            - containerPort: 8081
+              name: insights
+            - containerPort: 8082
+              name: web
+          env:
+            - name: runmode
+              value: "production"
+            - name: serverid
+              value: "default"
+            - name: logging
+              value: "normal"
+            - name: role
+              value: "monolith"
+            # Serverpod passwords via environment variables
+            - name: SERVERPOD_PASSWORD_database
+              valueFrom:
+                secretKeyRef:
+                  name: rimawari-postgresql
+                  key: password
+            - name: SERVERPOD_PASSWORD_redis
+              valueFrom:
+                secretKeyRef:
+                  name: rimawari-redis
+                  key: password
+            - name: SERVERPOD_PASSWORD_serviceSecret
+              valueFrom:
+                secretKeyRef:
+                  name: rimawari-server-secrets
+                  key: serviceSecret
+            - name: SERVERPOD_PASSWORD_emailSecretHashPepper
+              valueFrom:
+                secretKeyRef:
+                  name: rimawari-server-secrets
+                  key: emailSecretHashPepper
+            - name: SERVERPOD_PASSWORD_jwtHmacSha512PrivateKey
+              valueFrom:
+                secretKeyRef:
+                  name: rimawari-server-secrets
+                  key: jwtHmacSha512PrivateKey
+            - name: SERVERPOD_PASSWORD_jwtRefreshTokenHashPepper
+              valueFrom:
+                secretKeyRef:
+                  name: rimawari-server-secrets
+                  key: jwtRefreshTokenHashPepper
+            # Mailjet configuration
+            - name: MAILJET_API_KEY_PUBLIC
+              valueFrom:
+                configMapKeyRef:
+                  name: rimawari-server-config
+                  key: mailjetApiKeyPublic
+            - name: MAILJET_API_KEY_PRIVATE
+              valueFrom:
+                secretKeyRef:
+                  name: rimawari-server-secrets
+                  key: mailjetApiKeyPrivate
+            - name: MAILJET_EMAIL_SENDER
+              valueFrom:
+                configMapKeyRef:
+                  name: rimawari-server-config
+                  key: mailjetEmailSender
+            # Gemini API
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: rimawari-server-secrets
+                  key: geminiApiKey
+            # App config
+            - name: CACHE_DURATION_DAYS
+              valueFrom:
+                configMapKeyRef:
+                  name: rimawari-server-config
+                  key: cacheDurationDays
+          volumeMounts:
+            - name: config
+              mountPath: /config/production.yaml
+              subPath: production.yaml
+              readOnly: true
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: config
+          configMap:
+            name: rimawari-server-config

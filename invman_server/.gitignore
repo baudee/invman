@@ -1,9 +1,14 @@
+.env
+
 # Files and directories created by pub
 .dart_tool/
 .packages
 
 # Conventional directory for build outputs
 build/
+
+# Ignore the flutter web app directory
+web/app
 
 # Directory created by dartdoc
 doc/api/
@@ -13,3 +18,5 @@ config/passwords.yaml
 
 # Firebase service account key for Firebase auth
 config/firebase_service_account_key.json
+
+lib/src/di.config.dart

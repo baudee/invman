@@ -1,0 +1,4 @@
+// Develop flavor configuration
+PRODUCT_BUNDLE_IDENTIFIER = ch.valentinbaudin.rimawari.dev
+APP_DISPLAY_NAME = Rimawari Dev
+

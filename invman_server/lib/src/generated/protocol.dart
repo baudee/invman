@@ -7,12 +7,50 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'package:serverpod/protocol.dart' as _i2;
-import 'example.dart' as _i3;
-export 'example.dart';
+import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
+    as _i3;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+    as _i4;
+import 'account/models/account.dart' as _i5;
+import 'app_settings/models/app_settings.dart' as _i6;
+import 'core/exceptions/error_code.dart' as _i7;
+import 'core/exceptions/server_exception.dart' as _i8;
+import 'currency/models/currency.dart' as _i9;
+import 'investment/models/investment.dart' as _i10;
+import 'stock/models/stock.dart' as _i11;
+import 'stock/models/stock_filter.dart' as _i12;
+import 'stock/models/stock_like.dart' as _i13;
+import 'stock/models/stock_type.dart' as _i14;
+import 'transfer/models/transfer.dart' as _i15;
+import 'withdrawal/models/withdrawal_fee.dart' as _i16;
+import 'withdrawal/models/withdrawal_rule.dart' as _i17;
+import 'package:invman_server/src/generated/currency/models/currency.dart'
+    as _i18;
+import 'package:invman_server/src/generated/investment/models/investment.dart'
+    as _i19;
+import 'package:invman_server/src/generated/stock/models/stock.dart' as _i20;
+import 'package:invman_server/src/generated/transfer/models/transfer.dart'
+    as _i21;
+import 'package:invman_server/src/generated/withdrawal/models/withdrawal_rule.dart'
+    as _i22;
+export 'account/models/account.dart';
+export 'app_settings/models/app_settings.dart';
+export 'core/exceptions/error_code.dart';
+export 'core/exceptions/server_exception.dart';
+export 'currency/models/currency.dart';
+export 'investment/models/investment.dart';
+export 'stock/models/stock.dart';
+export 'stock/models/stock_filter.dart';
+export 'stock/models/stock_like.dart';
+export 'stock/models/stock_type.dart';
+export 'transfer/models/transfer.dart';
+export 'withdrawal/models/withdrawal_fee.dart';
+export 'withdrawal/models/withdrawal_rule.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
   Protocol._();
@@ -22,8 +60,768 @@ class Protocol extends _i1.SerializationManagerServer {
   static final Protocol _instance = Protocol._();
 
   static final List<_i2.TableDefinition> targetTableDefinitions = [
-    ..._i2.Protocol.targetTableDefinitions
+    _i2.TableDefinition(
+      name: 'account',
+      dartName: 'Account',
+      schema: 'public',
+      module: 'invman',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'account_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'currencyId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'account_fk_0',
+          columns: ['userId'],
+          referenceTable: 'serverpod_auth_core_user',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.cascade,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'account_fk_1',
+          columns: ['currencyId'],
+          referenceTable: 'currency',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'account_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'account_user_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'app_settings',
+      dartName: 'AppSettings',
+      schema: 'public',
+      module: 'invman',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'app_settings_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'maintenanceMode',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+        _i2.ColumnDefinition(
+          name: 'minVersion',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'appStoreUrl',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'playStoreUrl',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'symbolsUpdatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'app_settings_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'currency',
+      dartName: 'Currency',
+      schema: 'public',
+      module: 'invman',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'currency_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'code',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'dollarValue',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'timestamp',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'currency_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'currency_code_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'code',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'investment',
+      dartName: 'Investment',
+      schema: 'public',
+      module: 'invman',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'investment_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'name',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'stockId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'withdrawalRuleId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'investAmount',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'quantity',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'investment_fk_0',
+          columns: ['userId'],
+          referenceTable: 'serverpod_auth_core_user',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.cascade,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'investment_fk_1',
+          columns: ['stockId'],
+          referenceTable: 'stock',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'investment_fk_2',
+          columns: ['withdrawalRuleId'],
+          referenceTable: 'withdrawal_rule',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'investment_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'investment_user_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'stock',
+      dartName: 'Stock',
+      schema: 'public',
+      module: 'invman',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'symbol',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'name',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'quoteType',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:StockType',
+        ),
+        _i2.ColumnDefinition(
+          name: 'logoUrl',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'price',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'timestamp',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'currencyId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'stock_fk_0',
+          columns: ['currencyId'],
+          referenceTable: 'currency',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'stock_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'stock_symbol_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'symbol',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'stock_name_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'name',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'stock_like',
+      dartName: 'StockLike',
+      schema: 'public',
+      module: 'invman',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'stock_like_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'stockId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'stock_like_fk_0',
+          columns: ['userId'],
+          referenceTable: 'serverpod_auth_core_user',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.cascade,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'stock_like_fk_1',
+          columns: ['stockId'],
+          referenceTable: 'stock',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.cascade,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'stock_like_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'stock_like_user_stock_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'stockId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'transfer',
+      dartName: 'Transfer',
+      schema: 'public',
+      module: 'invman',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'transfer_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'investmentId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'quantity',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'amount',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'transfer_fk_0',
+          columns: ['investmentId'],
+          referenceTable: 'investment',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.cascade,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'transfer_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'investment_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'investmentId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'createdAt',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'withdrawal_fee',
+      dartName: 'WithdrawalFee',
+      schema: 'public',
+      module: 'invman',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'withdrawal_fee_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'fixed',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'percent',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'minimum',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'ruleId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'withdrawal_fee_fk_0',
+          columns: ['ruleId'],
+          referenceTable: 'withdrawal_rule',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.cascade,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'withdrawal_fee_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'withdrawal_rule',
+      dartName: 'WithdrawalRule',
+      schema: 'public',
+      module: 'invman',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'withdrawal_rule_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'name',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'currencyChangePercentage',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'withdrawal_rule_fk_0',
+          columns: ['userId'],
+          referenceTable: 'serverpod_auth_core_user',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.cascade,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'withdrawal_rule_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+      ],
+      managed: true,
+    ),
+    ..._i3.Protocol.targetTableDefinitions,
+    ..._i4.Protocol.targetTableDefinitions,
+    ..._i2.Protocol.targetTableDefinitions,
   ];
+
+  static String? getClassNameFromObjectJson(dynamic data) {
+    if (data is! Map) return null;
+    final className = data['__className__'] as String?;
+    return className;
+  }
 
   @override
   T deserialize<T>(
@@ -31,28 +829,250 @@ class Protocol extends _i1.SerializationManagerServer {
     Type? t,
   ]) {
     t ??= T;
-    if (t == _i3.Example) {
-      return _i3.Example.fromJson(data) as T;
+
+    final dataClassName = getClassNameFromObjectJson(data);
+    if (dataClassName != null && dataClassName != getClassNameForType(t)) {
+      try {
+        return deserializeByClassName({
+          'className': dataClassName,
+          'data': data,
+        });
+      } on FormatException catch (_) {
+        // If the className is not recognized (e.g., older client receiving
+        // data with a new subtype), fall back to deserializing without the
+        // className, using the expected type T.
+      }
     }
-    if (t == _i1.getType<_i3.Example?>()) {
-      return (data != null ? _i3.Example.fromJson(data) : null) as T;
+
+    if (t == _i5.Account) {
+      return _i5.Account.fromJson(data) as T;
     }
+    if (t == _i6.AppSettings) {
+      return _i6.AppSettings.fromJson(data) as T;
+    }
+    if (t == _i7.ErrorCode) {
+      return _i7.ErrorCode.fromJson(data) as T;
+    }
+    if (t == _i8.ServerException) {
+      return _i8.ServerException.fromJson(data) as T;
+    }
+    if (t == _i9.Currency) {
+      return _i9.Currency.fromJson(data) as T;
+    }
+    if (t == _i10.Investment) {
+      return _i10.Investment.fromJson(data) as T;
+    }
+    if (t == _i11.Stock) {
+      return _i11.Stock.fromJson(data) as T;
+    }
+    if (t == _i12.StockFilter) {
+      return _i12.StockFilter.fromJson(data) as T;
+    }
+    if (t == _i13.StockLike) {
+      return _i13.StockLike.fromJson(data) as T;
+    }
+    if (t == _i14.StockType) {
+      return _i14.StockType.fromJson(data) as T;
+    }
+    if (t == _i15.Transfer) {
+      return _i15.Transfer.fromJson(data) as T;
+    }
+    if (t == _i16.WithdrawalFee) {
+      return _i16.WithdrawalFee.fromJson(data) as T;
+    }
+    if (t == _i17.WithdrawalRule) {
+      return _i17.WithdrawalRule.fromJson(data) as T;
+    }
+    if (t == _i1.getType<_i5.Account?>()) {
+      return (data != null ? _i5.Account.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i6.AppSettings?>()) {
+      return (data != null ? _i6.AppSettings.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i7.ErrorCode?>()) {
+      return (data != null ? _i7.ErrorCode.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i8.ServerException?>()) {
+      return (data != null ? _i8.ServerException.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i9.Currency?>()) {
+      return (data != null ? _i9.Currency.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i10.Investment?>()) {
+      return (data != null ? _i10.Investment.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i11.Stock?>()) {
+      return (data != null ? _i11.Stock.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i12.StockFilter?>()) {
+      return (data != null ? _i12.StockFilter.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i13.StockLike?>()) {
+      return (data != null ? _i13.StockLike.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i14.StockType?>()) {
+      return (data != null ? _i14.StockType.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i15.Transfer?>()) {
+      return (data != null ? _i15.Transfer.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i16.WithdrawalFee?>()) {
+      return (data != null ? _i16.WithdrawalFee.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i17.WithdrawalRule?>()) {
+      return (data != null ? _i17.WithdrawalRule.fromJson(data) : null) as T;
+    }
+    if (t == List<_i15.Transfer>) {
+      return (data as List).map((e) => deserialize<_i15.Transfer>(e)).toList()
+          as T;
+    }
+    if (t == _i1.getType<List<_i15.Transfer>?>()) {
+      return (data != null
+              ? (data as List)
+                    .map((e) => deserialize<_i15.Transfer>(e))
+                    .toList()
+              : null)
+          as T;
+    }
+    if (t == List<_i13.StockLike>) {
+      return (data as List).map((e) => deserialize<_i13.StockLike>(e)).toList()
+          as T;
+    }
+    if (t == _i1.getType<List<_i13.StockLike>?>()) {
+      return (data != null
+              ? (data as List)
+                    .map((e) => deserialize<_i13.StockLike>(e))
+                    .toList()
+              : null)
+          as T;
+    }
+    if (t == List<_i10.Investment>) {
+      return (data as List).map((e) => deserialize<_i10.Investment>(e)).toList()
+          as T;
+    }
+    if (t == _i1.getType<List<_i10.Investment>?>()) {
+      return (data != null
+              ? (data as List)
+                    .map((e) => deserialize<_i10.Investment>(e))
+                    .toList()
+              : null)
+          as T;
+    }
+    if (t == List<_i16.WithdrawalFee>) {
+      return (data as List)
+              .map((e) => deserialize<_i16.WithdrawalFee>(e))
+              .toList()
+          as T;
+    }
+    if (t == _i1.getType<List<_i16.WithdrawalFee>?>()) {
+      return (data != null
+              ? (data as List)
+                    .map((e) => deserialize<_i16.WithdrawalFee>(e))
+                    .toList()
+              : null)
+          as T;
+    }
+    if (t == List<_i18.Currency>) {
+      return (data as List).map((e) => deserialize<_i18.Currency>(e)).toList()
+          as T;
+    }
+    if (t == List<_i19.Investment>) {
+      return (data as List).map((e) => deserialize<_i19.Investment>(e)).toList()
+          as T;
+    }
+    if (t == List<_i20.Stock>) {
+      return (data as List).map((e) => deserialize<_i20.Stock>(e)).toList()
+          as T;
+    }
+    if (t == List<_i21.Transfer>) {
+      return (data as List).map((e) => deserialize<_i21.Transfer>(e)).toList()
+          as T;
+    }
+    if (t == List<_i22.WithdrawalRule>) {
+      return (data as List)
+              .map((e) => deserialize<_i22.WithdrawalRule>(e))
+              .toList()
+          as T;
+    }
+    try {
+      return _i3.Protocol().deserialize<T>(data, t);
+    } on _i1.DeserializationTypeNotFoundException catch (_) {}
+    try {
+      return _i4.Protocol().deserialize<T>(data, t);
+    } on _i1.DeserializationTypeNotFoundException catch (_) {}
     try {
       return _i2.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
 
+  static String? getClassNameForType(Type type) {
+    return switch (type) {
+      _i5.Account => 'Account',
+      _i6.AppSettings => 'AppSettings',
+      _i7.ErrorCode => 'ErrorCode',
+      _i8.ServerException => 'ServerException',
+      _i9.Currency => 'Currency',
+      _i10.Investment => 'Investment',
+      _i11.Stock => 'Stock',
+      _i12.StockFilter => 'StockFilter',
+      _i13.StockLike => 'StockLike',
+      _i14.StockType => 'StockType',
+      _i15.Transfer => 'Transfer',
+      _i16.WithdrawalFee => 'WithdrawalFee',
+      _i17.WithdrawalRule => 'WithdrawalRule',
+      _ => null,
+    };
+  }
+
   @override
   String? getClassNameForObject(Object? data) {
     String? className = super.getClassNameForObject(data);
     if (className != null) return className;
-    if (data is _i3.Example) {
-      return 'Example';
+
+    if (data is Map<String, dynamic> && data['__className__'] is String) {
+      return (data['__className__'] as String).replaceFirst('invman.', '');
+    }
+
+    switch (data) {
+      case _i5.Account():
+        return 'Account';
+      case _i6.AppSettings():
+        return 'AppSettings';
+      case _i7.ErrorCode():
+        return 'ErrorCode';
+      case _i8.ServerException():
+        return 'ServerException';
+      case _i9.Currency():
+        return 'Currency';
+      case _i10.Investment():
+        return 'Investment';
+      case _i11.Stock():
+        return 'Stock';
+      case _i12.StockFilter():
+        return 'StockFilter';
+      case _i13.StockLike():
+        return 'StockLike';
+      case _i14.StockType():
+        return 'StockType';
+      case _i15.Transfer():
+        return 'Transfer';
+      case _i16.WithdrawalFee():
+        return 'WithdrawalFee';
+      case _i17.WithdrawalRule():
+        return 'WithdrawalRule';
     }
     className = _i2.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod.$className';
+    }
+    className = _i3.Protocol().getClassNameForObject(data);
+    if (className != null) {
+      return 'serverpod_auth_idp.$className';
+    }
+    className = _i4.Protocol().getClassNameForObject(data);
+    if (className != null) {
+      return 'serverpod_auth_core.$className';
     }
     return null;
   }
@@ -63,12 +1083,56 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName is! String) {
       return super.deserializeByClassName(data);
     }
-    if (dataClassName == 'Example') {
-      return deserialize<_i3.Example>(data['data']);
+    if (dataClassName == 'Account') {
+      return deserialize<_i5.Account>(data['data']);
+    }
+    if (dataClassName == 'AppSettings') {
+      return deserialize<_i6.AppSettings>(data['data']);
+    }
+    if (dataClassName == 'ErrorCode') {
+      return deserialize<_i7.ErrorCode>(data['data']);
+    }
+    if (dataClassName == 'ServerException') {
+      return deserialize<_i8.ServerException>(data['data']);
+    }
+    if (dataClassName == 'Currency') {
+      return deserialize<_i9.Currency>(data['data']);
+    }
+    if (dataClassName == 'Investment') {
+      return deserialize<_i10.Investment>(data['data']);
+    }
+    if (dataClassName == 'Stock') {
+      return deserialize<_i11.Stock>(data['data']);
+    }
+    if (dataClassName == 'StockFilter') {
+      return deserialize<_i12.StockFilter>(data['data']);
+    }
+    if (dataClassName == 'StockLike') {
+      return deserialize<_i13.StockLike>(data['data']);
+    }
+    if (dataClassName == 'StockType') {
+      return deserialize<_i14.StockType>(data['data']);
+    }
+    if (dataClassName == 'Transfer') {
+      return deserialize<_i15.Transfer>(data['data']);
+    }
+    if (dataClassName == 'WithdrawalFee') {
+      return deserialize<_i16.WithdrawalFee>(data['data']);
+    }
+    if (dataClassName == 'WithdrawalRule') {
+      return deserialize<_i17.WithdrawalRule>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
       return _i2.Protocol().deserializeByClassName(data);
+    }
+    if (dataClassName.startsWith('serverpod_auth_idp.')) {
+      data['className'] = dataClassName.substring(19);
+      return _i3.Protocol().deserializeByClassName(data);
+    }
+    if (dataClassName.startsWith('serverpod_auth_core.')) {
+      data['className'] = dataClassName.substring(20);
+      return _i4.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }
@@ -76,10 +1140,42 @@ class Protocol extends _i1.SerializationManagerServer {
   @override
   _i1.Table? getTableForType(Type t) {
     {
+      var table = _i3.Protocol().getTableForType(t);
+      if (table != null) {
+        return table;
+      }
+    }
+    {
+      var table = _i4.Protocol().getTableForType(t);
+      if (table != null) {
+        return table;
+      }
+    }
+    {
       var table = _i2.Protocol().getTableForType(t);
       if (table != null) {
         return table;
       }
+    }
+    switch (t) {
+      case _i5.Account:
+        return _i5.Account.t;
+      case _i6.AppSettings:
+        return _i6.AppSettings.t;
+      case _i9.Currency:
+        return _i9.Currency.t;
+      case _i10.Investment:
+        return _i10.Investment.t;
+      case _i11.Stock:
+        return _i11.Stock.t;
+      case _i13.StockLike:
+        return _i13.StockLike.t;
+      case _i15.Transfer:
+        return _i15.Transfer.t;
+      case _i16.WithdrawalFee:
+        return _i16.WithdrawalFee.t;
+      case _i17.WithdrawalRule:
+        return _i17.WithdrawalRule.t;
     }
     return null;
   }
@@ -90,4 +1186,22 @@ class Protocol extends _i1.SerializationManagerServer {
 
   @override
   String getModuleName() => 'invman';
+
+  /// Maps any `Record`s known to this [Protocol] to their JSON representation
+  ///
+  /// Throws in case the record type is not known.
+  ///
+  /// This method will return `null` (only) for `null` inputs.
+  Map<String, dynamic>? mapRecordToJson(Record? record) {
+    if (record == null) {
+      return null;
+    }
+    try {
+      return _i3.Protocol().mapRecordToJson(record);
+    } catch (_) {}
+    try {
+      return _i4.Protocol().mapRecordToJson(record);
+    } catch (_) {}
+    throw Exception('Unsupported record type ${record.runtimeType}');
+  }
 }

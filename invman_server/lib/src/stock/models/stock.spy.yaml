@@ -1,0 +1,23 @@
+class: Stock
+
+table: stock
+
+fields:
+  id: UuidValue, defaultModel=random,
+  symbol: String,
+  name: String,
+  quoteType: StockType,
+  logoUrl: String?,
+  price: double, defaultModel=0.0,
+  timestamp: DateTime, defaultModel=now,
+  updatedAt: DateTime, defaultModel=now,
+  currency: Currency?, relation
+  likes: List<StockLike>?, relation(name=stock_likes)
+  investments: List<Investment>?, relation(name=stock_investments)
+
+indexes:
+  stock_symbol_idx:
+    fields: symbol
+    unique: true
+  stock_name_idx:
+    fields: name
