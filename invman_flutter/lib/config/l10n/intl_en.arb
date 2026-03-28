@@ -80,6 +80,8 @@
     "asset_type": "{type, select, stock{Stock} etf{ETF} crypto{Crypto} commodity{Commodity} indice{Index} other{{type}}}",
     "asset_type_plural": "{type, select, stock{Stocks} etf{ETFs} crypto{Cryptos} commodity{Commodities} indice{Indices} other{{type}}}",
     "asset_time_horizon": "{type, select, oneDay{1d} oneWeek{1w} oneMonth{1m} oneYear{1y} all{All} other{{type}}}",
+    "asset_see_details_graph": "Touch the graph to see details",
+    "asset_exchange": "Exchange",
     "@TRANSFER---------------------------------------------------------------": {},
     "transfer_title": "Transfers",
     "transfer_selectInvestment": "Please select an investment",

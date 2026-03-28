@@ -17,16 +17,27 @@ class AssetGraphComponent extends StatefulWidget {
 
 class _AssetGraphComponentState extends State<AssetGraphComponent> with TickerProviderStateMixin {
   late final TabController _tabController;
+  final Signal<AssetValue?> _touchedPoint = signal(null);
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: AssetTimeHorizon.values.length, vsync: this);
+    _tabController = TabController(
+      length: AssetTimeHorizon.values.length,
+      vsync: this,
+      initialIndex: widget.preferencesManager.assetTimeHorizon.value.index,
+    );
+    widget.preferencesManager.setAssetTimeHorizon(AssetTimeHorizon.values[_tabController.index]);
+    _tabController.addListener(() {
+      _touchedPoint.value = null;
+      widget.preferencesManager.setAssetTimeHorizon(AssetTimeHorizon.values[_tabController.index]);
+    });
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _touchedPoint.dispose();
     super.dispose();
   }
 
@@ -48,7 +59,6 @@ class _AssetGraphComponentState extends State<AssetGraphComponent> with TickerPr
                 .map(
                   (e) => Builder(
                     builder: (context) {
-                      widget.preferencesManager.setAssetTimeHorizon(e);
                       final timeSeries = widget.controller.getTimeseriesFromTimeHorizon(e);
                       return LineChart(_getLineChartData(timeSeries.watch(context)));
                     },
@@ -57,23 +67,15 @@ class _AssetGraphComponentState extends State<AssetGraphComponent> with TickerPr
                 .toList(),
           ),
         ),
+        const SizedBox(height: UIConstants.spacingSm),
+        _InfoPanel(
+          touchedPoint: _touchedPoint,
+          timeHorizonSignal: widget.preferencesManager.assetTimeHorizon,
+          currencyCode: widget.controller.state.value.requireValue.currency?.code ?? '',
+          controller: widget.controller,
+        ),
       ],
     );
-  }
-
-  Widget _rightTitleWidget(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 10,
-    );
-    String text = switch (value.toInt()) {
-      1 => '10K',
-      3 => '30k',
-      5 => '50k',
-      _ => '',
-    };
-
-    return Text(text, style: style, textAlign: TextAlign.left);
   }
 
   LineChartData _getLineChartData(List<AssetValue> timeSeries) {
@@ -92,35 +94,124 @@ class _AssetGraphComponentState extends State<AssetGraphComponent> with TickerPr
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        rightTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            interval: 1,
-            getTitlesWidget: _rightTitleWidget,
-            reservedSize: 30,
-          ),
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
         ),
       ),
       borderData: FlBorderData(show: false),
+      lineTouchData: LineTouchData(
+        handleBuiltInTouches: true,
+        touchTooltipData: const LineTouchTooltipData(getTooltipItems: _noTooltipItems),
+        touchCallback: (event, response) {
+          if (!event.isInterestedForInteractions || response?.lineBarSpots == null || response!.lineBarSpots!.isEmpty) {
+            _touchedPoint.value = null;
+            return;
+          }
+          final spot = response.lineBarSpots!.first;
+          _touchedPoint.value = timeSeries.reversed.elementAt(spot.x.toInt());
+        },
+        getTouchedSpotIndicator: (barData, spotIndexes) {
+          return spotIndexes.map((index) {
+            return TouchedSpotIndicatorData(
+              FlLine(color: theme.colorScheme.primary, strokeWidth: 1),
+              FlDotData(
+                getDotPainter: (spot, percent, bar, index) => FlDotCirclePainter(
+                  radius: 3,
+                  color: theme.colorScheme.primary,
+                  strokeWidth: 1,
+                  strokeColor: theme.colorScheme.surface,
+                ),
+              ),
+            );
+          }).toList();
+        },
+      ),
       lineBarsData: [
         LineChartBarData(
-          spots: timeSeries.map((e) => FlSpot(e.timestamp.millisecondsSinceEpoch.toDouble(), e.value)).toList(),
-          isCurved: false,
+          spots: timeSeries.reversed.indexed.map((e) => FlSpot(e.$1.toDouble(), e.$2.value)).toList(),
+          isCurved: true,
+          curveSmoothness: 0.1,
           color: theme.colorScheme.primary,
           barWidth: 2,
-          isStrokeCapRound: false,
           dotData: const FlDotData(show: false),
           belowBarData: BarAreaData(
             show: true,
             gradient: LinearGradient(
-              begin: .topCenter,
-              end: .bottomCenter,
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
               colors: gradientColors.map((color) => color.withValues(alpha: 0.4)).toList(),
             ),
           ),
         ),
       ],
-      
     );
+  }
+
+  static List<LineTooltipItem?> _noTooltipItems(List<LineBarSpot> spots) => spots.map((_) => null).toList();
+}
+
+class _InfoPanel extends StatelessWidget {
+  final ReadonlySignal<AssetTimeHorizon> timeHorizonSignal;
+  final Signal<AssetValue?> touchedPoint;
+  final String currencyCode;
+  final AssetDetailController controller;
+
+  const _InfoPanel({
+    required this.timeHorizonSignal,
+    required this.touchedPoint,
+    required this.currencyCode,
+    required this.controller,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final point = touchedPoint.watch(context);
+    final timeHorizon = timeHorizonSignal.watch(context);
+    final timeSeries = controller.getTimeseriesFromTimeHorizon(timeHorizon).watch(context);
+
+    final percent = timeSeries.length >= 2 && timeSeries.last.value != 0
+        ? (timeSeries.first.value - timeSeries.last.value) / timeSeries.last.value * 100
+        : 0.0;
+    final percentColor = percent > 0 ? Colors.green : (percent < 0 ? Colors.red : Colors.grey);
+
+    return SizedBox(
+      height: 36,
+      child: Row(
+        mainAxisAlignment: .spaceBetween,
+        children: [
+          PercentBadge(percent: percent, color: percentColor),
+          point == null
+              ? Text(
+                  S.of(context).asset_see_details_graph,
+                  style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.4)),
+                )
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      point.value.toStringPrice(currencyCode),
+                      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(width: UIConstants.spacingMd),
+                    Text(
+                      _formatDate(point.timestamp.toLocal(), timeHorizon),
+                      style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+                    ),
+                  ],
+                ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDate(DateTime dt, AssetTimeHorizon timeHorizon) {
+    final date = '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}';
+    if (timeHorizon == AssetTimeHorizon.oneDay || timeHorizon == AssetTimeHorizon.oneWeek) {
+      final time = '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+      return '$date $time';
+    } else {
+      return date;
+    }
   }
 }

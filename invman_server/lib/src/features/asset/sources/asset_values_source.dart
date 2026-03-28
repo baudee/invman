@@ -74,6 +74,7 @@ class AssetValuesSourceImpl implements AssetValuesSource {
     final twelveDataTimeSeries = TwelveDataTimeSeries.fromJson(result);
     return twelveDataTimeSeries.values
         .map((e) => AssetValue(value: double.parse(e.close), timestamp: DateTime.parse(e.datetime)))
+        .where((e) => e.timestamp.isAfter(DateTime(1971)))
         .toList();
   }
 
@@ -98,13 +99,13 @@ class AssetValuesSourceImpl implements AssetValuesSource {
       case AssetTimeHorizon.oneDay:
         return "5min";
       case AssetTimeHorizon.oneWeek:
-        return "1h";
+        return "15min";
       case AssetTimeHorizon.oneMonth:
-        return "1day";
+        return "2h";
       case AssetTimeHorizon.oneYear:
         return "1day";
       case AssetTimeHorizon.all:
-        return "1week";
+        return "1month";
     }
   }
 }

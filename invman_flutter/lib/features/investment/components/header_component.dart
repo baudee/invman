@@ -42,7 +42,7 @@ class InvestmentHeaderContent extends StatelessWidget {
                   style: theme.textTheme.headlineLarge,
                 ),
                 const SizedBox(height: UIConstants.spacingSm),
-                _PercentBadge(
+                PercentBadge(
                   percent: investment?.percent ?? 0,
                   color: investment?.percentColor ?? theme.colorScheme.primary,
                 ),
@@ -136,33 +136,3 @@ class _StatCard extends StatelessWidget {
   }
 }
 
-class _PercentBadge extends StatelessWidget {
-  final double percent;
-  final Color color;
-
-  const _PercentBadge({required this.percent, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    final isPositive = percent >= 0;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: UIConstants.spacingSm, vertical: UIConstants.spacingXs),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(UIConstants.radiusXl),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(isPositive ? Icons.trending_up : Icons.trending_down, size: UIConstants.iconSm, color: color),
-          const SizedBox(width: UIConstants.spacingXs),
-          Text(
-            '${isPositive ? '+' : ''}${percent.toStringAsFixed(1)}%',
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(color: color),
-          ),
-        ],
-      ),
-    );
-  }
-}

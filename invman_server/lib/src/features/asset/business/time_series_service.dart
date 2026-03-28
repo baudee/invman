@@ -31,9 +31,9 @@ class TimeSeriesService {
       case AssetTimeHorizon.oneDay:
         return Duration(minutes: 1);
       case AssetTimeHorizon.oneWeek:
-        return Duration(hours: 1);
+        return Duration(minutes: 5);
       case AssetTimeHorizon.oneMonth:
-        return Duration(hours: 6);
+        return Duration(minutes: 30);
       case AssetTimeHorizon.oneYear:
         return Duration(hours: 6);
       case AssetTimeHorizon.all:

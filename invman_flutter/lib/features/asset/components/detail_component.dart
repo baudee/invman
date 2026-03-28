@@ -25,16 +25,17 @@ class AssetDetailComponent extends StatelessWidget {
             child: Column(
               children: [
                 AssetGraphComponent(controller: controller, preferencesManager: userPreferencesManager),
-                const SizedBox(height: UIConstants.spacingXl),
+                const SizedBox(height: UIConstants.spacingSm),
                 SectionHeaderComponent(title: S.of(context).asset_info),
                 const SizedBox(height: UIConstants.spacingSm),
-                Material(
-                  child: ListTile(
-                    leading: Icon(Icons.attach_money, color: Theme.of(context).colorScheme.primary),
-                    title: Text(S.of(context).investment_currency),
-                    trailing: Text(asset.currency?.code ?? '-'),
+                if (asset.exchange != null)
+                  Material(
+                    child: ListTile(
+                      leading: Icon(Icons.attach_money, color: Theme.of(context).colorScheme.primary),
+                      title: Text(S.of(context).asset_exchange),
+                      trailing: Text(asset.exchange!),
+                    ),
                   ),
-                ),
                 const SizedBox(height: UIConstants.spacingXs),
                 Material(
                   child: ListTile(

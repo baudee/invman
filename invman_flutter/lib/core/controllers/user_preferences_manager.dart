@@ -13,7 +13,7 @@ class UserPreferencesManager {
   ReadonlySignal<Locale> get locale => _locale;
   late final FlutterSignal<ThemeMode> _theme = signal<ThemeMode>(_repository.getTheme());
   ReadonlySignal<ThemeMode> get theme => _theme;
-  late final FlutterSignal<AssetTimeHorizon> _assetTimeHorizon = signal<AssetTimeHorizon>(AssetTimeHorizon.oneMonth);
+  late final FlutterSignal<AssetTimeHorizon> _assetTimeHorizon = signal<AssetTimeHorizon>(AssetTimeHorizon.oneDay);
   ReadonlySignal<AssetTimeHorizon> get assetTimeHorizon => _assetTimeHorizon;
 
   UserPreferencesManager({required UserPreferencesRepository repository}) : _repository = repository {
