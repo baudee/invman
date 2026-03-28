@@ -1,0 +1,7 @@
+enum: AssetType
+serialized: byName
+values:
+  - stock
+  - etf
+  - crypto
+  - commodity

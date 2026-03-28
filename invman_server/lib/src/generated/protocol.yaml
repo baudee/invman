@@ -3,6 +3,12 @@ account:
   - save:
 appSettings:
   - get:
+asset:
+  - like:
+  - unlike:
+  - retrieve:
+  - list:
+  - timeseries:
 emailIdp:
   - login:
   - startRegistration:
@@ -22,11 +28,6 @@ investment:
   - delete:
   - retrieve:
   - total:
-stock:
-  - like:
-  - unlike:
-  - retrieve:
-  - list:
 transfer:
   - retrieve:
   - save:

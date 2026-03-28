@@ -1,6 +1,0 @@
-class: StockFilter
-
-fields:
-    type: StockType?
-    query: String?
-    favorite: bool, default=false

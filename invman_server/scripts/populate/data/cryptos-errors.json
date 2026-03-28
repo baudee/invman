@@ -1,0 +1,44 @@
+[
+  {
+    "symbol": "CBBTC/USD",
+    "name": "Coinbase Wrapped BTC",
+    "currency": "USD",
+    "exchange": "Uniswap",
+    "error": "Data not found"
+  },
+  {
+    "symbol": "COOK/USD",
+    "name": "Cook Finance",
+    "currency": "USD",
+    "exchange": "Gate.io",
+    "error": "Data not found"
+  },
+  {
+    "symbol": "FBTC/USD",
+    "name": "Ignition",
+    "currency": "USD",
+    "exchange": "Uniswap",
+    "error": "Data not found"
+  },
+  {
+    "symbol": "GIGA/USDT",
+    "name": "Gigachad",
+    "currency": "USDT",
+    "exchange": "Binance",
+    "error": "Data not found"
+  },
+  {
+    "symbol": "GRT/EUR",
+    "name": "The Graph",
+    "currency": "EUR",
+    "exchange": "Binance",
+    "error": "**symbol** or **figi** parameter is missing or invalid. Please provide a valid symbol according to API documentation: https://twelvedata.com/docs#reference-data"
+  },
+  {
+    "symbol": "USDB/USD",
+    "name": "USDB",
+    "currency": "USD",
+    "exchange": "Uniswap",
+    "error": "Data not found"
+  }
+]

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
+import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/core/repositories/user_preferences_repository.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -12,6 +13,8 @@ class UserPreferencesManager {
   ReadonlySignal<Locale> get locale => _locale;
   late final FlutterSignal<ThemeMode> _theme = signal<ThemeMode>(_repository.getTheme());
   ReadonlySignal<ThemeMode> get theme => _theme;
+  late final FlutterSignal<AssetTimeHorizon> _assetTimeHorizon = signal<AssetTimeHorizon>(AssetTimeHorizon.oneMonth);
+  ReadonlySignal<AssetTimeHorizon> get assetTimeHorizon => _assetTimeHorizon;
 
   UserPreferencesManager({required UserPreferencesRepository repository}) : _repository = repository {
     initializeDateFormatting(_locale.value.toLanguageTag(), null);
@@ -32,5 +35,9 @@ class UserPreferencesManager {
       _theme.value = theme;
       return null;
     });
+  }
+
+  void setAssetTimeHorizon(AssetTimeHorizon timeHorizon) {
+    _assetTimeHorizon.value = timeHorizon;
   }
 }

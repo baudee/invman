@@ -10,7 +10,7 @@ WithdrawalRule "1" *-- "n" WithdrawalFee
 Userinfo "1" *-- "n" Investment
 Investment "1" *-- "n" Transfer
 Investment "n" o-- "1" WithdrawalRule
-Investment "n" o-- "1" Stock
+Investment "n" o-- "1" Asset
 
 
 %% Classes
@@ -30,7 +30,7 @@ class Transfer {
     double amount
 }
 
-class Stock {
+class Asset {
     int id
     String symbol
     String name

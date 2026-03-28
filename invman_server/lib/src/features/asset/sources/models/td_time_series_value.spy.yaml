@@ -1,0 +1,9 @@
+class: TwelveDataTimeSeriesValue
+serverOnly: true
+fields:
+    datetime: String
+    open: String
+    high: String
+    low: String
+    close: String
+

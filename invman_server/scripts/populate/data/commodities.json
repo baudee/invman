@@ -1,282 +1,415 @@
 [
   {
-    "symbol": "ZQUSD",
-    "name": "30 Day Fed Fund Futures",
-    "exchange": null,
-    "tradeMonth": "Nov",
-    "currency": "USD"
-  },
-  {
-    "symbol": "ALIUSD",
-    "name": "Aluminum Futures",
-    "exchange": null,
-    "tradeMonth": "Nov",
-    "currency": "USD"
-  },
-  {
-    "symbol": "ZBUSD",
-    "name": "30 Year U.S. Treasury Bond Futures",
-    "exchange": null,
-    "tradeMonth": "Dec",
-    "currency": "USD"
-  },
-  {
-    "symbol": "ZOUSX",
-    "name": "Oat Futures",
-    "exchange": null,
-    "tradeMonth": "Dec",
-    "currency": "USX"
-  },
-  {
-    "symbol": "ESUSD",
-    "name": "E-Mini S&P 500",
-    "exchange": null,
-    "tradeMonth": "Sep",
-    "currency": "USD"
-  },
-  {
-    "symbol": "ZMUSD",
-    "name": "Soybean Meal Futures",
-    "exchange": null,
-    "tradeMonth": "Dec",
-    "currency": "USD"
-  },
-  {
-    "symbol": "GCUSD",
-    "name": "Gold Futures",
-    "exchange": null,
-    "tradeMonth": "Dec",
-    "currency": "USD"
-  },
-  {
-    "symbol": "ZLUSX",
-    "name": "Soybean Oil Futures",
-    "exchange": null,
-    "tradeMonth": "Dec",
-    "currency": "USX"
-  },
-  {
-    "symbol": "KEUSX",
-    "name": "Wheat Futures",
-    "exchange": null,
-    "tradeMonth": "Dec",
-    "currency": "USX"
-  },
-  {
-    "symbol": "ZFUSD",
-    "name": "Five-Year US Treasury Note",
-    "exchange": null,
-    "tradeMonth": "Dec",
-    "currency": "USD"
-  },
-  {
-    "symbol": "SILUSD",
-    "name": "Micro Silver Futures",
-    "exchange": null,
-    "tradeMonth": "Dec",
-    "currency": "USD"
-  },
-  {
-    "symbol": "ZCUSX",
+    "symbol": "C_1",
     "name": "Corn Futures",
+    "currency": "USD",
     "exchange": null,
-    "tradeMonth": "Dec",
-    "currency": "USX"
+    "logoUrl": null
   },
   {
-    "symbol": "HEUSX",
-    "name": "Lean Hogs Futures",
-    "exchange": null,
-    "tradeMonth": "Oct",
-    "currency": "USX"
+    "symbol": "CC1",
+    "name": "Cocoa Futures",
+    "currency": "EUR",
+    "exchange": "Euronext",
+    "logoUrl": "https://api.twelvedata.com/logo/oci-global.com"
   },
   {
-    "symbol": "PLUSD",
-    "name": "Platinum",
-    "exchange": null,
-    "tradeMonth": "Oct",
-    "currency": "USD"
+    "symbol": "CHE",
+    "name": "Cheese Futures",
+    "currency": "USD",
+    "exchange": "NYSE",
+    "logoUrl": "https://api.twelvedata.com/logo/chemed.com"
   },
   {
-    "symbol": "HGUSD",
-    "name": "Copper",
+    "symbol": "CL1",
+    "name": "Crude Oil Futures",
+    "currency": "USD",
     "exchange": null,
-    "tradeMonth": "Dec",
-    "currency": "USD"
+    "logoUrl": null
   },
   {
-    "symbol": "MGCUSD",
-    "name": "Micro Gold Futures",
+    "symbol": "CO1",
+    "name": "Brent Futures",
+    "currency": "USD",
     "exchange": null,
-    "tradeMonth": "Dec",
-    "currency": "USD"
+    "logoUrl": null
   },
   {
-    "symbol": "SBUSX",
-    "name": "Sugar",
+    "symbol": "CT1",
+    "name": "Cotton Futures",
+    "currency": "USD",
     "exchange": null,
-    "tradeMonth": "Mar",
-    "currency": "USX"
+    "logoUrl": "https://api.twelvedata.com/logo/constellationtechnologies.com.au"
   },
   {
-    "symbol": "SIUSD",
-    "name": "Silver Futures",
+    "symbol": "DA",
+    "name": "Milk Futures",
+    "currency": "USD",
     "exchange": null,
-    "tradeMonth": "Dec",
-    "currency": "USD"
+    "logoUrl": null
   },
   {
-    "symbol": "CTUSX",
-    "name": "Cotton",
+    "symbol": "DL1",
+    "name": "Ethanol Futures",
+    "currency": "USD",
     "exchange": null,
-    "tradeMonth": "Dec",
-    "currency": "USX"
+    "logoUrl": null
   },
   {
-    "symbol": "DXUSD",
-    "name": "US Dollar",
-    "exchange": null,
-    "tradeMonth": "Sep",
-    "currency": "USD"
-  },
-  {
-    "symbol": "ZSUSX",
-    "name": "Soybean Futures",
-    "exchange": null,
-    "tradeMonth": "Nov",
-    "currency": "USX"
-  },
-  {
-    "symbol": "LBUSD",
-    "name": "Lumber Futures",
-    "exchange": null,
-    "tradeMonth": "Nov",
-    "currency": "USD"
-  },
-  {
-    "symbol": "LEUSX",
-    "name": "Live Cattle Futures",
-    "exchange": null,
-    "tradeMonth": "Oct",
-    "currency": "USX"
-  },
-  {
-    "symbol": "NGUSD",
-    "name": "Natural Gas",
-    "exchange": null,
-    "tradeMonth": "Oct",
-    "currency": "USD"
-  },
-  {
-    "symbol": "CLUSD",
-    "name": "Crude Oil",
-    "exchange": null,
-    "tradeMonth": "Oct",
-    "currency": "USD"
-  },
-  {
-    "symbol": "OJUSX",
-    "name": "Orange Juice",
-    "exchange": null,
-    "tradeMonth": "Nov",
-    "currency": "USX"
-  },
-  {
-    "symbol": "KCUSX",
-    "name": "Coffee",
-    "exchange": null,
-    "tradeMonth": "Dec",
-    "currency": "USX"
-  },
-  {
-    "symbol": "PAUSD",
-    "name": "Palladium",
-    "exchange": null,
-    "tradeMonth": "Dec",
-    "currency": "USD"
-  },
-  {
-    "symbol": "GFUSX",
+    "symbol": "FC1",
     "name": "Feeder Cattle Futures",
+    "currency": "USD",
     "exchange": null,
-    "tradeMonth": "Oct",
-    "currency": "USX"
+    "logoUrl": null
   },
   {
-    "symbol": "ZTUSD",
-    "name": "2-Year T-Note Futures",
+    "symbol": "GAU/EUR",
+    "name": "Gold Gram",
+    "currency": "EUR",
     "exchange": null,
-    "tradeMonth": "Dec",
-    "currency": "USD"
+    "logoUrl": null
   },
   {
-    "symbol": "ZRUSD",
-    "name": "Rough Rice Futures",
+    "symbol": "GAU/GBP",
+    "name": "Gold Gram",
+    "currency": "GBP",
     "exchange": null,
-    "tradeMonth": "Nov",
-    "currency": "USD"
+    "logoUrl": null
   },
   {
-    "symbol": "CCUSD",
-    "name": "Cocoa",
+    "symbol": "GAU/IDR",
+    "name": "Gold Gram",
+    "currency": "IDR",
     "exchange": null,
-    "tradeMonth": "Dec",
-    "currency": "USD"
+    "logoUrl": null
   },
   {
-    "symbol": "NQUSD",
-    "name": "Nasdaq 100",
+    "symbol": "GAU/TRY",
+    "name": "Gold Gram",
+    "currency": "TRY",
     "exchange": null,
-    "tradeMonth": "Sep",
-    "currency": "USD"
+    "logoUrl": null
   },
   {
-    "symbol": "ZNUSD",
-    "name": "10-Year T-Note Futures",
+    "symbol": "GAU/USD",
+    "name": "Gold Gram",
+    "currency": "USD",
     "exchange": null,
-    "tradeMonth": "Dec",
-    "currency": "USD"
+    "logoUrl": null
   },
   {
-    "symbol": "RTYUSD",
-    "name": "Micro E-mini Russell 2000 Index Futures",
-    "exchange": null,
-    "tradeMonth": "Sep",
-    "currency": "USD"
+    "symbol": "HG1",
+    "name": "Copper Futures",
+    "currency": "EUR",
+    "exchange": "FSX",
+    "logoUrl": "https://api.twelvedata.com/logo/homag.com"
   },
   {
-    "symbol": "BZUSD",
-    "name": "Brent Crude Oil",
+    "symbol": "JBP",
+    "name": "Steel Futures",
+    "currency": "USD",
     "exchange": null,
-    "tradeMonth": "Sep",
-    "currency": "USD"
+    "logoUrl": null
   },
   {
-    "symbol": "DCUSD",
-    "name": "Class III Milk Futures",
-    "exchange": null,
-    "tradeMonth": "Jan",
-    "currency": "USD"
+    "symbol": "JO1",
+    "name": "Orange Juice Futures",
+    "currency": "EUR",
+    "exchange": "FSX",
+    "logoUrl": "https://api.twelvedata.com/logo/jbssinc.com"
   },
   {
-    "symbol": "YMUSD",
-    "name": "Mini Dow Jones Industrial Average Index",
-    "exchange": null,
-    "tradeMonth": "Sep",
-    "currency": "USD"
+    "symbol": "KC1",
+    "name": "Coffee Futures",
+    "currency": "EUR",
+    "exchange": "FSX",
+    "logoUrl": "https://api.twelvedata.com/logo/trojangold.com"
   },
   {
-    "symbol": "RBUSD",
-    "name": "Gasoline RBOB",
+    "symbol": "LB1",
+    "name": "Lumber Futures",
+    "currency": "USD",
     "exchange": null,
-    "tradeMonth": "Oct",
-    "currency": "USD"
+    "logoUrl": null
   },
   {
-    "symbol": "HOUSD",
-    "name": "Heating Oil",
+    "symbol": "LC",
+    "name": "Lithium Futures",
+    "currency": "USD",
+    "exchange": "NYSE",
+    "logoUrl": "https://api.twelvedata.com/logo/lendingclub.com"
+  },
+  {
+    "symbol": "LC1",
+    "name": "Live Cattle Futures",
+    "currency": "EUR",
+    "exchange": "FSX",
+    "logoUrl": "https://api.twelvedata.com/logo/marzetticompany.com"
+  },
+  {
+    "symbol": "LH1",
+    "name": "Lean Hogs Futures",
+    "currency": "EUR",
+    "exchange": "XBER",
+    "logoUrl": "https://api.twelvedata.com/logo/lifetimebrands.com"
+  },
+  {
+    "symbol": "LMAHDS03",
+    "name": "Aluminum Futures",
+    "currency": "USD",
     "exchange": null,
-    "tradeMonth": "Oct",
-    "currency": "USD"
+    "logoUrl": null
+  },
+  {
+    "symbol": "NG/USD",
+    "name": "Natural Gas",
+    "currency": "USD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "O_1",
+    "name": "Oat Futures",
+    "currency": "USD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "RR1",
+    "name": "Rice Futures",
+    "currency": "EUR",
+    "exchange": "FSX",
+    "logoUrl": "https://api.twelvedata.com/logo/rainbowrareearths.com"
+  },
+  {
+    "symbol": "RS1",
+    "name": "Canola Futures",
+    "currency": "EUR",
+    "exchange": "FSX",
+    "logoUrl": "https://api.twelvedata.com/logo/rh.com"
+  },
+  {
+    "symbol": "S_1",
+    "name": "Soybeans Futures",
+    "currency": "USD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "SB1",
+    "name": "Sugar Futures",
+    "currency": "EUR",
+    "exchange": "XETR",
+    "logoUrl": "https://api.twelvedata.com/logo/smartbroker-holding.de"
+  },
+  {
+    "symbol": "URALS/USD",
+    "name": "Urals Crude Oil Spot",
+    "currency": "USD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "UXA",
+    "name": "Uranium Futures",
+    "currency": "USD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "W_1",
+    "name": "Wheat Futures",
+    "currency": "USD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "WTI/USD",
+    "name": "Crude Oil WTI Spot",
+    "currency": "USD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAG/AUD",
+    "name": "Silver Spot",
+    "currency": "AUD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAG/CAD",
+    "name": "Silver Spot",
+    "currency": "CAD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAG/CHF",
+    "name": "Silver Spot",
+    "currency": "CHF",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAG/EUR",
+    "name": "Silver Spot",
+    "currency": "EUR",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAG/GBP",
+    "name": "Silver Spot",
+    "currency": "GBP",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAGg/EUR",
+    "name": "Gram Silver",
+    "currency": "EUR",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAGg/TRY",
+    "name": "Gram Silver",
+    "currency": "TRY",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAGg/USD",
+    "name": "Gram Silver",
+    "currency": "USD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAG/TRY",
+    "name": "Silver Spot",
+    "currency": "TRY",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAG/USD",
+    "name": "Silver Spot",
+    "currency": "USD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAU/AUD",
+    "name": "Gold Spot",
+    "currency": "AUD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAU/CAD",
+    "name": "Gold Spot",
+    "currency": "CAD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAU/CHF",
+    "name": "Gold Spot",
+    "currency": "CHF",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAU/EUR",
+    "name": "Gold Spot",
+    "currency": "EUR",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAU/GBP",
+    "name": "Gold Spot",
+    "currency": "GBP",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAU/HKD",
+    "name": "Gold Spot",
+    "currency": "HKD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAU/JPY",
+    "name": "Gold Spot",
+    "currency": "JPY",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAU/NZD",
+    "name": "Gold Spot",
+    "currency": "NZD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAU/SGD",
+    "name": "Gold Spot",
+    "currency": "SGD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XAU/USD",
+    "name": "Gold Spot",
+    "currency": "USD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XB1",
+    "name": "Gasoline Futures",
+    "currency": "EUR",
+    "exchange": "FSX",
+    "logoUrl": "https://api.twelvedata.com/logo/ncabgroup.com"
+  },
+  {
+    "symbol": "XBR/USD",
+    "name": "Brent Spot",
+    "currency": "USD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XPD/USD",
+    "name": "Palladium Spot",
+    "currency": "USD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "XPT/USD",
+    "name": "Platinum Spot",
+    "currency": "USD",
+    "exchange": null,
+    "logoUrl": null
+  },
+  {
+    "symbol": "ZS",
+    "name": "Zinc Futures",
+    "currency": "USD",
+    "exchange": "NASDAQ",
+    "logoUrl": "https://api.twelvedata.com/logo/zscaler.com"
+  },
+  {
+    "symbol": "NI1",
+    "name": "Nickel Futures",
+    "currency": "USD",
+    "exchange": null,
+    "logoUrl": null
   }
 ]

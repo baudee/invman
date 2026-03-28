@@ -12,25 +12,31 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
-import 'package:invman_client/src/protocol/account/models/account.dart' as _i3;
-import 'package:invman_client/src/protocol/app_settings/models/app_settings.dart'
+import 'package:invman_client/src/protocol/features/account/models/account.dart'
+    as _i3;
+import 'package:invman_client/src/protocol/features/app_settings/models/app_settings.dart'
     as _i4;
-import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
+import 'package:invman_client/src/protocol/features/asset/models/asset.dart'
     as _i5;
-import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+import 'package:invman_client/src/protocol/features/asset/models/asset_filter.dart'
     as _i6;
-import 'package:invman_client/src/protocol/currency/models/currency.dart'
+import 'package:invman_client/src/protocol/features/asset/models/asset_value.dart'
     as _i7;
-import 'package:invman_client/src/protocol/investment/models/investment.dart'
+import 'package:invman_client/src/protocol/features/asset/models/asset_time_horizon.dart'
     as _i8;
-import 'package:invman_client/src/protocol/stock/models/stock.dart' as _i9;
-import 'package:invman_client/src/protocol/stock/models/stock_filter.dart'
+import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
+    as _i9;
+import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i10;
-import 'package:invman_client/src/protocol/transfer/models/transfer.dart'
+import 'package:invman_client/src/protocol/features/currency/models/currency.dart'
     as _i11;
-import 'package:invman_client/src/protocol/withdrawal/models/withdrawal_rule.dart'
+import 'package:invman_client/src/protocol/features/investment/models/investment.dart'
     as _i12;
-import 'protocol.dart' as _i13;
+import 'package:invman_client/src/protocol/features/transfer/models/transfer.dart'
+    as _i13;
+import 'package:invman_client/src/protocol/features/withdrawal/models/withdrawal_rule.dart'
+    as _i14;
+import 'protocol.dart' as _i15;
 
 /// {@category Endpoint}
 class EndpointAccount extends _i1.EndpointRef {
@@ -68,11 +74,66 @@ class EndpointAppSettings extends _i1.EndpointRef {
       );
 }
 
+/// {@category Endpoint}
+class EndpointAsset extends _i1.EndpointRef {
+  EndpointAsset(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'asset';
+
+  _i2.Future<void> like(_i1.UuidValue assetId) =>
+      caller.callServerEndpoint<void>(
+        'asset',
+        'like',
+        {'assetId': assetId},
+      );
+
+  _i2.Future<void> unlike(_i1.UuidValue assetId) =>
+      caller.callServerEndpoint<void>(
+        'asset',
+        'unlike',
+        {'assetId': assetId},
+      );
+
+  _i2.Future<_i5.Asset> retrieve(_i1.UuidValue uuid) =>
+      caller.callServerEndpoint<_i5.Asset>(
+        'asset',
+        'retrieve',
+        {'uuid': uuid},
+      );
+
+  _i2.Future<List<_i5.Asset>> list({
+    _i6.AssetFilter? filter,
+    required int limit,
+    required int page,
+  }) => caller.callServerEndpoint<List<_i5.Asset>>(
+    'asset',
+    'list',
+    {
+      'filter': filter,
+      'limit': limit,
+      'page': page,
+    },
+  );
+
+  _i2.Future<List<_i7.AssetValue>> timeseries(
+    _i1.UuidValue assetId, {
+    required _i8.AssetTimeHorizon timeHorizon,
+  }) => caller.callServerEndpoint<List<_i7.AssetValue>>(
+    'asset',
+    'timeseries',
+    {
+      'assetId': assetId,
+      'timeHorizon': timeHorizon,
+    },
+  );
+}
+
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
 /// are made available on the server and enable the corresponding sign-in widget
 /// on the client.
 /// {@category Endpoint}
-class EndpointEmailIdp extends _i5.EndpointEmailIdpBase {
+class EndpointEmailIdp extends _i9.EndpointEmailIdpBase {
   EndpointEmailIdp(_i1.EndpointCaller caller) : super(caller);
 
   @override
@@ -88,10 +149,10 @@ class EndpointEmailIdp extends _i5.EndpointEmailIdpBase {
   ///
   /// Throws an [AuthUserBlockedException] if the auth user is blocked.
   @override
-  _i2.Future<_i6.AuthSuccess> login({
+  _i2.Future<_i10.AuthSuccess> login({
     required String email,
     required String password,
-  }) => caller.callServerEndpoint<_i6.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i10.AuthSuccess>(
     'emailIdp',
     'login',
     {
@@ -156,10 +217,10 @@ class EndpointEmailIdp extends _i5.EndpointEmailIdpBase {
   ///
   /// Returns a session for the newly created user.
   @override
-  _i2.Future<_i6.AuthSuccess> finishRegistration({
+  _i2.Future<_i10.AuthSuccess> finishRegistration({
     required String registrationToken,
     required String password,
-  }) => caller.callServerEndpoint<_i6.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i10.AuthSuccess>(
     'emailIdp',
     'finishRegistration',
     {
@@ -254,7 +315,7 @@ class EndpointEmailIdp extends _i5.EndpointEmailIdpBase {
 /// By extending [RefreshJwtTokensEndpoint], the JWT token refresh endpoint
 /// is made available on the server and enables automatic token refresh on the client.
 /// {@category Endpoint}
-class EndpointJwtRefresh extends _i6.EndpointRefreshJwtTokens {
+class EndpointJwtRefresh extends _i10.EndpointRefreshJwtTokens {
   EndpointJwtRefresh(_i1.EndpointCaller caller) : super(caller);
 
   @override
@@ -279,9 +340,9 @@ class EndpointJwtRefresh extends _i6.EndpointRefreshJwtTokens {
   /// This endpoint is unauthenticated, meaning the client won't include any
   /// authentication information with the call.
   @override
-  _i2.Future<_i6.AuthSuccess> refreshAccessToken({
+  _i2.Future<_i10.AuthSuccess> refreshAccessToken({
     required String refreshToken,
-  }) => caller.callServerEndpoint<_i6.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i10.AuthSuccess>(
     'jwtRefresh',
     'refreshAccessToken',
     {'refreshToken': refreshToken},
@@ -296,8 +357,8 @@ class EndpointCurrency extends _i1.EndpointRef {
   @override
   String get name => 'currency';
 
-  _i2.Future<List<_i7.Currency>> list() =>
-      caller.callServerEndpoint<List<_i7.Currency>>(
+  _i2.Future<List<_i11.Currency>> list() =>
+      caller.callServerEndpoint<List<_i11.Currency>>(
         'currency',
         'list',
         {},
@@ -311,10 +372,10 @@ class EndpointInvestment extends _i1.EndpointRef {
   @override
   String get name => 'investment';
 
-  _i2.Future<List<_i8.Investment>> list({
+  _i2.Future<List<_i12.Investment>> list({
     required int limit,
     required int page,
-  }) => caller.callServerEndpoint<List<_i8.Investment>>(
+  }) => caller.callServerEndpoint<List<_i12.Investment>>(
     'investment',
     'list',
     {
@@ -323,76 +384,33 @@ class EndpointInvestment extends _i1.EndpointRef {
     },
   );
 
-  _i2.Future<_i8.Investment> save(_i8.Investment investment) =>
-      caller.callServerEndpoint<_i8.Investment>(
+  _i2.Future<_i12.Investment> save(_i12.Investment investment) =>
+      caller.callServerEndpoint<_i12.Investment>(
         'investment',
         'save',
         {'investment': investment},
       );
 
-  _i2.Future<_i8.Investment> delete(int id) =>
-      caller.callServerEndpoint<_i8.Investment>(
+  _i2.Future<_i12.Investment> delete(int id) =>
+      caller.callServerEndpoint<_i12.Investment>(
         'investment',
         'delete',
         {'id': id},
       );
 
-  _i2.Future<_i8.Investment> retrieve(int id) =>
-      caller.callServerEndpoint<_i8.Investment>(
+  _i2.Future<_i12.Investment> retrieve(int id) =>
+      caller.callServerEndpoint<_i12.Investment>(
         'investment',
         'retrieve',
         {'id': id},
       );
 
-  _i2.Future<_i8.Investment> total() =>
-      caller.callServerEndpoint<_i8.Investment>(
+  _i2.Future<_i12.Investment> total() =>
+      caller.callServerEndpoint<_i12.Investment>(
         'investment',
         'total',
         {},
       );
-}
-
-/// {@category Endpoint}
-class EndpointStock extends _i1.EndpointRef {
-  EndpointStock(_i1.EndpointCaller caller) : super(caller);
-
-  @override
-  String get name => 'stock';
-
-  _i2.Future<void> like(_i1.UuidValue stockId) =>
-      caller.callServerEndpoint<void>(
-        'stock',
-        'like',
-        {'stockId': stockId},
-      );
-
-  _i2.Future<void> unlike(_i1.UuidValue stockId) =>
-      caller.callServerEndpoint<void>(
-        'stock',
-        'unlike',
-        {'stockId': stockId},
-      );
-
-  _i2.Future<_i9.Stock> retrieve(_i1.UuidValue uuid) =>
-      caller.callServerEndpoint<_i9.Stock>(
-        'stock',
-        'retrieve',
-        {'uuid': uuid},
-      );
-
-  _i2.Future<List<_i9.Stock>> list({
-    _i10.StockFilter? filter,
-    required int limit,
-    required int page,
-  }) => caller.callServerEndpoint<List<_i9.Stock>>(
-    'stock',
-    'list',
-    {
-      'filter': filter,
-      'limit': limit,
-      'page': page,
-    },
-  );
 }
 
 /// {@category Endpoint}
@@ -402,32 +420,32 @@ class EndpointTransfer extends _i1.EndpointRef {
   @override
   String get name => 'transfer';
 
-  _i2.Future<_i11.Transfer> retrieve(int id) =>
-      caller.callServerEndpoint<_i11.Transfer>(
+  _i2.Future<_i13.Transfer> retrieve(int id) =>
+      caller.callServerEndpoint<_i13.Transfer>(
         'transfer',
         'retrieve',
         {'id': id},
       );
 
-  _i2.Future<_i11.Transfer> save(_i11.Transfer transfer) =>
-      caller.callServerEndpoint<_i11.Transfer>(
+  _i2.Future<_i13.Transfer> save(_i13.Transfer transfer) =>
+      caller.callServerEndpoint<_i13.Transfer>(
         'transfer',
         'save',
         {'transfer': transfer},
       );
 
-  _i2.Future<_i11.Transfer> delete(int id) =>
-      caller.callServerEndpoint<_i11.Transfer>(
+  _i2.Future<_i13.Transfer> delete(int id) =>
+      caller.callServerEndpoint<_i13.Transfer>(
         'transfer',
         'delete',
         {'id': id},
       );
 
-  _i2.Future<List<_i11.Transfer>> list(
+  _i2.Future<List<_i13.Transfer>> list(
     int investmentId, {
     required int limit,
     required int page,
-  }) => caller.callServerEndpoint<List<_i11.Transfer>>(
+  }) => caller.callServerEndpoint<List<_i13.Transfer>>(
     'transfer',
     'list',
     {
@@ -445,10 +463,10 @@ class EndpointWithdrawalRule extends _i1.EndpointRef {
   @override
   String get name => 'withdrawalRule';
 
-  _i2.Future<List<_i12.WithdrawalRule>> list({
+  _i2.Future<List<_i14.WithdrawalRule>> list({
     required int limit,
     required int page,
-  }) => caller.callServerEndpoint<List<_i12.WithdrawalRule>>(
+  }) => caller.callServerEndpoint<List<_i14.WithdrawalRule>>(
     'withdrawalRule',
     'list',
     {
@@ -457,22 +475,22 @@ class EndpointWithdrawalRule extends _i1.EndpointRef {
     },
   );
 
-  _i2.Future<_i12.WithdrawalRule> retrieve(int id) =>
-      caller.callServerEndpoint<_i12.WithdrawalRule>(
+  _i2.Future<_i14.WithdrawalRule> retrieve(int id) =>
+      caller.callServerEndpoint<_i14.WithdrawalRule>(
         'withdrawalRule',
         'retrieve',
         {'id': id},
       );
 
-  _i2.Future<_i12.WithdrawalRule> save(_i12.WithdrawalRule transfer) =>
-      caller.callServerEndpoint<_i12.WithdrawalRule>(
+  _i2.Future<_i14.WithdrawalRule> save(_i14.WithdrawalRule transfer) =>
+      caller.callServerEndpoint<_i14.WithdrawalRule>(
         'withdrawalRule',
         'save',
         {'transfer': transfer},
       );
 
-  _i2.Future<_i12.WithdrawalRule> delete(int id) =>
-      caller.callServerEndpoint<_i12.WithdrawalRule>(
+  _i2.Future<_i14.WithdrawalRule> delete(int id) =>
+      caller.callServerEndpoint<_i14.WithdrawalRule>(
         'withdrawalRule',
         'delete',
         {'id': id},
@@ -481,13 +499,13 @@ class EndpointWithdrawalRule extends _i1.EndpointRef {
 
 class Modules {
   Modules(Client client) {
-    serverpod_auth_idp = _i5.Caller(client);
-    serverpod_auth_core = _i6.Caller(client);
+    serverpod_auth_idp = _i9.Caller(client);
+    serverpod_auth_core = _i10.Caller(client);
   }
 
-  late final _i5.Caller serverpod_auth_idp;
+  late final _i9.Caller serverpod_auth_idp;
 
-  late final _i6.Caller serverpod_auth_core;
+  late final _i10.Caller serverpod_auth_core;
 }
 
 class Client extends _i1.ServerpodClientShared {
@@ -510,7 +528,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i13.Protocol(),
+         _i15.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -521,11 +539,11 @@ class Client extends _i1.ServerpodClientShared {
        ) {
     account = EndpointAccount(this);
     appSettings = EndpointAppSettings(this);
+    asset = EndpointAsset(this);
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
     currency = EndpointCurrency(this);
     investment = EndpointInvestment(this);
-    stock = EndpointStock(this);
     transfer = EndpointTransfer(this);
     withdrawalRule = EndpointWithdrawalRule(this);
     modules = Modules(this);
@@ -535,6 +553,8 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointAppSettings appSettings;
 
+  late final EndpointAsset asset;
+
   late final EndpointEmailIdp emailIdp;
 
   late final EndpointJwtRefresh jwtRefresh;
@@ -542,8 +562,6 @@ class Client extends _i1.ServerpodClientShared {
   late final EndpointCurrency currency;
 
   late final EndpointInvestment investment;
-
-  late final EndpointStock stock;
 
   late final EndpointTransfer transfer;
 
@@ -555,11 +573,11 @@ class Client extends _i1.ServerpodClientShared {
   Map<String, _i1.EndpointRef> get endpointRefLookup => {
     'account': account,
     'appSettings': appSettings,
+    'asset': asset,
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
     'currency': currency,
     'investment': investment,
-    'stock': stock,
     'transfer': transfer,
     'withdrawalRule': withdrawalRule,
   };

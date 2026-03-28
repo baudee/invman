@@ -1,0 +1,6 @@
+class: TwelveDataTimeSeries
+serverOnly: true
+fields:
+    meta: Map<String, String?>
+    values: List<TwelveDataTimeSeriesValue>
+

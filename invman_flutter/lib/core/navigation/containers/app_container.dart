@@ -16,7 +16,7 @@ class AppContainer extends StatelessWidget {
           navigationShell.goBranch(index, initialLocation: index == navigationShell.currentIndex);
         },
         destinations: [
-          NavigationDestination(icon: Icon(Icons.explore), label: S.of(context).stock_title),
+          NavigationDestination(icon: Icon(Icons.explore), label: S.of(context).asset_title),
           NavigationDestination(icon: Icon(Icons.show_chart_rounded), label: S.of(context).investment_title),
           NavigationDestination(icon: Icon(Icons.menu), label: S.of(context).account_title),
         ],

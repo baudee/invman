@@ -1,0 +1,6 @@
+class: AssetFilter
+
+fields:
+    type: AssetType?
+    query: String?
+    favorite: bool, default=false

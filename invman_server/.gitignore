@@ -20,3 +20,7 @@ config/passwords.yaml
 config/firebase_service_account_key.json
 
 lib/src/di.config.dart
+
+# freezed
+**.g.dart
+**.freezed.dart

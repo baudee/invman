@@ -1,0 +1,8 @@
+enum: AssetTimeHorizon
+serialized: byName
+values:
+  - oneDay
+  - oneWeek
+  - oneMonth
+  - oneYear
+  - all

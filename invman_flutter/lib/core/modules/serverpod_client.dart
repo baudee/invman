@@ -8,7 +8,7 @@ import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 abstract class ServerpodClientModule {
   @singleton
   Client client(Env env) {
-    return Client(env.baseUrl, connectionTimeout: const Duration(seconds: 30))
+    return Client(env.baseUrl, connectionTimeout: const Duration(seconds: 45))
       ..connectivityMonitor = FlutterConnectivityMonitor()
       ..authSessionManager = FlutterAuthSessionManager();
   }

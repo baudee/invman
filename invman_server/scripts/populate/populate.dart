@@ -21,7 +21,7 @@ Future<void> main(List<String> args) async {
   try {
     await _populateAppSettings(connection);
     await _populateCurrencies(connection);
-    await _populateStocks(connection);
+    await _populateAssets(connection);
     print('Database population completed successfully.');
   } finally {
     await connection.close();
@@ -166,14 +166,13 @@ Future<void> _populateCurrencies(Connection connection) async {
   print('  Currencies: inserted ${newCurrencies.length}, skipped $skippedCount (already exist).');
 }
 
-Future<void> _populateStocks(Connection connection) async {
+Future<void> _populateAssets(Connection connection) async {
   final currencyMap = await _loadCurrencyMap(connection);
 
-  await _populateCryptos(connection, currencyMap);
-  await _populateEtfs(connection, currencyMap);
-  await _populateEquities(connection, currencyMap);
-  await _populateIndices(connection, currencyMap);
-  await _populateCommodities(connection, currencyMap);
+  await _populateAssetFile(connection, currencyMap, 'stocks', AssetType.stock);
+  await _populateAssetFile(connection, currencyMap, 'etfs', AssetType.etf);
+  await _populateAssetFile(connection, currencyMap, 'cryptos', AssetType.crypto);
+  await _populateAssetFile(connection, currencyMap, 'commodities', AssetType.commodity);
 }
 
 Future<Map<String, int>> _loadCurrencyMap(Connection connection) async {
@@ -187,114 +186,49 @@ Future<Map<String, int>> _loadCurrencyMap(Connection connection) async {
   return map;
 }
 
-Future<void> _populateCryptos(
-  Connection connection,
-  Map<String, int> currencyMap,
-) async {
-  const filePath = 'scripts/populate/data/cryptos.json';
-  final file = File(filePath);
-
-  if (!file.existsSync()) {
-    print('Warning: cryptos.json not found, skipping.');
-    return;
-  }
-
-  print('Populating cryptos from cryptos.json...');
-
-  final jsonContent = file.readAsStringSync();
-  final List<dynamic> items = jsonDecode(jsonContent);
-
-  if (items.isEmpty) {
-    print('  Warning: cryptos.json is empty.');
-    return;
-  }
-
-  final existingResult = await connection.execute('SELECT symbol FROM stock');
-  final existingSymbols = existingResult.map((r) => r[0] as String).toSet();
-
-  final usdCurrencyId = currencyMap['USD'];
-  if (usdCurrencyId == null) {
-    print('  Error: USD currency not found in database.');
-    return;
-  }
-
-  final symbols = <String>[];
-  final names = <String>[];
-  final currencyIds = <int>[];
-  final logoUrls = <String>[];
-
-  var skippedCount = 0;
-
-  for (final item in items) {
-    final symbol = (item['symbol'] as String?)?.trim() ?? '';
-    if (symbol.isEmpty) continue;
-
-    if (existingSymbols.contains(symbol)) {
-      skippedCount++;
-      continue;
-    }
-
-    final name = (item['name'] as String?)?.trim() ?? symbol;
-
-    symbols.add(symbol);
-    names.add(name);
-    currencyIds.add(usdCurrencyId);
-    logoUrls.add("https://raw.githubusercontent.com/nvstly/icons/refs/heads/main/ticker_icons/$symbol.png");
-  }
-
-  if (symbols.isEmpty) {
-    print('  cryptos.json: inserted 0, skipped $skippedCount.');
-    return;
-  }
-
-  await connection.execute(
-    Sql.named('''
-      INSERT INTO stock (id, symbol, "name", "quoteType", "logoUrl", "price", "timestamp", "updatedAt", "currencyId")
-      SELECT gen_random_uuid(), symbol, name, @quoteType, logo_url, -1.0, NOW() - INTERVAL '1 day', NOW() - INTERVAL '1 day', currency_id
-      FROM unnest(@symbols::text[], @names::text[], @logoUrls::text[], @currencyIds::int[]) AS t(symbol, name, logo_url, currency_id)
-      ON CONFLICT (symbol) DO NOTHING
-    '''),
-    parameters: {
-      'symbols': symbols,
-      'names': names,
-      'quoteType': StockType.crypto.name,
-      'logoUrls': logoUrls,
-      'currencyIds': currencyIds,
-    },
-  );
-
-  print('  cryptos.json: inserted ${symbols.length}, skipped $skippedCount.');
+String _makeKey(String symbol, String? exchange) {
+  return '$symbol:${exchange ?? ''}';
 }
 
-Future<void> _populateEquities(
+Future<void> _populateAssetFile(
   Connection connection,
   Map<String, int> currencyMap,
+  String fileName,
+  AssetType assetType,
 ) async {
-  const filePath = 'scripts/populate/data/equities.json';
+  final filePath = 'scripts/populate/data/$fileName.json';
   final file = File(filePath);
 
   if (!file.existsSync()) {
-    print('Warning: equities.json not found, skipping.');
+    print('Warning: $fileName.json not found, skipping.');
+    print('  Run transform_raw_data.dart first to generate this file.');
     return;
   }
 
-  print('Populating equities from equities.json...');
+  print('Populating $fileName from $fileName.json...');
 
   final jsonContent = file.readAsStringSync();
   final List<dynamic> items = jsonDecode(jsonContent);
 
   if (items.isEmpty) {
-    print('  Warning: equities.json is empty.');
+    print('  Warning: $fileName.json is empty.');
     return;
   }
 
-  final existingResult = await connection.execute('SELECT symbol FROM stock');
-  final existingSymbols = existingResult.map((r) => r[0] as String).toSet();
+  // Load existing symbol+exchange combinations
+  final existingResult = await connection.execute('SELECT symbol, exchange FROM asset');
+  final existingKeys = <String>{};
+  for (final row in existingResult) {
+    final symbol = row[0] as String;
+    final exchange = row[1] as String?;
+    existingKeys.add(_makeKey(symbol, exchange));
+  }
 
   final symbols = <String>[];
   final names = <String>[];
+  final exchanges = <String?>[];
   final currencyIds = <int>[];
-  final logoUrls = <String>[];
+  final logoUrls = <String?>[];
 
   var skippedCount = 0;
   var missingCurrencyCount = 0;
@@ -303,103 +237,17 @@ Future<void> _populateEquities(
     final symbol = (item['symbol'] as String?)?.trim() ?? '';
     if (symbol.isEmpty) continue;
 
-    if (existingSymbols.contains(symbol)) {
-      skippedCount++;
-      continue;
-    }
+    final exchange = (item['exchange'] as String?)?.trim();
+    final key = _makeKey(symbol, exchange);
 
-    final name = (item['companyName'] as String?)?.trim() ?? symbol;
-    final currencyCode = (item['tradingCurrency'] as String?)?.trim().toUpperCase() ?? '';
-
-    if (currencyCode.isEmpty) {
-      print('Skipping equity with missing currency: $symbol');
-      print(item);
-      missingCurrencyCount++;
-      continue;
-    }
-
-    final currencyId = currencyMap[currencyCode];
-    if (currencyId == null) {
-      print('Skipping equity with unknown currency "$currencyCode": $symbol');
-      print(item);
-      missingCurrencyCount++;
-      continue;
-    }
-
-    symbols.add(symbol);
-    names.add(name);
-    currencyIds.add(currencyId);
-    logoUrls.add("https://raw.githubusercontent.com/nvstly/icons/refs/heads/main/ticker_icons/$symbol.png");
-  }
-
-  if (symbols.isEmpty) {
-    print('  equities.json: inserted 0, skipped $skippedCount, missing currency $missingCurrencyCount.');
-    return;
-  }
-
-  await connection.execute(
-    Sql.named('''
-      INSERT INTO stock (id, symbol, "name", "quoteType", "logoUrl", "price", "timestamp", "updatedAt", "currencyId")
-      SELECT gen_random_uuid(), symbol, name, @quoteType, logo_url, -1.0, NOW() - INTERVAL '1 day', NOW() - INTERVAL '1 day', currency_id
-      FROM unnest(@symbols::text[], @names::text[], @logoUrls::text[], @currencyIds::int[]) AS t(symbol, name, logo_url, currency_id)
-      ON CONFLICT (symbol) DO NOTHING
-    '''),
-    parameters: {
-      'symbols': symbols,
-      'names': names,
-      'quoteType': StockType.stock.name,
-      'logoUrls': logoUrls,
-      'currencyIds': currencyIds,
-    },
-  );
-
-  print('  equities.json: inserted ${symbols.length}, skipped $skippedCount, missing currency $missingCurrencyCount.');
-}
-
-Future<void> _populateIndices(
-  Connection connection,
-  Map<String, int> currencyMap,
-) async {
-  const filePath = 'scripts/populate/data/indices.json';
-  final file = File(filePath);
-
-  if (!file.existsSync()) {
-    print('Warning: indices.json not found, skipping.');
-    return;
-  }
-
-  print('Populating indices from indices.json...');
-
-  final jsonContent = file.readAsStringSync();
-  final List<dynamic> items = jsonDecode(jsonContent);
-
-  if (items.isEmpty) {
-    print('  Warning: indices.json is empty.');
-    return;
-  }
-
-  final existingResult = await connection.execute('SELECT symbol FROM stock');
-  final existingSymbols = existingResult.map((r) => r[0] as String).toSet();
-
-  final symbols = <String>[];
-  final names = <String>[];
-  final currencyIds = <int>[];
-  final logoUrls = <String>[];
-
-  var skippedCount = 0;
-  var missingCurrencyCount = 0;
-
-  for (final item in items) {
-    final symbol = (item['symbol'] as String?)?.trim() ?? '';
-    if (symbol.isEmpty) continue;
-
-    if (existingSymbols.contains(symbol)) {
+    if (existingKeys.contains(key)) {
       skippedCount++;
       continue;
     }
 
     final name = (item['name'] as String?)?.trim() ?? symbol;
     final currencyCode = (item['currency'] as String?)?.trim().toUpperCase() ?? '';
+    final logoUrl = item['logoUrl'] as String?;
 
     if (currencyCode.isEmpty) {
       missingCurrencyCount++;
@@ -414,209 +262,32 @@ Future<void> _populateIndices(
 
     symbols.add(symbol);
     names.add(name);
+    exchanges.add(exchange);
     currencyIds.add(currencyId);
-    logoUrls.add("https://raw.githubusercontent.com/nvstly/icons/refs/heads/main/ticker_icons/$symbol.png");
+    logoUrls.add(logoUrl);
   }
 
   if (symbols.isEmpty) {
-    print('  indices.json: inserted 0, skipped $skippedCount, missing currency $missingCurrencyCount.');
+    print('  $fileName.json: inserted 0, skipped $skippedCount, missing currency $missingCurrencyCount.');
     return;
   }
 
   await connection.execute(
     Sql.named('''
-      INSERT INTO stock (id, symbol, "name", "quoteType", "logoUrl", "price", "timestamp", "updatedAt", "currencyId")
-      SELECT gen_random_uuid(), symbol, name, @quoteType, logo_url, -1.0, NOW() - INTERVAL '1 day', NOW() - INTERVAL '1 day', currency_id
-      FROM unnest(@symbols::text[], @names::text[], @logoUrls::text[], @currencyIds::int[]) AS t(symbol, name, logo_url, currency_id)
-      ON CONFLICT (symbol) DO NOTHING
+      INSERT INTO asset (id, symbol, "name", exchange, type, "logoUrl", "currencyId")
+      SELECT gen_random_uuid(), symbol, name, exchange, @type, logo_url, currency_id
+      FROM unnest(@symbols::text[], @names::text[], @exchanges::text[], @logoUrls::text[], @currencyIds::int[]) AS t(symbol, name, exchange, logo_url, currency_id)
+      ON CONFLICT (symbol, exchange) DO NOTHING
     '''),
     parameters: {
       'symbols': symbols,
       'names': names,
-      'quoteType': StockType.indice.name,
+      'exchanges': exchanges,
+      'type': assetType.name,
       'logoUrls': logoUrls,
       'currencyIds': currencyIds,
     },
   );
 
-  print('  indices.json: inserted ${symbols.length}, skipped $skippedCount, missing currency $missingCurrencyCount.');
-}
-
-Future<void> _populateEtfs(
-  Connection connection,
-  Map<String, int> currencyMap,
-) async {
-  const filePath = 'scripts/populate/data/etfs_with_currency.json';
-  final file = File(filePath);
-
-  if (!file.existsSync()) {
-    print('Warning: etfs_with_currency.json not found, skipping.');
-    print('  Run scrape_etf_currencies.dart first to generate this file.');
-    return;
-  }
-
-  print('Populating ETFs from etfs_with_currency.json...');
-
-  final jsonContent = file.readAsStringSync();
-  final List<dynamic> items = jsonDecode(jsonContent);
-
-  if (items.isEmpty) {
-    print('  Warning: etfs_with_currency.json is empty.');
-    return;
-  }
-
-  final existingResult = await connection.execute('SELECT symbol FROM stock');
-  final existingSymbols = existingResult.map((r) => r[0] as String).toSet();
-
-  final symbols = <String>[];
-  final names = <String>[];
-  final currencyIds = <int>[];
-  final logoUrls = <String>[];
-
-  var skippedCount = 0;
-  var missingCurrencyCount = 0;
-
-  for (final item in items) {
-    final symbol = (item['symbol'] as String?)?.trim() ?? '';
-    if (symbol.isEmpty) continue;
-
-    if (existingSymbols.contains(symbol)) {
-      skippedCount++;
-      continue;
-    }
-
-    final name = (item['name'] as String?)?.trim() ?? symbol;
-    final currencyCode = (item['currency'] as String?)?.trim().toUpperCase() ?? '';
-
-    if (currencyCode.isEmpty) {
-      print('Skipping ETF with missing currency: $symbol');
-      print(item);
-      missingCurrencyCount++;
-      continue;
-    }
-
-    final currencyId = currencyMap[currencyCode];
-    if (currencyId == null) {
-      print('Skipping ETF with unknown currency "$currencyCode": $symbol');
-      print(item);
-      missingCurrencyCount++;
-      continue;
-    }
-
-    symbols.add(symbol);
-    names.add(name);
-    currencyIds.add(currencyId);
-    logoUrls.add("https://raw.githubusercontent.com/nvstly/icons/refs/heads/main/ticker_icons/$symbol.png");
-  }
-
-  if (symbols.isEmpty) {
-    print('  etfs_with_currency.json: inserted 0, skipped $skippedCount, missing currency $missingCurrencyCount.');
-    return;
-  }
-
-  await connection.execute(
-    Sql.named('''
-      INSERT INTO stock (id, symbol, "name", "quoteType", "logoUrl", "price", "timestamp", "updatedAt", "currencyId")
-      SELECT gen_random_uuid(), symbol, name, @quoteType, logo_url, -1.0, NOW() - INTERVAL '1 day', NOW() - INTERVAL '1 day', currency_id
-      FROM unnest(@symbols::text[], @names::text[], @logoUrls::text[], @currencyIds::int[]) AS t(symbol, name, logo_url, currency_id)
-      ON CONFLICT (symbol) DO NOTHING
-    '''),
-    parameters: {
-      'symbols': symbols,
-      'names': names,
-      'quoteType': StockType.etf.name,
-      'logoUrls': logoUrls,
-      'currencyIds': currencyIds,
-    },
-  );
-
-  print(
-    '  etfs_with_currency.json: inserted ${symbols.length}, skipped $skippedCount, missing currency $missingCurrencyCount.',
-  );
-}
-
-Future<void> _populateCommodities(
-  Connection connection,
-  Map<String, int> currencyMap,
-) async {
-  const filePath = 'scripts/populate/data/commodities.json';
-  final file = File(filePath);
-
-  if (!file.existsSync()) {
-    print('Warning: commodities.json not found, skipping.');
-    return;
-  }
-
-  print('Populating commodities from commodities.json...');
-
-  final jsonContent = file.readAsStringSync();
-  final List<dynamic> items = jsonDecode(jsonContent);
-
-  if (items.isEmpty) {
-    print('  Warning: commodities.json is empty.');
-    return;
-  }
-
-  final existingResult = await connection.execute('SELECT symbol FROM stock');
-  final existingSymbols = existingResult.map((r) => r[0] as String).toSet();
-
-  final symbols = <String>[];
-  final names = <String>[];
-  final currencyIds = <int>[];
-  final logoUrls = <String>[];
-
-  var skippedCount = 0;
-  var missingCurrencyCount = 0;
-
-  for (final item in items) {
-    final symbol = (item['symbol'] as String?)?.trim() ?? '';
-    if (symbol.isEmpty) continue;
-
-    if (existingSymbols.contains(symbol)) {
-      skippedCount++;
-      continue;
-    }
-
-    final name = (item['name'] as String?)?.trim() ?? symbol;
-    final currencyCode = (item['currency'] as String?)?.trim().toUpperCase() ?? '';
-
-    if (currencyCode.isEmpty) {
-      missingCurrencyCount++;
-      continue;
-    }
-
-    final currencyId = currencyMap[currencyCode];
-    if (currencyId == null) {
-      missingCurrencyCount++;
-      continue;
-    }
-
-    symbols.add(symbol);
-    names.add(name);
-    currencyIds.add(currencyId);
-    logoUrls.add("https://raw.githubusercontent.com/nvstly/icons/refs/heads/main/ticker_icons/$symbol.png");
-  }
-
-  if (symbols.isEmpty) {
-    print('  commodities.json: inserted 0, skipped $skippedCount, missing currency $missingCurrencyCount.');
-    return;
-  }
-
-  await connection.execute(
-    Sql.named('''
-      INSERT INTO stock (id, symbol, "name", "quoteType", "logoUrl", "price", "timestamp", "updatedAt", "currencyId")
-      SELECT gen_random_uuid(), symbol, name, @quoteType, logo_url, -1.0, NOW() - INTERVAL '1 day', NOW() - INTERVAL '1 day', currency_id
-      FROM unnest(@symbols::text[], @names::text[], @logoUrls::text[], @currencyIds::int[]) AS t(symbol, name, logo_url, currency_id)
-      ON CONFLICT (symbol) DO NOTHING
-    '''),
-    parameters: {
-      'symbols': symbols,
-      'names': names,
-      'quoteType': StockType.commodity.name,
-      'logoUrls': logoUrls,
-      'currencyIds': currencyIds,
-    },
-  );
-
-  print('  commodities.json: inserted ${symbols.length}, skipped $skippedCount, missing currency $missingCurrencyCount.');
+  print('  $fileName.json: inserted ${symbols.length}, skipped $skippedCount, missing currency $missingCurrencyCount.');
 }

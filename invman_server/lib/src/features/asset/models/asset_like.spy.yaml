@@ -1,0 +1,13 @@
+class: AssetLike
+
+table: asset_like
+
+fields:
+  user: module:serverpod_auth_core:AuthUser?, relation(onDelete=Cascade)
+  asset: Asset?, relation(name=asset_likes, onDelete=Cascade)
+  createdAt: DateTime, default=now
+
+indexes:
+  asset_like_user_asset_idx:
+    fields: userId, assetId
+    unique: true

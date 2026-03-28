@@ -1,0 +1,11 @@
+class: Currency
+
+table: currency
+
+fields:
+  code: String
+
+indexes:
+  currency_code_idx:
+    fields: code
+    unique: true

@@ -43,8 +43,8 @@ global:
       en: "Welcome to Rimawari!"
     investment:
       en: "Follow your investments"
-    stock:
-      en: "Track your stocks"
+    asset:
+      en: "Track your assets"
   # Where to write all generated renders:
   output_folder: "build/screenshots"
 

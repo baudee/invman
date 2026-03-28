@@ -1,8 +1,0 @@
-enum: StockType
-serialized: byName
-values:
-  - stock
-  - etf
-  - crypto
-  - commodity
-  - indice

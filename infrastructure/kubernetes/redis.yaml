@@ -13,12 +13,11 @@ spec:
     app: rimawari-redis
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: rimawari-redis
   namespace: production
 spec:
-  serviceName: rimawari-redis
   replicas: 1
   selector:
     matchLabels:
@@ -45,9 +44,6 @@ spec:
                 secretKeyRef:
                   name: rimawari-redis
                   key: password
-          volumeMounts:
-            - name: data
-              mountPath: /data
           resources:
             requests:
               memory: "64Mi"
@@ -55,11 +51,3 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "200m"
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 1Gi

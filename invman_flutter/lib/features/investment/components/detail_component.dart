@@ -5,7 +5,7 @@ import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
-import 'package:invman_flutter/features/stock/components/tile_component.dart';
+import 'package:invman_flutter/features/asset/components/tile_component.dart';
 import 'package:invman_flutter/features/transfer/transfer.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
@@ -34,9 +34,9 @@ class InvestmentDetailComponent extends StatelessWidget {
                 spacing: UIConstants.spacingXs,
                 children: [
                   const SizedBox(height: UIConstants.spacingSm),
-                  if (investment.stock != null) ...[
-                    SectionHeaderComponent(title: S.of(context).stock),
-                    StockTileComponent(stock: investment.stock!),
+                  if (investment.asset != null) ...[
+                    SectionHeaderComponent(title: S.of(context).asset),
+                    AssetTileComponent(asset: investment.asset!),
                     ListTile(
                       leading: Icon(Icons.confirmation_number, color: Theme.of(context).colorScheme.primary),
                       title: Text(S.of(context).investment_quantity),
@@ -44,16 +44,20 @@ class InvestmentDetailComponent extends StatelessWidget {
                     ),
                     ListTile(
                       leading: Icon(Icons.update, color: Theme.of(context).colorScheme.primary),
-                      title: Text("${S.of(context).stock} ${S.of(context).core_lastUpdate}"),
-                      trailing: Text(DateFormat.yMMMd().add_jm().format(investment.stock!.timestamp.toLocal())),
+                      title: Text("${S.of(context).asset} ${S.of(context).core_lastUpdate}"),
+                      trailing: Text(
+                        investment.asset?.timestamp != null
+                            ? DateFormat.yMMMd().add_jm().format(investment.asset!.timestamp!.toLocal())
+                            : '-',
+                      ),
                     ),
-                    ListTile(
-                      leading: Icon(Icons.update, color: Theme.of(context).colorScheme.primary),
-                      title: Text("${S.of(context).account_currency} ${S.of(context).core_lastUpdate}"),
-                      trailing: authManager.currency != null
-                          ? Text(DateFormat.yMMMd().add_jm().format(authManager.currency!.timestamp.toLocal()))
-                          : null,
-                    ),
+                    if (investment.forex != null)
+                      ListTile(
+                        leading: Icon(Icons.update, color: Theme.of(context).colorScheme.primary),
+                        title: Text("${S.of(context).account_currency} ${S.of(context).core_lastUpdate}"),
+                        subtitle: Text(investment.forex!.toStringComparison()),
+                        trailing: Text(DateFormat.yMMMd().add_jm().format(investment.forex!.timestamp.toLocal())),
+                      ),
                   ],
                   if (investment.withdrawalRule != null) ...[
                     SizedBox(height: UIConstants.spacingMd),

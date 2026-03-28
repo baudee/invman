@@ -6,7 +6,7 @@ import 'package:invman_flutter/features/account/account.dart';
 import 'package:invman_flutter/features/app_settings/app_settings.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/onboarding/onboarding.dart';
-import 'package:invman_flutter/features/stock/stock.dart';
+import 'package:invman_flutter/features/asset/asset.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 
 import 'containers/containers.dart';
@@ -18,7 +18,7 @@ GoRouter get router => getIt<GoRouter>();
 abstract class RouterModule {
   @singleton
   GoRouter router(AuthManager authManager) {
-    final initialRoute = StockRootScreen.route();
+    final initialRoute = AssetRootScreen.route();
     String destination = initialRoute;
 
     return GoRouter(
@@ -30,7 +30,7 @@ abstract class RouterModule {
         GoRoute(path: SignInScreen.route(), builder: (_, _) => SignInScreen()),
         ...OnboardingRoutes.routes,
         StatefulShellRoute.indexedStack(
-          branches: [StockRoutes.branch, InvestmentRoutes.branch, AccountRoutes.branch],
+          branches: [AssetRoutes.branch, InvestmentRoutes.branch, AccountRoutes.branch],
           builder: (context, state, navigationShell) {
             return AppContainer(navigationShell: navigationShell);
           },

@@ -5,7 +5,7 @@ import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/core/components/components.dart';
 import 'package:invman_flutter/core/utils/utils.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
-import 'package:invman_flutter/features/stock/stock.dart';
+import 'package:invman_flutter/features/asset/asset.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
@@ -16,7 +16,7 @@ class InvestmentFormComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final investment = controller.state.watch(context).requireValue;
-    final shouldNotPopAfterSave = controller.id == 0 && investment.stockId != UuidValue.fromString(Namespace.nil.value);
+    final shouldNotPopAfterSave = controller.id == 0 && investment.assetId != UuidValue.fromString(Namespace.nil.value);
     return Form(
       key: controller.formKey,
       child: Column(
@@ -35,9 +35,9 @@ class InvestmentFormComponent extends StatelessWidget {
             onRuleSelected: controller.setWithdrawalRule,
           ),
           SizedBox(height: UIConstants.spacingXs),
-          SectionHeaderComponent(title: S.of(context).stock_selection),
+          SectionHeaderComponent(title: S.of(context).asset_selection),
           SizedBox(height: UIConstants.spacingXs),
-          StockSelectTileComponent(stock: investment.stock, onStockSelected: controller.setStock),
+          AssetSelectTileComponent(asset: investment.asset, onAssetSelected: controller.setAsset),
           Spacer(),
           SaveButton(
             onPressed: () async {
@@ -45,7 +45,7 @@ class InvestmentFormComponent extends StatelessWidget {
               if (success) {
                 final id = controller.state.value.requireValue.id!;
                 if (shouldNotPopAfterSave) {
-                  // From Stock detail page
+                  // From Asset detail page
                   router.pushReplacement(InvestmentDetailScreen.route(id));
                 } else {
                   // From Investment list page

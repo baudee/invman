@@ -1,0 +1,5 @@
+class: AssetValue
+fields:
+    value: double
+    timestamp: DateTime
+

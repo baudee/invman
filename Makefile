@@ -41,6 +41,9 @@ server/populate:
 	cd $(PROJECT_NAME)_server && dart scripts/populate/populate.dart $(env)
 
 # Flutter app
+app/clean:
+	cd $(PROJECT_NAME)_flutter && flutter clean
+
 app/build:
 	cd $(PROJECT_NAME)_flutter && flutter pub get
 	cd $(PROJECT_NAME)_flutter && dart run build_runner build --delete-conflicting-outputs

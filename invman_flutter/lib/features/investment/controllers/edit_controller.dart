@@ -49,9 +49,9 @@ class InvestmentEditController extends Disposable {
     }
   }
 
-  void setStock(Stock stock) {
+  void setAsset(Asset asset) {
     if (_state.value case AsyncData(value: final investment)) {
-      _state.value = AsyncState.data(investment.copyWith(stock: stock, stockId: stock.id));
+      _state.value = AsyncState.data(investment.copyWith(asset: asset, assetId: asset.id));
     }
   }
 
@@ -61,8 +61,8 @@ class InvestmentEditController extends Disposable {
         return (false, S.current.error_fixToContinue);
       }
 
-      if (investment.stockId == UuidValue.fromString(Namespace.nil.value)) {
-        return (false, S.current.error_selectStock);
+      if (investment.assetId == UuidValue.fromString(Namespace.nil.value)) {
+        return (false, S.current.error_selectAsset);
       }
 
       investment = investment.copyWith(name: nameController.text);

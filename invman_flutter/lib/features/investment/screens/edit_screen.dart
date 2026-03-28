@@ -8,8 +8,8 @@ import 'package:invman_flutter/features/investment/investment.dart';
 
 class InvestmentEditScreen extends HookWidget {
   final int id;
-  final Stock? stock;
-  const InvestmentEditScreen({super.key, required this.id, this.stock});
+  final Asset? asset;
+  const InvestmentEditScreen({super.key, required this.id, this.asset});
 
   static const pathSegment = 'edit';
   static String route(int id) => '${InvestmentRootScreen.pathSegment}/$id/$pathSegment';
@@ -17,8 +17,8 @@ class InvestmentEditScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final controller = useController(() => getIt<InvestmentEditController>(param1: id), [id]);
-    if (stock != null) {
-      controller.setStock(stock!);
+    if (asset != null) {
+      controller.setAsset(asset!);
     }
     return BaseScreen(
       appBar: AppBar(title: Text(id == 0 ? S.of(context).investment_create : S.of(context).investment_edit)),

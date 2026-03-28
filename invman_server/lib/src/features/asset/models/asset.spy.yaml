@@ -1,0 +1,23 @@
+class: Asset
+
+table: asset
+
+fields:
+  id: UuidValue, defaultModel=random,
+  symbol: String,
+  name: String,
+  exchange: String?,
+  type: AssetType,
+  logoUrl: String?,
+  currency: Currency?, relation
+  likes: List<AssetLike>?, relation(name=asset_likes)
+  investments: List<Investment>?, relation(name=asset_investments)
+  price: double?, !persist
+  timestamp: DateTime?, !persist
+
+indexes:
+  asset_symbol_exchange_idx:
+    fields: symbol, exchange
+    unique: true
+  asset_name_idx:
+    fields: name

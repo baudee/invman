@@ -1,0 +1,7 @@
+class: Forex
+
+fields:
+  fromCurrency: String
+  toCurrency: String
+  rate: double
+  timestamp: DateTime

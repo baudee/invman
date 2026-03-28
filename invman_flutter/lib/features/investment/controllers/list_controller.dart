@@ -13,8 +13,8 @@ class InvestmentListController extends PaginationController<Investment> {
 
   InvestmentListController(this._repository) : super(fireImmediately: false) {
     _repository.invalidation.subscribe((_) {
-      print('Investment invalidation listened in controller');
-      loadTotal().then((_) => refresh());
+      loadTotal();
+      refresh();
     });
   }
 

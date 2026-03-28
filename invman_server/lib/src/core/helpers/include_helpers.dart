@@ -18,17 +18,17 @@ class IncludeHelpers {
   // Investment
   static InvestmentInclude investmentInclude() {
     return Investment.include(
-      stock: stockInclude(),
+      asset: assetInclude(),
       withdrawalRule: withdrawalInclude(),
     );
   }
 
-  // Stock
-  static StockInclude stockInclude({UuidValue? userId}) {
-    return Stock.include(
+  // Asset
+  static AssetInclude assetInclude({UuidValue? userId}) {
+    return Asset.include(
       currency: Currency.include(),
       likes: userId != null
-          ? StockLike.includeList(
+          ? AssetLike.includeList(
               where: (t) => t.userId.equals(userId),
             )
           : null,

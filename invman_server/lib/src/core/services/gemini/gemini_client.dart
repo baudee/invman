@@ -30,7 +30,7 @@ class GeminiClient {
     final response = await ApiClientService.post(
       url: _baseUrl,
       path: '/v1beta/models/$_model:generateContent',
-      queryParameters: {'key': _env.geminiApiKey},
+      queryParameters: {'key': 'key'},
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(body),
     );
