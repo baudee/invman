@@ -34,34 +34,43 @@ class CurrencyService {
 
   Future<Forex> change(
     Session session, {
-    required int? fromId,
-    required int? toId,
+    required String fromCode,
+    required String toCode,
   }) async {
-    if (fromId == null && toId == null) {
-      throw ServerException(errorCode: ErrorCode.badRequest);
-    }
+    final fromCurrencyDollarValue = await _getCachedDollarValue(session, code: fromCode);
+    final toCurrencyDollarValue = await _getCachedDollarValue(session, code: toCode);
 
-    final fromCurrency = await retrieve(session, fromId!);
-    final toCurrency = await retrieve(session, toId!);
+    return _getForexFromAssetValues(fromCurrencyDollarValue, toCurrencyDollarValue, fromCode, toCode);
+  }
 
-    final fromCurrencyDollarValue = await _getCachedDollarValue(session, code: fromCurrency.code);
-    final toCurrencyDollarValue = await _getCachedDollarValue(session, code: toCurrency.code);
+  Future<Forex> changeEod(
+    Session session, {
+    required String fromCode,
+    required String toCode,
+    required DateTime date,
+  }) async {
+    final fromCurrencyDollarValue = await _getCachedEodDollarValue(session, code: fromCode, date: date);
+    final toCurrencyDollarValue = await _getCachedEodDollarValue(session, code: toCode, date: date);
 
-    if (toCurrencyDollarValue.value == 0) {
+    return _getForexFromAssetValues(fromCurrencyDollarValue, toCurrencyDollarValue, fromCode, toCode);
+  }
+
+  Forex _getForexFromAssetValues(AssetValue fromAssetValue, AssetValue toAssetValue, String fromCode, String toCode) {
+    if (fromAssetValue.value == 0) {
       throw ServerException(errorCode: ErrorCode.unknown);
     }
 
     final DateTime forexTimestamp;
-    if (toCurrency.code == "USD") {
-      forexTimestamp = fromCurrencyDollarValue.timestamp;
+    if (toCode == "USD") {
+      forexTimestamp = fromAssetValue.timestamp;
     } else {
-      forexTimestamp = toCurrencyDollarValue.timestamp;
+      forexTimestamp = toAssetValue.timestamp;
     }
 
     return Forex(
-      fromCurrency: fromCurrency.code,
-      toCurrency: toCurrency.code,
-      rate: toCurrencyDollarValue.value / fromCurrencyDollarValue.value,
+      fromCurrency: fromCode,
+      toCurrency: toCode,
+      rate: toAssetValue.value / fromAssetValue.value,
       timestamp: forexTimestamp,
     );
   }
@@ -71,6 +80,16 @@ class CurrencyService {
     if (dollarValue == null) {
       dollarValue = await forexValuesSource.getDollarValue(code: code);
       await session.caches.local.put(code, dollarValue, lifetime: Duration(seconds: 30));
+    }
+    return dollarValue;
+  }
+
+  Future<AssetValue> _getCachedEodDollarValue(Session session, {required String code, required DateTime date}) async {
+    final cacheKey = "$code-${date.year}-${date.month}-${date.day}";
+    AssetValue? dollarValue = await session.caches.local.get(cacheKey);
+    if (dollarValue == null) {
+      dollarValue = await forexValuesSource.getDollarValue(code: code);
+      await session.caches.local.put(cacheKey, dollarValue, lifetime: Duration(days: 1));
     }
     return dollarValue;
   }

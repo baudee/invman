@@ -32,11 +32,15 @@ import 'package:invman_client/src/protocol/features/currency/models/currency.dar
     as _i11;
 import 'package:invman_client/src/protocol/features/investment/models/investment.dart'
     as _i12;
-import 'package:invman_client/src/protocol/features/transfer/models/transfer.dart'
+import 'package:invman_client/src/protocol/features/investment/models/return.dart'
     as _i13;
-import 'package:invman_client/src/protocol/features/withdrawal/models/withdrawal_rule.dart'
+import 'package:invman_client/src/protocol/features/investment/models/return_interval.dart'
     as _i14;
-import 'protocol.dart' as _i15;
+import 'package:invman_client/src/protocol/features/transfer/models/transfer.dart'
+    as _i15;
+import 'package:invman_client/src/protocol/features/withdrawal/models/withdrawal_rule.dart'
+    as _i16;
+import 'protocol.dart' as _i17;
 
 /// {@category Endpoint}
 class EndpointAccount extends _i1.EndpointRef {
@@ -411,6 +415,18 @@ class EndpointInvestment extends _i1.EndpointRef {
         'total',
         {},
       );
+
+  _i2.Future<List<_i13.InvestmentReturn>> returns(
+    int id, {
+    required _i14.InvestmentReturnInterval interval,
+  }) => caller.callServerEndpoint<List<_i13.InvestmentReturn>>(
+    'investment',
+    'returns',
+    {
+      'id': id,
+      'interval': interval,
+    },
+  );
 }
 
 /// {@category Endpoint}
@@ -420,32 +436,32 @@ class EndpointTransfer extends _i1.EndpointRef {
   @override
   String get name => 'transfer';
 
-  _i2.Future<_i13.Transfer> retrieve(int id) =>
-      caller.callServerEndpoint<_i13.Transfer>(
+  _i2.Future<_i15.Transfer> retrieve(int id) =>
+      caller.callServerEndpoint<_i15.Transfer>(
         'transfer',
         'retrieve',
         {'id': id},
       );
 
-  _i2.Future<_i13.Transfer> save(_i13.Transfer transfer) =>
-      caller.callServerEndpoint<_i13.Transfer>(
+  _i2.Future<_i15.Transfer> save(_i15.Transfer transfer) =>
+      caller.callServerEndpoint<_i15.Transfer>(
         'transfer',
         'save',
         {'transfer': transfer},
       );
 
-  _i2.Future<_i13.Transfer> delete(int id) =>
-      caller.callServerEndpoint<_i13.Transfer>(
+  _i2.Future<_i15.Transfer> delete(int id) =>
+      caller.callServerEndpoint<_i15.Transfer>(
         'transfer',
         'delete',
         {'id': id},
       );
 
-  _i2.Future<List<_i13.Transfer>> list(
+  _i2.Future<List<_i15.Transfer>> list(
     int investmentId, {
     required int limit,
     required int page,
-  }) => caller.callServerEndpoint<List<_i13.Transfer>>(
+  }) => caller.callServerEndpoint<List<_i15.Transfer>>(
     'transfer',
     'list',
     {
@@ -463,10 +479,10 @@ class EndpointWithdrawalRule extends _i1.EndpointRef {
   @override
   String get name => 'withdrawalRule';
 
-  _i2.Future<List<_i14.WithdrawalRule>> list({
+  _i2.Future<List<_i16.WithdrawalRule>> list({
     required int limit,
     required int page,
-  }) => caller.callServerEndpoint<List<_i14.WithdrawalRule>>(
+  }) => caller.callServerEndpoint<List<_i16.WithdrawalRule>>(
     'withdrawalRule',
     'list',
     {
@@ -475,22 +491,22 @@ class EndpointWithdrawalRule extends _i1.EndpointRef {
     },
   );
 
-  _i2.Future<_i14.WithdrawalRule> retrieve(int id) =>
-      caller.callServerEndpoint<_i14.WithdrawalRule>(
+  _i2.Future<_i16.WithdrawalRule> retrieve(int id) =>
+      caller.callServerEndpoint<_i16.WithdrawalRule>(
         'withdrawalRule',
         'retrieve',
         {'id': id},
       );
 
-  _i2.Future<_i14.WithdrawalRule> save(_i14.WithdrawalRule transfer) =>
-      caller.callServerEndpoint<_i14.WithdrawalRule>(
+  _i2.Future<_i16.WithdrawalRule> save(_i16.WithdrawalRule transfer) =>
+      caller.callServerEndpoint<_i16.WithdrawalRule>(
         'withdrawalRule',
         'save',
         {'transfer': transfer},
       );
 
-  _i2.Future<_i14.WithdrawalRule> delete(int id) =>
-      caller.callServerEndpoint<_i14.WithdrawalRule>(
+  _i2.Future<_i16.WithdrawalRule> delete(int id) =>
+      caller.callServerEndpoint<_i16.WithdrawalRule>(
         'withdrawalRule',
         'delete',
         {'id': id},
@@ -528,7 +544,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i15.Protocol(),
+         _i17.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,

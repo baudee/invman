@@ -9,7 +9,7 @@ class TransferListController extends PaginationController<Transfer> {
   final int investmentId;
   final TransferRepository _repository;
 
-  TransferListController(@factoryParam this.investmentId, this._repository) : super() {
+  TransferListController(@factoryParam this.investmentId, this._repository) : super(fireImmediately: false) {
     _repository.invalidation.subscribe((_) => refresh());
   }
 

@@ -15,6 +15,10 @@ class UserPreferencesManager {
   ReadonlySignal<ThemeMode> get theme => _theme;
   late final FlutterSignal<AssetTimeHorizon> _assetTimeHorizon = signal<AssetTimeHorizon>(AssetTimeHorizon.oneDay);
   ReadonlySignal<AssetTimeHorizon> get assetTimeHorizon => _assetTimeHorizon;
+  late final FlutterSignal<InvestmentReturnInterval> _investmentReturnInterval = signal<InvestmentReturnInterval>(
+    InvestmentReturnInterval.monthly,
+  );
+  ReadonlySignal<InvestmentReturnInterval> get investmentReturnInterval => _investmentReturnInterval;
 
   UserPreferencesManager({required UserPreferencesRepository repository}) : _repository = repository {
     initializeDateFormatting(_locale.value.toLanguageTag(), null);
@@ -39,5 +43,9 @@ class UserPreferencesManager {
 
   void setAssetTimeHorizon(AssetTimeHorizon timeHorizon) {
     _assetTimeHorizon.value = timeHorizon;
+  }
+
+  void setInvestmentReturnInterval(InvestmentReturnInterval interval) {
+    _investmentReturnInterval.value = interval;
   }
 }

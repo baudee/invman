@@ -12,10 +12,12 @@ import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 class InvestmentDetailComponent extends StatelessWidget {
   final InvestmentDetailController controller;
   final AuthManager authManager;
+  final UserPreferencesManager preferencesManager;
   const InvestmentDetailComponent({
     super.key,
     required this.controller,
     required this.authManager,
+    required this.preferencesManager,
   });
 
   static const double headerHeight = 260.0;
@@ -33,6 +35,7 @@ class InvestmentDetailComponent extends StatelessWidget {
               child: Column(
                 spacing: UIConstants.spacingXs,
                 children: [
+                  InvestmentReturnsGraphComponent(controller: controller, preferencesManager: preferencesManager),
                   const SizedBox(height: UIConstants.spacingSm),
                   if (investment.asset != null) ...[
                     SectionHeaderComponent(title: S.of(context).asset),

@@ -1,0 +1,5 @@
+enum: InvestmentReturnInterval
+serialized: byName
+values:
+  - yearly
+  - monthly

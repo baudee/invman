@@ -28,6 +28,7 @@ investment:
   - delete:
   - retrieve:
   - total:
+  - returns:
 transfer:
   - retrieve:
   - save:

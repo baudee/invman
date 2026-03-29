@@ -32,10 +32,14 @@ import 'package:invman_server/src/generated/features/currency/models/currency.da
     as _i11;
 import 'package:invman_server/src/generated/features/investment/models/investment.dart'
     as _i12;
-import 'package:invman_server/src/generated/features/transfer/models/transfer.dart'
+import 'package:invman_server/src/generated/features/investment/models/return.dart'
     as _i13;
-import 'package:invman_server/src/generated/features/withdrawal/models/withdrawal_rule.dart'
+import 'package:invman_server/src/generated/features/investment/models/return_interval.dart'
     as _i14;
+import 'package:invman_server/src/generated/features/transfer/models/transfer.dart'
+    as _i15;
+import 'package:invman_server/src/generated/features/withdrawal/models/withdrawal_rule.dart'
+    as _i16;
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:invman_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -1021,6 +1025,41 @@ class _InvestmentEndpoint {
       }
     });
   }
+
+  _i3.Future<List<_i13.InvestmentReturn>> returns(
+    _i1.TestSessionBuilder sessionBuilder,
+    int id, {
+    required _i14.InvestmentReturnInterval interval,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'investment',
+            method: 'returns',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'investment',
+          methodName: 'returns',
+          parameters: _i1.testObjectToJson({
+            'id': id,
+            'interval': interval,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<List<_i13.InvestmentReturn>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
 }
 
 class _TransferEndpoint {
@@ -1033,7 +1072,7 @@ class _TransferEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i13.Transfer> retrieve(
+  _i3.Future<_i15.Transfer> retrieve(
     _i1.TestSessionBuilder sessionBuilder,
     int id,
   ) async {
@@ -1056,7 +1095,7 @@ class _TransferEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i13.Transfer>);
+                as _i3.Future<_i15.Transfer>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1064,9 +1103,9 @@ class _TransferEndpoint {
     });
   }
 
-  _i3.Future<_i13.Transfer> save(
+  _i3.Future<_i15.Transfer> save(
     _i1.TestSessionBuilder sessionBuilder,
-    _i13.Transfer transfer,
+    _i15.Transfer transfer,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1087,7 +1126,7 @@ class _TransferEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i13.Transfer>);
+                as _i3.Future<_i15.Transfer>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1095,7 +1134,7 @@ class _TransferEndpoint {
     });
   }
 
-  _i3.Future<_i13.Transfer> delete(
+  _i3.Future<_i15.Transfer> delete(
     _i1.TestSessionBuilder sessionBuilder,
     int id,
   ) async {
@@ -1118,7 +1157,7 @@ class _TransferEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i13.Transfer>);
+                as _i3.Future<_i15.Transfer>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1126,7 +1165,7 @@ class _TransferEndpoint {
     });
   }
 
-  _i3.Future<List<_i13.Transfer>> list(
+  _i3.Future<List<_i15.Transfer>> list(
     _i1.TestSessionBuilder sessionBuilder,
     int investmentId, {
     required int limit,
@@ -1155,7 +1194,7 @@ class _TransferEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<List<_i13.Transfer>>);
+                as _i3.Future<List<_i15.Transfer>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1174,7 +1213,7 @@ class _WithdrawalRuleEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<List<_i14.WithdrawalRule>> list(
+  _i3.Future<List<_i16.WithdrawalRule>> list(
     _i1.TestSessionBuilder sessionBuilder, {
     required int limit,
     required int page,
@@ -1201,7 +1240,7 @@ class _WithdrawalRuleEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<List<_i14.WithdrawalRule>>);
+                as _i3.Future<List<_i16.WithdrawalRule>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1209,7 +1248,7 @@ class _WithdrawalRuleEndpoint {
     });
   }
 
-  _i3.Future<_i14.WithdrawalRule> retrieve(
+  _i3.Future<_i16.WithdrawalRule> retrieve(
     _i1.TestSessionBuilder sessionBuilder,
     int id,
   ) async {
@@ -1232,7 +1271,7 @@ class _WithdrawalRuleEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i14.WithdrawalRule>);
+                as _i3.Future<_i16.WithdrawalRule>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1240,9 +1279,9 @@ class _WithdrawalRuleEndpoint {
     });
   }
 
-  _i3.Future<_i14.WithdrawalRule> save(
+  _i3.Future<_i16.WithdrawalRule> save(
     _i1.TestSessionBuilder sessionBuilder,
-    _i14.WithdrawalRule transfer,
+    _i16.WithdrawalRule transfer,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1263,7 +1302,7 @@ class _WithdrawalRuleEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i14.WithdrawalRule>);
+                as _i3.Future<_i16.WithdrawalRule>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1271,7 +1310,7 @@ class _WithdrawalRuleEndpoint {
     });
   }
 
-  _i3.Future<_i14.WithdrawalRule> delete(
+  _i3.Future<_i16.WithdrawalRule> delete(
     _i1.TestSessionBuilder sessionBuilder,
     int id,
   ) async {
@@ -1294,7 +1333,7 @@ class _WithdrawalRuleEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i14.WithdrawalRule>);
+                as _i3.Future<_i16.WithdrawalRule>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

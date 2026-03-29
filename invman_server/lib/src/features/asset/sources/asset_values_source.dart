@@ -6,13 +6,15 @@ import 'package:invman_server/src/generated/protocol.dart';
 abstract class AssetValuesSource {
   Future<AssetValue> getCurrentValue({required Asset asset});
   Future<List<AssetValue>> getValues({required Asset asset, required AssetTimeHorizon timeHorizon});
+  Future<AssetValue> getEodValue({required Asset asset, required DateTime date});
 }
 
 @LazySingleton(as: AssetValuesSource)
 class AssetValuesSourceImpl implements AssetValuesSource {
   final Env _env;
   final String url = "api.twelvedata.com";
-  final String path = "time_series";
+  final String timeSeriePath = "time_series";
+  final String eodPath = "eod";
 
   AssetValuesSourceImpl(this._env);
 
@@ -32,7 +34,7 @@ class AssetValuesSourceImpl implements AssetValuesSource {
 
     final result = await ApiClientService.get(
       url: url,
-      path: path,
+      path: timeSeriePath,
       queryParameters: queryParameters,
     );
 
@@ -67,15 +69,41 @@ class AssetValuesSourceImpl implements AssetValuesSource {
 
     final result = await ApiClientService.get(
       url: url,
-      path: path,
+      path: timeSeriePath,
       queryParameters: queryParameters,
     );
+
+    if (result['status'] == "error") {
+      return [];
+    }
 
     final twelveDataTimeSeries = TwelveDataTimeSeries.fromJson(result);
     return twelveDataTimeSeries.values
         .map((e) => AssetValue(value: double.parse(e.close), timestamp: DateTime.parse(e.datetime)))
         .where((e) => e.timestamp.isAfter(DateTime(1971)))
         .toList();
+  }
+
+  @override
+  Future<AssetValue> getEodValue({required Asset asset, required DateTime date}) async {
+    Map<String, String> queryParameters = {
+      "symbol": asset.symbol,
+      "apikey": _env.twelveDataApiKey,
+      "timezone": "UTC",
+      "date": date.toString(),
+    };
+
+    if (asset.exchange != null) {
+      queryParameters["exchange"] = asset.exchange!;
+    }
+
+    final result = await ApiClientService.get(
+      url: url,
+      path: eodPath,
+      queryParameters: queryParameters,
+    );
+
+    return AssetValue(value: double.parse(result['close']), timestamp: DateTime.parse(result['datetime']));
   }
 
   String _getStartDateFromTimeHorizon(AssetTimeHorizon timeHorizon) {

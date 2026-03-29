@@ -16,6 +16,7 @@ class InvestmentDetailScreen extends HookWidget {
   Widget build(BuildContext context) {
     final controller = useController(() => getIt<InvestmentDetailController>(param1: id), [id]);
     final authManager = getIt<AuthManager>();
+    final preferencesManager = getIt<UserPreferencesManager>();
     return BaseScreen(
       appBar: BaseStateAppbar(
         state: controller.state,
@@ -39,7 +40,11 @@ class InvestmentDetailScreen extends HookWidget {
       body: BaseStateComponent(
         state: controller.state,
         onReload: controller.reload,
-        successBuilder: (_) => InvestmentDetailComponent(controller: controller, authManager: authManager),
+        successBuilder: (_) => InvestmentDetailComponent(
+          controller: controller,
+          authManager: authManager,
+          preferencesManager: preferencesManager,
+        ),
       ),
       usePadding: false,
       extendBodyBehindAppBar: true,

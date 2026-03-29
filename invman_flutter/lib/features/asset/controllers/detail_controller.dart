@@ -60,6 +60,12 @@ class AssetDetailController extends DetailController<UuidValue, Asset> {
   }
 
   @override
+  Future<void> reload() async {
+    super.reload();
+    _timeSeriesList.clear();
+  }
+
+  @override
   void onDispose() {
     super.onDispose();
     _timeSeriesList.forEach((_, signal) => signal.dispose());

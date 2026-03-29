@@ -5,13 +5,15 @@ import 'package:invman_server/src/generated/protocol.dart';
 
 abstract class ForexValuesSource {
   Future<AssetValue> getDollarValue({required String code});
+  Future<AssetValue> getEodDollarValue({required String code, required DateTime date});
 }
 
 @LazySingleton(as: ForexValuesSource)
 class ForexValuesSourceImpl implements ForexValuesSource {
   final Env _env;
   final String url = "api.twelvedata.com";
-  final String path = "time_series";
+  final String timeSeriesPath = "time_series";
+  final String eodPath = "eod";
 
   ForexValuesSourceImpl(this._env);
 
@@ -28,7 +30,7 @@ class ForexValuesSourceImpl implements ForexValuesSource {
 
     final result = await ApiClientService.get(
       url: url,
-      path: path,
+      path: timeSeriesPath,
       queryParameters: {
         "symbol": "USD/$requestCode",
         "interval": "1min",
@@ -51,5 +53,35 @@ class ForexValuesSourceImpl implements ForexValuesSource {
     }
 
     return AssetValue(value: value, timestamp: DateTime.parse(data.datetime));
+  }
+
+  @override
+  Future<AssetValue> getEodDollarValue({required String code, required DateTime date}) async {
+    if (code == "USD") {
+      return AssetValue(value: 1, timestamp: date);
+    }
+
+    String requestCode = code;
+    if (code == "ILA") {
+      requestCode = "ILS";
+    }
+
+    final result = await ApiClientService.get(
+      url: url,
+      path: eodPath,
+      queryParameters: {
+        "symbol": "USD/$requestCode",
+        "apikey": _env.twelveDataApiKey,
+        "timezone": "UTC",
+        "date": date.toString(),
+      },
+    );
+
+    double value = double.parse(result['close']);
+    if (code == "ILA") {
+      value *= 100;
+    }
+
+    return AssetValue(value: value, timestamp: DateTime.parse(result['datetime']));
   }
 }

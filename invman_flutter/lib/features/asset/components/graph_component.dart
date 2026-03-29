@@ -60,6 +60,9 @@ class _AssetGraphComponentState extends State<AssetGraphComponent> with TickerPr
                   (e) => Builder(
                     builder: (context) {
                       final timeSeries = widget.controller.getTimeseriesFromTimeHorizon(e);
+                      if (timeSeries.watch(context).isEmpty) {
+                        return Center(child: Text(S.of(context).asset_no_data));
+                      }
                       return LineChart(_getLineChartData(timeSeries.watch(context)));
                     },
                   ),
@@ -196,7 +199,9 @@ class _InfoPanel extends StatelessWidget {
                     const SizedBox(width: UIConstants.spacingMd),
                     Text(
                       _formatDate(point.timestamp.toLocal(), timeHorizon),
-                      style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                      ),
                     ),
                   ],
                 ),

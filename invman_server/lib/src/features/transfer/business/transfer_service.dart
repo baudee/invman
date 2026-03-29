@@ -43,7 +43,7 @@ class TransferService {
           );
         }
 
-        await investmentService.updateTotalTransfers(
+        await investmentService.refresh(
           session,
           savedTransfer.investmentId,
           transaction: transaction,
@@ -66,7 +66,7 @@ class TransferService {
           transfer,
           transaction: transaction,
         );
-        await investmentService.updateTotalTransfers(
+        await investmentService.refresh(
           session,
           transfer.investmentId,
           transaction: transaction,

@@ -28,14 +28,16 @@ import 'package:invman_server/src/generated/features/asset/models/asset_time_hor
     as _i13;
 import 'package:invman_server/src/generated/features/investment/models/investment.dart'
     as _i14;
-import 'package:invman_server/src/generated/features/transfer/models/transfer.dart'
+import 'package:invman_server/src/generated/features/investment/models/return_interval.dart'
     as _i15;
-import 'package:invman_server/src/generated/features/withdrawal/models/withdrawal_rule.dart'
+import 'package:invman_server/src/generated/features/transfer/models/transfer.dart'
     as _i16;
-import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
+import 'package:invman_server/src/generated/features/withdrawal/models/withdrawal_rule.dart'
     as _i17;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _i18;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+    as _i19;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -577,6 +579,31 @@ class Endpoints extends _i1.EndpointDispatch {
               ) async => (endpoints['investment'] as _i8.InvestmentEndpoint)
                   .total(session),
         ),
+        'returns': _i1.MethodConnector(
+          name: 'returns',
+          params: {
+            'id': _i1.ParameterDescription(
+              name: 'id',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'interval': _i1.ParameterDescription(
+              name: 'interval',
+              type: _i1.getType<_i15.InvestmentReturnInterval>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['investment'] as _i8.InvestmentEndpoint).returns(
+                    session,
+                    params['id'],
+                    interval: params['interval'],
+                  ),
+        ),
       },
     );
     connectors['transfer'] = _i1.EndpointConnector(
@@ -607,7 +634,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'transfer': _i1.ParameterDescription(
               name: 'transfer',
-              type: _i1.getType<_i15.Transfer>(),
+              type: _i1.getType<_i16.Transfer>(),
               nullable: false,
             ),
           },
@@ -725,7 +752,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'transfer': _i1.ParameterDescription(
               name: 'transfer',
-              type: _i1.getType<_i16.WithdrawalRule>(),
+              type: _i1.getType<_i17.WithdrawalRule>(),
               nullable: false,
             ),
           },
@@ -762,9 +789,9 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    modules['serverpod_auth_idp'] = _i17.Endpoints()
+    modules['serverpod_auth_idp'] = _i18.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i18.Endpoints()
+    modules['serverpod_auth_core'] = _i19.Endpoints()
       ..initializeEndpoints(server);
   }
 }

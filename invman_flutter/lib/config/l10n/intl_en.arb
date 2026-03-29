@@ -82,6 +82,7 @@
     "asset_time_horizon": "{type, select, oneDay{1d} oneWeek{1w} oneMonth{1m} oneYear{1y} all{All} other{{type}}}",
     "asset_see_details_graph": "Touch the graph to see details",
     "asset_exchange": "Exchange",
+    "asset_no_data": "No data available",
     "@TRANSFER---------------------------------------------------------------": {},
     "transfer_title": "Transfers",
     "transfer_selectInvestment": "Please select an investment",
@@ -129,5 +130,7 @@
     "investment_value": "Value",
     "investment_totalBalance": "Balance",
     "investment_totalGain": "Gain",
-    "investment_thisMonth": "this month"
+    "investment_thisMonth": "this month",
+    "investment_return_interval": "{type, select, yearly{Yearly} monthly{Monthly} other{{type}}}",
+    "investment_add_transfers": "Add transfers to see your performance"
 }

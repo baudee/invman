@@ -1,0 +1,7 @@
+class: InvestmentReturn
+fields:
+    percentage: double
+    gains: double
+    year: int
+    month: int
+
