@@ -3,6 +3,7 @@ fields:
     date: DateTime
     amountPerShare: double
     amount: double
+    investment: Investment
 
     
 

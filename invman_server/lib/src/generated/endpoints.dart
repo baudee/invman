@@ -494,6 +494,30 @@ class Endpoints extends _i1.EndpointDispatch {
       name: 'dividend',
       endpoint: endpoints['dividend']!,
       methodConnectors: {
+        'list': _i1.MethodConnector(
+          name: 'list',
+          params: {
+            'limit': _i1.ParameterDescription(
+              name: 'limit',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'page': _i1.ParameterDescription(
+              name: 'page',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['dividend'] as _i8.DividendEndpoint).list(
+                session,
+                limit: params['limit'],
+                page: params['page'],
+              ),
+        ),
         'calendar': _i1.MethodConnector(
           name: 'calendar',
           params: {},

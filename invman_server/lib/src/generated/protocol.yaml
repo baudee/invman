@@ -23,6 +23,7 @@ jwtRefresh:
 currency:
   - list:
 dividend:
+  - list:
   - calendar:
   - total:
 investment:

@@ -5,7 +5,7 @@ import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
 
 class DividendHeroCard extends StatelessWidget {
-  final List<InvestmentDividend> calendar;
+  final List<ComputedDividendValue> calendar;
   final String currency;
 
   const DividendHeroCard({super.key, required this.calendar, required this.currency});
@@ -138,14 +138,12 @@ class DividendHeroCard extends StatelessWidget {
     return colors[index % colors.length];
   }
 
-  static List<_Section> _buildSections(List<InvestmentDividend> items) {
-    return items
-        .map((inv) {
-          final total = inv.dividends.fold(0.0, (sum, d) => sum + d.amount);
-          return _Section(name: inv.investment.name, amount: total);
-        })
-        .where((s) => s.amount > 0)
-        .toList();
+  static List<_Section> _buildSections(List<ComputedDividendValue> items) {
+    final grouped = <String, double>{};
+    for (final entry in items) {
+      grouped[entry.investment.name] = (grouped[entry.investment.name] ?? 0) + entry.amount;
+    }
+    return grouped.entries.map((e) => _Section(name: e.key, amount: e.value)).where((s) => s.amount > 0).toList();
   }
 }
 

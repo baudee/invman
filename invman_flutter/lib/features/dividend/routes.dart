@@ -11,6 +11,12 @@ class DividendRoutes {
       GoRoute(
         path: DividendRootScreen.pathSegment,
         builder: (_, _) => const DividendRootScreen(),
+        routes: [
+          GoRoute(
+            path: DividendListScreen.pathSegment,
+            builder: (_, _) => const DividendListScreen(),
+          ),
+        ],
       ),
     ],
   );

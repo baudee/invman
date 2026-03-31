@@ -88,9 +88,7 @@ class DividendHistoryChart extends StatelessWidget {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 4),
                             child: Text(
-                              amount >= 1000
-                                  ? '${(amount / 1000).toStringAsFixed(1)}k'
-                                  : amount.toStringAsFixed(1),
+                              amount >= 1000 ? '${(amount / 1000).toStringAsFixed(1)}k' : amount.toStringAsFixed(1),
                               style: TextStyle(fontSize: 9, color: color, fontWeight: FontWeight.w600),
                             ),
                           );

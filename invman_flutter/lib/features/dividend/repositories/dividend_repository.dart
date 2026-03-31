@@ -9,11 +9,15 @@ class DividendRepository {
 
   DividendRepository(this.client);
 
-  Future<Either<String, List<InvestmentDividend>>> calendar() async {
+  Future<Either<String, List<ComputedDividendValue>>> calendar() async {
     return safeCall(() async => right(await client.dividend.calendar()));
   }
 
   Future<Either<String, List<TotalDividendYear>>> total(int fromYear, int toYear) async {
     return safeCall(() async => right(await client.dividend.total(fromYear, toYear)));
+  }
+
+  Future<Either<String, List<ComputedDividendValue>>> list({required int page, required int limit}) async {
+    return safeCall(() async => right(await client.dividend.list(page: page, limit: limit)));
   }
 }

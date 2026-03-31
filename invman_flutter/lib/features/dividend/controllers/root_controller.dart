@@ -10,7 +10,7 @@ class DividendController implements Disposable {
   final DividendRepository _repository;
   final TransferRepository _transferRepository;
 
-  final _calendar = asyncSignal<List<InvestmentDividend>>(AsyncState.loading());
+  final _calendar = asyncSignal<List<ComputedDividendValue>>(AsyncState.loading());
   final _history = asyncSignal<List<TotalDividendYear>>(AsyncState.loading());
   final _selectedCurrency = signal('');
   ReadonlySignal<String> get selectedCurrency => _selectedCurrency;
@@ -41,7 +41,7 @@ class DividendController implements Disposable {
     result.fold(
       (error) => _calendar.value = AsyncState.error(error),
       (data) {
-        final currencies = data.map((i) => i.investment.asset?.currency?.code ?? '?').toSet().toList()..sort();
+        final currencies = data.map((e) => e.investment.asset?.currency?.code ?? '?').toSet().toList()..sort();
         _selectedCurrency.value = currencies.isNotEmpty ? currencies.first : '';
         _calendar.value = AsyncState.data(data);
       },

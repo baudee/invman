@@ -11,18 +11,22 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
+import '../../../features/investment/models/investment.dart' as _i2;
+import 'package:invman_client/src/protocol/protocol.dart' as _i3;
 
 abstract class ComputedDividendValue implements _i1.SerializableModel {
   ComputedDividendValue._({
     required this.date,
     required this.amountPerShare,
     required this.amount,
+    required this.investment,
   });
 
   factory ComputedDividendValue({
     required DateTime date,
     required double amountPerShare,
     required double amount,
+    required _i2.Investment investment,
   }) = _ComputedDividendValueImpl;
 
   factory ComputedDividendValue.fromJson(
@@ -32,6 +36,9 @@ abstract class ComputedDividendValue implements _i1.SerializableModel {
       date: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['date']),
       amountPerShare: (jsonSerialization['amountPerShare'] as num).toDouble(),
       amount: (jsonSerialization['amount'] as num).toDouble(),
+      investment: _i3.Protocol().deserialize<_i2.Investment>(
+        jsonSerialization['investment'],
+      ),
     );
   }
 
@@ -41,6 +48,8 @@ abstract class ComputedDividendValue implements _i1.SerializableModel {
 
   double amount;
 
+  _i2.Investment investment;
+
   /// Returns a shallow copy of this [ComputedDividendValue]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -48,6 +57,7 @@ abstract class ComputedDividendValue implements _i1.SerializableModel {
     DateTime? date,
     double? amountPerShare,
     double? amount,
+    _i2.Investment? investment,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -56,6 +66,7 @@ abstract class ComputedDividendValue implements _i1.SerializableModel {
       'date': date.toJson(),
       'amountPerShare': amountPerShare,
       'amount': amount,
+      'investment': investment.toJson(),
     };
   }
 
@@ -70,10 +81,12 @@ class _ComputedDividendValueImpl extends ComputedDividendValue {
     required DateTime date,
     required double amountPerShare,
     required double amount,
+    required _i2.Investment investment,
   }) : super._(
          date: date,
          amountPerShare: amountPerShare,
          amount: amount,
+         investment: investment,
        );
 
   /// Returns a shallow copy of this [ComputedDividendValue]
@@ -84,11 +97,13 @@ class _ComputedDividendValueImpl extends ComputedDividendValue {
     DateTime? date,
     double? amountPerShare,
     double? amount,
+    _i2.Investment? investment,
   }) {
     return ComputedDividendValue(
       date: date ?? this.date,
       amountPerShare: amountPerShare ?? this.amountPerShare,
       amount: amount ?? this.amount,
+      investment: investment ?? this.investment.copyWith(),
     );
   }
 }

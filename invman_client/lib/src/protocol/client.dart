@@ -30,7 +30,7 @@ import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i10;
 import 'package:invman_client/src/protocol/features/currency/models/currency.dart'
     as _i11;
-import 'package:invman_client/src/protocol/features/dividend/models/investment_dividend.dart'
+import 'package:invman_client/src/protocol/features/dividend/models/computed_dividend_value.dart'
     as _i12;
 import 'package:invman_client/src/protocol/features/dividend/models/total_dividend_year.dart'
     as _i13;
@@ -380,8 +380,20 @@ class EndpointDividend extends _i1.EndpointRef {
   @override
   String get name => 'dividend';
 
-  _i2.Future<List<_i12.InvestmentDividend>> calendar() =>
-      caller.callServerEndpoint<List<_i12.InvestmentDividend>>(
+  _i2.Future<List<_i12.ComputedDividendValue>> list({
+    required int limit,
+    required int page,
+  }) => caller.callServerEndpoint<List<_i12.ComputedDividendValue>>(
+    'dividend',
+    'list',
+    {
+      'limit': limit,
+      'page': page,
+    },
+  );
+
+  _i2.Future<List<_i12.ComputedDividendValue>> calendar() =>
+      caller.callServerEndpoint<List<_i12.ComputedDividendValue>>(
         'dividend',
         'calendar',
         {},

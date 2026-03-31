@@ -6,7 +6,7 @@ import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
 
 class DividendMonthlyChart extends StatelessWidget {
-  final List<InvestmentDividend> calendar;
+  final List<ComputedDividendValue> calendar;
   final String currency;
 
   const DividendMonthlyChart({super.key, required this.calendar, required this.currency});
@@ -135,12 +135,10 @@ class DividendMonthlyChart extends StatelessWidget {
     );
   }
 
-  static Map<int, double> _buildMonthlyTotals(List<InvestmentDividend> items) {
+  static Map<int, double> _buildMonthlyTotals(List<ComputedDividendValue> items) {
     final result = <int, double>{};
-    for (final inv in items) {
-      for (final d in inv.dividends) {
-        result[d.date.month] = (result[d.date.month] ?? 0) + d.amount;
-      }
+    for (final entry in items) {
+      result[entry.date.month] = (result[entry.date.month] ?? 0) + entry.amount;
     }
     return result;
   }

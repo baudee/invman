@@ -5,7 +5,7 @@ import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/features/dividend/components/components.dart';
 
 class DividendNextPayments extends StatelessWidget {
-  final List<InvestmentDividend> calendar;
+  final List<ComputedDividendValue> calendar;
 
   const DividendNextPayments({super.key, required this.calendar});
 
@@ -14,12 +14,7 @@ class DividendNextPayments extends StatelessWidget {
     final theme = Theme.of(context);
     final now = DateTime.now();
 
-    final upcoming =
-        calendar
-            .expand((inv) => inv.dividends.map((d) => _PaymentEntry(investment: inv.investment, dividend: d)))
-            .where((e) => e.dividend.date.isAfter(now))
-            .toList()
-          ..sort((a, b) => a.dividend.date.compareTo(b.dividend.date));
+    final upcoming = calendar.where((e) => e.date.isAfter(now)).toList()..sort((a, b) => a.date.compareTo(b.date));
 
     final next3 = upcoming.take(3).toList();
 
@@ -34,14 +29,7 @@ class DividendNextPayments extends StatelessWidget {
 
     return Column(
       spacing: UIConstants.spacingXs,
-      children: next3.map((e) => DividendListTile(entry: e.dividend, investment: e.investment)).toList(),
+      children: next3.map((e) => DividendListTile(entry: e)).toList(),
     );
   }
-}
-
-class _PaymentEntry {
-  final Investment investment;
-  final ComputedDividendValue dividend;
-
-  const _PaymentEntry({required this.investment, required this.dividend});
 }

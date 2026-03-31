@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
@@ -18,16 +19,24 @@ class DividendRootScreen extends HookWidget {
     final controller = useController(() => getIt<DividendController>());
 
     return BaseScreen(
-      appBar: AppBar(title: Text(S.of(context).dividend_title)),
+      appBar: AppBar(
+        title: Text(S.of(context).dividend_title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.history),
+            onPressed: () => context.push(DividendListScreen.route()),
+          ),
+        ],
+      ),
       body: BaseStateComponent(
         state: controller.state,
         successBuilder: (data) {
-          final currencies = data.calendar.map((inv) => inv.investment.asset?.currency?.code ?? '?').toSet().toList()
+          final currencies = data.calendar.map((e) => e.investment.asset?.currency?.code ?? '?').toSet().toList()
             ..sort();
           final filteredCalendar = controller.selectedCurrency.value.isEmpty
-              ? <InvestmentDividend>[]
+              ? <ComputedDividendValue>[]
               : data.calendar
-                    .where((inv) => inv.investment.asset?.currency?.code == controller.selectedCurrency.value)
+                    .where((e) => e.investment.asset?.currency?.code == controller.selectedCurrency.value)
                     .toList();
           final filteredHistory = data.history.where((h) => h.currency == controller.selectedCurrency.value).toList();
           final hasData = data.calendar.isNotEmpty || data.history.isNotEmpty;

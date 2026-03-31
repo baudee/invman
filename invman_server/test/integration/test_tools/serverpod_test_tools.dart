@@ -30,7 +30,7 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i10;
 import 'package:invman_server/src/generated/features/currency/models/currency.dart'
     as _i11;
-import 'package:invman_server/src/generated/features/dividend/models/investment_dividend.dart'
+import 'package:invman_server/src/generated/features/dividend/models/computed_dividend_value.dart'
     as _i12;
 import 'package:invman_server/src/generated/features/dividend/models/total_dividend_year.dart'
     as _i13;
@@ -878,7 +878,42 @@ class _DividendEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<List<_i12.InvestmentDividend>> calendar(
+  _i3.Future<List<_i12.ComputedDividendValue>> list(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required int limit,
+    required int page,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'dividend',
+            method: 'list',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'dividend',
+          methodName: 'list',
+          parameters: _i1.testObjectToJson({
+            'limit': limit,
+            'page': page,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<List<_i12.ComputedDividendValue>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<List<_i12.ComputedDividendValue>> calendar(
     _i1.TestSessionBuilder sessionBuilder,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
@@ -900,7 +935,7 @@ class _DividendEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<List<_i12.InvestmentDividend>>);
+                as _i3.Future<List<_i12.ComputedDividendValue>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

@@ -39,7 +39,7 @@ import 'package:invman_client/src/protocol/features/asset/models/asset_value.dar
     as _i25;
 import 'package:invman_client/src/protocol/features/currency/models/currency.dart'
     as _i26;
-import 'package:invman_client/src/protocol/features/dividend/models/investment_dividend.dart'
+import 'package:invman_client/src/protocol/features/dividend/models/computed_dividend_value.dart'
     as _i27;
 import 'package:invman_client/src/protocol/features/dividend/models/total_dividend_year.dart'
     as _i28;
@@ -318,9 +318,9 @@ class Protocol extends _i1.SerializationManager {
       return (data as List).map((e) => deserialize<_i26.Currency>(e)).toList()
           as T;
     }
-    if (t == List<_i27.InvestmentDividend>) {
+    if (t == List<_i27.ComputedDividendValue>) {
       return (data as List)
-              .map((e) => deserialize<_i27.InvestmentDividend>(e))
+              .map((e) => deserialize<_i27.ComputedDividendValue>(e))
               .toList()
           as T;
     }

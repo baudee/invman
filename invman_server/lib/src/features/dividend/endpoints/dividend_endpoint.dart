@@ -15,7 +15,7 @@ class DividendEndpoint extends Endpoint with EndpointMiddleware {
     );
   }
 
-  Future<List<InvestmentDividend>> calendar(Session session) async {
+  Future<List<ComputedDividendValue>> calendar(Session session) async {
     return withMiddleware(
       session,
       () => getIt<DividendService>().calendar(session),

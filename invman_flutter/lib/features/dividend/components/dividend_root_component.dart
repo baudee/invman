@@ -8,7 +8,7 @@ import 'package:invman_flutter/features/dividend/components/dividend_monthly_cha
 import 'package:invman_flutter/features/dividend/components/dividend_next_payments.dart';
 
 class DividendRootComponent extends StatelessWidget {
-  final List<InvestmentDividend> calendar;
+  final List<ComputedDividendValue> calendar;
   final List<TotalDividendYear> history;
   final String selectedCurrency;
   final void Function(String) onSelectCurrency;

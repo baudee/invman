@@ -103,6 +103,7 @@ class DividendService {
             date: dividend.date,
             amountPerShare: dividend.amount,
             amount: quantityAtDividend * dividend.amount,
+            investment: investment,
           ),
         );
       }
@@ -114,7 +115,7 @@ class DividendService {
     return allDividends.skip(offset).take(limit).toList();
   }
 
-  Future<List<InvestmentDividend>> calendar(Session session) async {
+  Future<List<ComputedDividendValue>> calendar(Session session) async {
     final sessionUserId = (session.authenticated)!.authUserId;
 
     final investments = await Investment.db.find(
@@ -123,7 +124,7 @@ class DividendService {
       include: IncludeHelpers.investmentInclude(),
     );
 
-    final List<InvestmentDividend> result = [];
+    final List<ComputedDividendValue> result = [];
 
     for (final investment in investments) {
       if (investment.asset == null) continue;
@@ -134,23 +135,20 @@ class DividendService {
       final transfers = await transferService.listAll(session, investment.id!);
       if (transfers.isEmpty) continue;
 
-      final List<ComputedDividendValue> computedDividends = [];
-
       for (final dividend in dividends) {
         final quantityAtDividend = transfers
             .where((t) => t.createdAt.isBefore(dividend.date))
             .fold(0.0, (sum, t) => sum + t.quantity);
 
-        computedDividends.add(
+        result.add(
           ComputedDividendValue(
             date: dividend.date,
             amountPerShare: dividend.amount,
             amount: quantityAtDividend * dividend.amount,
+            investment: investment,
           ),
         );
       }
-
-      result.add(InvestmentDividend(investment: investment, dividends: computedDividends));
     }
 
     return result;
