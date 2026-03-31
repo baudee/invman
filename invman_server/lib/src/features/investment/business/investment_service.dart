@@ -261,6 +261,7 @@ class InvestmentService {
         final totalQuantity = group.fold(0.0, (sum, t) => sum + t.quantity);
 
         final assetValue = await assetsValuesSource.getEodValue(
+          session,
           asset: investment.asset!,
           date: calculationDate.add(const Duration(days: 1)),
         );

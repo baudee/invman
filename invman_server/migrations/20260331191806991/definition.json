@@ -259,6 +259,11 @@
               "__className__": "serverpod.IndexElementDefinition",
               "type": 0,
               "definition": "exchange"
+            },
+            {
+              "__className__": "serverpod.IndexElementDefinition",
+              "type": 0,
+              "definition": "type"
             }
           ],
           "type": "btree",
@@ -3983,7 +3988,7 @@
     {
       "__className__": "serverpod.DatabaseMigrationVersion",
       "module": "invman",
-      "version": "20260327163018634"
+      "version": "20260331191806991"
     },
     {
       "__className__": "serverpod.DatabaseMigrationVersion",

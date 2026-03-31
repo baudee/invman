@@ -7839,7 +7839,7 @@
     "exchange": "TASE",
     "logoUrl": null
   },
-    {
+  {
     "symbol": "ABFl",
     "name": "Associated British Foods plc",
     "currency": "GBX",
@@ -9630,5 +9630,12 @@
     "currency": "VEF",
     "exchange": "BVCC",
     "logoUrl": null
+  },
+  {
+    "symbol": "GRIN",
+    "name": "Grindrod Shipping Holdings Ltd",
+    "currency": "USD",
+    "exchange": "NASDAQ",
+    "logoUrl": "https://api.twelvedata.com/logo/grinshipping.com"
   }
 ]

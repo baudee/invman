@@ -17,7 +17,7 @@ fields:
 
 indexes:
   asset_symbol_exchange_idx:
-    fields: symbol, exchange
+    fields: symbol, exchange, type
     unique: true
   asset_name_idx:
     fields: name

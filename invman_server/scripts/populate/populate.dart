@@ -19,19 +19,24 @@ Future<void> main(List<String> args) async {
   final connection = await _connectToDatabase(passwords);
 
   try {
-    await _populateAppSettings(connection);
-    await _populateCurrencies(connection);
-    await _populateAssets(connection);
+    await connection.runTx((tx) async {
+      await _populateAppSettings(tx);
+      await _populateCurrencies(tx);
+      await _populateAssets(tx);
+    });
     print('Database population completed successfully.');
+  } catch (e) {
+    print('Error during population, all changes rolled back: $e');
+    exit(1);
   } finally {
     await connection.close();
   }
 }
 
-Future<void> _populateAppSettings(Connection connection) async {
+Future<void> _populateAppSettings(TxSession connection) async {
   await connection.execute('''
-    INSERT INTO app_settings ("maintenanceMode", "minVersion", "appStoreUrl", "playStoreUrl", "symbolsUpdatedAt")
-    VALUES (false, '1.0.0', NULL, NULL, '2026-03-18T00:00:00Z')
+    INSERT INTO app_settings ("maintenanceMode", "minVersion", "appStoreUrl", "playStoreUrl")
+    VALUES (false, '1.0.0', NULL, NULL)
   ''');
 }
 
@@ -106,7 +111,7 @@ Future<Connection> _connectToDatabase(
   return connection;
 }
 
-Future<void> _populateCurrencies(Connection connection) async {
+Future<void> _populateCurrencies(TxSession connection) async {
   print('Populating currencies...');
 
   final csvFile = File('scripts/populate/data/currencies.csv');
@@ -156,8 +161,8 @@ Future<void> _populateCurrencies(Connection connection) async {
   // Batch insert using unnest
   await connection.execute(
     Sql.named('''
-      INSERT INTO currency (code, "dollarValue", "timestamp", "updatedAt")
-      SELECT code, 1.0, NOW() - INTERVAL '1 day', NOW() - INTERVAL '1 day'
+      INSERT INTO currency (code)
+      SELECT code
       FROM unnest(@codes::text[]) AS code
     '''),
     parameters: {'codes': newCurrencies},
@@ -166,7 +171,7 @@ Future<void> _populateCurrencies(Connection connection) async {
   print('  Currencies: inserted ${newCurrencies.length}, skipped $skippedCount (already exist).');
 }
 
-Future<void> _populateAssets(Connection connection) async {
+Future<void> _populateAssets(TxSession connection) async {
   final currencyMap = await _loadCurrencyMap(connection);
 
   await _populateAssetFile(connection, currencyMap, 'stocks', AssetType.stock);
@@ -175,7 +180,7 @@ Future<void> _populateAssets(Connection connection) async {
   await _populateAssetFile(connection, currencyMap, 'commodities', AssetType.commodity);
 }
 
-Future<Map<String, int>> _loadCurrencyMap(Connection connection) async {
+Future<Map<String, int>> _loadCurrencyMap(TxSession connection) async {
   final result = await connection.execute(Sql.named('SELECT id, code FROM currency'));
 
   final map = <String, int>{};
@@ -191,7 +196,7 @@ String _makeKey(String symbol, String? exchange) {
 }
 
 Future<void> _populateAssetFile(
-  Connection connection,
+  TxSession connection,
   Map<String, int> currencyMap,
   String fileName,
   AssetType assetType,
@@ -240,7 +245,7 @@ Future<void> _populateAssetFile(
     final exchange = (item['exchange'] as String?)?.trim();
     final key = _makeKey(symbol, exchange);
 
-    if (existingKeys.contains(key)) {
+    if (AssetType.commodity != assetType && existingKeys.contains(key)) {
       skippedCount++;
       continue;
     }
@@ -277,14 +282,14 @@ Future<void> _populateAssetFile(
       INSERT INTO asset (id, symbol, "name", exchange, type, "logoUrl", "currencyId")
       SELECT gen_random_uuid(), symbol, name, exchange, @type, logo_url, currency_id
       FROM unnest(@symbols::text[], @names::text[], @exchanges::text[], @logoUrls::text[], @currencyIds::int[]) AS t(symbol, name, exchange, logo_url, currency_id)
-      ON CONFLICT (symbol, exchange) DO NOTHING
+      ON CONFLICT (symbol, exchange, type) DO NOTHING
     '''),
     parameters: {
-      'symbols': symbols,
-      'names': names,
-      'exchanges': exchanges,
+      'symbols': TypedValue(Type.textArray, symbols),
+      'names': TypedValue(Type.textArray, names),
+      'exchanges': TypedValue(Type.textArray, exchanges),
       'type': assetType.name,
-      'logoUrls': logoUrls,
+      'logoUrls': TypedValue(Type.textArray, logoUrls),
       'currencyIds': currencyIds,
     },
   );

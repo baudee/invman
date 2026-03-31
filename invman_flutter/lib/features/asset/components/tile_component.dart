@@ -18,7 +18,7 @@ class AssetTileComponent extends StatelessWidget {
       leading: AvatarComponent(asset: asset),
       title: Text(asset.name),
       subtitle: Text('${asset.symbol} - ${S.of(context).asset_type(asset.type.name)}'),
-      trailing: trailing ?? Text("${asset.price?.toStringAsFixed(2)} ${asset.currency?.code}"),
+      trailing: trailing ?? Text("${asset.currency?.code}"),
       onTap: onTap != null ? () => onTap!(asset) : null,
     );
   }

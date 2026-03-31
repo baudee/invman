@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:invman_client/invman_client.dart';
-import 'package:invman_flutter/core/utils/constants/constants.dart';
 
 class AvatarComponent extends StatelessWidget {
   final Asset asset;
@@ -15,23 +14,26 @@ class AvatarComponent extends StatelessWidget {
       style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.bold, fontSize: size / 3),
     );
 
+    final backgroundColor = theme.colorScheme.primary.withValues(alpha: 0.1);
+
     return SizedBox(
       width: size,
       height: size,
-      child: CircleAvatar(
-        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
-        child: Padding(
-          padding: const EdgeInsets.all(UIConstants.spacingSm),
-          child: asset.logoUrl != null
-              ? Image.network(
-                  asset.logoUrl!,
-                  errorBuilder: (context, error, stackTrace) {
-                    return noLogoText;
-                  },
-                )
-              : noLogoText,
-        ),
-      ),
+      child: asset.logoUrl != null
+          ? ClipOval(
+              child: Image.network(
+                asset.logoUrl!,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => CircleAvatar(
+                  backgroundColor: backgroundColor,
+                  child: noLogoText,
+                ),
+              ),
+            )
+          : CircleAvatar(
+              backgroundColor: backgroundColor,
+              child: noLogoText,
+            ),
     );
   }
 }

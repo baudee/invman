@@ -1,12 +1,13 @@
 import 'package:injectable/injectable.dart';
-import 'package:invman_server/src/core/services/services.dart';
+import 'package:invman_server/src/core/core.dart';
 import 'package:invman_server/src/env.dart';
 import 'package:invman_server/src/generated/protocol.dart';
+import 'package:serverpod/serverpod.dart';
 
 abstract class AssetValuesSource {
-  Future<AssetValue> getCurrentValue({required Asset asset});
+  Future<AssetValue> getCurrentValue(Session session, {required Asset asset});
   Future<List<AssetValue>> getValues({required Asset asset, required AssetTimeHorizon timeHorizon});
-  Future<AssetValue> getEodValue({required Asset asset, required DateTime date});
+  Future<AssetValue> getEodValue(Session session, {required Asset asset, required DateTime date});
 }
 
 @LazySingleton(as: AssetValuesSource)
@@ -19,33 +20,43 @@ class AssetValuesSourceImpl implements AssetValuesSource {
   AssetValuesSourceImpl(this._env);
 
   @override
-  Future<AssetValue> getCurrentValue({required Asset asset}) async {
-    Map<String, String> queryParameters = {
-      "symbol": asset.symbol,
-      "interval": "1min",
-      "outputsize": "1",
-      "apikey": _env.twelveDataApiKey,
-      "timezone": "UTC",
-    };
+  Future<AssetValue> getCurrentValue(Session session, {required Asset asset}) async {
+    AssetValue? currentValue = await session.caches.local.get(CacheKeys.assetCurrentValue(asset));
 
-    if (asset.exchange != null) {
-      queryParameters["exchange"] = asset.exchange!;
+    if (currentValue == null) {
+      Map<String, String> queryParameters = {
+        "symbol": asset.symbol,
+        "interval": "1min",
+        "outputsize": "1",
+        "apikey": _env.twelveDataApiKey,
+        "timezone": "UTC",
+      };
+
+      if (asset.exchange != null) {
+        queryParameters["exchange"] = asset.exchange!;
+      }
+
+      if (asset.type == AssetType.commodity) {
+        queryParameters["type"] = "Structured Product";
+      }
+
+      final result = await ApiClientService.get(
+        url: url,
+        path: timeSeriePath,
+        queryParameters: queryParameters,
+      );
+
+      final twelveDataTimeSeries = TwelveDataTimeSeries.fromJson(result);
+
+      if (twelveDataTimeSeries.values.isEmpty) {
+        throw ServerException(errorCode: ErrorCode.notFound);
+      }
+
+      final value = twelveDataTimeSeries.values.first;
+      currentValue = AssetValue(value: double.parse(value.close), timestamp: DateTime.parse(value.datetime));
+      await session.caches.local.put(CacheKeys.assetCurrentValue(asset), currentValue, lifetime: Duration(minutes: 1));
     }
-
-    final result = await ApiClientService.get(
-      url: url,
-      path: timeSeriePath,
-      queryParameters: queryParameters,
-    );
-
-    final twelveDataTimeSeries = TwelveDataTimeSeries.fromJson(result);
-
-    if (twelveDataTimeSeries.values.isEmpty) {
-      throw ServerException(errorCode: ErrorCode.notFound);
-    }
-
-    final value = twelveDataTimeSeries.values.first;
-    return AssetValue(value: double.parse(value.close), timestamp: DateTime.parse(value.datetime));
+    return currentValue;
   }
 
   @override
@@ -67,6 +78,10 @@ class AssetValuesSourceImpl implements AssetValuesSource {
       queryParameters["exchange"] = asset.exchange!;
     }
 
+    if (asset.type == AssetType.commodity) {
+      queryParameters["type"] = "Structured Product";
+    }
+
     final result = await ApiClientService.get(
       url: url,
       path: timeSeriePath,
@@ -85,7 +100,7 @@ class AssetValuesSourceImpl implements AssetValuesSource {
   }
 
   @override
-  Future<AssetValue> getEodValue({required Asset asset, required DateTime date}) async {
+  Future<AssetValue> getEodValue(Session session, {required Asset asset, required DateTime date}) async {
     Map<String, String> queryParameters = {
       "symbol": asset.symbol,
       "apikey": _env.twelveDataApiKey,
@@ -95,6 +110,10 @@ class AssetValuesSourceImpl implements AssetValuesSource {
 
     if (asset.exchange != null) {
       queryParameters["exchange"] = asset.exchange!;
+    }
+
+    if (asset.type == AssetType.commodity) {
+      queryParameters["type"] = "Structured Product";
     }
 
     final result = await ApiClientService.get(

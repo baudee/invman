@@ -319,6 +319,10 @@ class Protocol extends _i1.SerializationManagerServer {
               type: _i2.IndexElementDefinitionType.column,
               definition: 'exchange',
             ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'type',
+            ),
           ],
           type: 'btree',
           isUnique: true,

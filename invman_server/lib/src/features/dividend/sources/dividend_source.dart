@@ -15,14 +15,16 @@ class DividendSourceImpl implements DividendSource {
   final Env _env;
   final String url = "api.twelvedata.com";
   final String dividendsPath = "dividends";
+  final typesWithDividends = [AssetType.stock, AssetType.etf];
 
   DividendSourceImpl(this._env);
 
   @override
   Future<List<DividendValue>> getCurrentYearDividends(Session session, {required Investment investment}) async {
-    final symbol = investment.asset?.symbol ?? "";
-    final exchange = investment.asset?.exchange;
-    final cacheKey = CacheKeys.dividendsCurrent(symbol, exchange);
+    if (investment.asset == null || !typesWithDividends.contains(investment.asset!.type)) {
+      return [];
+    }
+    final cacheKey = CacheKeys.dividendsCurrent(investment.asset!);
 
     DividendList? cached = await session.caches.local.get<DividendList>(cacheKey);
 
@@ -71,9 +73,10 @@ class DividendSourceImpl implements DividendSource {
 
   @override
   Future<List<DividendValue>> getAllDividends(Session session, {required Investment investment}) async {
-    final symbol = investment.asset?.symbol ?? "";
-    final exchange = investment.asset?.exchange;
-    final cacheKey = CacheKeys.dividendsAll(symbol, exchange);
+    if (investment.asset == null || !typesWithDividends.contains(investment.asset!.type)) {
+      return [];
+    }
+    final cacheKey = CacheKeys.dividendsAll(investment.asset!);
 
     DividendList? cached = await session.caches.local.get<DividendList>(cacheKey);
 

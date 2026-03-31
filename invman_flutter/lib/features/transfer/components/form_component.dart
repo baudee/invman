@@ -14,6 +14,7 @@ class TransferFormComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final transferId = controller.state.value.requireValue.id;
     final authManager = getIt<AuthManager>();
 
     return LayoutBuilder(
@@ -63,16 +64,18 @@ class TransferFormComponent extends StatelessWidget {
                       },
                     ),
                     SizedBox(height: UIConstants.spacingSm),
-                    DeleteButton(
-                      onPressed: () async {
-                        final (success, message) = await controller.delete();
-                        ToastUtils.message(message, success: success);
-                        if (success) {
-                          router.pop();
-                        }
-                      },
-                    ),
-                    SizedBox(height: UIConstants.spacingMd),
+                    if (transferId != null && transferId != 0) ...[
+                      DeleteButton(
+                        onPressed: () async {
+                          final (success, message) = await controller.delete();
+                          ToastUtils.message(message, success: success);
+                          if (success) {
+                            router.pop();
+                          }
+                        },
+                      ),
+                      SizedBox(height: UIConstants.spacingMd),
+                    ],
                   ],
                 ),
               ),

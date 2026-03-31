@@ -33,6 +33,7 @@ class DividendRootComponent extends StatelessWidget {
           DividendMonthlyChart(calendar: calendar, currency: selectedCurrency),
           const SizedBox(height: UIConstants.spacingSm),
           SectionHeaderComponent(title: S.of(context).dividend_nextPayments),
+          const SizedBox(height: UIConstants.spacingSm),
           DividendNextPayments(calendar: calendar),
           const SizedBox(height: UIConstants.spacingSm),
           SectionHeaderComponent(title: S.of(context).dividend_history),

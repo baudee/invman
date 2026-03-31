@@ -259,6 +259,11 @@
               "__className__": "serverpod.IndexElementDefinition",
               "type": 0,
               "definition": "exchange"
+            },
+            {
+              "__className__": "serverpod.IndexElementDefinition",
+              "type": 0,
+              "definition": "type"
             }
           ],
           "type": "btree",

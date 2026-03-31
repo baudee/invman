@@ -8,25 +8,21 @@ class CacheKeys {
 
   // Investment
   static String investmentReturns(int investmentId, InvestmentReturnInterval interval) =>
-      '$investmentId-${interval.name}-returns';
+      'returns_${investmentId}_${interval.name}';
 
   // Asset
-  static String assetCurrentValue(Asset asset) =>
-      asset.exchange == null ? asset.symbol : '${asset.symbol}-${asset.exchange}';
+  static String assetCurrentValue(Asset asset) => 'asset_current_value_${asset.id}';
 
-  static String assetTimeSeries(Asset asset, AssetTimeHorizon timeHorizon) =>
-      '${asset.id}-${timeHorizon.name}';
+  static String assetTimeSeries(Asset asset, AssetTimeHorizon timeHorizon) => '${asset.id}-${timeHorizon.name}';
 
   // Currency
-  static String currencyDollarValue(String code) => code;
+  static String currencyDollarValue(String code) => "currency_dollar_value_$code";
 
   static String currencyEodDollarValue(String code, DateTime date) =>
-      '$code-${date.year}-${date.month}-${date.day}';
+      "currency_eod_dollar_value_$code-${date.year}-${date.month}-${date.day}";
 
   // Dividends
-  static String dividendsCurrent(String symbol, String? exchange) =>
-      'dividends_current_${symbol}_${exchange ?? ""}';
+  static String dividendsCurrent(Asset asset) => 'dividends_current_${asset.id}';
 
-  static String dividendsAll(String symbol, String? exchange) =>
-      'dividends_all_${symbol}_${exchange ?? ""}';
+  static String dividendsAll(Asset asset) => 'dividends_all_${asset.id}';
 }

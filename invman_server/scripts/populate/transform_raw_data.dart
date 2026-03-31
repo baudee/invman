@@ -643,7 +643,7 @@ class _ValidationResult {
 
 Future<_ValidationResult> _validateAsset(String symbol, String? exchange) async {
   try {
-    var url = 'https://api.twelvedata.com/time_series?symbol=$symbol&interval=1min&outputsize=1&apikey=$apiKey';
+    var url = 'https://api.twelvedata.com/time_series?symbol=$symbol&interval=1min&outputsize=1&apikey=$apiKey&type=Structured Product';
     if (exchange != null && exchange.isNotEmpty) {
       url += '&exchange=$exchange';
     }
