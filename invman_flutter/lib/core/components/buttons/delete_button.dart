@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:invman_flutter/config/generated/l10n.dart';
+import 'package:invman_flutter/core/components/components.dart';
 
 class DeleteButton extends StatelessWidget {
   final void Function()? onPressed;
@@ -6,10 +8,10 @@ class DeleteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FilledButton.icon(
+    return ActionButton(
       onPressed: onPressed,
-      style: FilledButton.styleFrom(minimumSize: const Size(double.infinity, 0)),
-      label: Icon(Icons.delete),
+      color: Theme.of(context).colorScheme.error,
+      child: Text(S.of(context).core_delete),
     );
   }
 }

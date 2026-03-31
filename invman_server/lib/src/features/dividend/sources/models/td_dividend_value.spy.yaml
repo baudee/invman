@@ -1,0 +1,6 @@
+class: TwelveDataDividendValue
+serverOnly: true
+fields:
+    exDate: String, jsonKey=ex_date
+    amount: double
+

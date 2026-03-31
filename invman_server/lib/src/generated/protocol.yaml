@@ -22,6 +22,9 @@ jwtRefresh:
   - refreshAccessToken:
 currency:
   - list:
+dividend:
+  - calendar:
+  - total:
 investment:
   - list:
   - save:

@@ -1,0 +1,7 @@
+class: DividendValue
+fields:
+    date: DateTime
+    amount: double
+
+    
+

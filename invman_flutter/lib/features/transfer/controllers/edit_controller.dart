@@ -47,6 +47,8 @@ class TransferEditController extends Disposable {
     });
   }
 
+  Future<(bool, String?)> delete() => DeleteCommand(onExecute: () => _transferRepository.delete(id)).execute();
+
   void _refreshControllers(Transfer transfer) {
     quantityController.text = transfer.quantity.toString();
     amountController.text = transfer.amount.toStringAsFixed(2);

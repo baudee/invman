@@ -17,27 +17,28 @@ import '../features/asset/endpoints/asset_endpoint.dart' as _i4;
 import '../features/auth/email_idp_endpoint.dart' as _i5;
 import '../features/auth/jwt_refresh_endpoint.dart' as _i6;
 import '../features/currency/endpoints/currency_endpoint.dart' as _i7;
-import '../features/investment/endpoints/investment_endpoint.dart' as _i8;
-import '../features/transfer/endpoints/transfer_endpoint.dart' as _i9;
-import '../features/withdrawal/endpoints/withdrawal_rule_endpoint.dart' as _i10;
+import '../features/dividend/endpoints/dividend_endpoint.dart' as _i8;
+import '../features/investment/endpoints/investment_endpoint.dart' as _i9;
+import '../features/transfer/endpoints/transfer_endpoint.dart' as _i10;
+import '../features/withdrawal/endpoints/withdrawal_rule_endpoint.dart' as _i11;
 import 'package:invman_server/src/generated/features/account/models/account.dart'
-    as _i11;
-import 'package:invman_server/src/generated/features/asset/models/asset_filter.dart'
     as _i12;
-import 'package:invman_server/src/generated/features/asset/models/asset_time_horizon.dart'
+import 'package:invman_server/src/generated/features/asset/models/asset_filter.dart'
     as _i13;
-import 'package:invman_server/src/generated/features/investment/models/investment.dart'
+import 'package:invman_server/src/generated/features/asset/models/asset_time_horizon.dart'
     as _i14;
-import 'package:invman_server/src/generated/features/investment/models/return_interval.dart'
+import 'package:invman_server/src/generated/features/investment/models/investment.dart'
     as _i15;
-import 'package:invman_server/src/generated/features/transfer/models/transfer.dart'
+import 'package:invman_server/src/generated/features/investment/models/return_interval.dart'
     as _i16;
-import 'package:invman_server/src/generated/features/withdrawal/models/withdrawal_rule.dart'
+import 'package:invman_server/src/generated/features/transfer/models/transfer.dart'
     as _i17;
-import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
+import 'package:invman_server/src/generated/features/withdrawal/models/withdrawal_rule.dart'
     as _i18;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _i19;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+    as _i20;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -79,19 +80,25 @@ class Endpoints extends _i1.EndpointDispatch {
           'currency',
           null,
         ),
-      'investment': _i8.InvestmentEndpoint()
+      'dividend': _i8.DividendEndpoint()
+        ..initialize(
+          server,
+          'dividend',
+          null,
+        ),
+      'investment': _i9.InvestmentEndpoint()
         ..initialize(
           server,
           'investment',
           null,
         ),
-      'transfer': _i9.TransferEndpoint()
+      'transfer': _i10.TransferEndpoint()
         ..initialize(
           server,
           'transfer',
           null,
         ),
-      'withdrawalRule': _i10.WithdrawalRuleEndpoint()
+      'withdrawalRule': _i11.WithdrawalRuleEndpoint()
         ..initialize(
           server,
           'withdrawalRule',
@@ -118,7 +125,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'account': _i1.ParameterDescription(
               name: 'account',
-              type: _i1.getType<_i11.Account>(),
+              type: _i1.getType<_i12.Account>(),
               nullable: false,
             ),
           },
@@ -212,7 +219,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'filter': _i1.ParameterDescription(
               name: 'filter',
-              type: _i1.getType<_i12.AssetFilter?>(),
+              type: _i1.getType<_i13.AssetFilter?>(),
               nullable: true,
             ),
             'limit': _i1.ParameterDescription(
@@ -247,7 +254,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'timeHorizon': _i1.ParameterDescription(
               name: 'timeHorizon',
-              type: _i1.getType<_i13.AssetTimeHorizon>(),
+              type: _i1.getType<_i14.AssetTimeHorizon>(),
               nullable: false,
             ),
           },
@@ -483,6 +490,46 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
+    connectors['dividend'] = _i1.EndpointConnector(
+      name: 'dividend',
+      endpoint: endpoints['dividend']!,
+      methodConnectors: {
+        'calendar': _i1.MethodConnector(
+          name: 'calendar',
+          params: {},
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['dividend'] as _i8.DividendEndpoint)
+                  .calendar(session),
+        ),
+        'total': _i1.MethodConnector(
+          name: 'total',
+          params: {
+            'fromYear': _i1.ParameterDescription(
+              name: 'fromYear',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'toYear': _i1.ParameterDescription(
+              name: 'toYear',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['dividend'] as _i8.DividendEndpoint).total(
+                session,
+                params['fromYear'],
+                params['toYear'],
+              ),
+        ),
+      },
+    );
     connectors['investment'] = _i1.EndpointConnector(
       name: 'investment',
       endpoint: endpoints['investment']!,
@@ -506,7 +553,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['investment'] as _i8.InvestmentEndpoint).list(
+                  (endpoints['investment'] as _i9.InvestmentEndpoint).list(
                     session,
                     limit: params['limit'],
                     page: params['page'],
@@ -517,7 +564,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'investment': _i1.ParameterDescription(
               name: 'investment',
-              type: _i1.getType<_i14.Investment>(),
+              type: _i1.getType<_i15.Investment>(),
               nullable: false,
             ),
           },
@@ -526,7 +573,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['investment'] as _i8.InvestmentEndpoint).save(
+                  (endpoints['investment'] as _i9.InvestmentEndpoint).save(
                     session,
                     params['investment'],
                   ),
@@ -545,7 +592,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['investment'] as _i8.InvestmentEndpoint).delete(
+                  (endpoints['investment'] as _i9.InvestmentEndpoint).delete(
                     session,
                     params['id'],
                   ),
@@ -564,7 +611,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['investment'] as _i8.InvestmentEndpoint).retrieve(
+                  (endpoints['investment'] as _i9.InvestmentEndpoint).retrieve(
                     session,
                     params['id'],
                   ),
@@ -576,7 +623,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['investment'] as _i8.InvestmentEndpoint)
+              ) async => (endpoints['investment'] as _i9.InvestmentEndpoint)
                   .total(session),
         ),
         'returns': _i1.MethodConnector(
@@ -589,7 +636,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'interval': _i1.ParameterDescription(
               name: 'interval',
-              type: _i1.getType<_i15.InvestmentReturnInterval>(),
+              type: _i1.getType<_i16.InvestmentReturnInterval>(),
               nullable: false,
             ),
           },
@@ -598,7 +645,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['investment'] as _i8.InvestmentEndpoint).returns(
+                  (endpoints['investment'] as _i9.InvestmentEndpoint).returns(
                     session,
                     params['id'],
                     interval: params['interval'],
@@ -624,7 +671,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['transfer'] as _i9.TransferEndpoint).retrieve(
+                  (endpoints['transfer'] as _i10.TransferEndpoint).retrieve(
                     session,
                     params['id'],
                   ),
@@ -634,7 +681,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'transfer': _i1.ParameterDescription(
               name: 'transfer',
-              type: _i1.getType<_i16.Transfer>(),
+              type: _i1.getType<_i17.Transfer>(),
               nullable: false,
             ),
           },
@@ -642,7 +689,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['transfer'] as _i9.TransferEndpoint).save(
+              ) async => (endpoints['transfer'] as _i10.TransferEndpoint).save(
                 session,
                 params['transfer'],
               ),
@@ -660,10 +707,11 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['transfer'] as _i9.TransferEndpoint).delete(
-                session,
-                params['id'],
-              ),
+              ) async =>
+                  (endpoints['transfer'] as _i10.TransferEndpoint).delete(
+                    session,
+                    params['id'],
+                  ),
         ),
         'list': _i1.MethodConnector(
           name: 'list',
@@ -688,7 +736,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['transfer'] as _i9.TransferEndpoint).list(
+              ) async => (endpoints['transfer'] as _i10.TransferEndpoint).list(
                 session,
                 params['investmentId'],
                 limit: params['limit'],
@@ -720,7 +768,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['withdrawalRule'] as _i10.WithdrawalRuleEndpoint)
+                  (endpoints['withdrawalRule'] as _i11.WithdrawalRuleEndpoint)
                       .list(
                         session,
                         limit: params['limit'],
@@ -741,7 +789,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['withdrawalRule'] as _i10.WithdrawalRuleEndpoint)
+                  (endpoints['withdrawalRule'] as _i11.WithdrawalRuleEndpoint)
                       .retrieve(
                         session,
                         params['id'],
@@ -752,7 +800,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'transfer': _i1.ParameterDescription(
               name: 'transfer',
-              type: _i1.getType<_i17.WithdrawalRule>(),
+              type: _i1.getType<_i18.WithdrawalRule>(),
               nullable: false,
             ),
           },
@@ -761,7 +809,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['withdrawalRule'] as _i10.WithdrawalRuleEndpoint)
+                  (endpoints['withdrawalRule'] as _i11.WithdrawalRuleEndpoint)
                       .save(
                         session,
                         params['transfer'],
@@ -781,7 +829,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['withdrawalRule'] as _i10.WithdrawalRuleEndpoint)
+                  (endpoints['withdrawalRule'] as _i11.WithdrawalRuleEndpoint)
                       .delete(
                         session,
                         params['id'],
@@ -789,9 +837,9 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    modules['serverpod_auth_idp'] = _i18.Endpoints()
+    modules['serverpod_auth_idp'] = _i19.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i19.Endpoints()
+    modules['serverpod_auth_core'] = _i20.Endpoints()
       ..initializeEndpoints(server);
   }
 }

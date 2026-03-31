@@ -30,26 +30,37 @@ import 'features/asset/sources/models/td_time_series.dart' as _i15;
 import 'features/asset/sources/models/td_time_series_value.dart' as _i16;
 import 'features/currency/models/currency.dart' as _i17;
 import 'features/currency/models/forex.dart' as _i18;
-import 'features/investment/models/investment.dart' as _i19;
-import 'features/investment/models/return.dart' as _i20;
-import 'features/investment/models/return_interval.dart' as _i21;
-import 'features/transfer/models/transfer.dart' as _i22;
-import 'features/withdrawal/models/withdrawal_fee.dart' as _i23;
-import 'features/withdrawal/models/withdrawal_rule.dart' as _i24;
+import 'features/dividend/models/computed_dividend_value.dart' as _i19;
+import 'features/dividend/models/dividend_list.dart' as _i20;
+import 'features/dividend/models/dividend_value.dart' as _i21;
+import 'features/dividend/models/investment_dividend.dart' as _i22;
+import 'features/dividend/models/total_dividend_year.dart' as _i23;
+import 'features/dividend/sources/models/td_dividend_value.dart' as _i24;
+import 'features/dividend/sources/models/td_dividends.dart' as _i25;
+import 'features/investment/models/investment.dart' as _i26;
+import 'features/investment/models/return.dart' as _i27;
+import 'features/investment/models/return_interval.dart' as _i28;
+import 'features/transfer/models/transfer.dart' as _i29;
+import 'features/withdrawal/models/withdrawal_fee.dart' as _i30;
+import 'features/withdrawal/models/withdrawal_rule.dart' as _i31;
 import 'package:invman_server/src/generated/features/asset/models/asset.dart'
-    as _i25;
+    as _i32;
 import 'package:invman_server/src/generated/features/asset/models/asset_value.dart'
-    as _i26;
+    as _i33;
 import 'package:invman_server/src/generated/features/currency/models/currency.dart'
-    as _i27;
+    as _i34;
+import 'package:invman_server/src/generated/features/dividend/models/investment_dividend.dart'
+    as _i35;
+import 'package:invman_server/src/generated/features/dividend/models/total_dividend_year.dart'
+    as _i36;
 import 'package:invman_server/src/generated/features/investment/models/investment.dart'
-    as _i28;
+    as _i37;
 import 'package:invman_server/src/generated/features/investment/models/return.dart'
-    as _i29;
+    as _i38;
 import 'package:invman_server/src/generated/features/transfer/models/transfer.dart'
-    as _i30;
+    as _i39;
 import 'package:invman_server/src/generated/features/withdrawal/models/withdrawal_rule.dart'
-    as _i31;
+    as _i40;
 export 'core/exceptions/error_code.dart';
 export 'core/exceptions/server_exception.dart';
 export 'features/account/models/account.dart';
@@ -64,6 +75,13 @@ export 'features/asset/sources/models/td_time_series.dart';
 export 'features/asset/sources/models/td_time_series_value.dart';
 export 'features/currency/models/currency.dart';
 export 'features/currency/models/forex.dart';
+export 'features/dividend/models/computed_dividend_value.dart';
+export 'features/dividend/models/dividend_list.dart';
+export 'features/dividend/models/dividend_value.dart';
+export 'features/dividend/models/investment_dividend.dart';
+export 'features/dividend/models/total_dividend_year.dart';
+export 'features/dividend/sources/models/td_dividend_value.dart';
+export 'features/dividend/sources/models/td_dividends.dart';
 export 'features/investment/models/investment.dart';
 export 'features/investment/models/return.dart';
 export 'features/investment/models/return_interval.dart';
@@ -873,23 +891,44 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i18.Forex) {
       return _i18.Forex.fromJson(data) as T;
     }
-    if (t == _i19.Investment) {
-      return _i19.Investment.fromJson(data) as T;
+    if (t == _i19.ComputedDividendValue) {
+      return _i19.ComputedDividendValue.fromJson(data) as T;
     }
-    if (t == _i20.InvestmentReturn) {
-      return _i20.InvestmentReturn.fromJson(data) as T;
+    if (t == _i20.DividendList) {
+      return _i20.DividendList.fromJson(data) as T;
     }
-    if (t == _i21.InvestmentReturnInterval) {
-      return _i21.InvestmentReturnInterval.fromJson(data) as T;
+    if (t == _i21.DividendValue) {
+      return _i21.DividendValue.fromJson(data) as T;
     }
-    if (t == _i22.Transfer) {
-      return _i22.Transfer.fromJson(data) as T;
+    if (t == _i22.InvestmentDividend) {
+      return _i22.InvestmentDividend.fromJson(data) as T;
     }
-    if (t == _i23.WithdrawalFee) {
-      return _i23.WithdrawalFee.fromJson(data) as T;
+    if (t == _i23.TotalDividendYear) {
+      return _i23.TotalDividendYear.fromJson(data) as T;
     }
-    if (t == _i24.WithdrawalRule) {
-      return _i24.WithdrawalRule.fromJson(data) as T;
+    if (t == _i24.TwelveDataDividendValue) {
+      return _i24.TwelveDataDividendValue.fromJson(data) as T;
+    }
+    if (t == _i25.TwelveDataDividends) {
+      return _i25.TwelveDataDividends.fromJson(data) as T;
+    }
+    if (t == _i26.Investment) {
+      return _i26.Investment.fromJson(data) as T;
+    }
+    if (t == _i27.InvestmentReturn) {
+      return _i27.InvestmentReturn.fromJson(data) as T;
+    }
+    if (t == _i28.InvestmentReturnInterval) {
+      return _i28.InvestmentReturnInterval.fromJson(data) as T;
+    }
+    if (t == _i29.Transfer) {
+      return _i29.Transfer.fromJson(data) as T;
+    }
+    if (t == _i30.WithdrawalFee) {
+      return _i30.WithdrawalFee.fromJson(data) as T;
+    }
+    if (t == _i31.WithdrawalRule) {
+      return _i31.WithdrawalRule.fromJson(data) as T;
     }
     if (t == _i1.getType<_i5.ErrorCode?>()) {
       return (data != null ? _i5.ErrorCode.fromJson(data) : null) as T;
@@ -937,26 +976,51 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i18.Forex?>()) {
       return (data != null ? _i18.Forex.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i19.Investment?>()) {
-      return (data != null ? _i19.Investment.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i19.ComputedDividendValue?>()) {
+      return (data != null ? _i19.ComputedDividendValue.fromJson(data) : null)
+          as T;
     }
-    if (t == _i1.getType<_i20.InvestmentReturn?>()) {
-      return (data != null ? _i20.InvestmentReturn.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i20.DividendList?>()) {
+      return (data != null ? _i20.DividendList.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i21.InvestmentReturnInterval?>()) {
+    if (t == _i1.getType<_i21.DividendValue?>()) {
+      return (data != null ? _i21.DividendValue.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i22.InvestmentDividend?>()) {
+      return (data != null ? _i22.InvestmentDividend.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i23.TotalDividendYear?>()) {
+      return (data != null ? _i23.TotalDividendYear.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i24.TwelveDataDividendValue?>()) {
+      return (data != null ? _i24.TwelveDataDividendValue.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i25.TwelveDataDividends?>()) {
+      return (data != null ? _i25.TwelveDataDividends.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i26.Investment?>()) {
+      return (data != null ? _i26.Investment.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i27.InvestmentReturn?>()) {
+      return (data != null ? _i27.InvestmentReturn.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i28.InvestmentReturnInterval?>()) {
       return (data != null
-              ? _i21.InvestmentReturnInterval.fromJson(data)
+              ? _i28.InvestmentReturnInterval.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i22.Transfer?>()) {
-      return (data != null ? _i22.Transfer.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i29.Transfer?>()) {
+      return (data != null ? _i29.Transfer.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i23.WithdrawalFee?>()) {
-      return (data != null ? _i23.WithdrawalFee.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i30.WithdrawalFee?>()) {
+      return (data != null ? _i30.WithdrawalFee.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i24.WithdrawalRule?>()) {
-      return (data != null ? _i24.WithdrawalRule.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i31.WithdrawalRule?>()) {
+      return (data != null ? _i31.WithdrawalRule.fromJson(data) : null) as T;
     }
     if (t == List<_i11.AssetLike>) {
       return (data as List).map((e) => deserialize<_i11.AssetLike>(e)).toList()
@@ -970,14 +1034,14 @@ class Protocol extends _i1.SerializationManagerServer {
               : null)
           as T;
     }
-    if (t == List<_i19.Investment>) {
-      return (data as List).map((e) => deserialize<_i19.Investment>(e)).toList()
+    if (t == List<_i26.Investment>) {
+      return (data as List).map((e) => deserialize<_i26.Investment>(e)).toList()
           as T;
     }
-    if (t == _i1.getType<List<_i19.Investment>?>()) {
+    if (t == _i1.getType<List<_i26.Investment>?>()) {
       return (data != null
               ? (data as List)
-                    .map((e) => deserialize<_i19.Investment>(e))
+                    .map((e) => deserialize<_i26.Investment>(e))
                     .toList()
               : null)
           as T;
@@ -994,61 +1058,91 @@ class Protocol extends _i1.SerializationManagerServer {
               .toList()
           as T;
     }
-    if (t == List<_i22.Transfer>) {
-      return (data as List).map((e) => deserialize<_i22.Transfer>(e)).toList()
+    if (t == List<_i21.DividendValue>) {
+      return (data as List)
+              .map((e) => deserialize<_i21.DividendValue>(e))
+              .toList()
           as T;
     }
-    if (t == _i1.getType<List<_i22.Transfer>?>()) {
+    if (t == List<_i19.ComputedDividendValue>) {
+      return (data as List)
+              .map((e) => deserialize<_i19.ComputedDividendValue>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_i24.TwelveDataDividendValue>) {
+      return (data as List)
+              .map((e) => deserialize<_i24.TwelveDataDividendValue>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_i29.Transfer>) {
+      return (data as List).map((e) => deserialize<_i29.Transfer>(e)).toList()
+          as T;
+    }
+    if (t == _i1.getType<List<_i29.Transfer>?>()) {
       return (data != null
               ? (data as List)
-                    .map((e) => deserialize<_i22.Transfer>(e))
+                    .map((e) => deserialize<_i29.Transfer>(e))
                     .toList()
               : null)
           as T;
     }
-    if (t == List<_i23.WithdrawalFee>) {
+    if (t == List<_i30.WithdrawalFee>) {
       return (data as List)
-              .map((e) => deserialize<_i23.WithdrawalFee>(e))
+              .map((e) => deserialize<_i30.WithdrawalFee>(e))
               .toList()
           as T;
     }
-    if (t == _i1.getType<List<_i23.WithdrawalFee>?>()) {
+    if (t == _i1.getType<List<_i30.WithdrawalFee>?>()) {
       return (data != null
               ? (data as List)
-                    .map((e) => deserialize<_i23.WithdrawalFee>(e))
+                    .map((e) => deserialize<_i30.WithdrawalFee>(e))
                     .toList()
               : null)
           as T;
     }
-    if (t == List<_i25.Asset>) {
-      return (data as List).map((e) => deserialize<_i25.Asset>(e)).toList()
+    if (t == List<_i32.Asset>) {
+      return (data as List).map((e) => deserialize<_i32.Asset>(e)).toList()
           as T;
     }
-    if (t == List<_i26.AssetValue>) {
-      return (data as List).map((e) => deserialize<_i26.AssetValue>(e)).toList()
+    if (t == List<_i33.AssetValue>) {
+      return (data as List).map((e) => deserialize<_i33.AssetValue>(e)).toList()
           as T;
     }
-    if (t == List<_i27.Currency>) {
-      return (data as List).map((e) => deserialize<_i27.Currency>(e)).toList()
+    if (t == List<_i34.Currency>) {
+      return (data as List).map((e) => deserialize<_i34.Currency>(e)).toList()
           as T;
     }
-    if (t == List<_i28.Investment>) {
-      return (data as List).map((e) => deserialize<_i28.Investment>(e)).toList()
-          as T;
-    }
-    if (t == List<_i29.InvestmentReturn>) {
+    if (t == List<_i35.InvestmentDividend>) {
       return (data as List)
-              .map((e) => deserialize<_i29.InvestmentReturn>(e))
+              .map((e) => deserialize<_i35.InvestmentDividend>(e))
               .toList()
           as T;
     }
-    if (t == List<_i30.Transfer>) {
-      return (data as List).map((e) => deserialize<_i30.Transfer>(e)).toList()
+    if (t == List<_i36.TotalDividendYear>) {
+      return (data as List)
+              .map((e) => deserialize<_i36.TotalDividendYear>(e))
+              .toList()
           as T;
     }
-    if (t == List<_i31.WithdrawalRule>) {
+    if (t == List<_i37.Investment>) {
+      return (data as List).map((e) => deserialize<_i37.Investment>(e)).toList()
+          as T;
+    }
+    if (t == List<_i38.InvestmentReturn>) {
       return (data as List)
-              .map((e) => deserialize<_i31.WithdrawalRule>(e))
+              .map((e) => deserialize<_i38.InvestmentReturn>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_i39.Transfer>) {
+      return (data as List).map((e) => deserialize<_i39.Transfer>(e)).toList()
+          as T;
+    }
+    if (t == List<_i40.WithdrawalRule>) {
+      return (data as List)
+              .map((e) => deserialize<_i40.WithdrawalRule>(e))
               .toList()
           as T;
     }
@@ -1080,12 +1174,19 @@ class Protocol extends _i1.SerializationManagerServer {
       _i16.TwelveDataTimeSeriesValue => 'TwelveDataTimeSeriesValue',
       _i17.Currency => 'Currency',
       _i18.Forex => 'Forex',
-      _i19.Investment => 'Investment',
-      _i20.InvestmentReturn => 'InvestmentReturn',
-      _i21.InvestmentReturnInterval => 'InvestmentReturnInterval',
-      _i22.Transfer => 'Transfer',
-      _i23.WithdrawalFee => 'WithdrawalFee',
-      _i24.WithdrawalRule => 'WithdrawalRule',
+      _i19.ComputedDividendValue => 'ComputedDividendValue',
+      _i20.DividendList => 'DividendList',
+      _i21.DividendValue => 'DividendValue',
+      _i22.InvestmentDividend => 'InvestmentDividend',
+      _i23.TotalDividendYear => 'TotalDividendYear',
+      _i24.TwelveDataDividendValue => 'TwelveDataDividendValue',
+      _i25.TwelveDataDividends => 'TwelveDataDividends',
+      _i26.Investment => 'Investment',
+      _i27.InvestmentReturn => 'InvestmentReturn',
+      _i28.InvestmentReturnInterval => 'InvestmentReturnInterval',
+      _i29.Transfer => 'Transfer',
+      _i30.WithdrawalFee => 'WithdrawalFee',
+      _i31.WithdrawalRule => 'WithdrawalRule',
       _ => null,
     };
   }
@@ -1128,17 +1229,31 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'Currency';
       case _i18.Forex():
         return 'Forex';
-      case _i19.Investment():
+      case _i19.ComputedDividendValue():
+        return 'ComputedDividendValue';
+      case _i20.DividendList():
+        return 'DividendList';
+      case _i21.DividendValue():
+        return 'DividendValue';
+      case _i22.InvestmentDividend():
+        return 'InvestmentDividend';
+      case _i23.TotalDividendYear():
+        return 'TotalDividendYear';
+      case _i24.TwelveDataDividendValue():
+        return 'TwelveDataDividendValue';
+      case _i25.TwelveDataDividends():
+        return 'TwelveDataDividends';
+      case _i26.Investment():
         return 'Investment';
-      case _i20.InvestmentReturn():
+      case _i27.InvestmentReturn():
         return 'InvestmentReturn';
-      case _i21.InvestmentReturnInterval():
+      case _i28.InvestmentReturnInterval():
         return 'InvestmentReturnInterval';
-      case _i22.Transfer():
+      case _i29.Transfer():
         return 'Transfer';
-      case _i23.WithdrawalFee():
+      case _i30.WithdrawalFee():
         return 'WithdrawalFee';
-      case _i24.WithdrawalRule():
+      case _i31.WithdrawalRule():
         return 'WithdrawalRule';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -1204,23 +1319,44 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'Forex') {
       return deserialize<_i18.Forex>(data['data']);
     }
+    if (dataClassName == 'ComputedDividendValue') {
+      return deserialize<_i19.ComputedDividendValue>(data['data']);
+    }
+    if (dataClassName == 'DividendList') {
+      return deserialize<_i20.DividendList>(data['data']);
+    }
+    if (dataClassName == 'DividendValue') {
+      return deserialize<_i21.DividendValue>(data['data']);
+    }
+    if (dataClassName == 'InvestmentDividend') {
+      return deserialize<_i22.InvestmentDividend>(data['data']);
+    }
+    if (dataClassName == 'TotalDividendYear') {
+      return deserialize<_i23.TotalDividendYear>(data['data']);
+    }
+    if (dataClassName == 'TwelveDataDividendValue') {
+      return deserialize<_i24.TwelveDataDividendValue>(data['data']);
+    }
+    if (dataClassName == 'TwelveDataDividends') {
+      return deserialize<_i25.TwelveDataDividends>(data['data']);
+    }
     if (dataClassName == 'Investment') {
-      return deserialize<_i19.Investment>(data['data']);
+      return deserialize<_i26.Investment>(data['data']);
     }
     if (dataClassName == 'InvestmentReturn') {
-      return deserialize<_i20.InvestmentReturn>(data['data']);
+      return deserialize<_i27.InvestmentReturn>(data['data']);
     }
     if (dataClassName == 'InvestmentReturnInterval') {
-      return deserialize<_i21.InvestmentReturnInterval>(data['data']);
+      return deserialize<_i28.InvestmentReturnInterval>(data['data']);
     }
     if (dataClassName == 'Transfer') {
-      return deserialize<_i22.Transfer>(data['data']);
+      return deserialize<_i29.Transfer>(data['data']);
     }
     if (dataClassName == 'WithdrawalFee') {
-      return deserialize<_i23.WithdrawalFee>(data['data']);
+      return deserialize<_i30.WithdrawalFee>(data['data']);
     }
     if (dataClassName == 'WithdrawalRule') {
-      return deserialize<_i24.WithdrawalRule>(data['data']);
+      return deserialize<_i31.WithdrawalRule>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -1268,14 +1404,14 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i11.AssetLike.t;
       case _i17.Currency:
         return _i17.Currency.t;
-      case _i19.Investment:
-        return _i19.Investment.t;
-      case _i22.Transfer:
-        return _i22.Transfer.t;
-      case _i23.WithdrawalFee:
-        return _i23.WithdrawalFee.t;
-      case _i24.WithdrawalRule:
-        return _i24.WithdrawalRule.t;
+      case _i26.Investment:
+        return _i26.Investment.t;
+      case _i29.Transfer:
+        return _i29.Transfer.t;
+      case _i30.WithdrawalFee:
+        return _i30.WithdrawalFee.t;
+      case _i31.WithdrawalRule:
+        return _i31.WithdrawalRule.t;
     }
     return null;
   }

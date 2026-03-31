@@ -1,0 +1,4 @@
+class: DividendList
+serverOnly: true
+fields:
+    values: List<DividendValue>

@@ -18,6 +18,7 @@ class AppContainer extends StatelessWidget {
         destinations: [
           NavigationDestination(icon: Icon(Icons.explore), label: S.of(context).asset_title),
           NavigationDestination(icon: Icon(Icons.show_chart_rounded), label: S.of(context).investment_title),
+          NavigationDestination(icon: Icon(Icons.payments_outlined), label: S.of(context).dividend_title),
           NavigationDestination(icon: Icon(Icons.menu), label: S.of(context).account_title),
         ],
       ),

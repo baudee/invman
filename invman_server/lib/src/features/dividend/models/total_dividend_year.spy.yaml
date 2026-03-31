@@ -1,0 +1,7 @@
+class: TotalDividendYear
+fields:
+    year: int
+    total: double
+    currency: String
+
+

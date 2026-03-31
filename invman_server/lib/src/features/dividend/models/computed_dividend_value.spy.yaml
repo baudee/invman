@@ -1,0 +1,8 @@
+class: ComputedDividendValue
+fields:
+    date: DateTime
+    amountPerShare: double
+    amount: double
+
+    
+

@@ -24,7 +24,6 @@ class AssetDetailScreen extends HookWidget {
         state: controller.state,
         successBuilder: (asset) => AppBar(
           backgroundColor: Colors.transparent,
-          elevation: 0,
           actions: [
             LikeButtonComponent(
               asset: asset,

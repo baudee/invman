@@ -23,6 +23,7 @@ class AppTheme {
 
   static CardThemeData _cardTheme(ColorScheme colorScheme) {
     return CardThemeData(
+      elevation: 0,
       color: colorScheme.surfaceContainerLow,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(UIConstants.radiusMd)),
     );

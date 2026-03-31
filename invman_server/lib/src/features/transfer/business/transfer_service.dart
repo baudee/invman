@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:invman_server/src/core/helpers/helpers.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:invman_server/src/features/investment/investment.dart';
 import 'package:serverpod/serverpod.dart';
@@ -8,6 +9,7 @@ class TransferService {
   TransferService({required this.investmentService});
 
   final InvestmentService investmentService;
+
 
   Future<Transfer> retrieve(Session session, int id) async {
     final transfer = await Transfer.db.findById(
@@ -25,7 +27,7 @@ class TransferService {
   }
 
   Future<Transfer> save(Session session, Transfer transfer) async {
-    return session.db.transaction(
+    final savedTransfer = await session.db.transaction(
       (transaction) async {
         final Transfer savedTransfer;
         if (transfer.id == 0 || transfer.id == null) {
@@ -55,10 +57,16 @@ class TransferService {
         isolationLevel: IsolationLevel.serializable,
       ),
     );
+
+    final investmentId = savedTransfer.investmentId;
+    await session.caches.local.invalidateKey(CacheKeys.transfersAll(investmentId));
+    await session.caches.local.invalidateKey(CacheKeys.investmentReturns(investmentId, InvestmentReturnInterval.monthly));
+    await session.caches.local.invalidateKey(CacheKeys.investmentReturns(investmentId, InvestmentReturnInterval.yearly));
+    return savedTransfer;
   }
 
   Future<Transfer> delete(Session session, int id) async {
-    return session.db.transaction(
+    final deletedTransfer = await session.db.transaction(
       (transaction) async {
         final transfer = await retrieve(session, id);
         final deletedTransfer = await Transfer.db.deleteRow(
@@ -77,6 +85,12 @@ class TransferService {
         isolationLevel: IsolationLevel.serializable,
       ),
     );
+
+    final investmentId = deletedTransfer.investmentId;
+    await session.caches.local.invalidateKey(CacheKeys.transfersAll(investmentId));
+    await session.caches.local.invalidateKey(CacheKeys.investmentReturns(investmentId, InvestmentReturnInterval.monthly));
+    await session.caches.local.invalidateKey(CacheKeys.investmentReturns(investmentId, InvestmentReturnInterval.yearly));
+    return deletedTransfer;
   }
 
   Future<List<Transfer>> list(
@@ -95,5 +109,21 @@ class TransferService {
       orderBy: (t) => t.createdAt,
       orderDescending: true,
     );
+  }
+
+  Future<List<Transfer>> listAll(Session session, int investmentId) async {
+    final cacheKey = CacheKeys.transfersAll(investmentId);
+    List<Transfer>? transfers = await session.caches.local.get(cacheKey);
+
+    if (transfers == null) {
+      transfers = await Transfer.db.find(
+        session,
+        where: (e) => e.investmentId.equals(investmentId),
+        orderBy: (t) => t.createdAt,
+      );
+      await session.caches.local.put(cacheKey, transfers, lifetime: const Duration(hours: 1));
+    }
+
+    return transfers;
   }
 }

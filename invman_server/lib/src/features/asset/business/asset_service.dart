@@ -26,11 +26,11 @@ class AssetService {
       throw ServerException(errorCode: ErrorCode.notFound);
     }
 
-    AssetValue? currentValue = await session.caches.local.get(_getCacheKey(asset));
+    AssetValue? currentValue = await session.caches.local.get(CacheKeys.assetCurrentValue(asset));
 
     if (currentValue == null) {
       currentValue = await assetsValuesSource.getCurrentValue(asset: asset);
-      await session.caches.local.put(_getCacheKey(asset), currentValue, lifetime: Duration(minutes: 1));
+      await session.caches.local.put(CacheKeys.assetCurrentValue(asset), currentValue, lifetime: Duration(minutes: 1));
     }
 
     return asset.copyWith(price: currentValue.value, timestamp: currentValue.timestamp);
@@ -84,11 +84,4 @@ class AssetService {
     };
   }
 
-  String _getCacheKey(Asset asset) {
-    if (asset.exchange == null) {
-      return asset.symbol;
-    } else {
-      return "${asset.symbol}-${asset.exchange}";
-    }
-  }
 }

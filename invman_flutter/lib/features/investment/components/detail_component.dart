@@ -25,62 +25,65 @@ class InvestmentDetailComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final investment = controller.state.value.requireValue;
-    return SingleChildScrollView(
-      child: Material(
-        child: Column(
-          children: [
-            InvestmentHeaderContent(investment: investment, currencyCode: authManager.currencyCode),
-            Padding(
-              padding: .symmetric(horizontal: UIConstants.appHorizontalPadding),
-              child: Column(
-                spacing: UIConstants.spacingXs,
-                children: [
-                  InvestmentReturnsGraphComponent(controller: controller, preferencesManager: preferencesManager),
-                  const SizedBox(height: UIConstants.spacingSm),
-                  if (investment.asset != null) ...[
-                    SectionHeaderComponent(title: S.of(context).asset),
-                    AssetTileComponent(asset: investment.asset!),
-                    ListTile(
-                      leading: Icon(Icons.confirmation_number, color: Theme.of(context).colorScheme.primary),
-                      title: Text(S.of(context).investment_quantity),
-                      trailing: Text(investment.quantity.toString()),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.update, color: Theme.of(context).colorScheme.primary),
-                      title: Text("${S.of(context).asset} ${S.of(context).core_lastUpdate}"),
-                      trailing: Text(
-                        investment.asset?.timestamp != null
-                            ? DateFormat.yMMMd().add_jm().format(investment.asset!.timestamp!.toLocal())
-                            : '-',
+    return RefreshIndicator(
+      onRefresh: controller.reload,
+      child: SingleChildScrollView(
+        child: Material(
+          child: Column(
+            children: [
+              InvestmentHeaderContent(investment: investment, currencyCode: authManager.currencyCode),
+              Padding(
+                padding: .symmetric(horizontal: UIConstants.appHorizontalPadding),
+                child: Column(
+                  spacing: UIConstants.spacingXs,
+                  children: [
+                    InvestmentReturnsGraphComponent(controller: controller, preferencesManager: preferencesManager),
+                    const SizedBox(height: UIConstants.spacingSm),
+                    if (investment.asset != null) ...[
+                      SectionHeaderComponent(title: S.of(context).asset(1)),
+                      AssetTileComponent(asset: investment.asset!),
+                      ListTile(
+                        leading: Icon(Icons.confirmation_number, color: Theme.of(context).colorScheme.primary),
+                        title: Text(S.of(context).investment_quantity),
+                        trailing: Text(investment.quantity.toString()),
                       ),
-                    ),
-                    if (investment.forex != null)
                       ListTile(
                         leading: Icon(Icons.update, color: Theme.of(context).colorScheme.primary),
-                        title: Text("${S.of(context).account_currency} ${S.of(context).core_lastUpdate}"),
-                        subtitle: Text(investment.forex!.toStringComparison()),
-                        trailing: Text(DateFormat.yMMMd().add_jm().format(investment.forex!.timestamp.toLocal())),
+                        title: Text("${S.of(context).asset(1)} ${S.of(context).core_lastUpdate}"),
+                        trailing: Text(
+                          investment.asset?.timestamp != null
+                              ? DateFormat.yMMMd().add_jm().format(investment.asset!.timestamp!.toLocal())
+                              : '-',
+                        ),
                       ),
+                      if (investment.forex != null)
+                        ListTile(
+                          leading: Icon(Icons.update, color: Theme.of(context).colorScheme.primary),
+                          title: Text("${S.of(context).account_currency} ${S.of(context).core_lastUpdate}"),
+                          subtitle: Text(investment.forex!.toStringComparison()),
+                          trailing: Text(DateFormat.yMMMd().add_jm().format(investment.forex!.timestamp.toLocal())),
+                        ),
+                    ],
+                    if (investment.withdrawalRule != null) ...[
+                      SizedBox(height: UIConstants.spacingMd),
+                      SectionHeaderComponent(title: S.of(context).withdrawal),
+                      WithdrawalRuleTileComponent(rule: investment.withdrawalRule!),
+                    ],
+                    const SizedBox(height: UIConstants.spacingLg),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await router.push(TransferRootScreen.route(investment.id!));
+                        controller.reload();
+                      },
+                      style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 0)),
+                      child: Text(S.of(context).transfer_title),
+                    ),
+                    const SizedBox(height: UIConstants.spacingMd),
                   ],
-                  if (investment.withdrawalRule != null) ...[
-                    SizedBox(height: UIConstants.spacingMd),
-                    SectionHeaderComponent(title: S.of(context).withdrawal),
-                    WithdrawalRuleTileComponent(rule: investment.withdrawalRule!),
-                  ],
-                  const SizedBox(height: UIConstants.spacingLg),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await router.push(TransferRootScreen.route(investment.id!));
-                      controller.reload();
-                    },
-                    style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 0)),
-                    child: Text(S.of(context).transfer_title),
-                  ),
-                  const SizedBox(height: UIConstants.spacingMd),
-                ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

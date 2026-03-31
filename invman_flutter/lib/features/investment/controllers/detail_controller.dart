@@ -45,6 +45,12 @@ class InvestmentDetailController extends DetailController<int, Investment> {
   }
 
   @override
+  Future<void> reload() async {
+    super.reload();
+    _returnsList.clear();
+  }
+
+  @override
   void onDispose() {
     super.onDispose();
     _returnsList.forEach((_, signal) => signal.dispose());

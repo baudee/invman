@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart' hide Order;
+import 'package:invman_server/src/core/helpers/helpers.dart';
 import 'package:invman_server/src/features/asset/asset.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
@@ -12,12 +13,12 @@ class TimeSeriesService {
   Future<List<AssetValue>> get(Session session, UuidValue assetId, {required AssetTimeHorizon timeHorizon}) async {
     final asset = await assetService.retrieve(session, assetId);
 
-    List<AssetValue>? timeSeries = await session.caches.local.get(_getCacheKey(asset, timeHorizon));
+    List<AssetValue>? timeSeries = await session.caches.local.get(CacheKeys.assetTimeSeries(asset, timeHorizon));
 
     if (timeSeries == null) {
       timeSeries = await assetsValuesSource.getValues(asset: asset, timeHorizon: timeHorizon);
       await session.caches.local.put(
-        _getCacheKey(asset, timeHorizon),
+        CacheKeys.assetTimeSeries(asset, timeHorizon),
         timeSeries,
         lifetime: _getDurationCachingFromTimeHorizon(timeHorizon),
       );
@@ -41,7 +42,4 @@ class TimeSeriesService {
     }
   }
 
-  String _getCacheKey(Asset asset, AssetTimeHorizon timeHorizon) {
-    return "${asset.id}-${timeHorizon.name}";
-  }
 }

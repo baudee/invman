@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:invman_server/src/core/helpers/helpers.dart';
 import 'package:invman_server/src/features/currency/currency.dart';
 import 'package:invman_server/src/env.dart';
 import 'package:invman_server/src/generated/protocol.dart';
@@ -76,16 +77,17 @@ class CurrencyService {
   }
 
   Future<AssetValue> _getCachedDollarValue(Session session, {required String code}) async {
-    AssetValue? dollarValue = await session.caches.local.get(code);
+    final cacheKey = CacheKeys.currencyDollarValue(code);
+    AssetValue? dollarValue = await session.caches.local.get(cacheKey);
     if (dollarValue == null) {
       dollarValue = await forexValuesSource.getDollarValue(code: code);
-      await session.caches.local.put(code, dollarValue, lifetime: Duration(seconds: 30));
+      await session.caches.local.put(cacheKey, dollarValue, lifetime: Duration(seconds: 30));
     }
     return dollarValue;
   }
 
   Future<AssetValue> _getCachedEodDollarValue(Session session, {required String code, required DateTime date}) async {
-    final cacheKey = "$code-${date.year}-${date.month}-${date.day}";
+    final cacheKey = CacheKeys.currencyEodDollarValue(code, date);
     AssetValue? dollarValue = await session.caches.local.get(cacheKey);
     if (dollarValue == null) {
       dollarValue = await forexValuesSource.getDollarValue(code: code);

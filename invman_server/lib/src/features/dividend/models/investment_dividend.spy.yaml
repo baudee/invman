@@ -1,0 +1,6 @@
+class: InvestmentDividend
+fields:
+    investment: Investment,
+    dividends: List<ComputedDividendValue>
+
+

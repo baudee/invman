@@ -62,6 +62,16 @@ class TransferFormComponent extends StatelessWidget {
                         }
                       },
                     ),
+                    SizedBox(height: UIConstants.spacingSm),
+                    DeleteButton(
+                      onPressed: () async {
+                        final (success, message) = await controller.delete();
+                        ToastUtils.message(message, success: success);
+                        if (success) {
+                          router.pop();
+                        }
+                      },
+                    ),
                     SizedBox(height: UIConstants.spacingMd),
                   ],
                 ),

@@ -15,6 +15,7 @@ class InvestmentTileComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     final authManager = getIt<AuthManager>();
     return ListTile(
+      leading: investment.asset != null ? AvatarComponent(asset: investment.asset!) : null,
       title: Text(investment.name, overflow: TextOverflow.ellipsis),
       subtitle: Text(
         "${investment.investAmount.toStringPrice(authManager.currencyCode)} / ${investment.withdrawAmount?.toStringPrice(authManager.currencyCode)}",

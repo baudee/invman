@@ -221,7 +221,7 @@ class InvestmentService {
   }) async {
     final investment = await retrieve(session, investmentId, computeWithdrawAmount: false);
 
-    final cacheKey = "$investmentId-${interval.name}-returns";
+    final cacheKey = CacheKeys.investmentReturns(investmentId, interval);
     List<InvestmentReturn>? returns = await session.caches.local.get(cacheKey);
 
     if (returns == null) {

@@ -22,6 +22,7 @@
     "core_seeAll": "See all",
     "core_lastUpdate": "Last Update",
     "core_popular": "Popular",
+    "core_share": "Share",
     "@APP_SETTINGS---------------------------------------------------------------": {},
     "appSettings_maintenanceTitle": "Application under maintenance",
     "appSettings_maintenanceSubtitle": "Please try again later",
@@ -76,7 +77,16 @@
     "asset_liked": "Your Favorites",
     "asset_info": "Asset Information",
     "asset_selection": "Asset Selection",
-    "asset": "Asset",
+    "asset": "{count, plural, =1{Asset} other{Assets}}",
+    "@asset": {
+        "description": "Label for financial assets",
+        "placeholders": {
+        "count": {
+            "type": "int",
+            "example": "1"
+        }
+        }
+    },
     "asset_type": "{type, select, stock{Stock} etf{ETF} crypto{Crypto} commodity{Commodity} indice{Index} other{{type}}}",
     "asset_type_plural": "{type, select, stock{Stocks} etf{ETFs} crypto{Cryptos} commodity{Commodities} indice{Indices} other{{type}}}",
     "asset_time_horizon": "{type, select, oneDay{1d} oneWeek{1w} oneMonth{1m} oneYear{1y} all{All} other{{type}}}",
@@ -132,5 +142,26 @@
     "investment_totalGain": "Gain",
     "investment_thisMonth": "this month",
     "investment_return_interval": "{type, select, yearly{Yearly} monthly{Monthly} other{{type}}}",
-    "investment_add_transfers": "Add transfers to see your performance"
+    "investment_add_transfers": "Add transfers to see your performance",
+    "@DIVIDEND---------------------------------------------------------------": {},
+    "dividend_title": "Dividends",
+    "dividend_estimatedYear": "Estimated {year}",
+    "@dividend_estimatedYear": {"placeholders": {"year": {"type": "int"}}},
+    "dividend_received": "Received",
+    "dividend_upcoming": "Upcoming",
+    "dividend_estimated": "Estimated",
+    "dividend_nextPayments": "Next payments",
+    "dividend_history": "History",
+    "dividend_calendar": "Calendar",
+    "dividend_monthly": "Monthly",
+    "dividend_years": "{n} years",
+    "@dividend_years": {"placeholders": {"n": {"type": "int"}}},
+    "dividend_perShare": "{amount} / share",
+    "@dividend_perShare": {"placeholders": {"amount": {"type": "String"}}},
+    "dividend_receivedPercent": "{pct}% received",
+    "@dividend_receivedPercent": {"placeholders": {"pct": {"type": "int"}}},
+    "dividend_totalReceived": "Total received {from}–{to}",
+    "@dividend_totalReceived": {"placeholders": {"from": {"type": "int"}, "to": {"type": "int"}}},
+    "dividend_noData": "No dividend data available",
+    "dividend_noData_actionCall": "To view dividends, create an investment and record your first transfers."
 }

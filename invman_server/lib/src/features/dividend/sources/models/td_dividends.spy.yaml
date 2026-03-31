@@ -1,0 +1,6 @@
+class: TwelveDataDividends
+serverOnly: true
+fields:
+    meta: Map<String, String?>
+    dividends: List<TwelveDataDividendValue>
+

@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/account/account.dart';
 import 'package:invman_flutter/features/app_settings/app_settings.dart';
+import 'package:invman_flutter/features/dividend/dividend.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/onboarding/onboarding.dart';
 import 'package:invman_flutter/features/asset/asset.dart';
@@ -30,7 +31,7 @@ abstract class RouterModule {
         GoRoute(path: SignInScreen.route(), builder: (_, _) => SignInScreen()),
         ...OnboardingRoutes.routes,
         StatefulShellRoute.indexedStack(
-          branches: [AssetRoutes.branch, InvestmentRoutes.branch, AccountRoutes.branch],
+          branches: [AssetRoutes.branch, InvestmentRoutes.branch, DividendRoutes.branch, AccountRoutes.branch],
           builder: (context, state, navigationShell) {
             return AppContainer(navigationShell: navigationShell);
           },
