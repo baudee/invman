@@ -5,7 +5,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 abstract class DetailController<K, T> implements Disposable {
   final _state = asyncSignal<T>(AsyncState.loading());
-  ReadonlySignal<AsyncState<T>> get state => _state;
+  ReadonlySignal<AsyncState<T>> get state => _state.readonly();
 
   final K id;
 

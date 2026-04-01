@@ -15,6 +15,8 @@ class CacheKeys {
 
   static String assetTimeSeries(Asset asset, AssetTimeHorizon timeHorizon) => '${asset.id}-${timeHorizon.name}';
 
+  static String exchangesList = 'exchanges_list';
+
   // Currency
   static String currencyDollarValue(String code) => "currency_dollar_value_$code";
 

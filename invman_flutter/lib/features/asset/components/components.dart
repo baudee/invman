@@ -1,5 +1,6 @@
 export 'card_component.dart';
 export 'detail_component.dart';
+export 'filter_sheet.dart';
 export 'like_button_component.dart';
 export 'search_component.dart';
 export 'search_placeholder_component.dart';

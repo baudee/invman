@@ -10,7 +10,6 @@ class TransferService {
 
   final InvestmentService investmentService;
 
-
   Future<Transfer> retrieve(Session session, int id) async {
     final transfer = await Transfer.db.findById(
       session,
@@ -60,8 +59,12 @@ class TransferService {
 
     final investmentId = savedTransfer.investmentId;
     await session.caches.local.invalidateKey(CacheKeys.transfersAll(investmentId));
-    await session.caches.local.invalidateKey(CacheKeys.investmentReturns(investmentId, InvestmentReturnInterval.monthly));
-    await session.caches.local.invalidateKey(CacheKeys.investmentReturns(investmentId, InvestmentReturnInterval.yearly));
+    await session.caches.local.invalidateKey(
+      CacheKeys.investmentReturns(investmentId, InvestmentReturnInterval.monthly),
+    );
+    await session.caches.local.invalidateKey(
+      CacheKeys.investmentReturns(investmentId, InvestmentReturnInterval.yearly),
+    );
     return savedTransfer;
   }
 
@@ -88,8 +91,12 @@ class TransferService {
 
     final investmentId = deletedTransfer.investmentId;
     await session.caches.local.invalidateKey(CacheKeys.transfersAll(investmentId));
-    await session.caches.local.invalidateKey(CacheKeys.investmentReturns(investmentId, InvestmentReturnInterval.monthly));
-    await session.caches.local.invalidateKey(CacheKeys.investmentReturns(investmentId, InvestmentReturnInterval.yearly));
+    await session.caches.local.invalidateKey(
+      CacheKeys.investmentReturns(investmentId, InvestmentReturnInterval.monthly),
+    );
+    await session.caches.local.invalidateKey(
+      CacheKeys.investmentReturns(investmentId, InvestmentReturnInterval.yearly),
+    );
     return deletedTransfer;
   }
 

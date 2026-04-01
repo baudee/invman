@@ -17,14 +17,17 @@ abstract class AssetFilter
     implements _i1.SerializableModel, _i1.ProtocolSerialization {
   AssetFilter._({
     this.type,
-    this.query,
+    String? query,
     bool? favorite,
-  }) : favorite = favorite ?? false;
+    this.exchange,
+  }) : query = query ?? '',
+       favorite = favorite ?? false;
 
   factory AssetFilter({
     _i2.AssetType? type,
     String? query,
     bool? favorite,
+    String? exchange,
   }) = _AssetFilterImpl;
 
   factory AssetFilter.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -36,14 +39,17 @@ abstract class AssetFilter
       favorite: jsonSerialization['favorite'] == null
           ? null
           : _i1.BoolJsonExtension.fromJson(jsonSerialization['favorite']),
+      exchange: jsonSerialization['exchange'] as String?,
     );
   }
 
   _i2.AssetType? type;
 
-  String? query;
+  String query;
 
   bool favorite;
+
+  String? exchange;
 
   /// Returns a shallow copy of this [AssetFilter]
   /// with some or all fields replaced by the given arguments.
@@ -52,14 +58,16 @@ abstract class AssetFilter
     _i2.AssetType? type,
     String? query,
     bool? favorite,
+    String? exchange,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'AssetFilter',
       if (type != null) 'type': type?.toJson(),
-      if (query != null) 'query': query,
+      'query': query,
       'favorite': favorite,
+      if (exchange != null) 'exchange': exchange,
     };
   }
 
@@ -68,8 +76,9 @@ abstract class AssetFilter
     return {
       '__className__': 'AssetFilter',
       if (type != null) 'type': type?.toJson(),
-      if (query != null) 'query': query,
+      'query': query,
       'favorite': favorite,
+      if (exchange != null) 'exchange': exchange,
     };
   }
 
@@ -86,10 +95,12 @@ class _AssetFilterImpl extends AssetFilter {
     _i2.AssetType? type,
     String? query,
     bool? favorite,
+    String? exchange,
   }) : super._(
          type: type,
          query: query,
          favorite: favorite,
+         exchange: exchange,
        );
 
   /// Returns a shallow copy of this [AssetFilter]
@@ -98,13 +109,15 @@ class _AssetFilterImpl extends AssetFilter {
   @override
   AssetFilter copyWith({
     Object? type = _Undefined,
-    Object? query = _Undefined,
+    String? query,
     bool? favorite,
+    Object? exchange = _Undefined,
   }) {
     return AssetFilter(
       type: type is _i2.AssetType? ? type : this.type,
-      query: query is String? ? query : this.query,
+      query: query ?? this.query,
       favorite: favorite ?? this.favorite,
+      exchange: exchange is String? ? exchange : this.exchange,
     );
   }
 }

@@ -2,5 +2,6 @@ class: AssetFilter
 
 fields:
     type: AssetType?
-    query: String?
+    query: String, default=""
     favorite: bool, default=false
+    exchange: String?

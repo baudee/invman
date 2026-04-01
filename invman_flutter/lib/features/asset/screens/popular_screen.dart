@@ -19,7 +19,7 @@ class PopularAssetsScreen extends HookWidget {
     final controller = useController(() => getIt<PopularAssetListController>(param1: type), [type]);
 
     return BaseScreen(
-      appBar: AppBar(title: Text(S.of(context).asset_popular)),
+      appBar: AppBar(title: Text("${S.of(context).core_popular} ${S.of(context).asset_type_plural(type)}")),
       body: InfiniteListComponent<Asset>(
         controller: controller,
         itemBuilder: (asset) =>

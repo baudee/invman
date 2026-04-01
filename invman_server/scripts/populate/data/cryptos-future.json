@@ -11,14 +11,14 @@
     "name": "Aave",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/aave.png"
   },
   {
     "symbol": "AAVE/ETH",
     "name": "Aave",
     "currency": "ETH",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/aave.png"
   },
   {
     "symbol": "ACOIN/BTC",
@@ -32,21 +32,21 @@
     "name": "Cardano",
     "currency": "BNB",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/ada.png"
   },
   {
     "symbol": "ADA/BTC",
     "name": "Cardano",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/ada.png"
   },
   {
     "symbol": "ADA/ETH",
     "name": "Cardano",
     "currency": "ETH",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/ada.png"
   },
   {
     "symbol": "ADC/BTC",
@@ -60,7 +60,7 @@
     "name": "AdEx",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/adx.png"
   },
   {
     "symbol": "ADZ/BTC",
@@ -81,7 +81,7 @@
     "name": "Algorand",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/algo.png"
   },
   {
     "symbol": "AMS/BTC",
@@ -144,7 +144,7 @@
     "name": "Cosmos",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/atom.png"
   },
   {
     "symbol": "AUR/BTC",
@@ -193,28 +193,28 @@
     "name": "Band Protocol",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/band.png"
   },
   {
     "symbol": "BAT/BTC",
     "name": "Basic Attention Token",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/bat.png"
   },
   {
     "symbol": "BAT/ETH",
     "name": "Basic Attention Token",
     "currency": "ETH",
     "exchange": "Coinbase Pro",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/bat.png"
   },
   {
     "symbol": "BCH/BNB",
     "name": "Bitcoin Cash",
     "currency": "BNB",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/bch.png"
   },
   {
     "symbol": "BCHSV/DOGE",
@@ -235,14 +235,14 @@
     "name": "Bitcoin Cash",
     "currency": "XRP",
     "exchange": "Bitrue",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/bch.png"
   },
   {
     "symbol": "BCN/ETH",
     "name": "Bytecoin",
     "currency": "ETH",
     "exchange": "HitBTC",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/bcn.png"
   },
   {
     "symbol": "BERN/BTC",
@@ -298,21 +298,21 @@
     "name": "Binance Coin",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/bnb.png"
   },
   {
     "symbol": "BNB/ETH",
     "name": "Binance Coin",
     "currency": "ETH",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/bnb.png"
   },
   {
     "symbol": "BNT/BTC",
     "name": "Bancor",
     "currency": "BTC",
     "exchange": "HitBTC",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/bnt.png"
   },
   {
     "symbol": "BOLI/BTC",
@@ -368,7 +368,7 @@
     "name": "Bitcoin",
     "currency": "ETH",
     "exchange": "Synthetic",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/btc.png"
   },
   {
     "symbol": "BTCRED/BTC",
@@ -382,14 +382,14 @@
     "name": "Bitcoin Gold",
     "currency": "BTC",
     "exchange": "HitBTC",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/btg.png"
   },
   {
     "symbol": "BTG/ETH",
     "name": "Bitcoin Gold",
     "currency": "ETH",
     "exchange": "HitBTC",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/btg.png"
   },
   {
     "symbol": "BUB/BTC",
@@ -473,14 +473,14 @@
     "name": "Clams",
     "currency": "BTC",
     "exchange": "YoBit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/clam.png"
   },
   {
     "symbol": "CLOAK/BTC",
     "name": "CloakCoin",
     "currency": "BTC",
     "exchange": "YoBit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/cloak.png"
   },
   {
     "symbol": "CLUB/BTC",
@@ -508,7 +508,7 @@
     "name": "Compound",
     "currency": "BTC",
     "exchange": "Coinbase Pro",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/comp.png"
   },
   {
     "symbol": "CONX/BTC",
@@ -557,14 +557,14 @@
     "name": "Curve DAO Token",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/crv.png"
   },
   {
     "symbol": "CRW/BTC",
     "name": "Crown",
     "currency": "BTC",
     "exchange": "YoBit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/crw.png"
   },
   {
     "symbol": "CTSI/BTC",
@@ -578,7 +578,7 @@
     "name": "Civic",
     "currency": "ETH",
     "exchange": "Gate.io",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/cvc.png"
   },
   {
     "symbol": "CXT/BTC",
@@ -599,7 +599,7 @@
     "name": "Dash",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/dash.png"
   },
   {
     "symbol": "DEM/BTC",
@@ -613,7 +613,7 @@
     "name": "Dent",
     "currency": "BTC",
     "exchange": "Upbit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/dent.png"
   },
   {
     "symbol": "DFT/BTC",
@@ -627,7 +627,7 @@
     "name": "DigiByte",
     "currency": "BTC",
     "exchange": "HitBTC",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/dgb.png"
   },
   {
     "symbol": "DGC/BTC",
@@ -648,14 +648,14 @@
     "name": "Agrello",
     "currency": "BTC",
     "exchange": "YoBit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/dlt.png"
   },
   {
     "symbol": "DOGE/BTC",
     "name": "Dogecoin",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/doge.png"
   },
   {
     "symbol": "DOGS/USDT",
@@ -704,14 +704,14 @@
     "name": "Enjin coin",
     "currency": "BTC",
     "exchange": "HitBTC",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/enj.png"
   },
   {
     "symbol": "ENJ/ETH",
     "name": "Enjin coin",
     "currency": "ETH",
     "exchange": "Kucoin",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/enj.png"
   },
   {
     "symbol": "ENT/BTC",
@@ -732,14 +732,14 @@
     "name": "Ethereum Classic",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/etc.png"
   },
   {
     "symbol": "ETH/BTC",
     "name": "Ethereum",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/eth.png"
   },
   {
     "symbol": "ETH/XAU",
@@ -767,7 +767,7 @@
     "name": "Expanse",
     "currency": "BTC",
     "exchange": "YoBit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/exp.png"
   },
   {
     "symbol": "FARTCOIN/USDT",
@@ -802,7 +802,7 @@
     "name": "Filecoin",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/fil.png"
   },
   {
     "symbol": "FLOKI/USDT",
@@ -823,7 +823,7 @@
     "name": "Flux",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/flux.png"
   },
   {
     "symbol": "FRC/BTC",
@@ -886,7 +886,7 @@
     "name": "Gas",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/gas.png"
   },
   {
     "symbol": "GB/BTC",
@@ -921,7 +921,7 @@
     "name": "Golem",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/gnt.png"
   },
   {
     "symbol": "GOD/BTC",
@@ -935,7 +935,7 @@
     "name": "The Graph",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/grt.png"
   },
   {
     "symbol": "GSR/BTC",
@@ -998,7 +998,7 @@
     "name": "Holo",
     "currency": "ETH",
     "exchange": "Bitrue",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/hot.png"
   },
   {
     "symbol": "HVCO/BTC",
@@ -1033,7 +1033,7 @@
     "name": "Internet Computer",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/icp.png"
   },
   {
     "symbol": "IETH/BTC",
@@ -1089,14 +1089,14 @@
     "name": "IoTeX",
     "currency": "BTC",
     "exchange": "Upbit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/iotx.png"
   },
   {
     "symbol": "IOTX/ETH",
     "name": "IoTeX",
     "currency": "ETH",
     "exchange": "Kucoin",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/iotx.png"
   },
   {
     "symbol": "IQN/BTC",
@@ -1131,21 +1131,21 @@
     "name": "KuCoin Shares",
     "currency": "BTC",
     "exchange": "Kucoin",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/kcs.png"
   },
   {
     "symbol": "KCS/ETH",
     "name": "KuCoin Shares",
     "currency": "ETH",
     "exchange": "Kucoin",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/kcs.png"
   },
   {
     "symbol": "KNC/BTC",
     "name": "Kyber Network",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/knc.png"
   },
   {
     "symbol": "KOBO/BTC",
@@ -1187,21 +1187,21 @@
     "name": "Chainlink",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/link.png"
   },
   {
     "symbol": "LINK/ETH",
     "name": "Chainlink",
     "currency": "ETH",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/link.png"
   },
   {
     "symbol": "LINK/XRP",
     "name": "Chainlink",
     "currency": "XRP",
     "exchange": "Bitrue",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/link.png"
   },
   {
     "symbol": "LIZA/BTC",
@@ -1236,28 +1236,28 @@
     "name": "Lisk",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/lsk.png"
   },
   {
     "symbol": "LTC/BNB",
     "name": "Litecoin",
     "currency": "BNB",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/ltc.png"
   },
   {
     "symbol": "LTC/BTC",
     "name": "Litecoin",
     "currency": "BTC",
     "exchange": "HitBTC",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/ltc.png"
   },
   {
     "symbol": "LTC/ETH",
     "name": "Litecoin",
     "currency": "ETH",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/ltc.png"
   },
   {
     "symbol": "LTCR/BTC",
@@ -1278,28 +1278,28 @@
     "name": "Lunyr",
     "currency": "ETH",
     "exchange": "YoBit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/lun.png"
   },
   {
     "symbol": "MAX/BTC",
     "name": "MaxCoin",
     "currency": "BTC",
     "exchange": "YoBit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/max.png"
   },
   {
     "symbol": "MITH/ETH",
     "name": "Mithril",
     "currency": "ETH",
     "exchange": "HitBTC",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/mith.png"
   },
   {
     "symbol": "MLN/BTC",
     "name": "Melon",
     "currency": "BTC",
     "exchange": "Kraken",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/mln.png"
   },
   {
     "symbol": "MNTP/BTC",
@@ -1334,7 +1334,7 @@
     "name": "MonaCoin",
     "currency": "BTC",
     "exchange": "Bitbank",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/mona.png"
   },
   {
     "symbol": "MOTO/BTC",
@@ -1383,7 +1383,7 @@
     "name": "Neo",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/neo.png"
   },
   {
     "symbol": "NETKO/BTC",
@@ -1404,35 +1404,35 @@
     "name": "Nexo",
     "currency": "BTC",
     "exchange": "HitBTC",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/nexo.png"
   },
   {
     "symbol": "NLC2/BTC",
     "name": "NoLimitCoin",
     "currency": "BTC",
     "exchange": "YoBit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/nlc2.png"
   },
   {
     "symbol": "NLG/BTC",
     "name": "Gulden",
     "currency": "BTC",
     "exchange": "YoBit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/nlg.png"
   },
   {
     "symbol": "NMC/BTC",
     "name": "Namecoin",
     "currency": "BTC",
     "exchange": "YoBit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/nmc.png"
   },
   {
     "symbol": "NMR/BTC",
     "name": "Numeraire",
     "currency": "BTC",
     "exchange": "Upbit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/nmr.png"
   },
   {
     "symbol": "NOT/USDT",
@@ -1474,7 +1474,7 @@
     "name": "Ontology",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/ont.png"
   },
   {
     "symbol": "OPAL/BTC",
@@ -1502,7 +1502,7 @@
     "name": "PAX Gold",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/paxg.png"
   },
   {
     "symbol": "pDOTn/BTC",
@@ -1684,7 +1684,7 @@
     "name": "ReddCoin",
     "currency": "BTC",
     "exchange": "YoBit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/rdd.png"
   },
   {
     "symbol": "REC/BTC",
@@ -1698,28 +1698,28 @@
     "name": "Augur",
     "currency": "BTC",
     "exchange": "HitBTC",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/rep.png"
   },
   {
     "symbol": "REP/ETH",
     "name": "Augur",
     "currency": "ETH",
     "exchange": "HitBTC",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/rep.png"
   },
   {
     "symbol": "RLC/BTC",
     "name": "iExec RLC",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/rlc.png"
   },
   {
     "symbol": "RLC/ETH",
     "name": "iExec RLC",
     "currency": "ETH",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/rlc.png"
   },
   {
     "symbol": "ROSE/BTC",
@@ -1754,14 +1754,14 @@
     "name": "Ravencoin",
     "currency": "BTC",
     "exchange": "Upbit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/rvn.png"
   },
   {
     "symbol": "SAND/BTC",
     "name": "The Sandbox",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/sand.png"
   },
   {
     "symbol": "SANTOS/BTC",
@@ -1775,7 +1775,7 @@
     "name": "Siacoin",
     "currency": "BTC",
     "exchange": "HitBTC",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/sc.png"
   },
   {
     "symbol": "SCL/BTC",
@@ -1803,42 +1803,42 @@
     "name": "SIBCoin",
     "currency": "BTC",
     "exchange": "YoBit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/sib.png"
   },
   {
     "symbol": "SLS/BTC",
     "name": "SaluS",
     "currency": "BTC",
     "exchange": "YoBit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/sls.png"
   },
   {
     "symbol": "SNX/BTC",
     "name": "Synthetix",
     "currency": "BTC",
     "exchange": "Kucoin",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/snx.png"
   },
   {
     "symbol": "SNX/ETH",
     "name": "Synthetix Network Token",
     "currency": "ETH",
     "exchange": "Kucoin",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/snx.png"
   },
   {
     "symbol": "SOL/BNB",
     "name": "Solana",
     "currency": "BNB",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/sol.png"
   },
   {
     "symbol": "SOL/BTC",
     "name": "Solana",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/sol.png"
   },
   {
     "symbol": "SONG/BTC",
@@ -1873,28 +1873,28 @@
     "name": "Startcoin",
     "currency": "BTC",
     "exchange": "YoBit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/start.png"
   },
   {
     "symbol": "STEEM/BTC",
     "name": "Steem",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/steem.png"
   },
   {
     "symbol": "STEEM/ETH",
     "name": "Steem",
     "currency": "ETH",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/steem.png"
   },
   {
     "symbol": "STX/ETH",
     "name": "Stox",
     "currency": "ETH",
     "exchange": "Gate.io",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/stx.png"
   },
   {
     "symbol": "STXk/BTC",
@@ -1936,14 +1936,14 @@
     "name": "Telcoin",
     "currency": "BTC",
     "exchange": "Kucoin",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/tel.png"
   },
   {
     "symbol": "TEL/ETH",
     "name": "Telcoin",
     "currency": "ETH",
     "exchange": "Kucoin",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/tel.png"
   },
   {
     "symbol": "TFUEL/BTC",
@@ -1957,7 +1957,7 @@
     "name": "THETA",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/theta.png"
   },
   {
     "symbol": "TOKC/BTC",
@@ -1999,21 +1999,21 @@
     "name": "TRON",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/trx.png"
   },
   {
     "symbol": "TRX/ETH",
     "name": "TRON",
     "currency": "ETH",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/trx.png"
   },
   {
     "symbol": "TRX/XRP",
     "name": "TRON",
     "currency": "XRP",
     "exchange": "Bitrue",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/trx.png"
   },
   {
     "symbol": "TX/BTC",
@@ -2062,14 +2062,14 @@
     "name": "VeChain",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/vet.png"
   },
   {
     "symbol": "VIA/BTC",
     "name": "Viacoin",
     "currency": "BTC",
     "exchange": "YoBit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/via.png"
   },
   {
     "symbol": "VLT/BTC",
@@ -2097,21 +2097,21 @@
     "name": "Vertcoin",
     "currency": "BTC",
     "exchange": "YoBit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/vtc.png"
   },
   {
     "symbol": "WAN/BTC",
     "name": "Wanchain",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/wan.png"
   },
   {
     "symbol": "WAN/XRP",
     "name": "Wanchain",
     "currency": "XRP",
     "exchange": "Bitrue",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/wan.png"
   },
   {
     "symbol": "WBB/BTC",
@@ -2125,7 +2125,7 @@
     "name": "Wrapped Bitcoin",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/wbtc.png"
   },
   {
     "symbol": "WBT/USDT",
@@ -2139,7 +2139,7 @@
     "name": "Wagerr",
     "currency": "BTC",
     "exchange": "YoBit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/wgr.png"
   },
   {
     "symbol": "WIF/USDT",
@@ -2174,7 +2174,7 @@
     "name": "XTRABYTES",
     "currency": "BTC",
     "exchange": "YoBit",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/xby.png"
   },
   {
     "symbol": "XCO/BTC",
@@ -2195,7 +2195,7 @@
     "name": "NEM",
     "currency": "BTC",
     "exchange": "HitBTC",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/xem.png"
   },
   {
     "symbol": "XHI/BTC",
@@ -2209,28 +2209,28 @@
     "name": "Mixin",
     "currency": "BTC",
     "exchange": "BigONE",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/xin.png"
   },
   {
     "symbol": "XLM/BTC",
     "name": "Stellar",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/xlm.png"
   },
   {
     "symbol": "XLM/ETH",
     "name": "Stellar",
     "currency": "ETH",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/xlm.png"
   },
   {
     "symbol": "XMR/BTC",
     "name": "Monero",
     "currency": "BTC",
     "exchange": "HitBTC",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/xmr.png"
   },
   {
     "symbol": "XPTX/BTC",
@@ -2258,35 +2258,35 @@
     "name": "XRP",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/xrp.png"
   },
   {
     "symbol": "XRP/ETH",
     "name": "XRP",
     "currency": "ETH",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/xrp.png"
   },
   {
     "symbol": "XRP/TRX",
     "name": "XRP",
     "currency": "TRX",
     "exchange": "Synthetic",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/xrp.png"
   },
   {
     "symbol": "XTZ/BTC",
     "name": "Tezos",
     "currency": "BTC",
     "exchange": "HitBTC",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/xtz.png"
   },
   {
     "symbol": "XVG/BTC",
     "name": "Verge",
     "currency": "BTC",
     "exchange": "HitBTC",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/xvg.png"
   },
   {
     "symbol": "XVS/BTC",
@@ -2314,21 +2314,21 @@
     "name": "Zcash",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/zec.png"
   },
   {
     "symbol": "ZEC/ETH",
     "name": "Zcash",
     "currency": "ETH",
     "exchange": "Poloniex",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/zec.png"
   },
   {
     "symbol": "ZEN/BTC",
     "name": "Horizen",
     "currency": "BTC",
     "exchange": "Binance",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/zen.png"
   },
   {
     "symbol": "ZENI/BTC",
@@ -2349,7 +2349,7 @@
     "name": "0x",
     "currency": "BTC",
     "exchange": "HitBTC",
-    "logoUrl": null
+    "logoUrl": "https://logo.twelvedata.com/crypto/zrx.png"
   },
   {
     "symbol": "ZYD/BTC",

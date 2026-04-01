@@ -135,6 +135,13 @@ class EndpointAsset extends _i1.EndpointRef {
       'timeHorizon': timeHorizon,
     },
   );
+
+  _i2.Future<List<String>> exchanges() =>
+      caller.callServerEndpoint<List<String>>(
+        'asset',
+        'exchanges',
+        {},
+      );
 }
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints

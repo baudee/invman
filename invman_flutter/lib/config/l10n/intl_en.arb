@@ -92,6 +92,8 @@
     "asset_time_horizon": "{type, select, oneDay{1d} oneWeek{1w} oneMonth{1m} oneYear{1y} all{All} other{{type}}}",
     "asset_see_details_graph": "Touch the graph to see details",
     "asset_exchange": "Exchange",
+    "asset_filters": "Filters",
+    "asset_filters_all": "All",
     "asset_no_data": "No data available",
     "@TRANSFER---------------------------------------------------------------": {},
     "transfer_title": "Transfers",

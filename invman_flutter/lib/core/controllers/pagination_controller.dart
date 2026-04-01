@@ -4,7 +4,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 abstract class PaginationController<T> extends Disposable {
   final _state = asyncSignal<List<T>>(AsyncState.loading());
-  ReadonlySignal<AsyncState<List<T>>> get state => _state;
+  ReadonlySignal<AsyncState<List<T>>> get state => _state.readonly();
 
   final _pageNumberSignal = signal(1);
   final _isLastPageSignal = signal(false);

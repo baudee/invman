@@ -14,6 +14,13 @@
     "error": "Data not found"
   },
   {
+    "symbol": "ETH/TRY",
+    "name": "Ethereum",
+    "currency": "TRY",
+    "exchange": "Bitexen",
+    "error": "**symbol** or **figi** parameter is missing or invalid. Please provide a valid symbol according to API documentation: https://twelvedata.com/docs#reference-data"
+  },
+  {
     "symbol": "FBTC/USD",
     "name": "Ignition",
     "currency": "USD",
@@ -40,5 +47,12 @@
     "currency": "USD",
     "exchange": "Uniswap",
     "error": "Data not found"
+  },
+  {
+    "symbol": "USDY/USD",
+    "name": "Ondo US Dollar Yield",
+    "currency": "USD",
+    "exchange": "Uniswap",
+    "error": "**symbol** or **figi** parameter is missing or invalid. Please provide a valid symbol according to API documentation: https://twelvedata.com/docs#reference-data"
   }
 ]

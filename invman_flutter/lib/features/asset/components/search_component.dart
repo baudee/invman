@@ -14,7 +14,7 @@ class AssetSearchComponent extends HookWidget {
       hintText: S.of(context).asset_searchHint,
       autoFocus: true,
       onChanged: (value) {
-        controller.query.value = value;
+        controller.setQuery(value);
       },
       text: controller.query.value,
     );

@@ -56,13 +56,17 @@ class AssetService {
         expressions.add(t.likes.any((like) => like.userId.equals(userId)));
       }
 
-      if (filter.query != null && filter.query!.trim().isNotEmpty) {
-        final q = "%${filter.query!.trim()}%";
+      if (filter.query.trim().isNotEmpty) {
+        final q = "%${filter.query.trim()}%";
         expressions.add(t.symbol.ilike(q) | t.name.ilike(q));
       }
 
       if (filter.type != null) {
         expressions.add(t.type.equals(filter.type!));
+      }
+
+      if (filter.exchange != null) {
+        expressions.add(t.exchange.equals(filter.exchange!));
       }
 
       return expressions.and ?? Constant.bool(true);

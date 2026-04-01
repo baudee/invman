@@ -41,5 +41,4 @@ class TimeSeriesService {
         return Duration(days: 1);
     }
   }
-
 }

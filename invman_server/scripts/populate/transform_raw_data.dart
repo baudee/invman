@@ -643,7 +643,8 @@ class _ValidationResult {
 
 Future<_ValidationResult> _validateAsset(String symbol, String? exchange) async {
   try {
-    var url = 'https://api.twelvedata.com/time_series?symbol=$symbol&interval=1min&outputsize=1&apikey=$apiKey&type=Structured Product';
+    var url =
+        'https://api.twelvedata.com/time_series?symbol=$symbol&interval=1min&outputsize=1&apikey=$apiKey&type=Structured Product';
     if (exchange != null && exchange.isNotEmpty) {
       url += '&exchange=$exchange';
     }
@@ -722,9 +723,12 @@ Future<String?> _fetchLogoUrl(String symbol) async {
     }
 
     final Map<String, dynamic> data = jsonDecode(response.body);
-    final logoUrl = data['url'] as String?;
+    String? logoUrl = data['url'] as String?;
     if (logoUrl == null || logoUrl.isEmpty) {
-      return null;
+      logoUrl = data['logo_base'] as String?;
+      if (logoUrl == null || logoUrl.isEmpty) {
+        return null;
+      }
     }
     return logoUrl;
   } catch (e) {

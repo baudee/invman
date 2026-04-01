@@ -13,8 +13,8 @@ class AssetHeaderComponent extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.only(
         top: kToolbarHeight * 2,
-        left: UIConstants.spacingXxl,
-        right: UIConstants.spacingXxl,
+        left: UIConstants.spacingXl,
+        right: UIConstants.spacingXl,
         bottom: UIConstants.spacingXxl * 2,
       ),
       decoration: BoxDecoration(
@@ -28,18 +28,20 @@ class AssetHeaderComponent extends StatelessWidget {
         children: [
           AvatarComponent(asset: asset, size: MediaQuery.of(context).size.width * 0.2),
           const SizedBox(width: UIConstants.spacingXl),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(asset.symbol, style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.primary)),
-              const SizedBox(height: UIConstants.spacingSm),
-              Text(
-                asset.price.toStringPrice(asset.currency?.code),
-                style: theme.textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: UIConstants.spacingSm),
-              Text(asset.name, style: theme.textTheme.bodyMedium),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(asset.symbol, style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.primary)),
+                const SizedBox(height: UIConstants.spacingSm),
+                Text(
+                  asset.price.toStringPrice(asset.currency?.code),
+                  style: theme.textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: UIConstants.spacingSm),
+                Text(asset.name, style: theme.textTheme.bodyMedium, overflow: .clip),
+              ],
+            ),
           ),
         ],
       ),

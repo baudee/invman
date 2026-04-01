@@ -46,7 +46,11 @@ class AssetEndpoint extends Endpoint with EndpointMiddleware {
     );
   }
 
-  Future<List<AssetValue>> timeseries(Session session, UuidValue assetId, {required AssetTimeHorizon timeHorizon}) async {
+  Future<List<AssetValue>> timeseries(
+    Session session,
+    UuidValue assetId, {
+    required AssetTimeHorizon timeHorizon,
+  }) async {
     return withMiddleware(
       session,
       () => getIt<TimeSeriesService>().get(
@@ -55,5 +59,9 @@ class AssetEndpoint extends Endpoint with EndpointMiddleware {
         timeHorizon: timeHorizon,
       ),
     );
+  }
+
+  Future<List<String>> exchanges(Session session) async {
+    return withMiddleware(session, () => getIt<ExchangeService>().listAll(session));
   }
 }

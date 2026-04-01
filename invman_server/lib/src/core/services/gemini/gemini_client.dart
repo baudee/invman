@@ -2,16 +2,13 @@ import 'dart:convert';
 
 import 'package:injectable/injectable.dart';
 import 'package:invman_server/src/core/services/api_client/api_client_service.dart';
-import 'package:invman_server/src/env.dart';
 
 @lazySingleton
 class GeminiClient {
-  final Env _env;
-
   static const _baseUrl = 'generativelanguage.googleapis.com';
   static const _model = 'gemini-2.5-flash';
 
-  GeminiClient(this._env);
+  GeminiClient();
 
   Future<String?> prompt(String prompt) async {
     final body = {
