@@ -11,12 +11,10 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import '../../../../features/dividend/sources/models/td_dividend_value.dart'
-    as _i2;
+import '../../../../features/dividend/sources/models/td_dividend_value.dart' as _i2;
 import 'package:invman_server/src/generated/protocol.dart' as _i3;
 
-abstract class TwelveDataDividends
-    implements _i1.SerializableModel, _i1.ProtocolSerialization {
+abstract class TwelveDataDividends implements _i1.SerializableModel, _i1.ProtocolSerialization {
   TwelveDataDividends._({
     required this.meta,
     required this.dividends,
@@ -98,8 +96,7 @@ class _TwelveDataDividendsImpl extends TwelveDataDividends {
               value0,
             ),
           ),
-      dividends:
-          dividends ?? this.dividends.map((e0) => e0.copyWith()).toList(),
+      dividends: dividends ?? this.dividends.map((e0) => e0.copyWith()).toList(),
     );
   }
 }

@@ -59,12 +59,6 @@ class TransferService {
 
     final investmentId = savedTransfer.investmentId;
     await session.caches.local.invalidateKey(CacheKeys.transfersAll(investmentId));
-    await session.caches.local.invalidateKey(
-      CacheKeys.investmentReturns(investmentId, InvestmentReturnInterval.monthly),
-    );
-    await session.caches.local.invalidateKey(
-      CacheKeys.investmentReturns(investmentId, InvestmentReturnInterval.yearly),
-    );
     return savedTransfer;
   }
 
@@ -91,12 +85,6 @@ class TransferService {
 
     final investmentId = deletedTransfer.investmentId;
     await session.caches.local.invalidateKey(CacheKeys.transfersAll(investmentId));
-    await session.caches.local.invalidateKey(
-      CacheKeys.investmentReturns(investmentId, InvestmentReturnInterval.monthly),
-    );
-    await session.caches.local.invalidateKey(
-      CacheKeys.investmentReturns(investmentId, InvestmentReturnInterval.yearly),
-    );
     return deletedTransfer;
   }
 

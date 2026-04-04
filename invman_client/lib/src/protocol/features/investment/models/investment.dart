@@ -35,6 +35,10 @@ abstract class Investment implements _i1.SerializableModel {
     DateTime? updatedAt,
     this.withdrawAmount,
     this.forex,
+    this.returnPercentage,
+    this.realizedProfit,
+    this.unrealizedProfit,
+    this.totalProfit,
   }) : investAmount = investAmount ?? 0.0,
        quantity = quantity ?? 0.0,
        updatedAt = updatedAt ?? DateTime.now();
@@ -54,6 +58,10 @@ abstract class Investment implements _i1.SerializableModel {
     DateTime? updatedAt,
     double? withdrawAmount,
     _i6.Forex? forex,
+    double? returnPercentage,
+    double? realizedProfit,
+    double? unrealizedProfit,
+    double? totalProfit,
   }) = _InvestmentImpl;
 
   factory Investment.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -90,6 +98,12 @@ abstract class Investment implements _i1.SerializableModel {
       forex: jsonSerialization['forex'] == null
           ? null
           : _i7.Protocol().deserialize<_i6.Forex>(jsonSerialization['forex']),
+      returnPercentage: (jsonSerialization['returnPercentage'] as num?)
+          ?.toDouble(),
+      realizedProfit: (jsonSerialization['realizedProfit'] as num?)?.toDouble(),
+      unrealizedProfit: (jsonSerialization['unrealizedProfit'] as num?)
+          ?.toDouble(),
+      totalProfit: (jsonSerialization['totalProfit'] as num?)?.toDouble(),
     );
   }
 
@@ -124,6 +138,14 @@ abstract class Investment implements _i1.SerializableModel {
 
   _i6.Forex? forex;
 
+  double? returnPercentage;
+
+  double? realizedProfit;
+
+  double? unrealizedProfit;
+
+  double? totalProfit;
+
   /// Returns a shallow copy of this [Investment]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -142,6 +164,10 @@ abstract class Investment implements _i1.SerializableModel {
     DateTime? updatedAt,
     double? withdrawAmount,
     _i6.Forex? forex,
+    double? returnPercentage,
+    double? realizedProfit,
+    double? unrealizedProfit,
+    double? totalProfit,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -162,6 +188,10 @@ abstract class Investment implements _i1.SerializableModel {
       'updatedAt': updatedAt.toJson(),
       if (withdrawAmount != null) 'withdrawAmount': withdrawAmount,
       if (forex != null) 'forex': forex?.toJson(),
+      if (returnPercentage != null) 'returnPercentage': returnPercentage,
+      if (realizedProfit != null) 'realizedProfit': realizedProfit,
+      if (unrealizedProfit != null) 'unrealizedProfit': unrealizedProfit,
+      if (totalProfit != null) 'totalProfit': totalProfit,
     };
   }
 
@@ -189,6 +219,10 @@ class _InvestmentImpl extends Investment {
     DateTime? updatedAt,
     double? withdrawAmount,
     _i6.Forex? forex,
+    double? returnPercentage,
+    double? realizedProfit,
+    double? unrealizedProfit,
+    double? totalProfit,
   }) : super._(
          id: id,
          userId: userId,
@@ -204,6 +238,10 @@ class _InvestmentImpl extends Investment {
          updatedAt: updatedAt,
          withdrawAmount: withdrawAmount,
          forex: forex,
+         returnPercentage: returnPercentage,
+         realizedProfit: realizedProfit,
+         unrealizedProfit: unrealizedProfit,
+         totalProfit: totalProfit,
        );
 
   /// Returns a shallow copy of this [Investment]
@@ -225,6 +263,10 @@ class _InvestmentImpl extends Investment {
     DateTime? updatedAt,
     Object? withdrawAmount = _Undefined,
     Object? forex = _Undefined,
+    Object? returnPercentage = _Undefined,
+    Object? realizedProfit = _Undefined,
+    Object? unrealizedProfit = _Undefined,
+    Object? totalProfit = _Undefined,
   }) {
     return Investment(
       id: id is int? ? id : this.id,
@@ -249,6 +291,16 @@ class _InvestmentImpl extends Investment {
           ? withdrawAmount
           : this.withdrawAmount,
       forex: forex is _i6.Forex? ? forex : this.forex?.copyWith(),
+      returnPercentage: returnPercentage is double?
+          ? returnPercentage
+          : this.returnPercentage,
+      realizedProfit: realizedProfit is double?
+          ? realizedProfit
+          : this.realizedProfit,
+      unrealizedProfit: unrealizedProfit is double?
+          ? unrealizedProfit
+          : this.unrealizedProfit,
+      totalProfit: totalProfit is double? ? totalProfit : this.totalProfit,
     );
   }
 }

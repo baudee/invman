@@ -12,8 +12,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 
-abstract class Currency
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class Currency implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Currency._({
     this.id,
     required this.code,

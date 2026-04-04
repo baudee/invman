@@ -43,7 +43,7 @@ class InvestmentHeaderContent extends StatelessWidget {
                 ),
                 const SizedBox(height: UIConstants.spacingSm),
                 PercentBadge(
-                  percent: investment?.percent ?? 0,
+                  percent: investment?.returnPercentage ?? 0,
                   color: investment?.percentColor ?? theme.colorScheme.primary,
                 ),
                 const SizedBox(height: UIConstants.spacingSm),
@@ -89,19 +89,31 @@ class _StatsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         _StatCard(
           label: S.of(context).investment_invested.toUpperCase(),
           value: investment?.investAmount.toStringPrice(currencyCode) ?? "—",
         ),
-        const SizedBox(width: UIConstants.spacingMd),
         _StatCard(
           label: S.of(context).investment_totalGain.toUpperCase(),
-          value: investment?.amountDifference.toStringPrice(currencyCode) ?? "—",
-          color: investment?.percentColor ?? Theme.of(context).colorScheme.primary,
+          value: investment?.unrealizedProfit.toStringPrice(currencyCode) ?? "—",
+          color: _getColor(investment?.unrealizedProfit),
+        ),
+        _StatCard(
+          label: S.of(context).investment_totalGain.toUpperCase(),
+          value: investment?.realizedProfit.toStringPrice(currencyCode) ?? "—",
+          color: _getColor(investment?.realizedProfit),
         ),
       ],
     );
+  }
+
+  Color? _getColor(double? value) {
+    if (value == null) return null;
+    if (value > 0) return Colors.green;
+    if (value < 0) return Colors.red;
+    return null;
   }
 }
 

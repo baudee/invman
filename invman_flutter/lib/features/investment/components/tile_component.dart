@@ -17,24 +17,28 @@ class InvestmentTileComponent extends StatelessWidget {
     return ListTile(
       leading: investment.asset != null ? AvatarComponent(asset: investment.asset!) : null,
       title: Text(investment.name, overflow: TextOverflow.ellipsis),
-      subtitle: Text(
-        "${investment.investAmount.toStringPrice(authManager.currencyCode)} / ${investment.withdrawAmount?.toStringPrice(authManager.currencyCode)}",
-      ),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            "${investment.percent.toStringAsFixed(1)}%",
+            "${investment.returnPercentage?.toStringAsFixed(1)}%",
             style: TextStyle(color: investment.percentColor, fontWeight: FontWeight.bold),
           ),
           Text(
-            investment.amountDifference.toStringPrice(authManager.currencyCode),
-            style: TextStyle(color: investment.percentColor),
+            investment.totalProfit.toStringPrice(authManager.currencyCode),
+            style: TextStyle(color: _getColor(investment.totalProfit)),
           ),
         ],
       ),
       onTap: () => router.push(InvestmentDetailScreen.route(investment.id!)),
     );
+  }
+
+  Color? _getColor(double? value) {
+    if (value == null) return null;
+    if (value > 0) return Colors.green;
+    if (value < 0) return Colors.red;
+    return null;
   }
 }

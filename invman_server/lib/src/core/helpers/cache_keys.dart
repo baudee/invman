@@ -6,10 +6,6 @@ class CacheKeys {
   // Transfers
   static String transfersAll(int investmentId) => 'transfers_all_$investmentId';
 
-  // Investment
-  static String investmentReturns(int investmentId, InvestmentReturnInterval interval) =>
-      'returns_${investmentId}_${interval.name}';
-
   // Asset
   static String assetCurrentValue(Asset asset) => 'asset_current_value_${asset.id}';
 

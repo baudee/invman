@@ -12,8 +12,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 
-abstract class AppSettings
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class AppSettings implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   AppSettings._({
     this.id,
     required this.maintenanceMode,
@@ -180,11 +179,10 @@ class AppSettingsUpdateTable extends _i1.UpdateTable<AppSettingsTable> {
     value,
   );
 
-  _i1.ColumnValue<String, String> playStoreUrl(String? value) =>
-      _i1.ColumnValue(
-        table.playStoreUrl,
-        value,
-      );
+  _i1.ColumnValue<String, String> playStoreUrl(String? value) => _i1.ColumnValue(
+    table.playStoreUrl,
+    value,
+  );
 }
 
 class AppSettingsTable extends _i1.Table<int?> {

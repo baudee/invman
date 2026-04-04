@@ -14,7 +14,8 @@ import 'package:serverpod/serverpod.dart' as _i1;
 
 enum InvestmentReturnInterval implements _i1.SerializableModel {
   yearly,
-  monthly;
+  monthly
+  ;
 
   static InvestmentReturnInterval fromJson(String name) {
     switch (name) {
