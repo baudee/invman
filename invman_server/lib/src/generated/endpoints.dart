@@ -268,16 +268,6 @@ class Endpoints extends _i1.EndpointDispatch {
                 timeHorizon: params['timeHorizon'],
               ),
         ),
-        'exchanges': _i1.MethodConnector(
-          name: 'exchanges',
-          params: {},
-          call:
-              (
-                _i1.Session session,
-                Map<String, dynamic> params,
-              ) async =>
-                  (endpoints['asset'] as _i4.AssetEndpoint).exchanges(session),
-        ),
       },
     );
     connectors['emailIdp'] = _i1.EndpointConnector(

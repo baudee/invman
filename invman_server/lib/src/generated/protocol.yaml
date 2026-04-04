@@ -9,7 +9,6 @@ asset:
   - retrieve:
   - list:
   - timeseries:
-  - exchanges:
 emailIdp:
   - login:
   - startRegistration:

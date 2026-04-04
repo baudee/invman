@@ -314,9 +314,6 @@ class Protocol extends _i1.SerializationManager {
       return (data as List).map((e) => deserialize<_i25.AssetValue>(e)).toList()
           as T;
     }
-    if (t == List<String>) {
-      return (data as List).map((e) => deserialize<String>(e)).toList() as T;
-    }
     if (t == List<_i26.Currency>) {
       return (data as List).map((e) => deserialize<_i26.Currency>(e)).toList()
           as T;

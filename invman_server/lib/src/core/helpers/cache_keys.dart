@@ -13,9 +13,11 @@ class CacheKeys {
   // Asset
   static String assetCurrentValue(Asset asset) => 'asset_current_value_${asset.id}';
 
-  static String assetTimeSeries(Asset asset, AssetTimeHorizon timeHorizon) => '${asset.id}-${timeHorizon.name}';
+  static String assetEodValue(Asset asset, DateTime date) =>
+      'asset_eod_${asset.id}-${date.year}-${date.month}-${date.day}';
 
-  static String exchangesList = 'exchanges_list';
+  static String assetTimeSeries(Asset asset, AssetTimeHorizon timeHorizon) =>
+      'asset_ts_${asset.id}-${timeHorizon.name}';
 
   // Currency
   static String currencyDollarValue(String code) => "currency_dollar_value_$code";

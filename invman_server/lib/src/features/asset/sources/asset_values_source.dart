@@ -101,28 +101,35 @@ class AssetValuesSourceImpl implements AssetValuesSource {
 
   @override
   Future<AssetValue> getEodValue(Session session, {required Asset asset, required DateTime date}) async {
-    Map<String, String> queryParameters = {
-      "symbol": asset.symbol,
-      "apikey": _env.twelveDataApiKey,
-      "timezone": "UTC",
-      "date": date.toString(),
-    };
+    AssetValue? eodValue = await session.caches.local.get(CacheKeys.assetEodValue(asset, date));
+    if (eodValue == null) {
+      Map<String, String> queryParameters = {
+        "symbol": asset.symbol,
+        "apikey": _env.twelveDataApiKey,
+        "timezone": "UTC",
+        "date": date.toString(),
+      };
 
-    if (asset.exchange != null) {
-      queryParameters["exchange"] = asset.exchange!;
+      if (asset.exchange != null) {
+        queryParameters["exchange"] = asset.exchange!;
+      }
+
+      if (asset.type == AssetType.commodity) {
+        queryParameters["type"] = "Structured Product";
+      }
+
+      final result = await ApiClientService.get(
+        url: url,
+        path: eodPath,
+        queryParameters: queryParameters,
+      );
+
+      eodValue = AssetValue(value: double.parse(result['close']), timestamp: DateTime.parse(result['datetime']));
+
+      await session.caches.local.put(CacheKeys.assetEodValue(asset, date), eodValue, lifetime: Duration(days: 30));
     }
 
-    if (asset.type == AssetType.commodity) {
-      queryParameters["type"] = "Structured Product";
-    }
-
-    final result = await ApiClientService.get(
-      url: url,
-      path: eodPath,
-      queryParameters: queryParameters,
-    );
-
-    return AssetValue(value: double.parse(result['close']), timestamp: DateTime.parse(result['datetime']));
+    return eodValue;
   }
 
   String _getStartDateFromTimeHorizon(AssetTimeHorizon timeHorizon) {

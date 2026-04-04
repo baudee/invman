@@ -60,8 +60,4 @@ class AssetEndpoint extends Endpoint with EndpointMiddleware {
       ),
     );
   }
-
-  Future<List<String>> exchanges(Session session) async {
-    return withMiddleware(session, () => getIt<ExchangeService>().listAll(session));
-  }
 }

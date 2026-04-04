@@ -1,5 +1,4 @@
 import 'package:injectable/injectable.dart';
-import 'package:invman_server/src/core/helpers/helpers.dart';
 import 'package:invman_server/src/features/currency/currency.dart';
 import 'package:invman_server/src/env.dart';
 import 'package:invman_server/src/generated/protocol.dart';
@@ -38,8 +37,8 @@ class CurrencyService {
     required String fromCode,
     required String toCode,
   }) async {
-    final fromCurrencyDollarValue = await _getCachedDollarValue(session, code: fromCode);
-    final toCurrencyDollarValue = await _getCachedDollarValue(session, code: toCode);
+    final fromCurrencyDollarValue = await forexValuesSource.getDollarValue(session, code: fromCode);
+    final toCurrencyDollarValue = await forexValuesSource.getDollarValue(session, code: toCode);
 
     return _getForexFromAssetValues(fromCurrencyDollarValue, toCurrencyDollarValue, fromCode, toCode);
   }
@@ -50,8 +49,8 @@ class CurrencyService {
     required String toCode,
     required DateTime date,
   }) async {
-    final fromCurrencyDollarValue = await _getCachedEodDollarValue(session, code: fromCode, date: date);
-    final toCurrencyDollarValue = await _getCachedEodDollarValue(session, code: toCode, date: date);
+    final fromCurrencyDollarValue = await forexValuesSource.getEodDollarValue(session, code: fromCode, date: date);
+    final toCurrencyDollarValue = await forexValuesSource.getEodDollarValue(session, code: toCode, date: date);
 
     return _getForexFromAssetValues(fromCurrencyDollarValue, toCurrencyDollarValue, fromCode, toCode);
   }
@@ -74,25 +73,5 @@ class CurrencyService {
       rate: toAssetValue.value / fromAssetValue.value,
       timestamp: forexTimestamp,
     );
-  }
-
-  Future<AssetValue> _getCachedDollarValue(Session session, {required String code}) async {
-    final cacheKey = CacheKeys.currencyDollarValue(code);
-    AssetValue? dollarValue = await session.caches.local.get(cacheKey);
-    if (dollarValue == null) {
-      dollarValue = await forexValuesSource.getDollarValue(code: code);
-      await session.caches.local.put(cacheKey, dollarValue, lifetime: Duration(seconds: 30));
-    }
-    return dollarValue;
-  }
-
-  Future<AssetValue> _getCachedEodDollarValue(Session session, {required String code, required DateTime date}) async {
-    final cacheKey = CacheKeys.currencyEodDollarValue(code, date);
-    AssetValue? dollarValue = await session.caches.local.get(cacheKey);
-    if (dollarValue == null) {
-      dollarValue = await forexValuesSource.getDollarValue(code: code);
-      await session.caches.local.put(cacheKey, dollarValue, lifetime: Duration(days: 1));
-    }
-    return dollarValue;
   }
 }
