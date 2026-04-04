@@ -94,11 +94,14 @@ class InvestmentService {
         orderBy: (e) => e.createdAt,
       );
       if (allTransfers.isNotEmpty) {
-        final now = DateTime.timestamp();
-        final cashFlows = [...allTransfers.map((t) => -t.amount), totalWithdrawAmount];
-        final dates = [...allTransfers.map((t) => t.createdAt), now];
-        final xirr = _computeXirr(cashFlows, dates);
-        globalReturnPercentage = (xirr ?? 0) * 100;
+        final cashFlows = allTransfers.map((t) => -t.amount).toList();
+        final dates = allTransfers.map((t) => t.createdAt).toList();
+        if (totalWithdrawAmount > 0) {
+          cashFlows.add(totalWithdrawAmount);
+          dates.add(DateTime.timestamp());
+        }
+        final irr = _computeIrr(cashFlows, dates);
+        globalReturnPercentage = (irr ?? 0) * 100;
       }
     }
 
@@ -283,7 +286,6 @@ class InvestmentService {
       final closingQuantity = openingQuantity + periodTransfers.fold(0.0, (sum, t) => sum + t.quantity);
 
       if (openingQuantity == 0 && periodTransfers.isEmpty) continue;
-      if (closingQuantity == 0) continue;
 
       final needsForex = accountCurrency?.id != investment.asset?.currency?.id;
 
@@ -365,8 +367,12 @@ class InvestmentService {
         dates.add(t.createdAt);
       }
 
-      cashFlows.add(closingNetValue);
-      dates.add(periodEnd);
+      // Only add terminal if shares remain — fully closed periods end at the last sell date,
+      // avoiding time-normalization distortion.
+      if (closingNetValue > 0) {
+        cashFlows.add(closingNetValue);
+        dates.add(periodEnd);
+      }
 
       final irr = _computeIrr(cashFlows, dates);
       final periodTransferAmount = periodTransfers.fold(0.0, (sum, t) => sum + t.amount);
@@ -411,43 +417,6 @@ class InvestmentService {
       periods.add((start, end, year, 0, isCurrentPeriod));
     }
     return periods;
-  }
-
-  /// Computes the annualized XIRR using Newton-Raphson. Time is expressed in years (days / 365).
-  static double? _computeXirr(List<double> cashFlows, List<DateTime> dates) {
-    final totalDays = dates.last.difference(dates.first).inDays;
-    if (totalDays == 0) return null;
-
-    final t = dates.map((d) => d.difference(dates.first).inDays / 365.0).toList();
-
-    double npv(double r) {
-      double sum = 0;
-      for (int i = 0; i < cashFlows.length; i++) {
-        sum += cashFlows[i] / pow(1 + r, t[i]);
-      }
-      return sum;
-    }
-
-    double dnpv(double r) {
-      double sum = 0;
-      for (int i = 0; i < cashFlows.length; i++) {
-        if (t[i] != 0) {
-          sum -= t[i] * cashFlows[i] / pow(1 + r, t[i] + 1);
-        }
-      }
-      return sum;
-    }
-
-    double r = 0.1;
-    for (int i = 0; i < 100; i++) {
-      final f = npv(r);
-      final df = dnpv(r);
-      if (df.abs() < 1e-10) break;
-      final next = r - f / df;
-      if ((next - r).abs() < 1e-7) return next;
-      r = next.clamp(-0.999, 100.0);
-    }
-    return r;
   }
 
   /// Computes the IRR (Internal Rate of Return) for a period using Newton-Raphson.
@@ -545,12 +514,17 @@ class InvestmentService {
         unrealizedProfit = withdrawAmount - (rollingQuantity * pamp);
         totalProfit = realizedProfit + unrealizedProfit;
 
-        // Annualized XIRR: buys/sells at exact dates + current liquidation value
-        final now = DateTime.timestamp();
-        final cashFlows = [...transfers.map((t) => -t.amount), withdrawAmount];
-        final dates = [...transfers.map((t) => t.createdAt), now];
-        final xirr = _computeXirr(cashFlows, dates);
-        returnPercentage = (xirr ?? 0) * 100;
+        // Brut total IRR: buys/sells at exact dates.
+        // Only add current liquidation value if shares are still held,
+        // so fully closed positions are normalized to [first_buy, last_sell].
+        final cashFlows = transfers.map((t) => -t.amount).toList();
+        final dates = transfers.map((t) => t.createdAt).toList();
+        if (withdrawAmount > 0) {
+          cashFlows.add(withdrawAmount);
+          dates.add(DateTime.timestamp());
+        }
+        final irr = _computeIrr(cashFlows, dates);
+        returnPercentage = (irr ?? 0) * 100;
       }
     }
 
