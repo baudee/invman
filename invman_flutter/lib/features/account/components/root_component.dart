@@ -19,11 +19,11 @@ class AccountRootComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userPrefsManager = getIt<UserPreferencesManager>();
-    final currentLocale = userPrefsManager.locale.watch(context);
-    final currentTheme = userPrefsManager.theme.watch(context);
-
     final authManager = getIt<AuthManager>();
     final packageInfoModule = getIt<PackageInfo>();
+    
+    final currentLocale = userPrefsManager.locale.watch(context);
+    final currentTheme = userPrefsManager.theme.watch(context);
 
     final tiles = [
       ListTile(
@@ -70,6 +70,23 @@ class AccountRootComponent extends StatelessWidget {
       ),
       _buildCurrencyTile(context, authManager),
       ListTile(
+        title: Text(S.of(context).account_exportTransfers),
+        subtitle: Text(S.of(context).account_exportTransfersSubtitle),
+        leading: Icon(Icons.download_rounded),
+        onTap: () => _onExport(context),
+      ),
+      ListTile(
+        title: Text(S.of(context).account_importTransfers),
+        subtitle: Text(S.of(context).account_importTransfersSubtitle),
+        leading: Icon(Icons.upload_rounded),
+        trailing: IconButton(
+          icon: Icon(Icons.description_outlined),
+          tooltip: S.of(context).account_downloadTemplate,
+          onPressed: () => controller.shareTemplate(),
+        ),
+        onTap: () => _onImport(context),
+      ),
+      ListTile(
         title: Text(S.of(context).auth_logOut, style: TextStyle(color: Colors.red)),
         leading: Icon(Icons.logout, color: Colors.red),
         onTap: () async {
@@ -98,6 +115,53 @@ class AccountRootComponent extends StatelessWidget {
             .toList(),
       ),
     );
+  }
+
+  Future<void> _onExport(BuildContext context) async {
+    final error = await controller.exportCsv();
+    if (error != null && context.mounted) {
+      ToastUtils.message(error, success: false);
+    }
+  }
+
+  Future<void> _onImport(BuildContext context) async {
+    final result = await controller.importCsv();
+    if (!context.mounted) return;
+
+    if (result.error != null) {
+      ToastUtils.message(result.error!, success: false);
+    } else if (result.validationErrors.isEmpty) {
+      ToastUtils.message(S.of(context).account_importSuccess);
+    } else {
+      showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(S.of(context).account_importErrors),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(S.of(context).account_importErrorsDescription),
+                const SizedBox(height: 12),
+                ...result.validationErrors.map(
+                  (e) => Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Text('• $e', style: const TextStyle(fontSize: 13)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            FilledButton(
+              onPressed: () => ctx.pop(),
+              child: Text(S.of(context).core_cancel),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   ListTile _buildCurrencyTile(BuildContext context, AuthManager authManager) {

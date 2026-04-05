@@ -46,6 +46,9 @@ dependencies:
   url_launcher: ^6.3.2
   google_fonts: ^8.0.2
   fl_chart: ^1.2.0
+  file_picker: ^10.1.9
+  share_plus: ^10.1.4
+  path_provider: ^2.1.5
 
 dev_dependencies:
   build_runner: ^2.10.4

@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:invman_client/invman_client.dart';
@@ -8,6 +10,9 @@ import 'package:invman_flutter/features/account/account.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/investment/repositories/repositories.dart';
 import 'package:invman_flutter/features/onboarding/onboarding.dart';
+import 'package:invman_flutter/features/transfer/transfer.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 @injectable
@@ -15,9 +20,16 @@ class AccountController implements Disposable {
   final AccountRepository _accountRepository;
   final CurrencyRepository _currencyRepository;
   final InvestmentRepository _investmentRepository;
+  final TransferRepository _transferRepository;
   final AuthManager _authManager;
 
-  AccountController(this._accountRepository, this._currencyRepository, this._investmentRepository, this._authManager) {
+  AccountController(
+    this._accountRepository,
+    this._currencyRepository,
+    this._investmentRepository,
+    this._transferRepository,
+    this._authManager,
+  ) {
     _load();
   }
 
@@ -63,6 +75,51 @@ class AccountController implements Disposable {
         return null;
       },
     );
+  }
+
+  /// Returns null on success, an error message on failure.
+  Future<String?> exportCsv() async {
+    final result = await _transferRepository.exportCsv();
+    return result.fold(
+      (error) => error,
+      (csv) async {
+        final dir = await getTemporaryDirectory();
+        final file = File('${dir.path}/transfers_export.csv');
+        await file.writeAsString(csv);
+        await Share.shareXFiles([XFile(file.path)]);
+        return null;
+      },
+    );
+  }
+
+  /// Picks a CSV file and imports its content.
+  /// Returns null on success, an error message on failure, or a non-empty
+  /// list of validation errors if the file has invalid rows.
+  Future<({String? error, List<String> validationErrors})> importCsv() async {
+    final pickerResult = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['csv'],
+    );
+
+    if (pickerResult == null || pickerResult.files.single.path == null) {
+      return (error: null, validationErrors: <String>[]);
+    }
+
+    final csvContent = await File(pickerResult.files.single.path!).readAsString();
+    final result = await _transferRepository.importCsv(csvContent);
+
+    return result.fold(
+      (error) => (error: error, validationErrors: <String>[]),
+      (errors) => (error: null, validationErrors: errors),
+    );
+  }
+
+  Future<void> shareTemplate() async {
+    const template = 'investmentId,quantity,amount,date\n1,10.5,1050.00,2025-03-15\n';
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/transfers_template.csv');
+    await file.writeAsString(template);
+    await Share.shareXFiles([XFile(file.path)]);
   }
 
   @override

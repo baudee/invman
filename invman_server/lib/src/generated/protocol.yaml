@@ -39,6 +39,8 @@ transfer:
   - save:
   - delete:
   - list:
+  - exportCsv:
+  - importCsv:
 withdrawalRule:
   - list:
   - retrieve:

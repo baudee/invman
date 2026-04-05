@@ -1144,6 +1144,9 @@ class Protocol extends _i1.SerializationManagerServer {
       return (data as List).map((e) => deserialize<_i39.Transfer>(e)).toList()
           as T;
     }
+    if (t == List<String>) {
+      return (data as List).map((e) => deserialize<String>(e)).toList() as T;
+    }
     if (t == List<_i40.WithdrawalRule>) {
       return (data as List)
               .map((e) => deserialize<_i40.WithdrawalRule>(e))

@@ -45,4 +45,18 @@ class TransferEndpoint extends Endpoint with EndpointMiddleware {
       ),
     );
   }
+
+  Future<String> exportCsv(Session session) async {
+    return withMiddleware(
+      session,
+      () => getIt<TransferCsvService>().exportCsv(session),
+    );
+  }
+
+  Future<List<String>> importCsv(Session session, String csvContent) async {
+    return withMiddleware(
+      session,
+      () => getIt<TransferCsvService>().importCsv(session, csvContent),
+    );
+  }
 }

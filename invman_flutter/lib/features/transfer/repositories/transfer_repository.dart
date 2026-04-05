@@ -45,4 +45,18 @@ class TransferRepository {
       return right(transfers);
     });
   }
+
+  Future<Either<String, String>> exportCsv() async {
+    return safeCall(() async {
+      final csv = await client.transfer.exportCsv();
+      return right(csv);
+    });
+  }
+
+  Future<Either<String, List<String>>> importCsv(String csvContent) async {
+    return safeCall(() async {
+      final errors = await client.transfer.importCsv(csvContent);
+      return right(errors);
+    });
+  }
 }

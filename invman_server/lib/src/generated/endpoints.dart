@@ -786,6 +786,35 @@ class Endpoints extends _i1.EndpointDispatch {
                 page: params['page'],
               ),
         ),
+        'exportCsv': _i1.MethodConnector(
+          name: 'exportCsv',
+          params: {},
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['transfer'] as _i10.TransferEndpoint)
+                  .exportCsv(session),
+        ),
+        'importCsv': _i1.MethodConnector(
+          name: 'importCsv',
+          params: {
+            'csvContent': _i1.ParameterDescription(
+              name: 'csvContent',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['transfer'] as _i10.TransferEndpoint).importCsv(
+                    session,
+                    params['csvContent'],
+                  ),
+        ),
       },
     );
     connectors['withdrawalRule'] = _i1.EndpointConnector(

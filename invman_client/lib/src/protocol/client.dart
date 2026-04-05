@@ -521,6 +521,19 @@ class EndpointTransfer extends _i1.EndpointRef {
       'page': page,
     },
   );
+
+  _i2.Future<String> exportCsv() => caller.callServerEndpoint<String>(
+    'transfer',
+    'exportCsv',
+    {},
+  );
+
+  _i2.Future<List<String>> importCsv(String csvContent) =>
+      caller.callServerEndpoint<List<String>>(
+        'transfer',
+        'importCsv',
+        {'csvContent': csvContent},
+      );
 }
 
 /// {@category Endpoint}
