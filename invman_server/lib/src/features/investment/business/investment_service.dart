@@ -267,9 +267,7 @@ class InvestmentService {
 
     if (allTransfers.isEmpty) return [];
 
-    final periods = isMonthly
-        ? _buildMonthlyPeriods(now)
-        : _buildYearlyPeriods(now, allTransfers.first.createdAt);
+    final periods = isMonthly ? _buildMonthlyPeriods(now) : _buildYearlyPeriods(now, allTransfers.first.createdAt);
 
     final List<InvestmentReturn> returns = [];
     for (final period in periods) {
@@ -284,6 +282,14 @@ class InvestmentService {
           .where((t) => !t.createdAt.isBefore(periodStart) && !t.createdAt.isAfter(periodEnd))
           .toList();
 
+      // Pre-warm EOD cache for all assets at both period boundaries in one batch call each,
+      // so the per-investment getEodValue calls below are cache hits.
+      final allAssets = investments.map((e) => e.asset!).toList();
+      await assetsValuesSource.preloadEodValues(session, assets: allAssets, date: openingEodDate);
+      if (!isCurrentPeriod) {
+        await assetsValuesSource.preloadEodValues(session, assets: allAssets, date: periodEnd);
+      }
+
       // Sum opening and closing net values across all investments
       double totalOpeningNetValue = 0;
       double totalClosingNetValue = 0;
@@ -295,7 +301,8 @@ class InvestmentService {
             .where((t) => t.createdAt.isBefore(periodStart))
             .fold(0.0, (sum, t) => sum + t.quantity);
 
-        final closingQuantity = openingQuantity +
+        final closingQuantity =
+            openingQuantity +
             investmentTransfers
                 .where((t) => !t.createdAt.isBefore(periodStart) && !t.createdAt.isAfter(periodEnd))
                 .fold(0.0, (sum, t) => sum + t.quantity);

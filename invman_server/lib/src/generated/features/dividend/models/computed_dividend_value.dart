@@ -14,8 +14,7 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import '../../../features/investment/models/investment.dart' as _i2;
 import 'package:invman_server/src/generated/protocol.dart' as _i3;
 
-abstract class ComputedDividendValue
-    implements _i1.SerializableModel, _i1.ProtocolSerialization {
+abstract class ComputedDividendValue implements _i1.SerializableModel, _i1.ProtocolSerialization {
   ComputedDividendValue._({
     required this.date,
     required this.amountPerShare,

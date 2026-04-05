@@ -8,6 +8,7 @@ abstract class AssetValuesSource {
   Future<AssetValue> getCurrentValue(Session session, {required Asset asset});
   Future<List<AssetValue>> getValues({required Asset asset, required AssetTimeHorizon timeHorizon});
   Future<AssetValue> getEodValue(Session session, {required Asset asset, required DateTime date});
+  Future<void> preloadEodValues(Session session, {required List<Asset> assets, required DateTime date});
 }
 
 @LazySingleton(as: AssetValuesSource)
@@ -130,6 +131,56 @@ class AssetValuesSourceImpl implements AssetValuesSource {
     }
 
     return eodValue;
+  }
+
+  @override
+  Future<void> preloadEodValues(Session session, {required List<Asset> assets, required DateTime date}) async {
+    final uncached = <Asset>[];
+    for (final asset in assets) {
+      final cached = await session.caches.local.get(CacheKeys.assetEodValue(asset, date));
+      if (cached == null) uncached.add(asset);
+    }
+
+    if (uncached.isEmpty) return;
+
+    // Single asset: delegate to getEodValue to reuse its existing parse/cache logic.
+    if (uncached.length == 1) {
+      await getEodValue(session, asset: uncached.first, date: date);
+      return;
+    }
+
+    // Batch: group by (exchange, isCommodity) so query params are consistent within each call.
+    final groups = <(String?, bool), List<Asset>>{};
+    for (final asset in uncached) {
+      final key = (asset.exchange, asset.type == AssetType.commodity);
+      groups.putIfAbsent(key, () => []).add(asset);
+    }
+
+    for (final entry in groups.entries) {
+      final (exchange, isCommodity) = entry.key;
+      final group = entry.value;
+
+      final queryParameters = <String, String>{
+        'symbol': group.map((a) => a.symbol).join(','),
+        'apikey': _env.twelveDataApiKey,
+        'timezone': 'UTC',
+        'date': date.toString(),
+      };
+      if (exchange != null) queryParameters['exchange'] = exchange;
+      if (isCommodity) queryParameters['type'] = 'Structured Product';
+
+      final result = await ApiClientService.get(url: url, path: eodPath, queryParameters: queryParameters);
+
+      for (final asset in group) {
+        final data = result[asset.symbol] as Map<String, dynamic>;
+        final eodValue = AssetValue(value: double.parse(data['close']), timestamp: DateTime.parse(data['datetime']));
+        await session.caches.local.put(
+          CacheKeys.assetEodValue(asset, date),
+          eodValue,
+          lifetime: const Duration(days: 30),
+        );
+      }
+    }
   }
 
   String _getStartDateFromTimeHorizon(AssetTimeHorizon timeHorizon) {
