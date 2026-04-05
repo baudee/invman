@@ -14,4 +14,10 @@ class ReturnsRepository {
       return right(await client.investment.returns(id, interval: interval));
     });
   }
+
+  Future<Either<String, List<InvestmentReturn>>> getTotal({required InvestmentReturnInterval interval}) async {
+    return safeCall(() async {
+      return right(await client.investment.totalReturns(interval: interval));
+    });
+  }
 }

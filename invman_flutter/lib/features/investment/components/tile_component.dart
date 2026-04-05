@@ -17,6 +17,7 @@ class InvestmentTileComponent extends StatelessWidget {
     return ListTile(
       leading: investment.asset != null ? AvatarComponent(asset: investment.asset!) : null,
       title: Text(investment.name, overflow: TextOverflow.ellipsis),
+      subtitle: Text(investment.asset?.name ?? "", overflow: TextOverflow.ellipsis),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,

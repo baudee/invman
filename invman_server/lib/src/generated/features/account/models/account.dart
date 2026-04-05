@@ -12,11 +12,13 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart' as _i2;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+    as _i2;
 import '../../../features/currency/models/currency.dart' as _i3;
 import 'package:invman_server/src/generated/protocol.dart' as _i4;
 
-abstract class Account implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class Account
+    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Account._({
     this.id,
     required this.userId,
@@ -170,7 +172,9 @@ class _AccountImpl extends Account {
       userId: userId ?? this.userId,
       user: user is _i2.AuthUser? ? user : this.user?.copyWith(),
       currencyId: currencyId is int? ? currencyId : this.currencyId,
-      currency: currency is _i3.Currency? ? currency : this.currency?.copyWith(),
+      currency: currency is _i3.Currency?
+          ? currency
+          : this.currency?.copyWith(),
     );
   }
 }
@@ -178,10 +182,11 @@ class _AccountImpl extends Account {
 class AccountUpdateTable extends _i1.UpdateTable<AccountTable> {
   AccountUpdateTable(super.table);
 
-  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) => _i1.ColumnValue(
-    table.userId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
 
   _i1.ColumnValue<int, int> currencyId(int? value) => _i1.ColumnValue(
     table.currencyId,
@@ -219,7 +224,8 @@ class AccountTable extends _i1.Table<int?> {
       field: Account.t.userId,
       foreignField: _i2.AuthUser.t.id,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i2.AuthUserTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i2.AuthUserTable(tableRelation: foreignTableRelation),
     );
     return _user!;
   }
@@ -231,7 +237,8 @@ class AccountTable extends _i1.Table<int?> {
       field: Account.t.currencyId,
       foreignField: _i3.Currency.t.id,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i3.CurrencyTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i3.CurrencyTable(tableRelation: foreignTableRelation),
     );
     return _currency!;
   }

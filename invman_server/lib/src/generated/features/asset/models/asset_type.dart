@@ -16,8 +16,7 @@ enum AssetType implements _i1.SerializableModel {
   stock,
   etf,
   crypto,
-  commodity
-  ;
+  commodity;
 
   static AssetType fromJson(String name) {
     switch (name) {

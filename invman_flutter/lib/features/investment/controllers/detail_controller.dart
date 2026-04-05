@@ -2,16 +2,17 @@ import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/features/investment/controllers/returns_provider.dart';
 import 'package:invman_flutter/features/investment/repositories/investment_repository.dart';
 import 'package:invman_flutter/features/investment/repositories/returns_repository.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 @injectable
-class InvestmentDetailController extends DetailController<int, Investment> {
+class InvestmentDetailController extends DetailController<int, Investment> implements ReturnsProvider {
   final InvestmentRepository _repository;
   final ReturnsRepository _returnsRepository;
 
-  final Map<InvestmentReturnInterval, FlutterSignal<List<InvestmentReturn>>> _returnsList = {};
+  final Map<InvestmentReturnInterval, AsyncSignal<List<InvestmentReturn>>> _returnsList = {};
 
   InvestmentDetailController(@factoryParam super.id, this._repository, this._returnsRepository)
     : super(fireImmediately: false) {
@@ -25,22 +26,36 @@ class InvestmentDetailController extends DetailController<int, Investment> {
 
   Future<(bool, String?)> delete() => DeleteCommand(onExecute: () => _repository.delete(id)).execute();
 
-  ReadonlySignal<List<InvestmentReturn>> getReturnsFromInterval(InvestmentReturnInterval interval) {
+  @override
+  ReadonlySignal<AsyncState<List<InvestmentReturn>>> getReturnsFromInterval(InvestmentReturnInterval interval) {
     if (_returnsList.containsKey(interval)) {
-      return _returnsList[interval]!;
+      return _returnsList[interval]!.readonly();
     } else {
-      final s = signal<List<InvestmentReturn>>([]);
+      final s = asyncSignal<List<InvestmentReturn>>(AsyncState.loading());
       _returnsList[interval] = s;
       _returnsRepository.get(id, interval: interval).then((result) {
         result.fold(
           (error) {},
           (returns) {
-            s.value = returns;
+            s.value = AsyncState.data(returns);
           },
         );
         _returnsList[interval] = s;
       });
       return s.readonly();
+    }
+  }
+
+  @override
+  void reloadReturns(InvestmentReturnInterval interval) {
+    if (_returnsList.containsKey(interval)) {
+      _returnsList[interval]!.value = AsyncState.loading();
+      _returnsRepository.get(id, interval: interval).then((result) {
+        result.fold(
+          (error) => null,
+          (returns) => _returnsList[interval]!.value = AsyncState.data(returns),
+        );
+      });
     }
   }
 

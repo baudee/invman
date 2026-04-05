@@ -94,13 +94,7 @@ class InvestmentService {
         orderBy: (e) => e.createdAt,
       );
       if (allTransfers.isNotEmpty) {
-        final cashFlows = allTransfers.map((t) => -t.amount).toList();
-        final dates = allTransfers.map((t) => t.createdAt).toList();
-        if (totalWithdrawAmount > 0) {
-          cashFlows.add(totalWithdrawAmount);
-          dates.add(DateTime.timestamp());
-        }
-        final irr = _computeIrr(cashFlows, dates);
+        final irr = _computeIrrFromTransfers(allTransfers, totalWithdrawAmount);
         globalReturnPercentage = (irr ?? 0) * 100;
       }
     }
@@ -247,6 +241,126 @@ class InvestmentService {
     );
   }
 
+  Future<List<InvestmentReturn>> totalReturns(
+    Session session, {
+    required InvestmentReturnInterval interval,
+  }) async {
+    final sessionUserId = (session.authenticated)!.authUserId;
+    final accountCurrency = (await accountService.retrieve(session)).currency;
+    final now = DateTime.timestamp();
+    final isMonthly = interval == InvestmentReturnInterval.monthly;
+
+    final investments = await Investment.db.find(
+      session,
+      where: (e) => e.userId.equals(sessionUserId),
+      include: IncludeHelpers.investmentInclude(),
+    );
+
+    if (investments.isEmpty) return [];
+
+    final investmentIds = investments.map((e) => e.id).whereType<int>().toSet();
+    final allTransfers = await Transfer.db.find(
+      session,
+      where: (e) => e.investmentId.inSet(investmentIds),
+      orderBy: (e) => e.createdAt,
+    );
+
+    if (allTransfers.isEmpty) return [];
+
+    final periods = isMonthly
+        ? _buildMonthlyPeriods(now)
+        : _buildYearlyPeriods(now, allTransfers.first.createdAt);
+
+    final List<InvestmentReturn> returns = [];
+    for (final period in periods) {
+      final periodStart = period.$1;
+      final periodEnd = period.$2;
+      final periodYear = period.$3;
+      final periodMonth = period.$4;
+      final isCurrentPeriod = period.$5;
+      final openingEodDate = periodStart.subtract(const Duration(days: 1));
+
+      final periodTransfers = allTransfers
+          .where((t) => !t.createdAt.isBefore(periodStart) && !t.createdAt.isAfter(periodEnd))
+          .toList();
+
+      // Sum opening and closing net values across all investments
+      double totalOpeningNetValue = 0;
+      double totalClosingNetValue = 0;
+
+      for (final investment in investments) {
+        final investmentTransfers = allTransfers.where((t) => t.investmentId == investment.id);
+
+        final openingQuantity = investmentTransfers
+            .where((t) => t.createdAt.isBefore(periodStart))
+            .fold(0.0, (sum, t) => sum + t.quantity);
+
+        final closingQuantity = openingQuantity +
+            investmentTransfers
+                .where((t) => !t.createdAt.isBefore(periodStart) && !t.createdAt.isAfter(periodEnd))
+                .fold(0.0, (sum, t) => sum + t.quantity);
+
+        if (openingQuantity > 0) {
+          totalOpeningNetValue += await _fetchPeriodNetValue(
+            session,
+            investment: investment,
+            quantity: openingQuantity,
+            accountCurrency: accountCurrency,
+            date: openingEodDate,
+            isCurrent: false,
+          );
+        }
+
+        if (closingQuantity > 0) {
+          totalClosingNetValue += await _fetchPeriodNetValue(
+            session,
+            investment: investment,
+            quantity: closingQuantity,
+            accountCurrency: accountCurrency,
+            date: periodEnd,
+            isCurrent: isCurrentPeriod,
+          );
+        }
+      }
+
+      if (totalOpeningNetValue == 0 && periodTransfers.isEmpty) continue;
+
+      // Combined cash flows across all investments for this period
+      final cashFlows = <double>[];
+      final dates = <DateTime>[];
+
+      if (totalOpeningNetValue > 0) {
+        cashFlows.add(-totalOpeningNetValue);
+        dates.add(periodStart);
+      }
+
+      for (final t in periodTransfers) {
+        cashFlows.add(-t.amount);
+        dates.add(t.createdAt);
+      }
+
+      if (totalClosingNetValue > 0) {
+        cashFlows.add(totalClosingNetValue);
+        dates.add(periodEnd);
+      }
+
+      final irr = _computeIrr(cashFlows, dates);
+      final periodTransferAmount = periodTransfers.fold(0.0, (sum, t) => sum + t.amount);
+      final gains = totalClosingNetValue - totalOpeningNetValue - periodTransferAmount;
+
+      returns.add(
+        InvestmentReturn(
+          percentage: (irr ?? 0) * 100,
+          gains: gains,
+          year: periodYear,
+          month: periodMonth,
+        ),
+      );
+    }
+
+    return returns;
+  }
+
   Future<List<InvestmentReturn>> returns(
     Session session,
     int investmentId, {
@@ -287,70 +401,29 @@ class InvestmentService {
 
       if (openingQuantity == 0 && periodTransfers.isEmpty) continue;
 
-      final needsForex = accountCurrency?.id != investment.asset?.currency?.id;
-
       // Opening value: use EOD of the day before the period starts so that
       // closing(M) == opening(M+1), making gains chainable across periods.
       final openingEodDate = periodStart.subtract(const Duration(days: 1));
       double openingNetValue = 0;
       if (openingQuantity > 0) {
-        final openingEod = await assetsValuesSource.getEodValue(
+        openingNetValue = await _fetchPeriodNetValue(
           session,
-          asset: investment.asset!,
-          date: openingEodDate,
-        );
-        Forex? openingForex;
-        if (needsForex) {
-          openingForex = await currencyService.changeEod(
-            session,
-            fromCode: investment.asset!.currency!.code,
-            toCode: accountCurrency!.code,
-            date: openingEodDate,
-          );
-        }
-        openingNetValue = _computeWithdrawAmount(
-          session,
+          investment: investment,
           quantity: openingQuantity,
-          assetValue: openingEod.value,
-          currencyChangeRate: openingForex?.rate ?? 1,
-          withdrawalRule: investment.withdrawalRule,
+          accountCurrency: accountCurrency,
+          date: openingEodDate,
+          isCurrent: false,
         );
       }
 
       // Closing value (value at end of period)
-      final AssetValue closingEod;
-      Forex? closingForex;
-      if (isCurrentPeriod) {
-        closingEod = await assetsValuesSource.getCurrentValue(session, asset: investment.asset!);
-        if (needsForex) {
-          closingForex = await currencyService.change(
-            session,
-            fromCode: investment.asset!.currency!.code,
-            toCode: accountCurrency!.code,
-          );
-        }
-      } else {
-        closingEod = await assetsValuesSource.getEodValue(
-          session,
-          asset: investment.asset!,
-          date: periodEnd,
-        );
-        if (needsForex) {
-          closingForex = await currencyService.changeEod(
-            session,
-            fromCode: investment.asset!.currency!.code,
-            toCode: accountCurrency!.code,
-            date: periodEnd,
-          );
-        }
-      }
-
-      final closingNetValue = _computeWithdrawAmount(
+      final closingNetValue = await _fetchPeriodNetValue(
         session,
+        investment: investment,
         quantity: closingQuantity,
-        assetValue: closingEod.value,
-        currencyChangeRate: closingForex?.rate ?? 1,
-        withdrawalRule: investment.withdrawalRule,
+        accountCurrency: accountCurrency,
+        date: periodEnd,
+        isCurrent: isCurrentPeriod,
       );
 
       // Build cash flows and dates for IRR
@@ -417,6 +490,68 @@ class InvestmentService {
       periods.add((start, end, year, 0, isCurrentPeriod));
     }
     return periods;
+  }
+
+  /// Fetches the net liquidation value for [quantity] shares at [date] (or current if [isCurrent]),
+  /// applying forex conversion and withdrawal fees.
+  Future<double> _fetchPeriodNetValue(
+    Session session, {
+    required Investment investment,
+    required double quantity,
+    required Currency? accountCurrency,
+    required DateTime date,
+    required bool isCurrent,
+  }) async {
+    final needsForex = accountCurrency?.id != investment.asset?.currency?.id;
+
+    final AssetValue assetValue;
+    Forex? forex;
+
+    if (isCurrent) {
+      assetValue = await assetsValuesSource.getCurrentValue(session, asset: investment.asset!);
+      if (needsForex) {
+        forex = await currencyService.change(
+          session,
+          fromCode: investment.asset!.currency!.code,
+          toCode: accountCurrency!.code,
+        );
+      }
+    } else {
+      assetValue = await assetsValuesSource.getEodValue(
+        session,
+        asset: investment.asset!,
+        date: date,
+      );
+      if (needsForex) {
+        forex = await currencyService.changeEod(
+          session,
+          fromCode: investment.asset!.currency!.code,
+          toCode: accountCurrency!.code,
+          date: date,
+        );
+      }
+    }
+
+    return _computeWithdrawAmount(
+      session,
+      quantity: quantity,
+      assetValue: assetValue.value,
+      currencyChangeRate: forex?.rate ?? 1,
+      withdrawalRule: investment.withdrawalRule,
+    );
+  }
+
+  /// Builds cash flows from [transfers] (outflows) plus an optional [terminalValue] inflow,
+  /// then computes the IRR. Returns null if transfers are empty or IRR cannot be determined.
+  static double? _computeIrrFromTransfers(List<Transfer> transfers, double terminalValue) {
+    if (transfers.isEmpty) return null;
+    final cashFlows = transfers.map((t) => -t.amount).toList();
+    final dates = transfers.map((t) => t.createdAt).toList();
+    if (terminalValue > 0) {
+      cashFlows.add(terminalValue);
+      dates.add(DateTime.timestamp());
+    }
+    return _computeIrr(cashFlows, dates);
   }
 
   /// Computes the IRR (Internal Rate of Return) for a period using Newton-Raphson.
@@ -517,13 +652,7 @@ class InvestmentService {
         // Brut total IRR: buys/sells at exact dates.
         // Only add current liquidation value if shares are still held,
         // so fully closed positions are normalized to [first_buy, last_sell].
-        final cashFlows = transfers.map((t) => -t.amount).toList();
-        final dates = transfers.map((t) => t.createdAt).toList();
-        if (withdrawAmount > 0) {
-          cashFlows.add(withdrawAmount);
-          dates.add(DateTime.timestamp());
-        }
-        final irr = _computeIrr(cashFlows, dates);
+        final irr = _computeIrrFromTransfers(transfers, withdrawAmount);
         returnPercentage = (irr ?? 0) * 100;
       }
     }

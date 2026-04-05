@@ -470,6 +470,14 @@ class EndpointInvestment extends _i1.EndpointRef {
       'interval': interval,
     },
   );
+
+  _i2.Future<List<_i15.InvestmentReturn>> totalReturns({
+    required _i16.InvestmentReturnInterval interval,
+  }) => caller.callServerEndpoint<List<_i15.InvestmentReturn>>(
+    'investment',
+    'totalReturns',
+    {'interval': interval},
+  );
 }
 
 /// {@category Endpoint}

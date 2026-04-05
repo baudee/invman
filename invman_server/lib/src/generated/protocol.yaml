@@ -33,6 +33,7 @@ investment:
   - retrieve:
   - total:
   - returns:
+  - totalReturns:
 transfer:
   - retrieve:
   - save:

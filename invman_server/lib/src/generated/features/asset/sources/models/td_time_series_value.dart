@@ -12,7 +12,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 
-abstract class TwelveDataTimeSeriesValue implements _i1.SerializableModel, _i1.ProtocolSerialization {
+abstract class TwelveDataTimeSeriesValue
+    implements _i1.SerializableModel, _i1.ProtocolSerialization {
   TwelveDataTimeSeriesValue._({
     required this.datetime,
     required this.open,

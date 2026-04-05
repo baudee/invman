@@ -17,8 +17,7 @@ enum AssetTimeHorizon implements _i1.SerializableModel {
   oneWeek,
   oneMonth,
   oneYear,
-  all
-  ;
+  all;
 
   static AssetTimeHorizon fromJson(String name) {
     switch (name) {

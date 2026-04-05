@@ -14,21 +14,36 @@
 import 'package:serverpod_test/serverpod_test.dart' as _i1;
 import 'package:serverpod/serverpod.dart' as _i2;
 import 'dart:async' as _i3;
-import 'package:invman_server/src/generated/features/account/models/account.dart' as _i4;
-import 'package:invman_server/src/generated/features/app_settings/models/app_settings.dart' as _i5;
-import 'package:invman_server/src/generated/features/asset/models/asset.dart' as _i6;
-import 'package:invman_server/src/generated/features/asset/models/asset_filter.dart' as _i7;
-import 'package:invman_server/src/generated/features/asset/models/asset_value.dart' as _i8;
-import 'package:invman_server/src/generated/features/asset/models/asset_time_horizon.dart' as _i9;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart' as _i10;
-import 'package:invman_server/src/generated/features/currency/models/currency.dart' as _i11;
-import 'package:invman_server/src/generated/features/dividend/models/computed_dividend_value.dart' as _i12;
-import 'package:invman_server/src/generated/features/dividend/models/total_dividend_year.dart' as _i13;
-import 'package:invman_server/src/generated/features/investment/models/investment.dart' as _i14;
-import 'package:invman_server/src/generated/features/investment/models/return.dart' as _i15;
-import 'package:invman_server/src/generated/features/investment/models/return_interval.dart' as _i16;
-import 'package:invman_server/src/generated/features/transfer/models/transfer.dart' as _i17;
-import 'package:invman_server/src/generated/features/withdrawal/models/withdrawal_rule.dart' as _i18;
+import 'package:invman_server/src/generated/features/account/models/account.dart'
+    as _i4;
+import 'package:invman_server/src/generated/features/app_settings/models/app_settings.dart'
+    as _i5;
+import 'package:invman_server/src/generated/features/asset/models/asset.dart'
+    as _i6;
+import 'package:invman_server/src/generated/features/asset/models/asset_filter.dart'
+    as _i7;
+import 'package:invman_server/src/generated/features/asset/models/asset_value.dart'
+    as _i8;
+import 'package:invman_server/src/generated/features/asset/models/asset_time_horizon.dart'
+    as _i9;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+    as _i10;
+import 'package:invman_server/src/generated/features/currency/models/currency.dart'
+    as _i11;
+import 'package:invman_server/src/generated/features/dividend/models/computed_dividend_value.dart'
+    as _i12;
+import 'package:invman_server/src/generated/features/dividend/models/total_dividend_year.dart'
+    as _i13;
+import 'package:invman_server/src/generated/features/investment/models/investment.dart'
+    as _i14;
+import 'package:invman_server/src/generated/features/investment/models/return.dart'
+    as _i15;
+import 'package:invman_server/src/generated/features/investment/models/return_interval.dart'
+    as _i16;
+import 'package:invman_server/src/generated/features/transfer/models/transfer.dart'
+    as _i17;
+import 'package:invman_server/src/generated/features/withdrawal/models/withdrawal_rule.dart'
+    as _i18;
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:invman_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -157,7 +172,8 @@ class TestEndpoints {
   late final _WithdrawalRuleEndpoint withdrawalRule;
 }
 
-class _InternalTestEndpoints extends TestEndpoints implements _i1.InternalTestEndpoints {
+class _InternalTestEndpoints extends TestEndpoints
+    implements _i1.InternalTestEndpoints {
   @override
   void initialize(
     _i2.SerializationManager serializationManager,
@@ -220,10 +236,11 @@ class _AccountEndpoint {
     _i1.TestSessionBuilder sessionBuilder,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'account',
-        method: 'retrieve',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'account',
+            method: 'retrieve',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -250,10 +267,11 @@ class _AccountEndpoint {
     _i4.Account account,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'account',
-        method: 'save',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'account',
+            method: 'save',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -288,10 +306,11 @@ class _AppSettingsEndpoint {
 
   _i3.Future<_i5.AppSettings> get(_i1.TestSessionBuilder sessionBuilder) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'appSettings',
-        method: 'get',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'appSettings',
+            method: 'get',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -329,10 +348,11 @@ class _AssetEndpoint {
     _i2.UuidValue assetId,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'asset',
-        method: 'like',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'asset',
+            method: 'like',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -359,10 +379,11 @@ class _AssetEndpoint {
     _i2.UuidValue assetId,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'asset',
-        method: 'unlike',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'asset',
+            method: 'unlike',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -389,10 +410,11 @@ class _AssetEndpoint {
     _i2.UuidValue uuid,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'asset',
-        method: 'retrieve',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'asset',
+            method: 'retrieve',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -421,10 +443,11 @@ class _AssetEndpoint {
     required int page,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'asset',
-        method: 'list',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'asset',
+            method: 'list',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -456,10 +479,11 @@ class _AssetEndpoint {
     required _i9.AssetTimeHorizon timeHorizon,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'asset',
-        method: 'timeseries',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'asset',
+            method: 'timeseries',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -501,10 +525,11 @@ class _EmailIdpEndpoint {
     required String password,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'emailIdp',
-        method: 'login',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'emailIdp',
+            method: 'login',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -534,10 +559,11 @@ class _EmailIdpEndpoint {
     required String email,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'emailIdp',
-        method: 'startRegistration',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'emailIdp',
+            method: 'startRegistration',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -565,10 +591,11 @@ class _EmailIdpEndpoint {
     required String verificationCode,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'emailIdp',
-        method: 'verifyRegistrationCode',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'emailIdp',
+            method: 'verifyRegistrationCode',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -599,10 +626,11 @@ class _EmailIdpEndpoint {
     required String password,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'emailIdp',
-        method: 'finishRegistration',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'emailIdp',
+            method: 'finishRegistration',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -632,10 +660,11 @@ class _EmailIdpEndpoint {
     required String email,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'emailIdp',
-        method: 'startPasswordReset',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'emailIdp',
+            method: 'startPasswordReset',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -663,10 +692,11 @@ class _EmailIdpEndpoint {
     required String verificationCode,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'emailIdp',
-        method: 'verifyPasswordResetCode',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'emailIdp',
+            method: 'verifyPasswordResetCode',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -697,10 +727,11 @@ class _EmailIdpEndpoint {
     required String newPassword,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'emailIdp',
-        method: 'finishPasswordReset',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'emailIdp',
+            method: 'finishPasswordReset',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -727,10 +758,11 @@ class _EmailIdpEndpoint {
 
   _i3.Future<bool> hasAccount(_i1.TestSessionBuilder sessionBuilder) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'emailIdp',
-        method: 'hasAccount',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'emailIdp',
+            method: 'hasAccount',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -768,10 +800,11 @@ class _JwtRefreshEndpoint {
     required String refreshToken,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'jwtRefresh',
-        method: 'refreshAccessToken',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'jwtRefresh',
+            method: 'refreshAccessToken',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -808,10 +841,11 @@ class _CurrencyEndpoint {
     _i1.TestSessionBuilder sessionBuilder,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'currency',
-        method: 'list',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'currency',
+            method: 'list',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -850,10 +884,11 @@ class _DividendEndpoint {
     required int page,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'dividend',
-        method: 'list',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'dividend',
+            method: 'list',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -882,10 +917,11 @@ class _DividendEndpoint {
     _i1.TestSessionBuilder sessionBuilder,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'dividend',
-        method: 'calendar',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'dividend',
+            method: 'calendar',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -913,10 +949,11 @@ class _DividendEndpoint {
     int toYear,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'dividend',
-        method: 'total',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'dividend',
+            method: 'total',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -958,10 +995,11 @@ class _InvestmentEndpoint {
     required int page,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'investment',
-        method: 'list',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'investment',
+            method: 'list',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -991,10 +1029,11 @@ class _InvestmentEndpoint {
     _i14.Investment investment,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'investment',
-        method: 'save',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'investment',
+            method: 'save',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -1021,10 +1060,11 @@ class _InvestmentEndpoint {
     int id,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'investment',
-        method: 'delete',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'investment',
+            method: 'delete',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -1051,10 +1091,11 @@ class _InvestmentEndpoint {
     int id,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'investment',
-        method: 'retrieve',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'investment',
+            method: 'retrieve',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -1080,10 +1121,11 @@ class _InvestmentEndpoint {
     _i1.TestSessionBuilder sessionBuilder,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'investment',
-        method: 'total',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'investment',
+            method: 'total',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -1111,10 +1153,11 @@ class _InvestmentEndpoint {
     required _i16.InvestmentReturnInterval interval,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'investment',
-        method: 'returns',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'investment',
+            method: 'returns',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -1124,6 +1167,37 @@ class _InvestmentEndpoint {
             'id': id,
             'interval': interval,
           }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<List<_i15.InvestmentReturn>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<List<_i15.InvestmentReturn>> totalReturns(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required _i16.InvestmentReturnInterval interval,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'investment',
+            method: 'totalReturns',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'investment',
+          methodName: 'totalReturns',
+          parameters: _i1.testObjectToJson({'interval': interval}),
           serializationManager: _serializationManager,
         );
         var _localReturnValue =
@@ -1155,10 +1229,11 @@ class _TransferEndpoint {
     int id,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'transfer',
-        method: 'retrieve',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'transfer',
+            method: 'retrieve',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -1185,10 +1260,11 @@ class _TransferEndpoint {
     _i17.Transfer transfer,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'transfer',
-        method: 'save',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'transfer',
+            method: 'save',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -1215,10 +1291,11 @@ class _TransferEndpoint {
     int id,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'transfer',
-        method: 'delete',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'transfer',
+            method: 'delete',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -1247,10 +1324,11 @@ class _TransferEndpoint {
     required int page,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'transfer',
-        method: 'list',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'transfer',
+            method: 'list',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -1293,10 +1371,11 @@ class _WithdrawalRuleEndpoint {
     required int page,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'withdrawalRule',
-        method: 'list',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'withdrawalRule',
+            method: 'list',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -1326,10 +1405,11 @@ class _WithdrawalRuleEndpoint {
     int id,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'withdrawalRule',
-        method: 'retrieve',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'withdrawalRule',
+            method: 'retrieve',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -1356,10 +1436,11 @@ class _WithdrawalRuleEndpoint {
     _i18.WithdrawalRule transfer,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'withdrawalRule',
-        method: 'save',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'withdrawalRule',
+            method: 'save',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
@@ -1386,10 +1467,11 @@ class _WithdrawalRuleEndpoint {
     int id,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-        endpoint: 'withdrawalRule',
-        method: 'delete',
-      );
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'withdrawalRule',
+            method: 'delete',
+          );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,

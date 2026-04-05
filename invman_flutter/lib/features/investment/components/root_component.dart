@@ -6,11 +6,13 @@ import 'package:signals_flutter/signals_flutter.dart';
 class InvestmentRootComponent extends StatelessWidget {
   final InvestmentListController controller;
   final String currencyCode;
+  final UserPreferencesManager preferencesManager;
 
   const InvestmentRootComponent({
     super.key,
     required this.controller,
     required this.currencyCode,
+    required this.preferencesManager,
   });
 
   static const double headerHeight = 260.0;
@@ -30,6 +32,15 @@ class InvestmentRootComponent extends StatelessWidget {
               child: InvestmentHeaderContent(
                 investment: controller.total.watch(context),
                 currencyCode: currencyCode,
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: UIConstants.appHorizontalPadding),
+              child: InvestmentReturnsGraphComponent(
+                controller: controller,
+                preferencesManager: preferencesManager,
               ),
             ),
           ),

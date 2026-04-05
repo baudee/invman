@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -5,10 +6,9 @@ import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 class InvestmentReturnsGraphComponent extends StatefulWidget {
-  final InvestmentDetailController controller;
+  final ReturnsProvider controller;
   final UserPreferencesManager preferencesManager;
 
   const InvestmentReturnsGraphComponent({
@@ -66,16 +66,18 @@ class _InvestmentReturnsGraphComponentState extends State<InvestmentReturnsGraph
                 .map(
                   (interval) => Builder(
                     builder: (context) {
-                      final raw = widget.controller.getReturnsFromInterval(interval).watch(context);
-                      if (raw.isEmpty) {
-                        return Center(child: Text(S.of(context).investment_add_transfers));
-                      }
-                      final returns = [...raw]
-                        ..sort((a, b) {
-                          final y = a.year.compareTo(b.year);
-                          return y != 0 ? y : a.month.compareTo(b.month);
-                        });
-                      return BarChart(_getBarChartData(context, returns, interval));
+                      return BaseStateComponent(
+                        state: widget.controller.getReturnsFromInterval(interval),
+                        successBuilder: (data) {
+                          final returns = data
+                            ..sort((a, b) {
+                              final y = a.year.compareTo(b.year);
+                              return y != 0 ? y : a.month.compareTo(b.month);
+                            });
+                          return BarChart(_getBarChartData(context, returns, interval));
+                        },
+                        onReload: () => widget.controller.reloadReturns(interval),
+                      );
                     },
                   ),
                 )
@@ -93,7 +95,14 @@ class _InvestmentReturnsGraphComponentState extends State<InvestmentReturnsGraph
   ) {
     final theme = Theme.of(context);
     final locale = Localizations.localeOf(context).toString();
+    final maxPct = returns.map((r) => r.percentage).reduce(max);
+    final minPct = returns.map((r) => r.percentage).reduce(min);
+    // Extra headroom above/below bars so floating labels are never clipped.
+    final maxY = maxPct + (maxPct.abs() * 0.4 + 4).clamp(4.0, double.infinity);
+    final minY = minPct < 0 ? minPct + (minPct * 0.4 - 4).clamp(double.negativeInfinity, -4.0) : 0.0;
     return BarChartData(
+      maxY: maxY,
+      minY: minY,
       gridData: FlGridData(
         show: true,
         drawVerticalLine: false,
@@ -104,40 +113,11 @@ class _InvestmentReturnsGraphComponentState extends State<InvestmentReturnsGraph
       titlesData: FlTitlesData(
         leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        topTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 44,
-            getTitlesWidget: (value, meta) {
-              final index = value.toInt();
-              if (index < 0 || index >= returns.length) return const SizedBox.shrink();
-              final r = returns[index];
-              final color = r.percentage > 0 ? Colors.green : (r.percentage < 0 ? Colors.red : Colors.grey);
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '${r.percentage.toStringAsFixed(1)}%',
-                      style: theme.textTheme.labelSmall?.copyWith(color: color, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      r.gains.toStringAsFixed(2),
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
+        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 28,
+            reservedSize: 40,
             getTitlesWidget: (value, meta) {
               final index = value.toInt();
               if (index < 0 || index >= returns.length) return const SizedBox.shrink();
@@ -147,19 +127,48 @@ class _InvestmentReturnsGraphComponentState extends State<InvestmentReturnsGraph
                   : _monthLabel(r.month, r.year, locale);
               return Padding(
                 padding: const EdgeInsets.only(top: 4),
-                child: Text(label, style: const TextStyle(fontSize: 10)),
+                child: Transform.rotate(
+                  angle: -pi / 4,
+                  child: Text(label, style: const TextStyle(fontSize: 10)),
+                ),
               );
             },
           ),
         ),
       ),
-      barTouchData: BarTouchData(enabled: false),
+      barTouchData: BarTouchData(
+        enabled: false,
+        touchTooltipData: BarTouchTooltipData(
+          getTooltipColor: (_) => Colors.transparent,
+          tooltipPadding: EdgeInsets.zero,
+          tooltipMargin: 1,
+          fitInsideVertically: true,
+          fitInsideHorizontally: true,
+          getTooltipItem: (group, groupIndex, rod, rodIndex) {
+            final r = returns[groupIndex];
+            final color = r.percentage > 0 ? Colors.green : (r.percentage < 0 ? Colors.red : Colors.grey);
+            return BarTooltipItem(
+              '${r.percentage.toStringAsFixed(1)}%\n',
+              theme.textTheme.labelSmall!.copyWith(color: color, fontWeight: FontWeight.bold),
+              children: [
+                TextSpan(
+                  text: r.gains.toStringAsFixed(2),
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
       barGroups: returns.indexed.map((entry) {
         final index = entry.$1;
         final r = entry.$2;
         final color = r.percentage > 0 ? Colors.green : (r.percentage < 0 ? Colors.red : Colors.grey);
         return BarChartGroupData(
           x: index,
+          showingTooltipIndicators: [0],
           barRods: [
             BarChartRodData(
               toY: r.percentage,

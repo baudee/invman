@@ -16,6 +16,7 @@ class InvestmentRootScreen extends HookWidget {
   Widget build(BuildContext context) {
     final controller = useController(() => getIt<InvestmentListController>());
     final authManager = getIt<AuthManager>();
+    final preferencesManager = getIt<UserPreferencesManager>();
 
     return BaseScreen(
       usePadding: false,
@@ -27,6 +28,7 @@ class InvestmentRootScreen extends HookWidget {
       body: InvestmentRootComponent(
         controller: controller,
         currencyCode: authManager.currencyCode,
+        preferencesManager: preferencesManager,
       ),
     );
   }

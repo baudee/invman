@@ -96,12 +96,12 @@ class _StatsRow extends StatelessWidget {
           value: investment?.investAmount.toStringPrice(currencyCode) ?? "—",
         ),
         _StatCard(
-          label: S.of(context).investment_totalGain.toUpperCase(),
+          label: S.of(context).investment_unrealizedGain.toUpperCase(),
           value: investment?.unrealizedProfit.toStringPrice(currencyCode) ?? "—",
           color: _getColor(investment?.unrealizedProfit),
         ),
         _StatCard(
-          label: S.of(context).investment_totalGain.toUpperCase(),
+          label: S.of(context).investment_realizedGain.toUpperCase(),
           value: investment?.realizedProfit.toStringPrice(currencyCode) ?? "—",
           color: _getColor(investment?.realizedProfit),
         ),

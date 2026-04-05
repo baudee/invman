@@ -38,8 +38,17 @@ class InvestmentDetailComponent extends StatelessWidget {
                   spacing: UIConstants.spacingXs,
                   children: [
                     InvestmentReturnsGraphComponent(controller: controller, preferencesManager: preferencesManager),
-                    const SizedBox(height: UIConstants.spacingSm),
+                    const SizedBox(height: UIConstants.spacingXs),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await router.push(TransferRootScreen.route(investment.id!));
+                        controller.reload();
+                      },
+                      style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 0)),
+                      child: Text(S.of(context).transfer_title),
+                    ),
                     if (investment.asset != null) ...[
+                      const SizedBox(height: UIConstants.spacingSm),
                       SectionHeaderComponent(title: S.of(context).asset(1)),
                       AssetTileComponent(asset: investment.asset!),
                       ListTile(
@@ -69,14 +78,12 @@ class InvestmentDetailComponent extends StatelessWidget {
                       SectionHeaderComponent(title: S.of(context).withdrawal),
                       WithdrawalRuleTileComponent(rule: investment.withdrawalRule!),
                     ],
-                    const SizedBox(height: UIConstants.spacingLg),
-                    ElevatedButton(
-                      onPressed: () async {
-                        await router.push(TransferRootScreen.route(investment.id!));
-                        controller.reload();
-                      },
-                      style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 0)),
-                      child: Text(S.of(context).transfer_title),
+                    const SizedBox(height: UIConstants.spacingXs),
+                    SectionHeaderComponent(title: S.of(context).investment_title),
+                    ListTile(
+                      leading: Icon(Icons.confirmation_number, color: Theme.of(context).colorScheme.primary),
+                      title: Text("${S.of(context).core_id}:"),
+                      trailing: Text(investment.id.toString()),
                     ),
                     const SizedBox(height: UIConstants.spacingMd),
                   ],
