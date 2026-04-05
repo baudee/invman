@@ -18,7 +18,8 @@ import '../../../features/asset/models/asset_like.dart' as _i4;
 import '../../../features/investment/models/investment.dart' as _i5;
 import 'package:invman_server/src/generated/protocol.dart' as _i6;
 
-abstract class Asset implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
+abstract class Asset
+    implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
   Asset._({
     _i1.UuidValue? id,
     required this.symbol,
@@ -51,7 +52,9 @@ abstract class Asset implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSeriali
 
   factory Asset.fromJson(Map<String, dynamic> jsonSerialization) {
     return Asset(
-      id: jsonSerialization['id'] == null ? null : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       symbol: jsonSerialization['symbol'] as String,
       name: jsonSerialization['name'] as String,
       exchange: jsonSerialization['exchange'] as String?,
@@ -142,7 +145,8 @@ abstract class Asset implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSeriali
       'currencyId': currencyId,
       if (currency != null) 'currency': currency?.toJson(),
       if (likes != null) 'likes': likes?.toJson(valueToJson: (v) => v.toJson()),
-      if (investments != null) 'investments': investments?.toJson(valueToJson: (v) => v.toJson()),
+      if (investments != null)
+        'investments': investments?.toJson(valueToJson: (v) => v.toJson()),
       if (price != null) 'price': price,
       if (timestamp != null) 'timestamp': timestamp?.toJson(),
     };
@@ -160,7 +164,8 @@ abstract class Asset implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSeriali
       if (logoUrl != null) 'logoUrl': logoUrl,
       'currencyId': currencyId,
       if (currency != null) 'currency': currency?.toJsonForProtocol(),
-      if (likes != null) 'likes': likes?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
+      if (likes != null)
+        'likes': likes?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
       if (investments != null)
         'investments': investments?.toJson(
           valueToJson: (v) => v.toJsonForProtocol(),
@@ -265,8 +270,12 @@ class _AssetImpl extends Asset {
       type: type ?? this.type,
       logoUrl: logoUrl is String? ? logoUrl : this.logoUrl,
       currencyId: currencyId ?? this.currencyId,
-      currency: currency is _i3.Currency? ? currency : this.currency?.copyWith(),
-      likes: likes is List<_i4.AssetLike>? ? likes : this.likes?.map((e0) => e0.copyWith()).toList(),
+      currency: currency is _i3.Currency?
+          ? currency
+          : this.currency?.copyWith(),
+      likes: likes is List<_i4.AssetLike>?
+          ? likes
+          : this.likes?.map((e0) => e0.copyWith()).toList(),
       investments: investments is List<_i5.Investment>?
           ? investments
           : this.investments?.map((e0) => e0.copyWith()).toList(),
@@ -294,10 +303,11 @@ class AssetUpdateTable extends _i1.UpdateTable<AssetTable> {
     value,
   );
 
-  _i1.ColumnValue<_i2.AssetType, _i2.AssetType> type(_i2.AssetType value) => _i1.ColumnValue(
-    table.type,
-    value,
-  );
+  _i1.ColumnValue<_i2.AssetType, _i2.AssetType> type(_i2.AssetType value) =>
+      _i1.ColumnValue(
+        table.type,
+        value,
+      );
 
   _i1.ColumnValue<String, String> logoUrl(String? value) => _i1.ColumnValue(
     table.logoUrl,
@@ -371,7 +381,8 @@ class AssetTable extends _i1.Table<_i1.UuidValue> {
       field: Asset.t.currencyId,
       foreignField: _i3.Currency.t.id,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i3.CurrencyTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i3.CurrencyTable(tableRelation: foreignTableRelation),
     );
     return _currency!;
   }
@@ -383,7 +394,8 @@ class AssetTable extends _i1.Table<_i1.UuidValue> {
       field: Asset.t.id,
       foreignField: _i4.AssetLike.t.assetId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i4.AssetLikeTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i4.AssetLikeTable(tableRelation: foreignTableRelation),
     );
     return ___likes!;
   }
@@ -395,7 +407,8 @@ class AssetTable extends _i1.Table<_i1.UuidValue> {
       field: Asset.t.id,
       foreignField: _i5.Investment.t.assetId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i5.InvestmentTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i5.InvestmentTable(tableRelation: foreignTableRelation),
     );
     return ___investments!;
   }
@@ -407,7 +420,8 @@ class AssetTable extends _i1.Table<_i1.UuidValue> {
       field: Asset.t.id,
       foreignField: _i4.AssetLike.t.assetId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i4.AssetLikeTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i4.AssetLikeTable(tableRelation: foreignTableRelation),
     );
     _likes = _i1.ManyRelation<_i4.AssetLikeTable>(
       tableWithRelations: relationTable,
@@ -425,7 +439,8 @@ class AssetTable extends _i1.Table<_i1.UuidValue> {
       field: Asset.t.id,
       foreignField: _i5.Investment.t.assetId,
       tableRelation: tableRelation,
-      createTable: (foreignTableRelation) => _i5.InvestmentTable(tableRelation: foreignTableRelation),
+      createTable: (foreignTableRelation) =>
+          _i5.InvestmentTable(tableRelation: foreignTableRelation),
     );
     _investments = _i1.ManyRelation<_i5.InvestmentTable>(
       tableWithRelations: relationTable,
@@ -829,7 +844,9 @@ class AssetAttachRepository {
       throw ArgumentError.notNull('asset.id');
     }
 
-    var $assetLike = assetLike.map((e) => e.copyWith(assetId: asset.id)).toList();
+    var $assetLike = assetLike
+        .map((e) => e.copyWith(assetId: asset.id))
+        .toList();
     await session.db.update<_i4.AssetLike>(
       $assetLike,
       columns: [_i4.AssetLike.t.assetId],
@@ -852,7 +869,9 @@ class AssetAttachRepository {
       throw ArgumentError.notNull('asset.id');
     }
 
-    var $investment = investment.map((e) => e.copyWith(assetId: asset.id)).toList();
+    var $investment = investment
+        .map((e) => e.copyWith(assetId: asset.id))
+        .toList();
     await session.db.update<_i5.Investment>(
       $investment,
       columns: [_i5.Investment.t.assetId],

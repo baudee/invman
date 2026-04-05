@@ -5,3 +5,4 @@ fields:
     query: String, default=""
     favorite: bool, default=false
     exchange: String?
+    currencyId: int?

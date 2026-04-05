@@ -69,6 +69,10 @@ class AssetService {
         expressions.add(t.exchange.equals(filter.exchange!));
       }
 
+      if (filter.currencyId != null) {
+        expressions.add(t.currencyId.equals(filter.currencyId!));
+      }
+
       return expressions.and ?? Constant.bool(true);
     };
   }

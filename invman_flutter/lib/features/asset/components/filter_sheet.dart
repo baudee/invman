@@ -16,6 +16,7 @@ class AssetFilterSheet extends HookWidget {
   Widget build(BuildContext context) {
     final selectedType = signal(controller.type.value);
     final selectedExchange = signal(controller.exchange.value);
+    final selectedCurrency = signal(controller.currency.value);
 
     final s = S.of(context);
 
@@ -33,6 +34,7 @@ class AssetFilterSheet extends HookWidget {
                 onPressed: () {
                   selectedType.value = null;
                   selectedExchange.value = null;
+                  selectedCurrency.value = null;
                   context.pop();
                 },
                 child: Text(s.core_cancel),
@@ -44,12 +46,20 @@ class AssetFilterSheet extends HookWidget {
           const SizedBox(height: UIConstants.spacingSm),
           _TypeChips(selectedTypeSignal: selectedType),
           const SizedBox(height: UIConstants.spacingMd),
+          Text(s.asset_filters_currency, style: Theme.of(context).textTheme.labelLarge),
+          const SizedBox(height: UIConstants.spacingSm),
+          _CurrencyDropdown(
+            selectedCurrencySignal: selectedCurrency,
+            currencies: controller.currencies.watch(context),
+          ),
+          const SizedBox(height: UIConstants.spacingMd),
           SizedBox(
             width: double.infinity,
             child: FilledButton(
               onPressed: () {
                 controller.setType(selectedType.value);
                 controller.setExchange(selectedExchange.value);
+                controller.setCurrency(selectedCurrency.value);
                 context.pop();
               },
               child: Text(s.core_apply),
@@ -91,6 +101,30 @@ class _TypeChips extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _CurrencyDropdown extends StatelessWidget {
+  final Signal<Currency?> selectedCurrencySignal;
+  final List<Currency> currencies;
+
+  const _CurrencyDropdown({required this.selectedCurrencySignal, required this.currencies});
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+
+    return DropdownButtonFormField<Currency?>(
+      initialValue: selectedCurrencySignal.watch(context),
+      decoration: const InputDecoration(border: OutlineInputBorder()),
+      items: [
+        DropdownMenuItem(value: null, child: Text(s.asset_filters_all)),
+        ...currencies.map(
+          (currency) => DropdownMenuItem(value: currency, child: Text(currency.code)),
+        ),
+      ],
+      onChanged: (value) => selectedCurrencySignal.value = value,
     );
   }
 }

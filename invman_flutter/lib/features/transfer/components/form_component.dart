@@ -28,6 +28,15 @@ class TransferFormComponent extends StatelessWidget {
                 key: controller.formKey,
                 child: Column(
                   children: [
+                    SegmentedButton<bool>(
+                      segments: [
+                        ButtonSegment(value: false, label: Text(S.of(context).transfer_buy)),
+                        ButtonSegment(value: true, label: Text(S.of(context).transfer_sell)),
+                      ],
+                      selected: {controller.isSell.watch(context)},
+                      onSelectionChanged: (selection) => controller.setIsSell(selection.first),
+                    ),
+                    const SizedBox(height: UIConstants.spacingSm),
                     TextFormField(
                       controller: controller.amountController,
                       validator: (value) => ValidationUtils.formValidatorDouble(value),
@@ -46,6 +55,7 @@ class TransferFormComponent extends StatelessWidget {
                       ),
                       keyboardType: TextInputType.number,
                     ),
+                    const SizedBox(height: UIConstants.spacingSm),
                     SectionHeaderComponent(title: S.of(context).transfer_date),
                     CalendarDatePicker(
                       initialDate: controller.state.watch(context).requireValue.createdAt,

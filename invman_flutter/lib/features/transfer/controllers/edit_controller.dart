@@ -19,6 +19,9 @@ class TransferEditController extends Disposable {
   final _state = asyncSignal<Transfer>(AsyncState.loading());
   ReadonlySignal<AsyncState<Transfer>> get state => _state;
 
+  final _isSell = Signal<bool>(false);
+  ReadonlySignal<bool> get isSell => _isSell.readonly();
+
   final formKey = GlobalKey<FormState>();
   final amountController = TextEditingController();
   final quantityController = TextEditingController();
@@ -49,9 +52,12 @@ class TransferEditController extends Disposable {
 
   Future<(bool, String?)> delete() => DeleteCommand(onExecute: () => _transferRepository.delete(id)).execute();
 
+  void setIsSell(bool value) => _isSell.value = value;
+
   void _refreshControllers(Transfer transfer) {
-    quantityController.text = transfer.quantity.toString();
-    amountController.text = transfer.amount.toStringAsFixed(2);
+    _isSell.value = transfer.quantity < 0;
+    quantityController.text = transfer.quantity.abs().toString();
+    amountController.text = transfer.amount.abs().toStringAsFixed(2);
   }
 
   void setTransferDate(DateTime date) {
@@ -74,9 +80,10 @@ class TransferEditController extends Disposable {
         return (false, S.current.transfer_selectValidAmount);
       }
 
+      final sign = _isSell.value ? -1.0 : 1.0;
       final transferToSave = transfer.copyWith(
-        quantity: double.parse(quantityController.text.trim()),
-        amount: double.parse(amountController.text.trim()),
+        quantity: double.parse(quantityController.text.trim()) * sign,
+        amount: double.parse(amountController.text.trim()) * sign,
         investmentId: investmentId,
         createdAt: transfer.createdAt.toUtc(),
       );
@@ -105,6 +112,7 @@ class TransferEditController extends Disposable {
   @override
   void onDispose() {
     _state.dispose();
+    _isSell.dispose();
     amountController.dispose();
     quantityController.dispose();
   }

@@ -17,7 +17,8 @@ class AssetFilterFloatingActionButton extends StatelessWidget {
         builder: (_) => AssetFilterSheet(controller: controller),
       ),
       child: Watch((context) {
-        final hasFilters = controller.type.value != null || controller.exchange.value != null;
+        final hasFilters =
+            controller.type.value != null || controller.exchange.value != null || controller.currency.value != null;
         return Stack(
           alignment: Alignment.center,
           children: [

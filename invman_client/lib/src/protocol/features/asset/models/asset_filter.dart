@@ -19,6 +19,7 @@ abstract class AssetFilter implements _i1.SerializableModel {
     String? query,
     bool? favorite,
     this.exchange,
+    this.currencyId,
   }) : query = query ?? '',
        favorite = favorite ?? false;
 
@@ -27,6 +28,7 @@ abstract class AssetFilter implements _i1.SerializableModel {
     String? query,
     bool? favorite,
     String? exchange,
+    int? currencyId,
   }) = _AssetFilterImpl;
 
   factory AssetFilter.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -39,6 +41,7 @@ abstract class AssetFilter implements _i1.SerializableModel {
           ? null
           : _i1.BoolJsonExtension.fromJson(jsonSerialization['favorite']),
       exchange: jsonSerialization['exchange'] as String?,
+      currencyId: jsonSerialization['currencyId'] as int?,
     );
   }
 
@@ -50,6 +53,8 @@ abstract class AssetFilter implements _i1.SerializableModel {
 
   String? exchange;
 
+  int? currencyId;
+
   /// Returns a shallow copy of this [AssetFilter]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -58,6 +63,7 @@ abstract class AssetFilter implements _i1.SerializableModel {
     String? query,
     bool? favorite,
     String? exchange,
+    int? currencyId,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -67,6 +73,7 @@ abstract class AssetFilter implements _i1.SerializableModel {
       'query': query,
       'favorite': favorite,
       if (exchange != null) 'exchange': exchange,
+      if (currencyId != null) 'currencyId': currencyId,
     };
   }
 
@@ -84,11 +91,13 @@ class _AssetFilterImpl extends AssetFilter {
     String? query,
     bool? favorite,
     String? exchange,
+    int? currencyId,
   }) : super._(
          type: type,
          query: query,
          favorite: favorite,
          exchange: exchange,
+         currencyId: currencyId,
        );
 
   /// Returns a shallow copy of this [AssetFilter]
@@ -100,12 +109,14 @@ class _AssetFilterImpl extends AssetFilter {
     String? query,
     bool? favorite,
     Object? exchange = _Undefined,
+    Object? currencyId = _Undefined,
   }) {
     return AssetFilter(
       type: type is _i2.AssetType? ? type : this.type,
       query: query ?? this.query,
       favorite: favorite ?? this.favorite,
       exchange: exchange is String? ? exchange : this.exchange,
+      currencyId: currencyId is int? ? currencyId : this.currencyId,
     );
   }
 }
