@@ -6,6 +6,8 @@ import 'dart:io';
 import 'package:dotenv/dotenv.dart';
 import 'package:http/http.dart' as http;
 
+import 's3_helper.dart';
+
 const rawDataDir = 'scripts/populate/raw-data';
 const outputDir = 'scripts/populate/data';
 const batchSize = 2; // Number of items to process in parallel
@@ -23,6 +25,22 @@ Future<void> main(List<String> args) async {
     print('Error: TWELVE_DATA_API_KEY environment variable not set.');
     exit(1);
   }
+
+  final s3AccessKey = env['S3_ACCESS_KEY'] ?? '';
+  final s3SecretKey = env['S3_SECRET_KEY'] ?? '';
+  if (s3AccessKey.isEmpty || s3SecretKey.isEmpty) {
+    print('Error: S3_ACCESS_KEY and S3_SECRET_KEY environment variables must be set.');
+    exit(1);
+  }
+
+  final s3 = createS3Client(s3AccessKey, s3SecretKey);
+
+  // Sync raw-data and existing output from S3
+  print('Downloading raw-data from S3...');
+  await downloadS3Dir(s3, 'populate/raw-data', rawDataDir);
+
+  print('Downloading existing processed data from S3 (for resume)...');
+  await downloadS3Dir(s3, 'populate/data', outputDir);
 
   // Ensure output directory exists
   final outputDirFile = Directory(outputDir);
@@ -58,6 +76,10 @@ Future<void> main(List<String> args) async {
 
   // Close HTTP client
   httpClient.close();
+
+  // Upload processed data to S3
+  print('\nUploading processed data to S3...');
+  await uploadDir(s3, outputDir, 'populate/data');
 
   print('\nTransformation completed!');
 }

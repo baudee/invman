@@ -4,15 +4,30 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:csv/csv.dart';
+import 'package:dotenv/dotenv.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:postgres/postgres.dart';
 import 'package:yaml/yaml.dart';
+
+import 's3_helper.dart';
 
 const validEnvironments = ['development', 'staging', 'production'];
 
 Future<void> main(List<String> args) async {
   final env = _parseEnvironment(args);
   print('Populating database for environment: $env');
+
+  final dotenv = DotEnv(includePlatformEnvironment: true)..load();
+  final s3AccessKey = dotenv['S3_ACCESS_KEY'] ?? '';
+  final s3SecretKey = dotenv['S3_SECRET_KEY'] ?? '';
+  if (s3AccessKey.isEmpty || s3SecretKey.isEmpty) {
+    print('Error: S3_ACCESS_KEY and S3_SECRET_KEY environment variables must be set.');
+    exit(1);
+  }
+
+  final s3 = createS3Client(s3AccessKey, s3SecretKey);
+  print('Downloading populate data from S3...');
+  await downloadS3Dir(s3, 'populate/data', 'scripts/populate/data');
 
   final passwords = _loadPasswords(env);
 

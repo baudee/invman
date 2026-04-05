@@ -1,0 +1,54 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: rimawari-db-backup
+  namespace: production
+spec:
+  schedule: "0 0 * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 3600
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: backup
+              image: alpine:3.19
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  set -e
+                  apk add --no-cache postgresql16-client aws-cli
+                  FILENAME="backup-$(date +%Y%m%d-%H%M%S).sql.gz"
+                  PGPASSWORD="$POSTGRES_PASSWORD" pg_dump \
+                    -h rimawari-postgresql \
+                    -U postgres \
+                    -d serverpod \
+                    | gzip > /tmp/$FILENAME
+                  aws s3 cp "/tmp/$FILENAME" "s3://$S3_BUCKET/database/$FILENAME" \
+                    --endpoint-url "https://s3.swiss-backup04.infomaniak.com" \
+                    --region us-east-1
+                  echo "Backup $FILENAME uploaded successfully"
+              env:
+                - name: POSTGRES_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: rimawari-postgresql
+                      key: password
+                - name: S3_BUCKET
+                  valueFrom:
+                    secretKeyRef:
+                      name: rimawari-backup-s3
+                      key: bucket
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: rimawari-backup-s3
+                      key: access_key
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: rimawari-backup-s3
+                      key: secret_key

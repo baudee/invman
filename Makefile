@@ -78,3 +78,20 @@ infra/apply:
 
 infra/server/delete:
 	kubectl delete -n $(NAMESPACE) deployment/rimawari-server service/rimawari-server
+
+infra/db/delete:
+	@echo "WARNING: This will permanently delete the database pod, service, and all its data (PVC)."
+	@read -p "Type 'yes' to confirm: " confirm && [ "$$confirm" = "yes" ] || (echo "Aborted." && exit 1)
+	kubectl delete -n $(NAMESPACE) statefulset/rimawari-postgresql service/rimawari-postgresql --ignore-not-found
+	kubectl delete -n $(NAMESPACE) pvc/data-rimawari-postgresql-0 --ignore-not-found
+	@echo "Database deleted."
+
+infra/db/restore:
+	@if [ ! -f infrastructure/backup.sql ]; then \
+		echo "Error: infrastructure/backup.sql not found."; \
+		exit 1; \
+	fi
+	@echo "Restoring database from infrastructure/backup.sql..."
+	kubectl cp infrastructure/backup.sql $(NAMESPACE)/rimawari-postgresql-0:/tmp/backup.sql
+	kubectl exec -n $(NAMESPACE) rimawari-postgresql-0 -- bash -c 'PGPASSWORD=$$POSTGRES_PASSWORD psql -U postgres -d serverpod < /tmp/backup.sql'
+	@echo "Restore complete."
