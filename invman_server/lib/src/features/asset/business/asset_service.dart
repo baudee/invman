@@ -56,7 +56,7 @@ class AssetService {
         expressions.add(t.likes.any((like) => like.userId.equals(userId)));
       }
 
-      if (filter.query.trim().isNotEmpty) {
+      if (filter.query.trim().length >= 2) {
         final q = "%${filter.query.trim()}%";
         expressions.add(t.symbol.ilike(q) | t.name.ilike(q));
       }
@@ -78,11 +78,9 @@ class AssetService {
   }
 
   List<Order> Function(AssetTable)? _getOrderListFromFilter(AssetFilter filter) {
-    return (AssetTable t) {
-      return [
-        Order(column: t.investments.count(), orderDescending: true),
-        Order(column: t.likes.count(), orderDescending: true),
-      ];
-    };
+    return (AssetTable t) => [
+          Order(column: t.investments.count(), orderDescending: true),
+          Order(column: t.likes.count(), orderDescending: true),
+        ];
   }
 }

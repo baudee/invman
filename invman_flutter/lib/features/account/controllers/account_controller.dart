@@ -95,27 +95,27 @@ class AccountController implements Disposable {
   /// Picks a CSV file and imports its content.
   /// Returns null on success, an error message on failure, or a non-empty
   /// list of validation errors if the file has invalid rows.
-  Future<({String? error, List<String> validationErrors})> importCsv() async {
+  Future<({String? error, List<String> validationErrors, bool cancelled})> importCsv() async {
     final pickerResult = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['csv'],
     );
 
     if (pickerResult == null || pickerResult.files.single.path == null) {
-      return (error: null, validationErrors: <String>[]);
+      return (error: null, validationErrors: <String>[], cancelled: true);
     }
 
     final csvContent = await File(pickerResult.files.single.path!).readAsString();
     final result = await _transferRepository.importCsv(csvContent);
 
     return result.fold(
-      (error) => (error: error, validationErrors: <String>[]),
-      (errors) => (error: null, validationErrors: errors),
+      (error) => (error: error, validationErrors: <String>[], cancelled: false),
+      (errors) => (error: null, validationErrors: errors, cancelled: false),
     );
   }
 
   Future<void> shareTemplate() async {
-    const template = 'investmentId,quantity,amount,date\n1,10.5,1050.00,2025-03-15\n';
+    const template = 'investmentId,quantity,amount,date\n1,10.5,1050.00,2025-03-15\n2,5.0,500.00,03/15/2025\n';
     final dir = await getTemporaryDirectory();
     final file = File('${dir.path}/transfers_template.csv');
     await file.writeAsString(template);

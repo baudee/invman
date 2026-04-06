@@ -62,7 +62,7 @@ class TransferEditController extends Disposable {
 
   void setTransferDate(DateTime date) {
     if (state.value case AsyncData(value: final transfer)) {
-      _state.value = AsyncState.data(transfer.copyWith(createdAt: date.toUtc()));
+      _state.value = AsyncState.data(transfer.copyWith(createdAt: DateTime(date.year, date.month, date.day)));
     }
   }
 
@@ -85,7 +85,7 @@ class TransferEditController extends Disposable {
         quantity: double.parse(quantityController.text.trim()) * sign,
         amount: double.parse(amountController.text.trim()) * sign,
         investmentId: investmentId,
-        createdAt: transfer.createdAt.toUtc(),
+        createdAt: transfer.createdAt,
       );
 
       _state.value = AsyncState.loading();

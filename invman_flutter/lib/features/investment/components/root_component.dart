@@ -20,9 +20,7 @@ class InvestmentRootComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async {
-        controller.loadTotal().then((_) => controller.refresh());
-      },
+      onRefresh: () => controller.reload(),
       child: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [

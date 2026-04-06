@@ -18,9 +18,7 @@ class InvestmentListController extends PaginationController<Investment> implemen
 
   InvestmentListController(this._repository, this._returnsRepository) : super(fireImmediately: false) {
     _repository.invalidation.subscribe((_) {
-      _returnsList.clear();
-      loadTotal();
-      refresh();
+      reload();
     });
   }
 
@@ -52,6 +50,12 @@ class InvestmentListController extends PaginationController<Investment> implemen
       });
       return s.readonly();
     }
+  }
+
+  Future<void> reload() async {
+    _returnsList.clear();
+    loadTotal();
+    refresh();
   }
 
   @override

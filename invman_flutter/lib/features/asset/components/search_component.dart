@@ -13,6 +13,7 @@ class AssetSearchComponent extends HookWidget {
     return DebouncingSearchBar(
       hintText: S.of(context).asset_searchHint,
       autoFocus: true,
+      debounceMs: 400,
       onChanged: (value) {
         controller.setQuery(value);
       },

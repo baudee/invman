@@ -19,5 +19,9 @@ indexes:
   asset_symbol_exchange_idx:
     fields: symbol, exchange, type
     unique: true
-  asset_name_idx:
+  asset_symbol_trgm_idx:
+    fields: symbol
+    type: gin
+  asset_name_trgm_idx:
     fields: name
+    type: gin

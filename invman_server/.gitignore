@@ -21,6 +21,10 @@ config/firebase_service_account_key.json
 
 lib/src/di.config.dart
 
-# freezed
+# generated
 **.g.dart
 **.freezed.dart
+lib/src/generated/**
+
+# data populate
+scripts/populate/data/**

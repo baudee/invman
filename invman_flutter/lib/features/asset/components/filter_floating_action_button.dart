@@ -12,12 +12,12 @@ class AssetFilterFloatingActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: () async {
+        FocusScope.of(context).unfocus();
         await showModalBottomSheet(
           context: context,
           isScrollControlled: true,
           builder: (_) => AssetFilterSheet(controller: controller),
         );
-        if (context.mounted) FocusScope.of(context).unfocus();
       },
       child: Watch((context) {
         final hasFilters =

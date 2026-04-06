@@ -128,6 +128,8 @@ class AccountRootComponent extends StatelessWidget {
     final result = await controller.importCsv();
     if (!context.mounted) return;
 
+    if (result.cancelled) return;
+
     if (result.error != null) {
       ToastUtils.message(result.error!, success: false);
     } else if (result.validationErrors.isEmpty) {
