@@ -99,7 +99,7 @@ class TransferEditController extends Disposable {
         },
         (saved) {
           _state.value = AsyncState.data(saved);
-          _investmentRepository.invalidate();
+          _investmentRepository.saveInvalidate();
           return (true, S.current.core_itemSaved);
         },
       );

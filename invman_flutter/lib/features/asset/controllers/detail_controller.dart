@@ -11,7 +11,7 @@ class AssetDetailController extends DetailController<UuidValue, Asset> {
   final AssetRepository _repository;
   final TimeSeriesRepository _timeSeriesRepository;
 
-  final Map<AssetTimeHorizon, FlutterSignal<List<AssetValue>>> _timeSeriesList = {};
+  final Map<AssetTimeHorizon, AsyncSignal<List<AssetValue>>> _timeSeriesList = {};
 
   AssetDetailController(@factoryParam super.id, this._repository, this._timeSeriesRepository);
 
@@ -40,22 +40,34 @@ class AssetDetailController extends DetailController<UuidValue, Asset> {
     return S.current.error_invalidState;
   }
 
-  ReadonlySignal<List<AssetValue>> getTimeseriesFromTimeHorizon(AssetTimeHorizon timeHorizon) {
+  ReadonlySignal<AsyncState<List<AssetValue>>> getTimeseriesFromTimeHorizon(AssetTimeHorizon timeHorizon) {
     if (_timeSeriesList.containsKey(timeHorizon)) {
-      return _timeSeriesList[timeHorizon]!;
+      return _timeSeriesList[timeHorizon]!.readonly();
     } else {
-      final s = signal<List<AssetValue>>([]);
+      final s = asyncSignal<List<AssetValue>>(AsyncState.loading());
       _timeSeriesList[timeHorizon] = s;
       _timeSeriesRepository.get(id, timeHorizon: timeHorizon).then((result) {
         result.fold(
           (error) {},
           (timeSeries) {
-            s.value = timeSeries;
+            s.value = AsyncState.data(timeSeries);
           },
         );
         _timeSeriesList[timeHorizon] = s;
       });
       return s.readonly();
+    }
+  }
+
+  void reloadTimeseries(AssetTimeHorizon horizon) {
+    if (_timeSeriesList.containsKey(horizon)) {
+      _timeSeriesList[horizon]!.value = AsyncState.loading();
+      _timeSeriesRepository.get(id, timeHorizon: horizon).then((result) {
+        result.fold(
+          (error) => null,
+          (returns) => _timeSeriesList[horizon]!.value = AsyncState.data(returns),
+        );
+      });
     }
   }
 

@@ -8,3 +8,4 @@ export 'select_tile_component.dart';
 export 'tile_component.dart';
 export 'header_component.dart';
 export 'root_component.dart';
+export 'filter_floating_action_button.dart';

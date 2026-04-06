@@ -58,7 +58,7 @@ class _InvestmentReturnsGraphComponentState extends State<InvestmentReturnsGraph
         ),
         const SizedBox(height: UIConstants.spacingSm),
         SizedBox(
-          height: 250,
+          height: 230,
           child: TabBarView(
             controller: _tabController,
             physics: const NeverScrollableScrollPhysics(),
@@ -102,8 +102,8 @@ class _InvestmentReturnsGraphComponentState extends State<InvestmentReturnsGraph
     final maxPct = returns.map((r) => r.percentage).reduce(max);
     final minPct = returns.map((r) => r.percentage).reduce(min);
     // Extra headroom above/below bars so floating labels are never clipped.
-    final maxY = maxPct + (maxPct.abs() * 0.4 + 4).clamp(4.0, double.infinity);
-    final minY = minPct < 0 ? minPct + (minPct * 0.4 - 4).clamp(double.negativeInfinity, -4.0) : 0.0;
+    final maxY = maxPct + (maxPct.abs() * 0.25 + 8).clamp(8.0, double.infinity);
+    final minY = minPct < 0 ? minPct + (minPct.abs() * 0.25 + 8).clamp(8.0, double.infinity) * -1 : 0.0;
     return BarChartData(
       maxY: maxY,
       minY: minY,
@@ -121,7 +121,7 @@ class _InvestmentReturnsGraphComponentState extends State<InvestmentReturnsGraph
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 40,
+            reservedSize: 28,
             getTitlesWidget: (value, meta) {
               final index = value.toInt();
               if (index < 0 || index >= returns.length) return const SizedBox.shrink();
@@ -129,12 +129,9 @@ class _InvestmentReturnsGraphComponentState extends State<InvestmentReturnsGraph
               final label = interval == InvestmentReturnInterval.yearly
                   ? '${r.year}'
                   : _monthLabel(r.month, r.year, locale);
-              return Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Transform.rotate(
-                  angle: -pi / 4,
-                  child: Text(label, style: const TextStyle(fontSize: 10)),
-                ),
+              return Transform.rotate(
+                angle: -pi / 4,
+                child: Text(label, style: const TextStyle(fontSize: 10)),
               );
             },
           ),

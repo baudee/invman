@@ -16,6 +16,7 @@ class AssetSelectScreen extends HookWidget {
     final controller = useMemoized(() => getIt<AssetSearchListController>());
     return BaseScreen(
       appBar: AppBar(title: AssetSearchComponent(controller: controller)),
+      floatingActionButton: AssetFilterFloatingActionButton(controller: controller),
       body: InfiniteListComponent(
         refreshIndicator: false,
         controller: controller,

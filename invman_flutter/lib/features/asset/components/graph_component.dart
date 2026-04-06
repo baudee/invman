@@ -51,31 +51,40 @@ class _AssetGraphComponentState extends State<AssetGraphComponent> with TickerPr
         ),
         const SizedBox(height: UIConstants.spacingSm),
         SizedBox(
-          height: 200,
+          height: 250,
           child: TabBarView(
             controller: _tabController,
             physics: const NeverScrollableScrollPhysics(),
             children: AssetTimeHorizon.values
                 .map(
-                  (e) => Builder(
+                  (horizon) => Builder(
                     builder: (context) {
-                      final timeSeries = widget.controller.getTimeseriesFromTimeHorizon(e);
-                      if (timeSeries.watch(context).isEmpty) {
-                        return Center(child: Text(S.of(context).asset_no_data));
-                      }
-                      return LineChart(_getLineChartData(timeSeries.watch(context)));
+                      return BaseStateComponent(
+                        state: widget.controller.getTimeseriesFromTimeHorizon(horizon),
+                        successBuilder: (data) {
+                          if (data.isEmpty) {
+                            return Center(child: Text(S.of(context).asset_no_data));
+                          }
+                          return Column(
+                            children: [
+                              Expanded(child: LineChart(_getLineChartData(data))),
+                              const SizedBox(height: UIConstants.spacingSm),
+                              _InfoPanel(
+                                touchedPoint: _touchedPoint,
+                                timeHorizon: horizon,
+                                currencyCode: widget.controller.state.value.requireValue.currency?.code ?? '',
+                                timeSeries: data,
+                              ),
+                            ],
+                          );
+                        },
+                        onReload: () => widget.controller.reloadTimeseries(horizon),
+                      );
                     },
                   ),
                 )
                 .toList(),
           ),
-        ),
-        const SizedBox(height: UIConstants.spacingSm),
-        _InfoPanel(
-          touchedPoint: _touchedPoint,
-          timeHorizonSignal: widget.preferencesManager.assetTimeHorizon,
-          currencyCode: widget.controller.state.value.requireValue.currency?.code ?? '',
-          controller: widget.controller,
         ),
       ],
     );
@@ -154,24 +163,22 @@ class _AssetGraphComponentState extends State<AssetGraphComponent> with TickerPr
 }
 
 class _InfoPanel extends StatelessWidget {
-  final ReadonlySignal<AssetTimeHorizon> timeHorizonSignal;
+  final AssetTimeHorizon timeHorizon;
   final Signal<AssetValue?> touchedPoint;
   final String currencyCode;
-  final AssetDetailController controller;
+  final List<AssetValue> timeSeries;
 
   const _InfoPanel({
-    required this.timeHorizonSignal,
+    required this.timeHorizon,
     required this.touchedPoint,
     required this.currencyCode,
-    required this.controller,
+    required this.timeSeries,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final point = touchedPoint.watch(context);
-    final timeHorizon = timeHorizonSignal.watch(context);
-    final timeSeries = controller.getTimeseriesFromTimeHorizon(timeHorizon).watch(context);
 
     final percent = timeSeries.length >= 2 && timeSeries.last.value != 0
         ? (timeSeries.first.value - timeSeries.last.value) / timeSeries.last.value * 100

@@ -16,7 +16,7 @@ class InvestmentDetailController extends DetailController<int, Investment> imple
 
   InvestmentDetailController(@factoryParam super.id, this._repository, this._returnsRepository)
     : super(fireImmediately: false) {
-    _repository.invalidation.subscribe((_) => reload());
+    _repository.saveInvalidation.subscribe((_) => reload());
   }
 
   @override

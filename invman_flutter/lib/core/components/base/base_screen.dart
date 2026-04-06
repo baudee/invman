@@ -10,7 +10,7 @@ class BaseScreen extends StatelessWidget {
   final Widget? bodyMd;
   final Widget? bodyLg;
 
-  final FloatingActionButton? floatingActionButton;
+  final Widget? floatingActionButton;
   final Widget? bottomNavigationBar;
   final bool usePadding;
   final bool extendBodyBehindAppBar;

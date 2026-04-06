@@ -11,11 +11,14 @@ class AssetFilterFloatingActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      onPressed: () => showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (_) => AssetFilterSheet(controller: controller),
-      ),
+      onPressed: () async {
+        await showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          builder: (_) => AssetFilterSheet(controller: controller),
+        );
+        if (context.mounted) FocusScope.of(context).unfocus();
+      },
       child: Watch((context) {
         final hasFilters =
             controller.type.value != null || controller.exchange.value != null || controller.currency.value != null;

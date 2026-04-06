@@ -22,6 +22,8 @@ class InvestmentDetailScreen extends HookWidget {
         state: controller.state,
         successBuilder: (investment) => AppBar(
           backgroundColor: Colors.transparent,
+          centerTitle: true,
+          title: Text(investment.name, overflow: TextOverflow.ellipsis),
           actions: [
             PopupMenuActions(
               onEdit: () async {

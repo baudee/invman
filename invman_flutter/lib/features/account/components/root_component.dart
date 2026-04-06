@@ -21,7 +21,7 @@ class AccountRootComponent extends StatelessWidget {
     final userPrefsManager = getIt<UserPreferencesManager>();
     final authManager = getIt<AuthManager>();
     final packageInfoModule = getIt<PackageInfo>();
-    
+
     final currentLocale = userPrefsManager.locale.watch(context);
     final currentTheme = userPrefsManager.theme.watch(context);
 
@@ -109,7 +109,7 @@ class AccountRootComponent extends StatelessWidget {
             .map(
               (tile) => Padding(
                 padding: const EdgeInsets.only(bottom: UIConstants.spacingXs),
-                child: tile,
+                child: Material(child: tile),
               ),
             )
             .toList(),
@@ -164,7 +164,7 @@ class AccountRootComponent extends StatelessWidget {
     }
   }
 
-  ListTile _buildCurrencyTile(BuildContext context, AuthManager authManager) {
+  Widget _buildCurrencyTile(BuildContext context, AuthManager authManager) {
     return ListTile(
       title: Text(S.of(context).account_currency),
       subtitle: Text(authManager.account.watch(context)?.currency?.code ?? "-"),

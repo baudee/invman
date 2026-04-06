@@ -71,7 +71,7 @@ class AccountController implements Disposable {
       (_) {
         _selectedCurrency.value = currency;
         _authManager.replaceMe(newAccount);
-        _investmentRepository.invalidate();
+        _investmentRepository.saveInvalidate();
         return null;
       },
     );

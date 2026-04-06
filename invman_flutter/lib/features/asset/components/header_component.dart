@@ -13,8 +13,8 @@ class AssetHeaderComponent extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.only(
         top: kToolbarHeight * 2,
-        left: UIConstants.spacingXl,
-        right: UIConstants.spacingXl,
+        left: UIConstants.spacingLg,
+        right: UIConstants.spacingLg,
         bottom: UIConstants.spacingXxl * 2,
       ),
       decoration: BoxDecoration(
@@ -27,7 +27,7 @@ class AssetHeaderComponent extends StatelessWidget {
       child: Row(
         children: [
           AvatarComponent(asset: asset, size: MediaQuery.of(context).size.width * 0.2),
-          const SizedBox(width: UIConstants.spacingXl),
+          const SizedBox(width: UIConstants.spacingLg),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
