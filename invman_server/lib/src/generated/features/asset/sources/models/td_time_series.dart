@@ -11,12 +11,10 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import '../../../../features/asset/sources/models/td_time_series_value.dart'
-    as _i2;
+import '../../../../features/asset/sources/models/td_time_series_value.dart' as _i2;
 import 'package:invman_server/src/generated/protocol.dart' as _i3;
 
-abstract class TwelveDataTimeSeries
-    implements _i1.SerializableModel, _i1.ProtocolSerialization {
+abstract class TwelveDataTimeSeries implements _i1.SerializableModel, _i1.ProtocolSerialization {
   TwelveDataTimeSeries._({
     required this.meta,
     required this.values,

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:injectable/injectable.dart';
 import 'package:invman_server/src/core/core.dart';
 import 'package:invman_server/src/env.dart';
@@ -8,7 +10,7 @@ abstract class AssetValuesSource {
   Future<AssetValue> getCurrentValue(Session session, {required Asset asset});
   Future<List<AssetValue>> getValues({required Asset asset, required AssetTimeHorizon timeHorizon});
   Future<AssetValue> getEodValue(Session session, {required Asset asset, required DateTime date});
-  Future<void> preloadEodValues(Session session, {required List<Asset> assets, required DateTime date});
+  Future<void> preloadEodValuesBulk(Session session, List<(Asset, DateTime)> pairs);
 }
 
 @LazySingleton(as: AssetValuesSource)
@@ -125,7 +127,11 @@ class AssetValuesSourceImpl implements AssetValuesSource {
         queryParameters: queryParameters,
       );
 
-      eodValue = AssetValue(value: double.parse(result['close']), timestamp: DateTime.parse(result['datetime']));
+      if (result['close'] == null || result['datetime'] == null) {
+        eodValue = AssetValue(value: 0.0, timestamp: DateTime.timestamp());
+      } else {
+        eodValue = AssetValue(value: double.parse(result['close']), timestamp: DateTime.parse(result['datetime']));
+      }
 
       await session.caches.local.put(CacheKeys.assetEodValue(asset, date), eodValue, lifetime: Duration(days: 30));
     }
@@ -134,52 +140,84 @@ class AssetValuesSourceImpl implements AssetValuesSource {
   }
 
   @override
-  Future<void> preloadEodValues(Session session, {required List<Asset> assets, required DateTime date}) async {
-    final uncached = <Asset>[];
-    for (final asset in assets) {
+  Future<void> preloadEodValuesBulk(Session session, List<(Asset, DateTime)> pairs) async {
+    final uncached = <(Asset, DateTime)>[];
+    for (final pair in pairs) {
+      final (asset, date) = pair;
       final cached = await session.caches.local.get(CacheKeys.assetEodValue(asset, date));
-      if (cached == null) uncached.add(asset);
+      if (cached == null) uncached.add(pair);
     }
 
     if (uncached.isEmpty) return;
 
-    // Single asset: delegate to getEodValue to reuse its existing parse/cache logic.
     if (uncached.length == 1) {
-      await getEodValue(session, asset: uncached.first, date: date);
+      final (asset, date) = uncached.first;
+      await getEodValue(session, asset: asset, date: date);
       return;
     }
 
-    // Batch: group by (exchange, isCommodity) so query params are consistent within each call.
-    final groups = <(String?, bool), List<Asset>>{};
-    for (final asset in uncached) {
-      final key = (asset.exchange, asset.type == AssetType.commodity);
-      groups.putIfAbsent(key, () => []).add(asset);
-    }
+    // Build one sub-request per (asset, date) pair.
+    final reqIndex = <String, (Asset, DateTime)>{};
+    final batchBody = <String, dynamic>{};
 
-    for (final entry in groups.entries) {
-      final (exchange, isCommodity) = entry.key;
-      final group = entry.value;
+    for (int i = 0; i < uncached.length; i++) {
+      final (asset, date) = uncached[i];
+      final reqId = 'eod_$i';
+      reqIndex[reqId] = (asset, date);
 
-      final queryParameters = <String, String>{
-        'symbol': group.map((a) => a.symbol).join(','),
+      final params = <String, String>{
+        'symbol': asset.symbol,
         'apikey': _env.twelveDataApiKey,
         'timezone': 'UTC',
         'date': date.toString(),
       };
-      if (exchange != null) queryParameters['exchange'] = exchange;
-      if (isCommodity) queryParameters['type'] = 'Structured Product';
+      if (asset.exchange != null) params['exchange'] = asset.exchange!;
+      if (asset.type == AssetType.commodity) params['type'] = 'Structured Product';
 
-      final result = await ApiClientService.get(url: url, path: eodPath, queryParameters: queryParameters);
+      final queryString = params.entries
+          .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+          .join('&');
+      batchBody[reqId] = {'url': '/$eodPath?$queryString'};
+    }
 
-      for (final asset in group) {
-        final data = result[asset.symbol] as Map<String, dynamic>;
-        final eodValue = AssetValue(value: double.parse(data['close']), timestamp: DateTime.parse(data['datetime']));
-        await session.caches.local.put(
-          CacheKeys.assetEodValue(asset, date),
-          eodValue,
-          lifetime: const Duration(days: 30),
-        );
+    final result = await ApiClientService.post(
+      url: url,
+      path: 'batch',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'apikey ${_env.twelveDataApiKey}',
+      },
+      body: jsonEncode(batchBody),
+    );
+
+    final data = result['data'] as Map<String, dynamic>?;
+    if (data == null) return;
+
+    for (final entry in reqIndex.entries) {
+      final reqId = entry.key;
+      final (asset, date) = entry.value;
+
+      final AssetValue eodValue;
+      final responseEntry = data[reqId] as Map<String, dynamic>?;
+      if (responseEntry == null || responseEntry['status'] != 'success') {
+        eodValue = AssetValue(value: 0.0, timestamp: DateTime.timestamp());
+      } else {
+        final response = responseEntry['response'] as Map<String, dynamic>;
+        if (response['close'] == null || response['datetime'] == null) {
+          eodValue = AssetValue(value: 0.0, timestamp: DateTime.timestamp());
+        } else {
+          eodValue = AssetValue(
+            value: double.parse(response['close']),
+            timestamp: DateTime.parse(response['datetime']),
+          );
+        }
       }
+
+      await session.caches.local.put(
+        CacheKeys.assetEodValue(asset, date),
+        eodValue,
+        lifetime: const Duration(days: 30),
+      );
     }
   }
 

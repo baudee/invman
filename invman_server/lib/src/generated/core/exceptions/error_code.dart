@@ -18,7 +18,8 @@ enum ErrorCode implements _i1.SerializableModel {
   conflict,
   unauthorized,
   forbidden,
-  badRequest;
+  badRequest
+  ;
 
   static ErrorCode fromJson(String name) {
     switch (name) {

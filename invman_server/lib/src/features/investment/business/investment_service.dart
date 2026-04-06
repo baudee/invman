@@ -268,6 +268,21 @@ class InvestmentService {
     if (allTransfers.isEmpty) return [];
 
     final periods = isMonthly ? _buildMonthlyPeriods(now) : _buildYearlyPeriods(now, allTransfers.first.createdAt);
+    final allAssets = investments.map((e) => e.asset!).toList();
+
+    // Bulk-preload all EOD values needed across every period in one batch HTTP call.
+    final eodPairs = <(Asset, DateTime)>[];
+    for (final period in periods) {
+      final periodStart = period.$1;
+      final periodEnd = period.$2;
+      final isCurrentPeriod = period.$5;
+      final openingEodDate = periodStart.subtract(const Duration(days: 1));
+      for (final asset in allAssets) {
+        eodPairs.add((asset, openingEodDate));
+        if (!isCurrentPeriod) eodPairs.add((asset, periodEnd));
+      }
+    }
+    await assetsValuesSource.preloadEodValuesBulk(session, eodPairs);
 
     final List<InvestmentReturn> returns = [];
     for (final period in periods) {
@@ -281,14 +296,6 @@ class InvestmentService {
       final periodTransfers = allTransfers
           .where((t) => !t.createdAt.isBefore(periodStart) && !t.createdAt.isAfter(periodEnd))
           .toList();
-
-      // Pre-warm EOD cache for all assets at both period boundaries in one batch call each,
-      // so the per-investment getEodValue calls below are cache hits.
-      final allAssets = investments.map((e) => e.asset!).toList();
-      await assetsValuesSource.preloadEodValues(session, assets: allAssets, date: openingEodDate);
-      if (!isCurrentPeriod) {
-        await assetsValuesSource.preloadEodValues(session, assets: allAssets, date: periodEnd);
-      }
 
       // Sum opening and closing net values across all investments
       double totalOpeningNetValue = 0;
@@ -388,6 +395,19 @@ class InvestmentService {
     if (allTransfers.isEmpty) return [];
 
     final periods = isMonthly ? _buildMonthlyPeriods(now) : _buildYearlyPeriods(now, allTransfers.first.createdAt);
+
+    // Bulk-preload all EOD values needed across every period in one batch HTTP call.
+    final eodPairs = <(Asset, DateTime)>[];
+    for (final period in periods) {
+      final periodStart = period.$1;
+      final periodEnd = period.$2;
+      final isCurrentPeriod = period.$5;
+      final openingEodDate = periodStart.subtract(const Duration(days: 1));
+      eodPairs.add((investment.asset!, openingEodDate));
+      if (!isCurrentPeriod) eodPairs.add((investment.asset!, periodEnd));
+    }
+    await assetsValuesSource.preloadEodValuesBulk(session, eodPairs);
+
     final List<InvestmentReturn> returns = [];
     for (final period in periods) {
       final periodStart = period.$1;

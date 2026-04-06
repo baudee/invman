@@ -37,7 +37,7 @@ spec:
         - name: ghcr-secret
       containers:
         - name: server
-          image: ghcr.io/baudee/invman:0.0.2
+          image: ghcr.io/baudee/invman:0.1.0
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -102,18 +102,12 @@ spec:
                 configMapKeyRef:
                   name: rimawari-server-config
                   key: mailjetEmailSender
-            # Gemini API
-            - name: GEMINI_API_KEY
+            # Twelve Data API
+            - name: TWELVE_DATA_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: rimawari-server-secrets
-                  key: geminiApiKey
-            # App config
-            - name: CACHE_DURATION_DAYS
-              valueFrom:
-                configMapKeyRef:
-                  name: rimawari-server-config
-                  key: cacheDurationDays
+                  key: twelveDataApiKey
           volumeMounts:
             - name: config
               mountPath: /config/production.yaml

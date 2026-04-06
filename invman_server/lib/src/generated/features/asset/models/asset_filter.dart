@@ -13,8 +13,7 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../../../features/asset/models/asset_type.dart' as _i2;
 
-abstract class AssetFilter
-    implements _i1.SerializableModel, _i1.ProtocolSerialization {
+abstract class AssetFilter implements _i1.SerializableModel, _i1.ProtocolSerialization {
   AssetFilter._({
     this.type,
     String? query,
@@ -34,9 +33,7 @@ abstract class AssetFilter
 
   factory AssetFilter.fromJson(Map<String, dynamic> jsonSerialization) {
     return AssetFilter(
-      type: jsonSerialization['type'] == null
-          ? null
-          : _i2.AssetType.fromJson((jsonSerialization['type'] as String)),
+      type: jsonSerialization['type'] == null ? null : _i2.AssetType.fromJson((jsonSerialization['type'] as String)),
       query: jsonSerialization['query'] as String?,
       favorite: jsonSerialization['favorite'] == null
           ? null

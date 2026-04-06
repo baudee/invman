@@ -6,7 +6,6 @@ metadata:
 data:
   mailjetApiKeyPublic: "c20de179490741bae3c078d941d67d2f"
   mailjetEmailSender: "noreply@valentinbaudin.ch"
-  cacheDurationDays: "2"
 
   production.yaml: |
     apiServer:

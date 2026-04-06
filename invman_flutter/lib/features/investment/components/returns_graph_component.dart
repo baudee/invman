@@ -58,7 +58,7 @@ class _InvestmentReturnsGraphComponentState extends State<InvestmentReturnsGraph
         ),
         const SizedBox(height: UIConstants.spacingSm),
         SizedBox(
-          height: 220,
+          height: 250,
           child: TabBarView(
             controller: _tabController,
             physics: const NeverScrollableScrollPhysics(),
@@ -74,7 +74,11 @@ class _InvestmentReturnsGraphComponentState extends State<InvestmentReturnsGraph
                               final y = a.year.compareTo(b.year);
                               return y != 0 ? y : a.month.compareTo(b.month);
                             });
-                          return BarChart(_getBarChartData(context, returns, interval));
+                          if (returns.isEmpty) {
+                            return Center(child: Text(S.of(context).asset_no_data));
+                          } else {
+                            return BarChart(_getBarChartData(context, returns, interval));
+                          }
                         },
                         onReload: () => widget.controller.reloadReturns(interval),
                       );
@@ -141,7 +145,7 @@ class _InvestmentReturnsGraphComponentState extends State<InvestmentReturnsGraph
         touchTooltipData: BarTouchTooltipData(
           getTooltipColor: (_) => Colors.transparent,
           tooltipPadding: EdgeInsets.zero,
-          tooltipMargin: 1,
+          tooltipMargin: 2,
           fitInsideVertically: true,
           fitInsideHorizontally: true,
           getTooltipItem: (group, groupIndex, rod, rodIndex) {

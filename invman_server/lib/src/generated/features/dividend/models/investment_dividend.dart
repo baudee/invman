@@ -15,8 +15,7 @@ import '../../../features/investment/models/investment.dart' as _i2;
 import '../../../features/dividend/models/computed_dividend_value.dart' as _i3;
 import 'package:invman_server/src/generated/protocol.dart' as _i4;
 
-abstract class InvestmentDividend
-    implements _i1.SerializableModel, _i1.ProtocolSerialization {
+abstract class InvestmentDividend implements _i1.SerializableModel, _i1.ProtocolSerialization {
   InvestmentDividend._({
     required this.investment,
     required this.dividends,
@@ -92,8 +91,7 @@ class _InvestmentDividendImpl extends InvestmentDividend {
   }) {
     return InvestmentDividend(
       investment: investment ?? this.investment.copyWith(),
-      dividends:
-          dividends ?? this.dividends.map((e0) => e0.copyWith()).toList(),
+      dividends: dividends ?? this.dividends.map((e0) => e0.copyWith()).toList(),
     );
   }
 }

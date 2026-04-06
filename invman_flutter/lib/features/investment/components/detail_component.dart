@@ -38,7 +38,7 @@ class InvestmentDetailComponent extends StatelessWidget {
                   spacing: UIConstants.spacingXs,
                   children: [
                     InvestmentReturnsGraphComponent(controller: controller, preferencesManager: preferencesManager),
-                    const SizedBox(height: UIConstants.spacingXs),
+                    const SizedBox(height: UIConstants.spacingMd),
                     ElevatedButton(
                       onPressed: () async {
                         await router.push(TransferRootScreen.route(investment.id!));

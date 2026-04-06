@@ -18,6 +18,7 @@ class OnboardingRootComponent extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        const SizedBox(height: UIConstants.spacingLg),
         Text(S.of(context).onboarding_welcome, style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: UIConstants.spacingMd),
         Text(S.of(context).onboarding_select_currency, style: Theme.of(context).textTheme.bodyMedium),
@@ -44,6 +45,7 @@ class OnboardingRootComponent extends StatelessWidget {
                     : null,
                 child: Text(S.of(context).core_continue),
               ),
+        const SizedBox(height: UIConstants.spacingLg),
       ],
     );
   }
