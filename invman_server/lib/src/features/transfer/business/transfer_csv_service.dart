@@ -162,7 +162,7 @@ class TransferCsvService {
 
     // Try MM/DD/YYYY
     final parts = raw.split('/');
-    if (parts.length == 3) {
+    if (parts.length == 3 && parts[2].length == 4) {
       final month = int.tryParse(parts[0]);
       final day = int.tryParse(parts[1]);
       final year = int.tryParse(parts[2]);

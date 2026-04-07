@@ -36,7 +36,7 @@ class AssetHeaderComponent extends StatelessWidget {
                 const SizedBox(height: UIConstants.spacingSm),
                 Text(
                   asset.price.toStringPrice(asset.currency?.code),
-                  style: theme.textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold),
+                  style: theme.textTheme.headlineMedium,
                 ),
                 const SizedBox(height: UIConstants.spacingSm),
                 Text(asset.name, style: theme.textTheme.bodyMedium, overflow: .clip),

@@ -23,8 +23,12 @@ class DividendMonthlyChart extends StatelessWidget {
     final now = DateTime.now();
     final locale = Localizations.localeOf(context).toString();
 
-    final monthly = _buildMonthlyTotals(calendar);
-    final maxY = monthly.values.isEmpty ? 1.0 : monthly.values.reduce((a, b) => a > b ? a : b);
+    final totals = _buildMonthlyTotals(calendar, now);
+    final monthlyTotals = List.generate(12, (i) {
+      final month = i + 1;
+      return (totals.received[month] ?? 0.0) + (totals.partialUpcoming[month] ?? 0.0);
+    });
+    final maxY = monthlyTotals.isEmpty ? 1.0 : monthlyTotals.reduce((a, b) => a > b ? a : b);
 
     return Card(
       child: Padding(
@@ -52,16 +56,20 @@ class DividendMonthlyChart extends StatelessWidget {
                           final index = value.toInt();
                           if (index < 0 || index > 11) return const SizedBox.shrink();
                           final month = index + 1;
-                          final amount = monthly[month] ?? 0.0;
-                          if (amount <= 0) return const SizedBox.shrink();
                           final isUpcoming = month > now.month;
+                          final received = totals.received[month] ?? 0.0;
+                          final partial = totals.partialUpcoming[month] ?? 0.0;
+                          // For current month: label shows received amount (confirmed payments only)
+                          final labelAmount = received > 0 ? received : partial;
+                          if (labelAmount <= 0) return const SizedBox.shrink();
+
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 4),
                             child: Text(
-                              _compact(amount),
+                              _compact(labelAmount),
                               style: TextStyle(
                                 fontSize: 9,
-                                color: isUpcoming ? cs.onSurfaceVariant : cs.primary,
+                                color: isUpcoming || received <= 0 ? cs.onSurfaceVariant : cs.primary,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -96,8 +104,32 @@ class DividendMonthlyChart extends StatelessWidget {
                   ),
                   barGroups: List.generate(12, (i) {
                     final month = i + 1;
-                    final amount = monthly[month] ?? 0.0;
                     final isUpcoming = month > now.month;
+                    final isCurrentMonth = month == now.month;
+                    final received = totals.received[month] ?? 0.0;
+                    final partial = totals.partialUpcoming[month] ?? 0.0;
+                    final total = received + partial;
+
+                    if (isCurrentMonth && total > 0) {
+                      // Stacked bar: received (bottom, primary) + partial upcoming (top, grey)
+                      return BarChartGroupData(
+                        x: i,
+                        barRods: [
+                          BarChartRodData(
+                            toY: total,
+                            width: 16,
+                            borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                            borderSide: BorderSide.none,
+                            rodStackItems: [
+                              BarChartRodStackItem(0, received, cs.primary),
+                              if (partial > 0) BarChartRodStackItem(received, total, cs.surfaceContainerHighest),
+                            ],
+                          ),
+                        ],
+                      );
+                    }
+
+                    final amount = received;
                     return BarChartGroupData(
                       x: i,
                       barRods: [
@@ -135,12 +167,28 @@ class DividendMonthlyChart extends StatelessWidget {
     );
   }
 
-  static Map<int, double> _buildMonthlyTotals(List<ComputedDividendValue> items) {
-    final result = <int, double>{};
+  static ({Map<int, double> received, Map<int, double> partialUpcoming}) _buildMonthlyTotals(
+    List<ComputedDividendValue> items,
+    DateTime now,
+  ) {
+    final received = <int, double>{};
+    final partialUpcoming = <int, double>{};
+
     for (final entry in items) {
-      result[entry.date.month] = (result[entry.date.month] ?? 0) + entry.amount;
+      final month = entry.date.month;
+      if (month == now.month) {
+        // Within current month: split by whether payment date has passed
+        if (!entry.date.isAfter(now)) {
+          received[month] = (received[month] ?? 0) + entry.amount;
+        } else {
+          partialUpcoming[month] = (partialUpcoming[month] ?? 0) + entry.amount;
+        }
+      } else {
+        received[month] = (received[month] ?? 0) + entry.amount;
+      }
     }
-    return result;
+
+    return (received: received, partialUpcoming: partialUpcoming);
   }
 }
 

@@ -31,7 +31,7 @@ class InvestmentHeaderContent extends StatelessWidget {
         SafeArea(
           bottom: false,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: UIConstants.spacingLg),
+            padding: const EdgeInsets.symmetric(horizontal: UIConstants.spacingXs),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -39,14 +39,14 @@ class InvestmentHeaderContent extends StatelessWidget {
                 const SizedBox(height: UIConstants.spacingXs),
                 Text(
                   investment?.withdrawAmount?.toStringPrice(currencyCode) ?? "—",
-                  style: theme.textTheme.headlineLarge,
+                  style: theme.textTheme.headlineMedium,
                 ),
                 const SizedBox(height: UIConstants.spacingSm),
                 PercentBadge(
                   percent: investment?.returnPercentage ?? 0,
                   color: investment?.percentColor ?? theme.colorScheme.primary,
                 ),
-                const SizedBox(height: UIConstants.spacingSm),
+                const SizedBox(height: UIConstants.spacingMd),
                 _StatsRow(investment: investment, currencyCode: currencyCode),
               ],
             ),
@@ -89,20 +89,20 @@ class _StatsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: .spaceBetween,
       children: [
         _StatCard(
           label: S.of(context).investment_invested.toUpperCase(),
-          value: investment?.investAmount.toStringPrice(currencyCode) ?? "—",
+          value: investment?.investAmount.toStringAsFixed(2) ?? "—",
         ),
         _StatCard(
           label: S.of(context).investment_unrealizedGain.toUpperCase(),
-          value: investment?.unrealizedProfit.toStringPrice(currencyCode) ?? "—",
+          value: investment?.unrealizedProfit?.toStringAsFixed(2) ?? "—",
           color: _getColor(investment?.unrealizedProfit),
         ),
         _StatCard(
           label: S.of(context).investment_realizedGain.toUpperCase(),
-          value: investment?.realizedProfit.toStringPrice(currencyCode) ?? "—",
+          value: investment?.realizedProfit?.toStringAsFixed(2) ?? "—",
           color: _getColor(investment?.realizedProfit),
         ),
       ],
@@ -131,14 +131,14 @@ class _StatCard extends StatelessWidget {
       child: Card(
         elevation: 2,
         child: Padding(
-          padding: const EdgeInsets.all(UIConstants.spacingMd),
+          padding: const EdgeInsets.all(UIConstants.spacingSm),
           child: Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(label, style: theme.textTheme.labelSmall),
-                Text(value, style: theme.textTheme.titleSmall?.copyWith(color: color)),
+                Text(value, style: theme.textTheme.titleSmall?.copyWith(color: color, fontSize: 12)),
               ],
             ),
           ),
