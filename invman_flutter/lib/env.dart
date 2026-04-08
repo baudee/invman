@@ -8,6 +8,8 @@ class Env {
   late final Flavor flavor;
   late final String baseUrl;
   late final String sentryDsn;
+  late final String iosRevenueCatApiKey;
+  late final String androidRevenueCatApiKey;
 
   Env() {
     switch (appFlavor) {
@@ -30,6 +32,12 @@ class Env {
 
     const String stringBaseUrl = String.fromEnvironment("BASE_URL");
     baseUrl = _checkIfEmpty("BASE_URL", stringBaseUrl);
+
+    const String stringIosRevenueCatApiKey = String.fromEnvironment("IOS_REVENUE_CAT_API_KEY");
+    iosRevenueCatApiKey = _checkIfEmpty("IOS_REVENUE_CAT_API_KEY", stringIosRevenueCatApiKey);
+
+    const String stringAndroidRevenueCatApiKey = String.fromEnvironment("ANDROID_REVENUE_CAT_API_KEY");
+    androidRevenueCatApiKey = _checkIfEmpty("ANDROID_REVENUE_CAT_API_KEY", stringAndroidRevenueCatApiKey);
   }
 
   String _checkIfEmpty(String key, String value) {

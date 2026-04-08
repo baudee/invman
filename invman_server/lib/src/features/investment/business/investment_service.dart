@@ -284,6 +284,32 @@ class InvestmentService {
     }
     await assetsValuesSource.preloadEodValuesBulk(session, eodPairs);
 
+    // Bulk-preload all EOD forex rates needed across every period in one batch HTTP call.
+    // Collect the unique currency codes that will need conversion (non-USD only).
+    final uniqueCurrencyCodes = <String>{};
+    for (final investment in investments) {
+      final assetCode = investment.asset?.currency?.code;
+      if (assetCode != null && assetCode != accountCurrency?.code) {
+        if (assetCode != 'USD') uniqueCurrencyCodes.add(assetCode);
+        if (accountCurrency?.code != null && accountCurrency!.code != 'USD') {
+          uniqueCurrencyCodes.add(accountCurrency.code);
+        }
+      }
+    }
+    if (uniqueCurrencyCodes.isNotEmpty) {
+      final forexPairs = <(String, DateTime)>[];
+      for (final period in periods) {
+        if (period.$5) continue; // current period uses live rate, not EOD
+        final openingEodDate = period.$1.subtract(const Duration(days: 1));
+        final closingEodDate = period.$2;
+        for (final code in uniqueCurrencyCodes) {
+          forexPairs.add((code, openingEodDate));
+          forexPairs.add((code, closingEodDate));
+        }
+      }
+      await currencyService.preloadEodDollarValuesBulk(session, forexPairs);
+    }
+
     final List<InvestmentReturn> returns = [];
     for (final period in periods) {
       final periodStart = period.$1;
@@ -407,6 +433,29 @@ class InvestmentService {
       if (!isCurrentPeriod) eodPairs.add((investment.asset!, periodEnd));
     }
     await assetsValuesSource.preloadEodValuesBulk(session, eodPairs);
+
+    // Bulk-preload all EOD forex rates needed across every period in one batch HTTP call.
+    final assetCurrencyCode = investment.asset?.currency?.code;
+    if (assetCurrencyCode != null && assetCurrencyCode != accountCurrency?.code) {
+      final uniqueCurrencyCodes = <String>{};
+      if (assetCurrencyCode != 'USD') uniqueCurrencyCodes.add(assetCurrencyCode);
+      if (accountCurrency?.code != null && accountCurrency!.code != 'USD') {
+        uniqueCurrencyCodes.add(accountCurrency.code);
+      }
+      if (uniqueCurrencyCodes.isNotEmpty) {
+        final forexPairs = <(String, DateTime)>[];
+        for (final period in periods) {
+          if (period.$5) continue; // current period uses live rate, not EOD
+          final openingEodDate = period.$1.subtract(const Duration(days: 1));
+          final closingEodDate = period.$2;
+          for (final code in uniqueCurrencyCodes) {
+            forexPairs.add((code, openingEodDate));
+            forexPairs.add((code, closingEodDate));
+          }
+        }
+        await currencyService.preloadEodDollarValuesBulk(session, forexPairs);
+      }
+    }
 
     final List<InvestmentReturn> returns = [];
     for (final period in periods) {

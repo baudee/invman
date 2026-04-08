@@ -79,8 +79,8 @@ class AssetService {
 
   List<Order> Function(AssetTable)? _getOrderListFromFilter(AssetFilter filter) {
     return (AssetTable t) => [
-          Order(column: t.investments.count(), orderDescending: true),
-          Order(column: t.likes.count(), orderDescending: true),
-        ];
+      Order(column: t.investments.count(), orderDescending: true),
+      Order(column: t.likes.count(), orderDescending: true),
+    ];
   }
 }

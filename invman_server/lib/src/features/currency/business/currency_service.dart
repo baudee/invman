@@ -55,6 +55,10 @@ class CurrencyService {
     return _getForexFromAssetValues(fromCurrencyDollarValue, toCurrencyDollarValue, fromCode, toCode);
   }
 
+  Future<void> preloadEodDollarValuesBulk(Session session, List<(String, DateTime)> pairs) {
+    return forexValuesSource.preloadEodDollarValuesBulk(session, pairs);
+  }
+
   Forex _getForexFromAssetValues(AssetValue fromAssetValue, AssetValue toAssetValue, String fromCode, String toCode) {
     if (fromAssetValue.value == 0) {
       throw ServerException(errorCode: ErrorCode.unknown);

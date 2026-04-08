@@ -156,68 +156,72 @@ class AssetValuesSourceImpl implements AssetValuesSource {
       return;
     }
 
-    // Build one sub-request per (asset, date) pair.
-    final reqIndex = <String, (Asset, DateTime)>{};
-    final batchBody = <String, dynamic>{};
+    // Chunk into groups of 40 to stay within Twelve Data's batch sub-request limit.
+    for (int chunkStart = 0; chunkStart < uncached.length; chunkStart += 40) {
+      final chunk = uncached.sublist(chunkStart, (chunkStart + 40).clamp(0, uncached.length));
 
-    for (int i = 0; i < uncached.length; i++) {
-      final (asset, date) = uncached[i];
-      final reqId = 'eod_$i';
-      reqIndex[reqId] = (asset, date);
+      final reqIndex = <String, (Asset, DateTime)>{};
+      final batchBody = <String, dynamic>{};
 
-      final params = <String, String>{
-        'symbol': asset.symbol,
-        'apikey': _env.twelveDataApiKey,
-        'timezone': 'UTC',
-        'date': date.toString(),
-      };
-      if (asset.exchange != null) params['exchange'] = asset.exchange!;
-      if (asset.type == AssetType.commodity) params['type'] = 'Structured Product';
+      for (int i = 0; i < chunk.length; i++) {
+        final (asset, date) = chunk[i];
+        final reqId = 'eod_$i';
+        reqIndex[reqId] = (asset, date);
 
-      final queryString = params.entries
-          .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
-          .join('&');
-      batchBody[reqId] = {'url': '/$eodPath?$queryString'};
-    }
+        final params = <String, String>{
+          'symbol': asset.symbol,
+          'apikey': _env.twelveDataApiKey,
+          'timezone': 'UTC',
+          'date': date.toString(),
+        };
+        if (asset.exchange != null) params['exchange'] = asset.exchange!;
+        if (asset.type == AssetType.commodity) params['type'] = 'Structured Product';
 
-    final result = await ApiClientService.post(
-      url: url,
-      path: 'batch',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'apikey ${_env.twelveDataApiKey}',
-      },
-      body: jsonEncode(batchBody),
-    );
-
-    final data = result['data'] as Map<String, dynamic>?;
-    if (data == null) return;
-
-    for (final entry in reqIndex.entries) {
-      final reqId = entry.key;
-      final (asset, date) = entry.value;
-
-      final AssetValue eodValue;
-      final responseEntry = data[reqId] as Map<String, dynamic>?;
-      if (responseEntry == null || responseEntry['status'] != 'success') {
-        eodValue = AssetValue(value: 0.0, timestamp: DateTime.timestamp());
-      } else {
-        final response = responseEntry['response'] as Map<String, dynamic>;
-        if (response['close'] == null || response['datetime'] == null) {
-          eodValue = AssetValue(value: 0.0, timestamp: DateTime.timestamp());
-        } else {
-          eodValue = AssetValue(
-            value: double.parse(response['close']),
-            timestamp: DateTime.parse(response['datetime']),
-          );
-        }
+        final queryString = params.entries
+            .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+            .join('&');
+        batchBody[reqId] = {'url': '/$eodPath?$queryString'};
       }
 
-      await session.caches.local.put(
-        CacheKeys.assetEodValue(asset, date),
-        eodValue,
-        lifetime: const Duration(days: 30),
+      final result = await ApiClientService.post(
+        url: url,
+        path: 'batch',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'apikey ${_env.twelveDataApiKey}',
+        },
+        body: jsonEncode(batchBody),
       );
+
+      final data = result['data'] as Map<String, dynamic>?;
+      if (data == null) continue;
+
+      for (final entry in reqIndex.entries) {
+        final reqId = entry.key;
+        final (asset, date) = entry.value;
+
+        final AssetValue eodValue;
+        final responseEntry = data[reqId] as Map<String, dynamic>?;
+        if (responseEntry == null || responseEntry['status'] != 'success') {
+          eodValue = AssetValue(value: 0.0, timestamp: DateTime.timestamp());
+        } else {
+          final response = responseEntry['response'] as Map<String, dynamic>;
+          if (response['close'] == null || response['datetime'] == null) {
+            eodValue = AssetValue(value: 0.0, timestamp: DateTime.timestamp());
+          } else {
+            eodValue = AssetValue(
+              value: double.parse(response['close']),
+              timestamp: DateTime.parse(response['datetime']),
+            );
+          }
+        }
+
+        await session.caches.local.put(
+          CacheKeys.assetEodValue(asset, date),
+          eodValue,
+          lifetime: const Duration(days: 30),
+        );
+      }
     }
   }
 
