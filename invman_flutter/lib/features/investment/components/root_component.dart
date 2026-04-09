@@ -22,7 +22,9 @@ class InvestmentRootComponent extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () => controller.reload(),
       child: CustomScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: ClampingScrollPhysics(),
+        ),
         slivers: [
           SliverToBoxAdapter(
             child: SizedBox(

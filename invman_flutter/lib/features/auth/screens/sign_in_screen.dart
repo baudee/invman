@@ -15,6 +15,7 @@ class SignInScreen extends StatelessWidget {
 
     return BaseScreen(
       usePadding: false,
+      useTopSafeArea: false,
       body: Column(
         children: [
           Expanded(

@@ -28,6 +28,9 @@ class InvestmentDetailComponent extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: controller.reload,
       child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: ClampingScrollPhysics(),
+        ),
         child: Material(
           child: Column(
             children: [

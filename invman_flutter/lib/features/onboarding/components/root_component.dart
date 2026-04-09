@@ -24,6 +24,7 @@ class OnboardingRootComponent extends StatelessWidget {
         Text(S.of(context).onboarding_select_currency, style: Theme.of(context).textTheme.bodyMedium),
         const SizedBox(height: UIConstants.spacingLg),
         DropdownMenu(
+          menuHeight: MediaQuery.of(context).size.height * 0.8,
           dropdownMenuEntries: controller.state
               .watch(context)
               .requireValue

@@ -18,6 +18,9 @@ class AssetDetailComponent extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: controller.reload,
       child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: ClampingScrollPhysics(),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:invman_flutter/app.dart';
 import 'package:invman_flutter/di.dart';
+import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:invman_flutter/env.dart';
 
@@ -33,6 +34,8 @@ void main() async {
 Future<void> _initializeApp(Env env) async {
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await _initializeRevenueCat(env.androidRevenueCatApiKey, env.iosRevenueCatApiKey);
+  // AuthManager init here because needs initialized RevenueCat (and RevenueCat need Enviroment variables)
+  await getIt<AuthManager>().init();
 
   runApp(const MyApp());
 }

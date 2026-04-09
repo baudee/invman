@@ -16,8 +16,8 @@ abstract class StorageSource {
 class StorageSourceSharedPrefsImpl extends StorageSource {
   late final SharedPreferences _instance;
 
-  @PostConstruct()
-  void init() async {
+  @PostConstruct(preResolve: true)
+  Future<void> init() async {
     _instance = await SharedPreferences.getInstance();
   }
 
