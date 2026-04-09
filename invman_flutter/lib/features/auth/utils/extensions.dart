@@ -5,5 +5,4 @@ extension AuthExtensions on AuthManager {
   String get currencyCode => account.value?.currency?.code ?? "-";
   Currency? get currency => account.value?.currency;
   AccountPlan get plan => account.value?.plan ?? AccountPlan.free;
-  bool get isPremium => plan != AccountPlan.free;
 }

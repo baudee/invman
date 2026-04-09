@@ -2,29 +2,33 @@ import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/core/core.dart';
-import 'package:invman_flutter/features/investment/controllers/returns_provider.dart';
-import 'package:invman_flutter/features/investment/repositories/investment_repository.dart';
-import 'package:invman_flutter/features/investment/repositories/returns_repository.dart';
+import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 @injectable
 class InvestmentListController extends PaginationController<Investment> implements ReturnsProvider {
   final InvestmentRepository _repository;
+  final InvestmentCountRepository _countRepository;
   final ReturnsRepository _returnsRepository;
   final Signal<Investment?> _total = signal(null);
   ReadonlySignal<Investment?> get total => _total;
 
   final Map<InvestmentReturnInterval, AsyncSignal<List<InvestmentReturn>>> _returnsList = {};
 
-  InvestmentListController(this._repository, this._returnsRepository) : super(fireImmediately: false) {
+  InvestmentListController(this._repository, this._countRepository, this._returnsRepository)
+    : super(fireImmediately: false) {
     _repository.invalidation.subscribe((_) {
       reload();
     });
   }
 
   @override
-  Future<Either<String, List<Investment>>> fetchPage(int page, int limit) {
-    return _repository.list(page: page, limit: limit);
+  Future<Either<String, List<Investment>>> fetchPage(int page, int limit) async {
+    final result = await _repository.list(page: page, limit: limit);
+    if (page == 1) {
+      result.fold((error) => null, (list) => _countRepository.setCount(list.length));
+    }
+    return result;
   }
 
   Future<void> loadTotal() async {

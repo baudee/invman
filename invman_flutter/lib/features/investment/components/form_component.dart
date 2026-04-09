@@ -6,6 +6,7 @@ import 'package:invman_flutter/core/components/components.dart';
 import 'package:invman_flutter/core/utils/utils.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
+import 'package:invman_flutter/features/investment/controllers/count_manager.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/asset/asset.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
@@ -42,25 +43,36 @@ class InvestmentFormComponent extends StatelessWidget {
           SizedBox(height: UIConstants.spacingXs),
           AssetSelectTileComponent(asset: investment.asset, onAssetSelected: controller.setAsset),
           Spacer(),
-          PlanGuard(
-            requiredPlan: AccountPlan.pro,
-            child: SaveButton(
-              onPressed: () async {
-                final (success, message) = await controller.submit();
-                if (success) {
-                  final id = controller.state.value.requireValue.id!;
-                  if (shouldNotPopAfterSave) {
-                    // From Asset detail page
-                    router.pushReplacement(InvestmentDetailScreen.route(id));
+          Builder(
+            builder: (context) {
+              final saveButton = SaveButton(
+                onPressed: () async {
+                  final (success, message) = await controller.submit();
+                  if (success) {
+                    final id = controller.state.value.requireValue.id!;
+                    if (shouldNotPopAfterSave) {
+                      // From Asset detail page
+                      router.pushReplacement(InvestmentDetailScreen.route(id));
+                    } else {
+                      // From Investment list page
+                      router.pop();
+                    }
                   } else {
-                    // From Investment list page
-                    router.pop();
+                    ToastUtils.message(message, success: success);
                   }
-                } else {
-                  ToastUtils.message(message, success: success);
+                },
+              );
+              if (getIt<AuthManager>().plan == AccountPlan.free) {
+                final count = getIt<InvestmentCountManager>().count.watch(context);
+                if (count != null && count >= freeInvestmentLimit) {
+                  return PlanGuard(
+                    requiredPlan: AccountPlan.pro,
+                    child: saveButton,
+                  );
                 }
-              },
-            ),
+              }
+              return saveButton;
+            },
           ),
           SizedBox(height: UIConstants.spacingSm),
         ],

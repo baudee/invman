@@ -790,4 +790,9 @@ class InvestmentService {
     withdrawAmount *= finalRate;
     return withdrawAmount;
   }
+
+  Future<int> count(Session session) async {
+    final sessionUserId = (session.authenticated)!.authUserId;
+    return Investment.db.count(session, where: (e) => e.userId.equals(sessionUserId));
+  }
 }

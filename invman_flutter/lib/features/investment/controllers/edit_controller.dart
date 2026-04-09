@@ -12,15 +12,18 @@ import 'package:signals_flutter/signals_flutter.dart';
 @injectable
 class InvestmentEditController extends Disposable {
   final int id;
-  final InvestmentRepository _service;
+  final InvestmentRepository _repository;
 
   final _state = asyncSignal<Investment>(AsyncState.loading());
   ReadonlySignal<AsyncState<Investment>> get state => _state;
 
+  final FlutterSignal<int?> _investmentsCount = signal<int?>(null);
+  ReadonlySignal<int?> get investmentsCount => _investmentsCount;
+
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
 
-  InvestmentEditController(@factoryParam this.id, this._service) {
+  InvestmentEditController(@factoryParam this.id, this._repository) {
     _load();
   }
 
@@ -32,7 +35,7 @@ class InvestmentEditController extends Disposable {
       _state.value = AsyncState.data(initial);
       return;
     }
-    final result = await _service.retrieve(id);
+    final result = await _repository.retrieve(id);
     result.fold((error) => _state.value = AsyncState.error(error), (investment) {
       _refreshControllers(investment);
       _state.value = AsyncState.data(investment);
@@ -69,7 +72,7 @@ class InvestmentEditController extends Disposable {
 
       _state.value = AsyncState.loading();
 
-      final result = await _service.save(investment);
+      final result = await _repository.save(investment);
 
       return result.fold(
         (error) {

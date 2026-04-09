@@ -20,6 +20,7 @@ class InvestmentEditScreen extends HookWidget {
     if (asset != null) {
       controller.setAsset(asset!);
     }
+
     return BaseScreen(
       appBar: AppBar(title: Text(id == 0 ? S.of(context).investment_create : S.of(context).investment_edit)),
       body: BaseStateComponent(

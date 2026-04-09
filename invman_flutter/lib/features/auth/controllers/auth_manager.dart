@@ -9,7 +9,7 @@ import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 class AuthManager {
-  final AccountRepository _accountService;
+  final AccountRepository _accountRepository;
   final UserPreferencesRepository _preferencesRepository;
   final Client _client;
 
@@ -38,7 +38,7 @@ class AuthManager {
     required UserPreferencesRepository preferencesRepository,
     required Client client,
     required Env env,
-  }) : _accountService = accountService,
+  }) : _accountRepository = accountService,
        _preferencesRepository = preferencesRepository,
        _client = client;
 
@@ -46,11 +46,12 @@ class AuthManager {
     state.value = AuthStateBooting();
     await _client.auth.initialize();
 
+    // Listen to auth state
     _client.auth.authInfoListenable.addListener(() async {
       if (!_client.auth.isAuthenticated) {
         resetState();
       } else {
-        final accountResult = await _accountService.retrieve();
+        final accountResult = await _accountRepository.retrieve();
         accountResult.fold(
           (error) {
             resetState();
@@ -61,7 +62,6 @@ class AuthManager {
         );
       }
     });
-
     await refreshMe();
   }
 
@@ -77,7 +77,7 @@ class AuthManager {
   }
 
   Future<String?> _setAccount() async {
-    final accountResult = await _accountService.retrieve();
+    final accountResult = await _accountRepository.retrieve();
 
     return accountResult.fold(
       (error) {

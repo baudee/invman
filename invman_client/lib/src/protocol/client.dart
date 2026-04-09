@@ -478,6 +478,12 @@ class EndpointInvestment extends _i1.EndpointRef {
     'totalReturns',
     {'interval': interval},
   );
+
+  _i2.Future<int> count() => caller.callServerEndpoint<int>(
+    'investment',
+    'count',
+    {},
+  );
 }
 
 /// {@category Endpoint}
