@@ -67,9 +67,10 @@ CREATE TABLE "asset" (
 );
 
 -- Indexes
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
 CREATE UNIQUE INDEX "asset_symbol_exchange_idx" ON "asset" USING btree ("symbol", "exchange", "type");
-CREATE INDEX "asset_symbol_trgm_idx" ON "asset" USING gin ("symbol");
-CREATE INDEX "asset_name_trgm_idx" ON "asset" USING gin ("name");
+CREATE INDEX "asset_symbol_trgm_idx" ON "asset" USING gin ("symbol" gin_trgm_ops);
+CREATE INDEX "asset_name_trgm_idx" ON "asset" USING gin ("name" gin_trgm_ops);
 
 --
 -- Class AssetLike as table asset_like
