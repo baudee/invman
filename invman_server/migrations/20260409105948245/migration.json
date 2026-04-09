@@ -1,0 +1,57 @@
+{
+  "__className__": "serverpod.DatabaseMigration",
+  "actions": [
+    {
+      "__className__": "serverpod.DatabaseMigrationAction",
+      "type": "alterTable",
+      "alterTable": {
+        "__className__": "serverpod.TableMigration",
+        "name": "account",
+        "schema": "public",
+        "addColumns": [
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "plan",
+            "columnType": 0,
+            "isNullable": false,
+            "columnDefault": "'free'::text",
+            "dartType": "protocol:AccountPlan"
+          }
+        ],
+        "deleteColumns": [
+          "isPremium"
+        ],
+        "modifyColumns": [],
+        "addIndexes": [],
+        "deleteIndexes": [],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": [
+          {
+            "__className__": "serverpod.DatabaseMigrationWarning",
+            "type": "columnDropped",
+            "message": "Column \"isPremium\" of table \"account\" will be dropped.",
+            "table": "account",
+            "columns": [
+              "isPremium"
+            ],
+            "destrucive": true
+          }
+        ]
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "__className__": "serverpod.DatabaseMigrationWarning",
+      "type": "columnDropped",
+      "message": "Column \"isPremium\" of table \"account\" will be dropped.",
+      "table": "account",
+      "columns": [
+        "isPremium"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

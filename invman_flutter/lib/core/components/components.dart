@@ -4,5 +4,6 @@ export 'buttons/buttons.dart';
 export 'debouncing_search_bar.dart';
 export 'list/list.dart';
 export 'percent_badge.dart';
+export 'plan_guard.dart';
 export 'section_header_component.dart';
 export 'avatar_component.dart';

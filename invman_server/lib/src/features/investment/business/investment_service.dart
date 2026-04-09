@@ -140,6 +140,23 @@ class InvestmentService {
         );
 
         if (investment.id == 0 || investment.id == null) {
+          final account = await Account.db.findFirstRow(
+            session,
+            where: (a) => a.userId.equals((session.authenticated)!.authUserId),
+            transaction: transaction,
+          );
+          if (account == null) throw ServerException(errorCode: ErrorCode.notFound);
+
+          final limit = investmentLimit(account.plan);
+          if (limit != null) {
+            final count = await Investment.db.count(
+              session,
+              where: (i) => i.userId.equals((session.authenticated)!.authUserId),
+              transaction: transaction,
+            );
+            if (count >= limit) throw ServerException(errorCode: ErrorCode.unauthorized, message: "upgradeRequired");
+          }
+
           return Investment.db.insertRow(
             session,
             investment.copyWith(id: null),

@@ -5,6 +5,7 @@ table: account
 fields:
   user: module:serverpod_auth_core:AuthUser?, relation(onDelete=Cascade)
   currency: Currency?, relation(optional)
+  plan: AccountPlan, default=free
 
 
 indexes:

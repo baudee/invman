@@ -86,6 +86,12 @@ spec:
                 secretKeyRef:
                   name: rimawari-server-secrets
                   key: jwtRefreshTokenHashPepper
+            # RevenueCat webhook
+            - name: SERVERPOD_PASSWORD_revenueCatWebhookSecret
+              valueFrom:
+                secretKeyRef:
+                  name: rimawari-server-secrets
+                  key: revenueCatWebhookSecret
             # Mailjet configuration
             - name: MAILJET_API_KEY_PUBLIC
               valueFrom:

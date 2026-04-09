@@ -5,5 +5,5 @@ values:
  - notFound
  - conflict
  - unauthorized
- - forbidden 
+ - forbidden
  - badRequest

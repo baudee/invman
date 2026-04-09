@@ -1,0 +1,5 @@
+enum: AccountPlan
+serialized: byName
+values:
+  - free
+  - pro

@@ -27,7 +27,7 @@ class InvestmentRoutes {
                 path: InvestmentEditScreen.pathSegment,
                 builder: (_, state) => InvestmentEditScreen(
                   id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
-                  asset: state.extra as Asset?,
+                  asset: state.extra is Asset ? state.extra as Asset : null,
                 ),
               ),
               GoRoute(

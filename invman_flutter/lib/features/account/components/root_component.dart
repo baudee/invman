@@ -69,22 +69,28 @@ class AccountRootComponent extends StatelessWidget {
         onTap: () => router.push(WithdrawalRuleRootScreen.route()),
       ),
       _buildCurrencyTile(context, authManager),
-      ListTile(
-        title: Text(S.of(context).account_exportTransfers),
-        subtitle: Text(S.of(context).account_exportTransfersSubtitle),
-        leading: Icon(Icons.download_rounded),
-        onTap: () => _onExport(context),
-      ),
-      ListTile(
-        title: Text(S.of(context).account_importTransfers),
-        subtitle: Text(S.of(context).account_importTransfersSubtitle),
-        leading: Icon(Icons.upload_rounded),
-        trailing: IconButton(
-          icon: Icon(Icons.description_outlined),
-          tooltip: S.of(context).account_downloadTemplate,
-          onPressed: () => controller.shareTemplate(),
+      PlanGuard(
+        requiredPlan: AccountPlan.pro,
+        child: ListTile(
+          title: Text(S.of(context).account_exportTransfers),
+          subtitle: Text(S.of(context).account_exportTransfersSubtitle),
+          leading: Icon(Icons.download_rounded),
+          onTap: () => _onExport(context),
         ),
-        onTap: () => _onImport(context),
+      ),
+      PlanGuard(
+        requiredPlan: AccountPlan.pro,
+        child: ListTile(
+          title: Text(S.of(context).account_importTransfers),
+          subtitle: Text(S.of(context).account_importTransfersSubtitle),
+          leading: Icon(Icons.upload_rounded),
+          trailing: IconButton(
+            icon: Icon(Icons.description_outlined),
+            tooltip: S.of(context).account_downloadTemplate,
+            onPressed: () => controller.shareTemplate(),
+          ),
+          onTap: () => _onImport(context),
+        ),
       ),
       ListTile(
         title: Text(S.of(context).auth_logOut, style: TextStyle(color: Colors.red)),

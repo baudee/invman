@@ -124,6 +124,9 @@ Use `getIt` and `injectable` for DI. Annotate injectable classes with `@injectab
 #### DB Transactions
 Serverpod provides a `session.db.transaction` method for handling transactions. Always use the appropriate transaction level. Link the docs if necessary: `https://docs.serverpod.dev/concepts/database/transactions`
 
+#### DB Migrations
+Never update migrations files yourself, to generate a new migration execut `make server/migration`
+
 ### Flutter Frontend
 dart MCP accessible
 

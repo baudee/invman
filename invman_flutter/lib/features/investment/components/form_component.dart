@@ -4,9 +4,12 @@ import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/core/components/components.dart';
 import 'package:invman_flutter/core/utils/utils.dart';
+import 'package:invman_flutter/di.dart';
+import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/asset/asset.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
+import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 class InvestmentFormComponent extends StatelessWidget {
@@ -39,22 +42,25 @@ class InvestmentFormComponent extends StatelessWidget {
           SizedBox(height: UIConstants.spacingXs),
           AssetSelectTileComponent(asset: investment.asset, onAssetSelected: controller.setAsset),
           Spacer(),
-          SaveButton(
-            onPressed: () async {
-              final (success, message) = await controller.submit();
-              if (success) {
-                final id = controller.state.value.requireValue.id!;
-                if (shouldNotPopAfterSave) {
-                  // From Asset detail page
-                  router.pushReplacement(InvestmentDetailScreen.route(id));
+          PlanGuard(
+            requiredPlan: AccountPlan.pro,
+            child: SaveButton(
+              onPressed: () async {
+                final (success, message) = await controller.submit();
+                if (success) {
+                  final id = controller.state.value.requireValue.id!;
+                  if (shouldNotPopAfterSave) {
+                    // From Asset detail page
+                    router.pushReplacement(InvestmentDetailScreen.route(id));
+                  } else {
+                    // From Investment list page
+                    router.pop();
+                  }
                 } else {
-                  // From Investment list page
-                  router.pop();
+                  ToastUtils.message(message, success: success);
                 }
-              } else {
-                ToastUtils.message(message, success: success);
-              }
-            },
+              },
+            ),
           ),
           SizedBox(height: UIConstants.spacingSm),
         ],

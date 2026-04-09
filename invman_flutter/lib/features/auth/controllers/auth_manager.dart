@@ -4,6 +4,7 @@ import 'package:invman_flutter/core/repositories/user_preferences_repository.dar
 import 'package:invman_flutter/env.dart';
 import 'package:invman_flutter/features/account/account.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
@@ -89,6 +90,7 @@ class AuthManager {
         } else {
           state.value = AuthStateOnboarding(account: account);
         }
+        Purchases.logIn(account.userId.toString()).ignore();
         return null;
       },
     );
@@ -113,6 +115,7 @@ class AuthManager {
   }
 
   void resetState() {
+    Purchases.logOut().ignore();
     final email = _preferencesRepository.getEmail() ?? "";
     state.value = AuthStateGuest(email: email);
   }

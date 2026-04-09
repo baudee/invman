@@ -1,5 +1,6 @@
 import 'package:invman_server/src/core/services/mail/mail.dart';
 import 'package:invman_server/src/di.dart';
+import 'package:invman_server/src/features/revenue_cat/routes/revenue_cat_route.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 import 'package:serverpod_auth_idp_server/providers/email.dart';
@@ -35,6 +36,9 @@ void run(List<String> args) async {
       },
     ),
   );
+
+  // RevenueCat webhook route
+  pod.webServer.addRoute(RevenueCatRoute(), '/webhook/revenuecat');
 
   // Start the server.
   await pod.start();
