@@ -38,7 +38,10 @@ class PlanGuard extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: SizedBox(height: 50, child: Padding(padding: const EdgeInsets.all(8.0), child: Image.asset("assets/images/logo.webp"))),
+                child: SizedBox(
+                  height: 50,
+                  child: Padding(padding: const EdgeInsets.all(8.0), child: Image.asset("assets/images/logo.webp")),
+                ),
               ),
             ),
           ),

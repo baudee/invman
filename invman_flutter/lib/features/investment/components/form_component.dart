@@ -10,7 +10,6 @@ import 'package:invman_flutter/features/investment/controllers/count_manager.dar
 import 'package:invman_flutter/features/investment/investment.dart';
 import 'package:invman_flutter/features/asset/asset.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
-import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 class InvestmentFormComponent extends StatelessWidget {
