@@ -7,7 +7,7 @@
 global:
   # Path to your app’s font file. Can be a ZIP of bitmap glyphs or a TrueType/OTF.
   # This hasn't been tested and it is recommended not to use this to use the default font.
-  #font: "assets/fonts/inter.zip"
+  font: "screenshots/fonts/google_sans.ttf"
 
   # Background fill for the entire canvas:
   background:
@@ -26,7 +26,7 @@ global:
   # Padding (in pixels) around the screenshot inside the frame,
   # before drawing text or borders.
   # It is recommended not to use this and let the default padding be used.
-  padding: 40
+  padding: 20
 
   # Default text settings by language. You can override per-language here.
   text:
@@ -35,16 +35,18 @@ global:
       text_color: "#FFFFFF"
       # Font size (points or pixels—match your font design).
       # Common presets: [56, 72, 80, 100, 120, 150]
-      font_size: 120
+      font_size: 80
 
   # Default texts for all platforms
   texts:
     home:
-      en: "Welcome to Rimawari!"
+      en: "Explore thousands of assets"
     investment:
-      en: "Follow your investments"
+      en: "Your real return, not just the nominal one"
     asset:
-      en: "Track your assets"
+      en: "Know before you invest"
+    dividends:
+      en: "Passive income, planned ahead"
   # Where to write all generated renders:
   output_folder: "build/screenshots"
 
