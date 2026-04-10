@@ -154,9 +154,9 @@ jobs:
       - name: Create .env File
         run: |
           echo "BASE_URL=${{ vars.BASE_URL }}" > .env
-          echo "SENTRY_DSN"=${{ vars.SENTRY_DSN }} >> .env
-          echo "IOS_REVENUE_CAT_API_KEY"=${{ vars.IOS_REVENUE_CAT_API_KEY }} >> .env
-          echo "ANDROID_REVENUE_CAT_API_KEY"=${{ vars.ANDROID_REVENUE_CAT_API_KEY }} >> .env"
+          echo "SENTRY_DSN=${{ vars.SENTRY_DSN }}" >> .env
+          echo "IOS_REVENUE_CAT_API_KEY=${{ vars.IOS_REVENUE_CAT_API_KEY }}" >> .env
+          echo "ANDROID_REVENUE_CAT_API_KEY=${{ vars.ANDROID_REVENUE_CAT_API_KEY }}" >> .env
 
       - name: Decode Keystore
         run: |
@@ -308,7 +308,9 @@ jobs:
       - name: Create .env File
         run: |
           echo "BASE_URL=${{ vars.BASE_URL }}" > .env
-          echo "SENTRY_DSN"=${{ vars.SENTRY_DSN }} >> .env
+          echo "SENTRY_DSN=${{ vars.SENTRY_DSN }}" >> .env
+          echo "IOS_REVENUE_CAT_API_KEY=${{ vars.IOS_REVENUE_CAT_API_KEY }}" >> .env
+          echo "ANDROID_REVENUE_CAT_API_KEY=${{ vars.ANDROID_REVENUE_CAT_API_KEY }}" >> .env
 
       - name: Build Release IPA
         run: |

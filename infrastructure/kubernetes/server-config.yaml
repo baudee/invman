@@ -14,6 +14,12 @@ data:
       publicPort: 443
       publicScheme: https
 
+    webServer:
+      port: 8082
+      publicHost: app-rimawari.kube.simonbraillard.com
+      publicPort: 443
+      publicScheme: https
+
     database:
       host: rimawari-postgresql
       port: 5432
