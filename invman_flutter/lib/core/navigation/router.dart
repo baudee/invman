@@ -39,6 +39,8 @@ abstract class RouterModule {
       ],
       refreshListenable: authManager.state,
       redirect: (context, state) {
+        if (authManager.state.value is AuthStateBooting) return null;
+
         final appSettingsStatus = getIt<AppSettingsManager>().status.value;
         final location = state.matchedLocation;
 

@@ -1,54 +1,29 @@
-import 'dart:io';
-import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:invman_flutter/app.dart';
 import 'package:invman_flutter/di.dart';
-import 'package:invman_flutter/features/auth/auth.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:invman_flutter/env.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 void main() async {
+  // Initialize app
   WidgetsFlutterBinding.ensureInitialized();
-
-  // DEPENDENCY INJECTION
   await configureDependencies();
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
+  // Start app
   final env = getIt<Env>();
-  if (env.sentryDsn.isNotEmpty) {
+  if (env.flavor == Flavor.develop) {
+    runApp(const MyApp());
+  } else {
     await SentryFlutter.init(
       (options) {
         options.dsn = env.sentryDsn;
+        options.sendDefaultPii = true;
         options.environment = env.flavor.name;
         options.tracesSampleRate = 1.0;
       },
-      appRunner: () async {
-        await _initializeApp(env);
-      },
+      appRunner: () => runApp(SentryWidget(child: MyApp())),
     );
-  } else {
-    await _initializeApp(env);
   }
-}
-
-Future<void> _initializeApp(Env env) async {
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  await _initializeRevenueCat(env.androidRevenueCatApiKey, env.iosRevenueCatApiKey);
-  // AuthManager init here because needs initialized RevenueCat (and RevenueCat need Enviroment variables)
-  await getIt<AuthManager>().init();
-
-  runApp(const MyApp());
-}
-
-Future<void> _initializeRevenueCat(String androidApiKey, String iosApiKey) async {
-  String apiKey;
-  if (Platform.isIOS) {
-    apiKey = iosApiKey;
-  } else if (Platform.isAndroid) {
-    apiKey = androidApiKey;
-  } else {
-    throw UnsupportedError('Platform not supported');
-  }
-
-  await Purchases.configure(PurchasesConfiguration(apiKey));
 }

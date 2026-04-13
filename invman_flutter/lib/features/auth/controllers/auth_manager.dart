@@ -1,15 +1,12 @@
-import 'package:injectable/injectable.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/repositories/user_preferences_repository.dart';
 import 'package:invman_flutter/env.dart';
 import 'package:invman_flutter/features/account/account.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-@singleton
 class AuthManager {
   final AccountRepository _accountRepository;
   final UserPreferencesRepository _preferencesRepository;
@@ -46,9 +43,13 @@ class AuthManager {
 
   Future<void> init() async {
     state.value = AuthStateBooting();
-    await _client.auth.initialize();
+    try {
+      await _client.auth.initialize();
+    } catch (_) {
+      resetState();
+      return;
+    }
 
-    // Listen to auth state
     _client.auth.authInfoListenable.addListener(() async {
       if (!_client.auth.isAuthenticated) {
         resetState();
@@ -92,7 +93,6 @@ class AuthManager {
         } else {
           state.value = AuthStateOnboarding(account: account);
         }
-        Purchases.logIn(account.userId.toString()).ignore();
         return null;
       },
     );
@@ -117,7 +117,6 @@ class AuthManager {
   }
 
   void resetState() {
-    Purchases.logOut().ignore();
     final email = _preferencesRepository.getEmail() ?? "";
     state.value = AuthStateGuest(email: email);
   }
