@@ -35,7 +35,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Extract Flutter version from pubspec.yaml
         id: flutter_version
@@ -51,7 +51,7 @@ jobs:
           cache: true
 
       - name: Cache pub dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.pub-cache
@@ -94,7 +94,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Extract Flutter version from pubspec.yaml
         id: flutter_version
@@ -115,7 +115,7 @@ jobs:
           echo "build_number=${BUILD_NUMBER}" >> $GITHUB_OUTPUT
 
       - name: Set Up Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: "temurin"
           java-version: "17"
@@ -128,7 +128,7 @@ jobs:
           cache: true
 
       - name: Cache pub dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.pub-cache
@@ -137,7 +137,7 @@ jobs:
           restore-keys: pub-${{ runner.os }}-
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Build
         run: |
@@ -202,13 +202,14 @@ jobs:
           echo "APK is properly release-signed"
 
       - name: Upload Android Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: android-release-${{ steps.version.outputs.version }}
           path: |
             invman_flutter/build/app/outputs/flutter-apk/app-production-release.apk
             invman_flutter/build/app/outputs/bundle/productionRelease/app-production-release.aab
           if-no-files-found: error
+          retention-days: 7
 
       - name: Upload to Play Store (Internal Testing)
         if: ${{ vars.ENABLE_PLAY_STORE == 'true' }}
@@ -231,7 +232,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Extract Flutter version from pubspec.yaml
         id: flutter_version
@@ -259,7 +260,7 @@ jobs:
           cache: true
 
       - name: Cache pub dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.pub-cache
@@ -268,7 +269,7 @@ jobs:
           restore-keys: pub-${{ runner.os }}-
 
       - name: Cache CocoaPods
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ${{ env.WORK_DIR }}/ios/Pods
@@ -277,7 +278,7 @@ jobs:
           restore-keys: pods-${{ runner.os }}-
 
       - name: Install Apple Certificate
-        uses: apple-actions/import-codesign-certs@v2
+        uses: apple-actions/import-codesign-certs@v5
         with:
           p12-file-base64: ${{ secrets.P12_DIST_CERT }}
           p12-password: ${{ secrets.P12_PASSWORD }}
@@ -316,11 +317,12 @@ jobs:
             --build-number=${{ steps.version.outputs.build_number }}
 
       - name: Upload iOS Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ios-release-${{ steps.version.outputs.version }}
           path: invman_flutter/build/ios/ipa/*.ipa
           if-no-files-found: error
+          retention-days: 7
 
       - name: Find IPA file
         if: ${{ vars.ENABLE_TESTFLIGHT == 'true' }}
