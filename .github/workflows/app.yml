@@ -325,14 +325,12 @@ jobs:
           retention-days: 7
 
       - name: Find IPA file
-        if: ${{ vars.ENABLE_TESTFLIGHT == 'true' }}
         id: find_ipa
         run: |
           IPA_PATH=$(find build/ios/ipa -name "*.ipa" -type f | head -1)
           echo "ipa_path=${IPA_PATH}" >> $GITHUB_OUTPUT
 
       - name: Upload to TestFlight
-        if: ${{ vars.ENABLE_TESTFLIGHT == 'true' }}
         uses: apple-actions/upload-testflight-build@v1
         with:
           app-path: invman_flutter/${{ steps.find_ipa.outputs.ipa_path }}
