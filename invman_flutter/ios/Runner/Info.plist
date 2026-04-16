@@ -85,5 +85,7 @@
 		</array>
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>This app does not access your photo library. This permission is required by a system component used to import files.</string>
 	</dict>
 </plist>
