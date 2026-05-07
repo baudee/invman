@@ -48,14 +48,14 @@ class TransferRepository {
 
   Future<Either<String, String>> exportCsv() async {
     return safeCall(() async {
-      final csv = await client.transfer.exportCsv();
+      final csv = await client.dataTransfer.exportCsv();
       return right(csv);
     });
   }
 
   Future<Either<String, List<String>>> importCsv(String csvContent) async {
     return safeCall(() async {
-      final errors = await client.transfer.importCsv(csvContent);
+      final errors = await client.dataTransfer.importCsv(csvContent);
       return right(errors);
     });
   }

@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:invman_server/src/core/helpers/include_helpers.dart';
+import 'package:invman_server/src/features/auth/auth.dart';
 import 'package:invman_server/src/features/currency/currency.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
@@ -24,7 +25,9 @@ class AccountService {
       throw ServerException(errorCode: ErrorCode.notFound);
     }
 
-    return account;
+    return account.copyWith(
+      permissions: UserPermissionsExtensions.fromSession(session),
+    );
   }
 
   Future<Account> save(Session session, Account account) async {
@@ -39,11 +42,29 @@ class AccountService {
       account.currencyId!,
     );
 
-    return await Account.db.updateRow(
+    final savedAccount = await Account.db.updateRow(
       session,
       existingAccount.copyWith(
         currencyId: currency.id,
       ),
+    );
+
+    return savedAccount.copyWith(
+      permissions: UserPermissionsExtensions.fromSession(session),
+    );
+  }
+
+  Future<void> delete(Session session) async {
+    final authUserId = (session.authenticated)!.authUserId;
+
+    await AuthServices.instance.authUsers.delete(
+      session,
+      authUserId: authUserId,
+    );
+
+    await session.messages.authenticationRevoked(
+      authUserId.uuid,
+      RevokedAuthenticationUser(),
     );
   }
 }

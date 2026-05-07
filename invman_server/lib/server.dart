@@ -1,5 +1,6 @@
 import 'package:invman_server/src/core/services/mail/mail.dart';
 import 'package:invman_server/src/di.dart';
+import 'package:invman_server/src/features/auth/auth.dart';
 import 'package:invman_server/src/features/revenue_cat/routes/revenue_cat_route.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
@@ -27,7 +28,7 @@ void run(List<String> args) async {
     ],
     authUsersConfig: AuthUsersConfig(
       onAfterAuthUserCreated: (session, authUser, {required transaction}) async {
-        final account = Account(userId: authUser.id);
+        final account = Account(userId: authUser.id, permissions: UserPermissionsExtensions.fromSession(session));
         await Account.db.insertRow(
           session,
           account,

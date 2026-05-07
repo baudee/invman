@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 
 class PlanGuard extends StatelessWidget {
-  final AccountPlan requiredPlan;
+  final Set<String> requiredScopes;
   final Widget child;
 
   const PlanGuard({
     super.key,
-    required this.requiredPlan,
+    required this.requiredScopes,
     required this.child,
   });
 
@@ -18,7 +17,7 @@ class PlanGuard extends StatelessWidget {
   Widget build(BuildContext context) {
     final authManager = getIt<AuthManager>();
 
-    final hasAccess = AccountPlan.values.indexOf(authManager.plan) >= AccountPlan.values.indexOf(requiredPlan);
+    final hasAccess = requiredScopes.every((scope) => authManager.scopes.contains(scope));
     if (hasAccess) return child;
 
     return Stack(

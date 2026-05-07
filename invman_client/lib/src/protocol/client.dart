@@ -65,6 +65,12 @@ class EndpointAccount extends _i1.EndpointRef {
         'save',
         {'account': account},
       );
+
+  _i2.Future<void> delete() => caller.callServerEndpoint<void>(
+    'account',
+    'delete',
+    {},
+  );
 }
 
 /// {@category Endpoint}
@@ -487,6 +493,27 @@ class EndpointInvestment extends _i1.EndpointRef {
 }
 
 /// {@category Endpoint}
+class EndpointDataTransfer extends _i1.EndpointRef {
+  EndpointDataTransfer(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'dataTransfer';
+
+  _i2.Future<String> exportCsv() => caller.callServerEndpoint<String>(
+    'dataTransfer',
+    'exportCsv',
+    {},
+  );
+
+  _i2.Future<List<String>> importCsv(String csvContent) =>
+      caller.callServerEndpoint<List<String>>(
+        'dataTransfer',
+        'importCsv',
+        {'csvContent': csvContent},
+      );
+}
+
+/// {@category Endpoint}
 class EndpointTransfer extends _i1.EndpointRef {
   EndpointTransfer(_i1.EndpointCaller caller) : super(caller);
 
@@ -527,19 +554,6 @@ class EndpointTransfer extends _i1.EndpointRef {
       'page': page,
     },
   );
-
-  _i2.Future<String> exportCsv() => caller.callServerEndpoint<String>(
-    'transfer',
-    'exportCsv',
-    {},
-  );
-
-  _i2.Future<List<String>> importCsv(String csvContent) =>
-      caller.callServerEndpoint<List<String>>(
-        'transfer',
-        'importCsv',
-        {'csvContent': csvContent},
-      );
 }
 
 /// {@category Endpoint}
@@ -631,6 +645,7 @@ class Client extends _i1.ServerpodClientShared {
     currency = EndpointCurrency(this);
     dividend = EndpointDividend(this);
     investment = EndpointInvestment(this);
+    dataTransfer = EndpointDataTransfer(this);
     transfer = EndpointTransfer(this);
     withdrawalRule = EndpointWithdrawalRule(this);
     modules = Modules(this);
@@ -652,6 +667,8 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointInvestment investment;
 
+  late final EndpointDataTransfer dataTransfer;
+
   late final EndpointTransfer transfer;
 
   late final EndpointWithdrawalRule withdrawalRule;
@@ -668,6 +685,7 @@ class Client extends _i1.ServerpodClientShared {
     'currency': currency,
     'dividend': dividend,
     'investment': investment,
+    'dataTransfer': dataTransfer,
     'transfer': transfer,
     'withdrawalRule': withdrawalRule,
   };

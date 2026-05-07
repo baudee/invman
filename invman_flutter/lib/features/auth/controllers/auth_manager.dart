@@ -60,7 +60,7 @@ class AuthManager {
             resetState();
           },
           (account) {
-            _setAccount();
+            _setAccount(_client.auth.authInfo!);
           },
         );
       }
@@ -76,10 +76,10 @@ class AuthManager {
       return null;
     }
 
-    return _setAccount();
+    return _setAccount(userInfo);
   }
 
-  Future<String?> _setAccount() async {
+  Future<String?> _setAccount(AuthSuccess authSuccess) async {
     final accountResult = await _accountRepository.retrieve();
 
     return accountResult.fold(
@@ -89,9 +89,9 @@ class AuthManager {
       },
       (account) {
         if (account.isOnboarded()) {
-          state.value = AuthStateSuccess(account: account);
+          state.value = AuthStateSuccess(account: account, userInfo: authSuccess);
         } else {
-          state.value = AuthStateOnboarding(account: account);
+          state.value = AuthStateOnboarding(account: account, userInfo: authSuccess);
         }
         return null;
       },
@@ -112,6 +112,22 @@ class AuthManager {
     }
   }
 
+  Future<String?> deleteAccount() async {
+    if (state.value is! AuthStateSuccess) {
+      return S.current.error_invalidState;
+    }
+
+    final result = await _accountRepository.delete();
+    return result.fold(
+      (error) => error,
+      (_) async {
+        await _client.auth.signOutDevice();
+        resetState();
+        return null;
+      },
+    );
+  }
+
   void setCredentialsInState(String email, String password) {
     state.value = AuthStateGuest(email: email, password: password);
   }
@@ -122,8 +138,8 @@ class AuthManager {
   }
 
   void replaceMe(Account account) {
-    if (state.value case AuthStateSuccess()) {
-      state.value = AuthStateSuccess(account: account);
+    if (state.value case AuthStateSuccess successState) {
+      state.value = AuthStateSuccess(account: account, userInfo: successState.userInfo);
     }
   }
 }

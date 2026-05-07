@@ -70,7 +70,7 @@ class AccountRootComponent extends StatelessWidget {
       ),
       _buildCurrencyTile(context, authManager),
       PlanGuard(
-        requiredPlan: AccountPlan.pro,
+        requiredScopes: {UserScopeType.premium.name},
         child: ListTile(
           title: Text(S.of(context).account_exportTransfers),
           subtitle: Text(S.of(context).account_exportTransfersSubtitle),
@@ -79,7 +79,7 @@ class AccountRootComponent extends StatelessWidget {
         ),
       ),
       PlanGuard(
-        requiredPlan: AccountPlan.pro,
+        requiredScopes: {UserScopeType.premium.name},
         child: ListTile(
           title: Text(S.of(context).account_importTransfers),
           subtitle: Text(S.of(context).account_importTransfersSubtitle),
@@ -105,6 +105,11 @@ class AccountRootComponent extends StatelessWidget {
           }
         },
       ),
+      ListTile(
+        title: Text(S.of(context).account_deleteAccount, style: TextStyle(color: Colors.red)),
+        leading: Icon(Icons.delete_forever, color: Colors.red),
+        onTap: () => _onDeleteAccount(context, authManager),
+      ),
       Text(packageInfoModule.version, style: Theme.of(context).textTheme.bodySmall),
     ];
 
@@ -127,6 +132,39 @@ class AccountRootComponent extends StatelessWidget {
     final error = await controller.exportCsv();
     if (error != null && context.mounted) {
       ToastUtils.message(error, success: false);
+    }
+  }
+
+  Future<void> _onDeleteAccount(BuildContext context, AuthManager authManager) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(S.of(ctx).account_deleteAccount_title),
+        content: Text(S.of(ctx).account_deleteAccount_description),
+        actions: [
+          FilledButton(
+            onPressed: () => ctx.pop(false),
+            child: Text(S.of(ctx).core_cancel),
+          ),
+          TextButton(
+            onPressed: () => ctx.pop(true),
+            child: Text(
+              S.of(ctx).account_deleteAccount_confirm,
+              style: const TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !context.mounted) return;
+
+    final errorMessage = await authManager.deleteAccount();
+
+    if (errorMessage == null && context.mounted) {
+      StatefulNavigationShell.of(context).goBranch(0, initialLocation: true);
+    } else {
+      ToastUtils.message(errorMessage, success: false);
     }
   }
 

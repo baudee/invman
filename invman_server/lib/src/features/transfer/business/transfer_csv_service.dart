@@ -1,7 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:invman_server/src/core/helpers/helpers.dart';
 import 'package:invman_server/src/generated/protocol.dart';
-import 'package:invman_server/src/features/account/account.dart';
 import 'package:invman_server/src/features/investment/investment.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
@@ -9,16 +8,10 @@ import 'package:serverpod_auth_idp_server/core.dart';
 @injectable
 class TransferCsvService {
   final InvestmentService _investmentService;
-  final AccountService _accountService;
 
-  TransferCsvService(this._investmentService, this._accountService);
+  TransferCsvService(this._investmentService);
 
   Future<String> exportCsv(Session session) async {
-    final account = await _accountService.retrieve(session);
-    if (!canImportExport(account.plan)) {
-      throw ServerException(errorCode: ErrorCode.unauthorized, message: "upgradeRequired");
-    }
-
     final sessionUserId = session.authenticated!.authUserId;
 
     final investments = await Investment.db.find(
@@ -63,11 +56,6 @@ class TransferCsvService {
   }
 
   Future<List<String>> importCsv(Session session, String csvContent) async {
-    final account = await _accountService.retrieve(session);
-    if (!canImportExport(account.plan)) {
-      throw ServerException(errorCode: ErrorCode.unauthorized, message: "upgradeRequired");
-    }
-
     final sessionUserId = session.authenticated!.authUserId;
 
     final investments = await Investment.db.find(

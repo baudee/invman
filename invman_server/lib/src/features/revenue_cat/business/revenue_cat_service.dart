@@ -1,6 +1,8 @@
 import 'package:injectable/injectable.dart';
+import 'package:invman_server/src/features/auth/models/user_scopes.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
+import 'package:serverpod_auth_idp_server/core.dart';
 
 @injectable
 class RevenueCatService {
@@ -18,34 +20,47 @@ class RevenueCatService {
       throw ServerException(errorCode: ErrorCode.badRequest);
     }
 
-    final AccountPlan? plan;
+    final bool grantPremium;
     if (_premiumEvents.contains(eventType)) {
-      plan = AccountPlan.pro;
+      grantPremium = true;
     } else if (_freeEvents.contains(eventType)) {
-      plan = AccountPlan.free;
+      grantPremium = false;
     } else {
       return;
     }
 
-    final userId = UuidValue.fromString(appUserId);
+    final authUserId = UuidValue.fromString(appUserId);
+    final authUsers = AuthServices.instance.authUsers;
 
-    await session.db.transaction(
-      (transaction) async {
-        final account = await Account.db.findFirstRow(
+    try {
+      await session.db.transaction((transaction) async {
+        final authUser = await authUsers.get(
           session,
-          where: (a) => a.userId.equals(userId),
+          authUserId: authUserId,
           transaction: transaction,
         );
 
-        if (account == null) return;
+        final updatedScopes = {...authUser.scopes};
+        if (grantPremium) {
+          updatedScopes.add(UserScope.premium);
+        } else {
+          updatedScopes.remove(UserScope.premium);
+        }
 
-        await Account.db.updateRow(
+        await authUsers.update(
           session,
-          account.copyWith(plan: plan),
+          authUserId: authUserId,
+          scopes: updatedScopes,
           transaction: transaction,
         );
-      },
-      settings: TransactionSettings(isolationLevel: IsolationLevel.readCommitted),
-    );
+      });
+
+      await session.messages.authenticationRevoked(
+        appUserId,
+        RevokedAuthenticationUser(),
+      );
+    } on AuthUserNotFoundException {
+      return;
+    }
   }
 }

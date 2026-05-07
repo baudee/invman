@@ -1,0 +1,3 @@
+class: UserPermissions
+fields:
+    investmentsLimit: int?

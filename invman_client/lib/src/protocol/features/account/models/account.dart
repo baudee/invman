@@ -11,10 +11,10 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import '../../../features/account/models/account_plan.dart' as _i2;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
-    as _i3;
-import '../../../features/currency/models/currency.dart' as _i4;
+    as _i2;
+import '../../../features/currency/models/currency.dart' as _i3;
+import '../../../features/auth/models/user_permissions.dart' as _i4;
 import 'package:invman_client/src/protocol/protocol.dart' as _i5;
 
 abstract class Account implements _i1.SerializableModel {
@@ -24,16 +24,16 @@ abstract class Account implements _i1.SerializableModel {
     this.user,
     this.currencyId,
     this.currency,
-    _i2.AccountPlan? plan,
-  }) : plan = plan ?? _i2.AccountPlan.free;
+    this.permissions,
+  });
 
   factory Account({
     int? id,
     required _i1.UuidValue userId,
-    _i3.AuthUser? user,
+    _i2.AuthUser? user,
     int? currencyId,
-    _i4.Currency? currency,
-    _i2.AccountPlan? plan,
+    _i3.Currency? currency,
+    _i4.UserPermissions? permissions,
   }) = _AccountImpl;
 
   factory Account.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -42,16 +42,18 @@ abstract class Account implements _i1.SerializableModel {
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
-          : _i5.Protocol().deserialize<_i3.AuthUser>(jsonSerialization['user']),
+          : _i5.Protocol().deserialize<_i2.AuthUser>(jsonSerialization['user']),
       currencyId: jsonSerialization['currencyId'] as int?,
       currency: jsonSerialization['currency'] == null
           ? null
-          : _i5.Protocol().deserialize<_i4.Currency>(
+          : _i5.Protocol().deserialize<_i3.Currency>(
               jsonSerialization['currency'],
             ),
-      plan: jsonSerialization['plan'] == null
+      permissions: jsonSerialization['permissions'] == null
           ? null
-          : _i2.AccountPlan.fromJson((jsonSerialization['plan'] as String)),
+          : _i5.Protocol().deserialize<_i4.UserPermissions>(
+              jsonSerialization['permissions'],
+            ),
     );
   }
 
@@ -62,13 +64,13 @@ abstract class Account implements _i1.SerializableModel {
 
   _i1.UuidValue userId;
 
-  _i3.AuthUser? user;
+  _i2.AuthUser? user;
 
   int? currencyId;
 
-  _i4.Currency? currency;
+  _i3.Currency? currency;
 
-  _i2.AccountPlan plan;
+  _i4.UserPermissions? permissions;
 
   /// Returns a shallow copy of this [Account]
   /// with some or all fields replaced by the given arguments.
@@ -76,10 +78,10 @@ abstract class Account implements _i1.SerializableModel {
   Account copyWith({
     int? id,
     _i1.UuidValue? userId,
-    _i3.AuthUser? user,
+    _i2.AuthUser? user,
     int? currencyId,
-    _i4.Currency? currency,
-    _i2.AccountPlan? plan,
+    _i3.Currency? currency,
+    _i4.UserPermissions? permissions,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -90,7 +92,7 @@ abstract class Account implements _i1.SerializableModel {
       if (user != null) 'user': user?.toJson(),
       if (currencyId != null) 'currencyId': currencyId,
       if (currency != null) 'currency': currency?.toJson(),
-      'plan': plan.toJson(),
+      if (permissions != null) 'permissions': permissions?.toJson(),
     };
   }
 
@@ -106,17 +108,17 @@ class _AccountImpl extends Account {
   _AccountImpl({
     int? id,
     required _i1.UuidValue userId,
-    _i3.AuthUser? user,
+    _i2.AuthUser? user,
     int? currencyId,
-    _i4.Currency? currency,
-    _i2.AccountPlan? plan,
+    _i3.Currency? currency,
+    _i4.UserPermissions? permissions,
   }) : super._(
          id: id,
          userId: userId,
          user: user,
          currencyId: currencyId,
          currency: currency,
-         plan: plan,
+         permissions: permissions,
        );
 
   /// Returns a shallow copy of this [Account]
@@ -129,17 +131,19 @@ class _AccountImpl extends Account {
     Object? user = _Undefined,
     Object? currencyId = _Undefined,
     Object? currency = _Undefined,
-    _i2.AccountPlan? plan,
+    Object? permissions = _Undefined,
   }) {
     return Account(
       id: id is int? ? id : this.id,
       userId: userId ?? this.userId,
-      user: user is _i3.AuthUser? ? user : this.user?.copyWith(),
+      user: user is _i2.AuthUser? ? user : this.user?.copyWith(),
       currencyId: currencyId is int? ? currencyId : this.currencyId,
-      currency: currency is _i4.Currency?
+      currency: currency is _i3.Currency?
           ? currency
           : this.currency?.copyWith(),
-      plan: plan ?? this.plan,
+      permissions: permissions is _i4.UserPermissions?
+          ? permissions
+          : this.permissions?.copyWith(),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:injectable/injectable.dart';
 import 'package:invman_server/src/features/account/account.dart';
 import 'package:invman_server/src/core/helpers/helpers.dart';
+import 'package:invman_server/src/features/auth/auth.dart';
 import 'package:invman_server/src/features/currency/currency.dart';
 import 'package:invman_server/src/env.dart';
 import 'package:invman_server/src/generated/protocol.dart';
@@ -35,6 +36,9 @@ class InvestmentService {
     required int page,
   }) async {
     final sessionUserId = (session.authenticated)!.authUserId;
+
+    final userPermissions = UserPermissionsExtensions.fromSession(session);
+    limit = userPermissions.investmentsLimit != null ? min(limit, userPermissions.investmentsLimit!) : limit;
 
     List<Investment> investments = await Investment.db.find(
       session,
@@ -147,14 +151,16 @@ class InvestmentService {
           );
           if (account == null) throw ServerException(errorCode: ErrorCode.notFound);
 
-          final limit = investmentLimit(account.plan);
-          if (limit != null) {
+          final userPermissions = UserPermissionsExtensions.fromSession(session);
+          if (userPermissions.investmentsLimit != null) {
             final count = await Investment.db.count(
               session,
               where: (i) => i.userId.equals((session.authenticated)!.authUserId),
               transaction: transaction,
             );
-            if (count >= limit) throw ServerException(errorCode: ErrorCode.unauthorized, message: "upgradeRequired");
+            if (count >= userPermissions.investmentsLimit!) {
+              throw ServerException(errorCode: ErrorCode.forbidden, message: "upgradeRequired");
+            }
           }
 
           return Investment.db.insertRow(

@@ -8,6 +8,10 @@ Future<Either<String, T>> safeCall<T>(Future<Either<String, T>> Function() actio
     return await action();
   } on ServerException catch (e) {
     return left(e.errorCode.message);
+  } on ServerpodClientUnauthorized catch (_) {
+    return left(ErrorCode.unauthorized.message);
+  } on ServerpodClientForbidden catch (_) {
+    return left(ErrorCode.forbidden.message);
   } catch (e, st) {
     // Log to Sentry
     await Sentry.captureException(e, stackTrace: st);

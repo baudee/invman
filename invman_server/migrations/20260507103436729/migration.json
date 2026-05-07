@@ -1,0 +1,48 @@
+{
+  "__className__": "serverpod.DatabaseMigration",
+  "actions": [
+    {
+      "__className__": "serverpod.DatabaseMigrationAction",
+      "type": "alterTable",
+      "alterTable": {
+        "__className__": "serverpod.TableMigration",
+        "name": "account",
+        "schema": "public",
+        "addColumns": [],
+        "deleteColumns": [
+          "plan"
+        ],
+        "modifyColumns": [],
+        "addIndexes": [],
+        "deleteIndexes": [],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": [
+          {
+            "__className__": "serverpod.DatabaseMigrationWarning",
+            "type": "columnDropped",
+            "message": "Column \"plan\" of table \"account\" will be dropped.",
+            "table": "account",
+            "columns": [
+              "plan"
+            ],
+            "destrucive": true
+          }
+        ]
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "__className__": "serverpod.DatabaseMigrationWarning",
+      "type": "columnDropped",
+      "message": "Column \"plan\" of table \"account\" will be dropped.",
+      "table": "account",
+      "columns": [
+        "plan"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

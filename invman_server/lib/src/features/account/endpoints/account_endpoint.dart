@@ -21,4 +21,11 @@ class AccountEndpoint extends Endpoint with EndpointMiddleware {
       () => getIt<AccountService>().save(session, account),
     );
   }
+
+  Future<void> delete(Session session) async {
+    return withMiddleware(
+      session,
+      () => getIt<AccountService>().delete(session),
+    );
+  }
 }

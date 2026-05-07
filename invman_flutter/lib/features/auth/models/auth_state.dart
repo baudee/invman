@@ -1,4 +1,5 @@
 import 'package:invman_client/invman_client.dart';
+import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 
 @immutable
 sealed class AuthState {
@@ -18,10 +19,12 @@ final class AuthStateGuest extends AuthState {
 
 final class AuthStateOnboarding extends AuthState {
   final Account account;
-  const AuthStateOnboarding({required this.account});
+  final AuthSuccess userInfo;
+  const AuthStateOnboarding({required this.account, required this.userInfo});
 }
 
 final class AuthStateSuccess extends AuthState {
   final Account account;
-  const AuthStateSuccess({required this.account});
+  final AuthSuccess userInfo;
+  const AuthStateSuccess({required this.account, required this.userInfo});
 }

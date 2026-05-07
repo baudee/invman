@@ -61,11 +61,12 @@ class InvestmentFormComponent extends StatelessWidget {
                   }
                 },
               );
-              if (getIt<AuthManager>().plan == AccountPlan.free) {
+              final userPermissions = getIt<AuthManager>().permissions;
+              if (userPermissions?.investmentsLimit != null) {
                 final count = getIt<InvestmentCountManager>().count.watch(context);
-                if (count != null && count >= freeInvestmentLimit) {
+                if (count != null && count >= userPermissions!.investmentsLimit!) {
                   return PlanGuard(
-                    requiredPlan: AccountPlan.pro,
+                    requiredScopes: {UserScopeType.premium.name},
                     child: saveButton,
                   );
                 }

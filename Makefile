@@ -68,7 +68,10 @@ infra/db/logs:
 	kubectl logs -n $(NAMESPACE) statefulset/rimawari-postgresql -f
 
 infra/db/forward:
-	kubectl port-forward -n $(NAMESPACE) statefulset/rimawari-postgresql 5432:5432  
+	kubectl port-forward -n $(NAMESPACE) statefulset/rimawari-postgresql 5432:5432
+
+infra/insights/forward:
+	kubectl port-forward -n $(NAMESPACE) deployment/rimawari-server 8081:8081
 
 infra/redis/logs:
 	kubectl logs -n $(NAMESPACE) statefulset/rimawari-redis -f

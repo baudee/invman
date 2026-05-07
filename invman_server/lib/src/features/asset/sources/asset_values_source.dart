@@ -49,6 +49,10 @@ class AssetValuesSourceImpl implements AssetValuesSource {
         queryParameters: queryParameters,
       );
 
+      if (result['status'] == "error") {
+        throw ServerException(errorCode: ErrorCode.notFound);
+      }
+
       final twelveDataTimeSeries = TwelveDataTimeSeries.fromJson(result);
 
       if (twelveDataTimeSeries.values.isEmpty) {

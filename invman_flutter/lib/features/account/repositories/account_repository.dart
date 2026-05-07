@@ -20,4 +20,11 @@ class AccountRepository {
       return right(await client.account.save(account));
     });
   }
+
+  Future<Either<String, void>> delete() async {
+    return safeCall(() async {
+      await client.account.delete();
+      return right(null);
+    });
+  }
 }

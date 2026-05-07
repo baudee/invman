@@ -10,8 +10,13 @@
 
 ## Workflow Rules
 
-- When executing phased implementation plans, start making code changes immediately. Do NOT spend the entire session exploring the codebase without producing output. If exploration is needed, timebox it to 2-3 minutes then begin implementation.
-- Always run commands from the correct project directory. Before executing any shell command, verify the current working directory matches the target sub-project. Never mix files between sub-projects (e.g., frontend files into backend folder).
+- **The Approval Gate:** You are strictly forbidden from modifying files or executing multi-step implementations without a "Green Light" from me. 
+- **The Protocol:** 
+  1. Analyze the request.
+  2. Propose the specific changes/logic in the chat.
+  3. **Stop and ask for permission.**
+  4. Only after I say "Proceed" or "Go," apply the changes to the files.
+- **Timebox Exploration:** If you need to explore the codebase to answer a question, do so for 2-3 minutes, then report your findings and propose a plan before editing.
 
 ## Communication
 

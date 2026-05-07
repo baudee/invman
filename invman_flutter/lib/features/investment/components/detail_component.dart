@@ -5,7 +5,7 @@ import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/investment/investment.dart';
-import 'package:invman_flutter/features/asset/components/tile_component.dart';
+import 'package:invman_flutter/features/asset/asset.dart';
 import 'package:invman_flutter/features/transfer/transfer.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
@@ -53,7 +53,10 @@ class InvestmentDetailComponent extends StatelessWidget {
                     if (investment.asset != null) ...[
                       const SizedBox(height: UIConstants.spacingSm),
                       SectionHeaderComponent(title: S.of(context).asset(1)),
-                      AssetTileComponent(asset: investment.asset!),
+                      AssetTileComponent(
+                        asset: investment.asset!,
+                        onTap: (asset) => router.push(AssetDetailScreen.route(asset.id)),
+                      ),
                       ListTile(
                         leading: Icon(Icons.confirmation_number, color: Theme.of(context).colorScheme.primary),
                         title: Text(S.of(context).investment_quantity),
@@ -79,7 +82,10 @@ class InvestmentDetailComponent extends StatelessWidget {
                     if (investment.withdrawalRule != null) ...[
                       SizedBox(height: UIConstants.spacingMd),
                       SectionHeaderComponent(title: S.of(context).withdrawal),
-                      WithdrawalRuleTileComponent(rule: investment.withdrawalRule!),
+                      WithdrawalRuleTileComponent(
+                        rule: investment.withdrawalRule!,
+                        onTap: () => router.push(WithdrawalRuleDetailScreen.route(investment.withdrawalRule!.id!)),
+                      ),
                     ],
                     const SizedBox(height: UIConstants.spacingXs),
                     SectionHeaderComponent(title: S.of(context).investment_title),

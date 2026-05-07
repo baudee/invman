@@ -42,7 +42,11 @@ class OnboardingController implements Disposable {
     }
     _isValidating.value = true;
     try {
-      final account = Account(userId: UuidValue.fromString(Namespace.nil.value), currencyId: _selectedCurrency.value!);
+      final account = Account(
+        userId: UuidValue.fromString(Namespace.nil.value),
+        currencyId: _selectedCurrency.value!,
+        permissions: UserPermissions(),
+      );
       await _accountRepository.save(account.copyWith(currencyId: _selectedCurrency.value));
       await _authManager.refreshMe();
       _isValidating.value = false;
