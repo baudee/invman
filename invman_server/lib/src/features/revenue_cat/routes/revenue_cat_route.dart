@@ -10,11 +10,10 @@ class RevenueCatRoute extends Route {
 
   @override
   Future<Response> handleCall(Session session, Request request) async {
-    final authValues = request.headers['authorization'];
-    final authHeader = authValues?.first;
+    final authHeader = request.headers['authorization']?.firstOrNull;
     final expectedSecret = Serverpod.instance.getPassword('revenueCatWebhookSecret');
 
-    if (authHeader == null || authHeader != expectedSecret) {
+    if (authHeader == null || authHeader != 'Bearer $expectedSecret') {
       return Response.unauthorized();
     }
 
