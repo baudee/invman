@@ -14,15 +14,15 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'core/exceptions/error_code.dart' as _i2;
 import 'core/exceptions/server_exception.dart' as _i3;
 import 'features/account/models/account.dart' as _i4;
-import 'features/app_settings/models/app_settings.dart' as _i5;
-import 'features/asset/models/asset.dart' as _i6;
-import 'features/asset/models/asset_filter.dart' as _i7;
-import 'features/asset/models/asset_like.dart' as _i8;
-import 'features/asset/models/asset_time_horizon.dart' as _i9;
-import 'features/asset/models/asset_type.dart' as _i10;
-import 'features/asset/models/asset_value.dart' as _i11;
-import 'features/auth/models/user_permissions.dart' as _i12;
-import 'features/auth/models/user_scope_type.dart' as _i13;
+import 'features/account/models/subscription_plan.dart' as _i5;
+import 'features/app_settings/models/app_settings.dart' as _i6;
+import 'features/asset/models/asset.dart' as _i7;
+import 'features/asset/models/asset_filter.dart' as _i8;
+import 'features/asset/models/asset_like.dart' as _i9;
+import 'features/asset/models/asset_time_horizon.dart' as _i10;
+import 'features/asset/models/asset_type.dart' as _i11;
+import 'features/asset/models/asset_value.dart' as _i12;
+import 'features/auth/models/user_permissions.dart' as _i13;
 import 'features/currency/models/currency.dart' as _i14;
 import 'features/currency/models/forex.dart' as _i15;
 import 'features/dividend/models/computed_dividend_value.dart' as _i16;
@@ -60,6 +60,7 @@ import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
 export 'core/exceptions/error_code.dart';
 export 'core/exceptions/server_exception.dart';
 export 'features/account/models/account.dart';
+export 'features/account/models/subscription_plan.dart';
 export 'features/app_settings/models/app_settings.dart';
 export 'features/asset/models/asset.dart';
 export 'features/asset/models/asset_filter.dart';
@@ -68,7 +69,6 @@ export 'features/asset/models/asset_time_horizon.dart';
 export 'features/asset/models/asset_type.dart';
 export 'features/asset/models/asset_value.dart';
 export 'features/auth/models/user_permissions.dart';
-export 'features/auth/models/user_scope_type.dart';
 export 'features/currency/models/currency.dart';
 export 'features/currency/models/forex.dart';
 export 'features/dividend/models/computed_dividend_value.dart';
@@ -126,32 +126,32 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i4.Account) {
       return _i4.Account.fromJson(data) as T;
     }
-    if (t == _i5.AppSettings) {
-      return _i5.AppSettings.fromJson(data) as T;
+    if (t == _i5.SubscriptionPlan) {
+      return _i5.SubscriptionPlan.fromJson(data) as T;
     }
-    if (t == _i6.Asset) {
-      return _i6.Asset.fromJson(data) as T;
+    if (t == _i6.AppSettings) {
+      return _i6.AppSettings.fromJson(data) as T;
     }
-    if (t == _i7.AssetFilter) {
-      return _i7.AssetFilter.fromJson(data) as T;
+    if (t == _i7.Asset) {
+      return _i7.Asset.fromJson(data) as T;
     }
-    if (t == _i8.AssetLike) {
-      return _i8.AssetLike.fromJson(data) as T;
+    if (t == _i8.AssetFilter) {
+      return _i8.AssetFilter.fromJson(data) as T;
     }
-    if (t == _i9.AssetTimeHorizon) {
-      return _i9.AssetTimeHorizon.fromJson(data) as T;
+    if (t == _i9.AssetLike) {
+      return _i9.AssetLike.fromJson(data) as T;
     }
-    if (t == _i10.AssetType) {
-      return _i10.AssetType.fromJson(data) as T;
+    if (t == _i10.AssetTimeHorizon) {
+      return _i10.AssetTimeHorizon.fromJson(data) as T;
     }
-    if (t == _i11.AssetValue) {
-      return _i11.AssetValue.fromJson(data) as T;
+    if (t == _i11.AssetType) {
+      return _i11.AssetType.fromJson(data) as T;
     }
-    if (t == _i12.UserPermissions) {
-      return _i12.UserPermissions.fromJson(data) as T;
+    if (t == _i12.AssetValue) {
+      return _i12.AssetValue.fromJson(data) as T;
     }
-    if (t == _i13.UserScopeType) {
-      return _i13.UserScopeType.fromJson(data) as T;
+    if (t == _i13.UserPermissions) {
+      return _i13.UserPermissions.fromJson(data) as T;
     }
     if (t == _i14.Currency) {
       return _i14.Currency.fromJson(data) as T;
@@ -198,32 +198,32 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i4.Account?>()) {
       return (data != null ? _i4.Account.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i5.AppSettings?>()) {
-      return (data != null ? _i5.AppSettings.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i5.SubscriptionPlan?>()) {
+      return (data != null ? _i5.SubscriptionPlan.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i6.Asset?>()) {
-      return (data != null ? _i6.Asset.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i6.AppSettings?>()) {
+      return (data != null ? _i6.AppSettings.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i7.AssetFilter?>()) {
-      return (data != null ? _i7.AssetFilter.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i7.Asset?>()) {
+      return (data != null ? _i7.Asset.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i8.AssetLike?>()) {
-      return (data != null ? _i8.AssetLike.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i8.AssetFilter?>()) {
+      return (data != null ? _i8.AssetFilter.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i9.AssetTimeHorizon?>()) {
-      return (data != null ? _i9.AssetTimeHorizon.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i9.AssetLike?>()) {
+      return (data != null ? _i9.AssetLike.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i10.AssetType?>()) {
-      return (data != null ? _i10.AssetType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i10.AssetTimeHorizon?>()) {
+      return (data != null ? _i10.AssetTimeHorizon.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i11.AssetValue?>()) {
-      return (data != null ? _i11.AssetValue.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i11.AssetType?>()) {
+      return (data != null ? _i11.AssetType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i12.UserPermissions?>()) {
-      return (data != null ? _i12.UserPermissions.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i12.AssetValue?>()) {
+      return (data != null ? _i12.AssetValue.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i13.UserScopeType?>()) {
-      return (data != null ? _i13.UserScopeType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i13.UserPermissions?>()) {
+      return (data != null ? _i13.UserPermissions.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i14.Currency?>()) {
       return (data != null ? _i14.Currency.fromJson(data) : null) as T;
@@ -266,14 +266,14 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i25.WithdrawalRule?>()) {
       return (data != null ? _i25.WithdrawalRule.fromJson(data) : null) as T;
     }
-    if (t == List<_i8.AssetLike>) {
-      return (data as List).map((e) => deserialize<_i8.AssetLike>(e)).toList()
+    if (t == List<_i9.AssetLike>) {
+      return (data as List).map((e) => deserialize<_i9.AssetLike>(e)).toList()
           as T;
     }
-    if (t == _i1.getType<List<_i8.AssetLike>?>()) {
+    if (t == _i1.getType<List<_i9.AssetLike>?>()) {
       return (data != null
               ? (data as List)
-                    .map((e) => deserialize<_i8.AssetLike>(e))
+                    .map((e) => deserialize<_i9.AssetLike>(e))
                     .toList()
               : null)
           as T;
@@ -383,15 +383,15 @@ class Protocol extends _i1.SerializationManager {
       _i2.ErrorCode => 'ErrorCode',
       _i3.ServerException => 'ServerException',
       _i4.Account => 'Account',
-      _i5.AppSettings => 'AppSettings',
-      _i6.Asset => 'Asset',
-      _i7.AssetFilter => 'AssetFilter',
-      _i8.AssetLike => 'AssetLike',
-      _i9.AssetTimeHorizon => 'AssetTimeHorizon',
-      _i10.AssetType => 'AssetType',
-      _i11.AssetValue => 'AssetValue',
-      _i12.UserPermissions => 'UserPermissions',
-      _i13.UserScopeType => 'UserScopeType',
+      _i5.SubscriptionPlan => 'SubscriptionPlan',
+      _i6.AppSettings => 'AppSettings',
+      _i7.Asset => 'Asset',
+      _i8.AssetFilter => 'AssetFilter',
+      _i9.AssetLike => 'AssetLike',
+      _i10.AssetTimeHorizon => 'AssetTimeHorizon',
+      _i11.AssetType => 'AssetType',
+      _i12.AssetValue => 'AssetValue',
+      _i13.UserPermissions => 'UserPermissions',
       _i14.Currency => 'Currency',
       _i15.Forex => 'Forex',
       _i16.ComputedDividendValue => 'ComputedDividendValue',
@@ -424,24 +424,24 @@ class Protocol extends _i1.SerializationManager {
         return 'ServerException';
       case _i4.Account():
         return 'Account';
-      case _i5.AppSettings():
+      case _i5.SubscriptionPlan():
+        return 'SubscriptionPlan';
+      case _i6.AppSettings():
         return 'AppSettings';
-      case _i6.Asset():
+      case _i7.Asset():
         return 'Asset';
-      case _i7.AssetFilter():
+      case _i8.AssetFilter():
         return 'AssetFilter';
-      case _i8.AssetLike():
+      case _i9.AssetLike():
         return 'AssetLike';
-      case _i9.AssetTimeHorizon():
+      case _i10.AssetTimeHorizon():
         return 'AssetTimeHorizon';
-      case _i10.AssetType():
+      case _i11.AssetType():
         return 'AssetType';
-      case _i11.AssetValue():
+      case _i12.AssetValue():
         return 'AssetValue';
-      case _i12.UserPermissions():
+      case _i13.UserPermissions():
         return 'UserPermissions';
-      case _i13.UserScopeType():
-        return 'UserScopeType';
       case _i14.Currency():
         return 'Currency';
       case _i15.Forex():
@@ -493,32 +493,32 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'Account') {
       return deserialize<_i4.Account>(data['data']);
     }
+    if (dataClassName == 'SubscriptionPlan') {
+      return deserialize<_i5.SubscriptionPlan>(data['data']);
+    }
     if (dataClassName == 'AppSettings') {
-      return deserialize<_i5.AppSettings>(data['data']);
+      return deserialize<_i6.AppSettings>(data['data']);
     }
     if (dataClassName == 'Asset') {
-      return deserialize<_i6.Asset>(data['data']);
+      return deserialize<_i7.Asset>(data['data']);
     }
     if (dataClassName == 'AssetFilter') {
-      return deserialize<_i7.AssetFilter>(data['data']);
+      return deserialize<_i8.AssetFilter>(data['data']);
     }
     if (dataClassName == 'AssetLike') {
-      return deserialize<_i8.AssetLike>(data['data']);
+      return deserialize<_i9.AssetLike>(data['data']);
     }
     if (dataClassName == 'AssetTimeHorizon') {
-      return deserialize<_i9.AssetTimeHorizon>(data['data']);
+      return deserialize<_i10.AssetTimeHorizon>(data['data']);
     }
     if (dataClassName == 'AssetType') {
-      return deserialize<_i10.AssetType>(data['data']);
+      return deserialize<_i11.AssetType>(data['data']);
     }
     if (dataClassName == 'AssetValue') {
-      return deserialize<_i11.AssetValue>(data['data']);
+      return deserialize<_i12.AssetValue>(data['data']);
     }
     if (dataClassName == 'UserPermissions') {
-      return deserialize<_i12.UserPermissions>(data['data']);
-    }
-    if (dataClassName == 'UserScopeType') {
-      return deserialize<_i13.UserScopeType>(data['data']);
+      return deserialize<_i13.UserPermissions>(data['data']);
     }
     if (dataClassName == 'Currency') {
       return deserialize<_i14.Currency>(data['data']);

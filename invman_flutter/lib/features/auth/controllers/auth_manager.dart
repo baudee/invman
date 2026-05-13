@@ -1,3 +1,4 @@
+import 'package:injectable/injectable.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/repositories/user_preferences_repository.dart';
@@ -7,6 +8,7 @@ import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
+@singleton
 class AuthManager {
   final AccountRepository _accountRepository;
   final UserPreferencesRepository _preferencesRepository;
@@ -40,6 +42,24 @@ class AuthManager {
   }) : _accountRepository = accountService,
        _preferencesRepository = preferencesRepository,
        _client = client;
+
+  @preResolve
+  @factoryMethod
+  static Future<AuthManager> create(
+    AccountRepository accountService,
+    UserPreferencesRepository preferencesRepository,
+    Client client,
+    Env env,
+  ) async {
+    final manager = AuthManager(
+      accountService: accountService,
+      preferencesRepository: preferencesRepository,
+      client: client,
+      env: env,
+    );
+    await manager.init();
+    return manager;
+  }
 
   Future<void> init() async {
     state.value = AuthStateBooting();

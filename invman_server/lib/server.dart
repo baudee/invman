@@ -28,7 +28,10 @@ void run(List<String> args) async {
     ],
     authUsersConfig: AuthUsersConfig(
       onAfterAuthUserCreated: (session, authUser, {required transaction}) async {
-        final account = Account(userId: authUser.id, permissions: UserPermissionsExtensions.fromSession(session));
+        final account = Account(
+          userId: authUser.id,
+          permissions: UserPermissionsExtensions.fromPlan(SubscriptionPlan.free),
+        );
         await Account.db.insertRow(
           session,
           account,

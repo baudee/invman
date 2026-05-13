@@ -1,0 +1,67 @@
+default_platform(:ios)
+
+WHATS_NEW_PATH = File.expand_path("../../distribution/whatsnew/whatsnew-en-US.txt", __dir__).freeze
+CHANGELOG = File.read(WHATS_NEW_PATH).strip.freeze
+
+def asc_api_key
+  app_store_connect_api_key(
+    key_id: ENV.fetch("APP_STORE_CONNECT_API_KEY_ID"),
+    issuer_id: ENV.fetch("APP_STORE_CONNECT_ISSUER_ID"),
+    key_content: ENV.fetch("APP_STORE_CONNECT_API_KEY"),
+    is_key_content_base64: false,
+    in_house: false,
+  )
+end
+
+def ipa_path
+  ENV.fetch("IPA_PATH")
+end
+
+platform :ios do
+  desc "Upload to TestFlight for internal testers only"
+  lane :internal do
+    upload_to_testflight(
+      api_key: asc_api_key,
+      ipa: ipa_path,
+      skip_waiting_for_build_processing: true,
+      skip_submission: true,
+    )
+  end
+
+  desc "Upload to TestFlight and distribute to the Closed Beta group"
+  lane :alpha_external do
+    upload_to_testflight(
+      api_key: asc_api_key,
+      ipa: ipa_path,
+      distribute_external: true,
+      groups: ["Closed Beta"],
+      changelog: CHANGELOG,
+      submit_beta_review: true,
+    )
+  end
+
+  desc "Upload to TestFlight and distribute to the Open Beta group"
+  lane :beta_external do
+    upload_to_testflight(
+      api_key: asc_api_key,
+      ipa: ipa_path,
+      distribute_external: true,
+      groups: ["Open Beta"],
+      changelog: CHANGELOG,
+      submit_beta_review: true,
+    )
+  end
+
+  desc "Upload to App Store Connect without submitting for review"
+  lane :appstore do
+    upload_to_app_store(
+      api_key: asc_api_key,
+      ipa: ipa_path,
+      skip_metadata: true,
+      skip_screenshots: true,
+      submit_for_review: false,
+      precheck_include_in_app_purchases: false,
+      force: true,
+    )
+  end
+end

@@ -105,7 +105,8 @@ jobs:
       - name: Extract version from tag
         id: version
         run: |
-          VERSION=${GITHUB_REF#refs/tags/v}
+          VERSION_RAW=${GITHUB_REF#refs/tags/v}
+          VERSION=${VERSION_RAW%%-*}
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
           IFS='.' read -ra PARTS <<< "$VERSION"
           MAJOR=${PARTS[0]:-0}
@@ -113,6 +114,22 @@ jobs:
           PATCH=${PARTS[2]:-0}
           BUILD_NUMBER=$((MAJOR * 1000000 + MINOR * 1000 + PATCH))
           echo "build_number=${BUILD_NUMBER}" >> $GITHUB_OUTPUT
+
+      - name: Determine Play Store track
+        id: track
+        run: |
+          TAG=${GITHUB_REF#refs/tags/v}
+          if [[ "$TAG" == *-* ]]; then
+            SUFFIX="${TAG#*-}"
+            case "$SUFFIX" in
+              beta)  TRACK="beta" ;;
+              alpha) TRACK="alpha" ;;
+              *)     TRACK="internal" ;;
+            esac
+          else
+            TRACK="production"
+          fi
+          echo "track=${TRACK}" >> $GITHUB_OUTPUT
 
       - name: Set Up Java
         uses: actions/setup-java@v5
@@ -181,11 +198,15 @@ jobs:
           flutter build apk --release \
             --flavor production \
             --dart-define-from-file .env \
+            --obfuscate \
+            --split-debug-info=build/debug-info \
             --build-name=${{ steps.version.outputs.version }} \
             --build-number=${{ steps.version.outputs.build_number }}
           flutter build appbundle --release \
             --flavor production \
             --dart-define-from-file .env \
+            --obfuscate \
+            --split-debug-info=build/debug-info \
             --build-name=${{ steps.version.outputs.version }} \
             --build-number=${{ steps.version.outputs.build_number }}
 
@@ -211,15 +232,24 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-      - name: Upload to Play Store (Internal Testing)
-        if: ${{ vars.ENABLE_PLAY_STORE == 'true' }}
+      - name: Upload symbols to Sentry (Android)
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
+        run: |
+          curl -sL https://sentry.io/get-cli/ | bash
+          sentry-cli debug-files upload --include-sources build/debug-info
+
+      - name: Upload to Play Store
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
           packageName: ch.valentinbaudin.rimawari
           releaseFiles: invman_flutter/build/app/outputs/bundle/productionRelease/app-production-release.aab
-          track: internal
+          track: ${{ steps.track.outputs.track }}
           status: completed
+          whatsNewDirectory: invman_flutter/distribution/whatsnew
 
   release-ios:
     if: startsWith(github.ref, 'refs/tags/v')
@@ -243,7 +273,8 @@ jobs:
       - name: Extract version from tag
         id: version
         run: |
-          VERSION=${GITHUB_REF#refs/tags/v}
+          VERSION_RAW=${GITHUB_REF#refs/tags/v}
+          VERSION=${VERSION_RAW%%-*}
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
           IFS='.' read -ra PARTS <<< "$VERSION"
           MAJOR=${PARTS[0]:-0}
@@ -251,6 +282,22 @@ jobs:
           PATCH=${PARTS[2]:-0}
           BUILD_NUMBER=$((MAJOR * 1000000 + MINOR * 1000 + PATCH))
           echo "build_number=${BUILD_NUMBER}" >> $GITHUB_OUTPUT
+
+      - name: Determine iOS destination
+        id: destination
+        run: |
+          TAG=${GITHUB_REF#refs/tags/v}
+          if [[ "$TAG" == *-* ]]; then
+            SUFFIX="${TAG#*-}"
+            case "$SUFFIX" in
+              beta)  LANE="beta_external" ;;
+              alpha) LANE="alpha_external" ;;
+              *)     LANE="internal" ;;
+            esac
+          else
+            LANE="appstore"
+          fi
+          echo "lane=${LANE}" >> $GITHUB_OUTPUT
 
       - name: Select Xcode version
         uses: maxim-lobanov/setup-xcode@v1
@@ -318,8 +365,20 @@ jobs:
             --flavor production \
             --export-options-plist=ios/ExportOptions.plist \
             --dart-define-from-file .env \
+            --obfuscate \
+            --split-debug-info=build/debug-info \
             --build-name=${{ steps.version.outputs.version }} \
             --build-number=${{ steps.version.outputs.build_number }}
+
+      - name: Upload symbols to Sentry (iOS)
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
+        run: |
+          curl -sL https://sentry.io/get-cli/ | bash
+          sentry-cli debug-files upload --include-sources build/debug-info
+          sentry-cli debug-files upload --include-sources build/ios/archive/Runner.xcarchive/dSYMs
 
       - name: Upload iOS Artifacts
         uses: actions/upload-artifact@v6
@@ -335,10 +394,18 @@ jobs:
           IPA_PATH=$(find build/ios/ipa -name "*.ipa" -type f | head -1)
           echo "ipa_path=${IPA_PATH}" >> $GITHUB_OUTPUT
 
-      - name: Upload to TestFlight
-        uses: apple-actions/upload-testflight-build@v1
+      - name: Set up Ruby and install fastlane
+        uses: ruby/setup-ruby@v1
         with:
-          app-path: invman_flutter/${{ steps.find_ipa.outputs.ipa_path }}
-          issuer-id: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-          api-key-id: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
-          api-private-key: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          ruby-version: "3.3"
+          bundler-cache: true
+          working-directory: ${{ env.WORK_DIR }}/ios
+
+      - name: Run fastlane (${{ steps.destination.outputs.lane }})
+        working-directory: ${{ env.WORK_DIR }}/ios
+        env:
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          IPA_PATH: ${{ github.workspace }}/${{ env.WORK_DIR }}/${{ steps.find_ipa.outputs.ipa_path }}
+        run: bundle exec fastlane ios ${{ steps.destination.outputs.lane }}

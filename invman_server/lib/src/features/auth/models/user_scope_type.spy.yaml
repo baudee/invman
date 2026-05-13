@@ -1,4 +1,0 @@
-enum: UserScopeType
-serialized: byName
-values:
-  - premium

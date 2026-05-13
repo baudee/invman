@@ -1,8 +1,6 @@
 import 'package:injectable/injectable.dart';
-import 'package:invman_server/src/features/auth/models/user_scopes.dart';
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
-import 'package:serverpod_auth_idp_server/core.dart';
 
 @injectable
 class RevenueCatService {
@@ -20,47 +18,32 @@ class RevenueCatService {
       throw ServerException(errorCode: ErrorCode.badRequest);
     }
 
-    final bool grantPremium;
+    final SubscriptionPlan newPlan;
     if (_premiumEvents.contains(eventType)) {
-      grantPremium = true;
+      newPlan = SubscriptionPlan.premium;
     } else if (_freeEvents.contains(eventType)) {
-      grantPremium = false;
+      newPlan = SubscriptionPlan.free;
     } else {
       return;
     }
 
     final authUserId = UuidValue.fromString(appUserId);
-    final authUsers = AuthServices.instance.authUsers;
 
-    try {
-      await session.db.transaction((transaction) async {
-        final authUser = await authUsers.get(
-          session,
-          authUserId: authUserId,
-          transaction: transaction,
-        );
-
-        final updatedScopes = {...authUser.scopes};
-        if (grantPremium) {
-          updatedScopes.add(UserScope.premium);
-        } else {
-          updatedScopes.remove(UserScope.premium);
-        }
-
-        await authUsers.update(
-          session,
-          authUserId: authUserId,
-          scopes: updatedScopes,
-          transaction: transaction,
-        );
-      });
-
-      await session.messages.authenticationRevoked(
-        appUserId,
-        RevokedAuthenticationUser(),
+    await session.db.transaction((transaction) async {
+      final account = await Account.db.findFirstRow(
+        session,
+        where: (a) => a.userId.equals(authUserId),
+        transaction: transaction,
       );
-    } on AuthUserNotFoundException {
-      return;
-    }
+
+      if (account == null) return;
+      if (account.subscriptionPlan == newPlan) return;
+
+      await Account.db.updateRow(
+        session,
+        account.copyWith(subscriptionPlan: newPlan),
+        transaction: transaction,
+      );
+    });
   }
 }

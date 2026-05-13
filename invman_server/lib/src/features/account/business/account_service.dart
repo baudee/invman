@@ -26,7 +26,7 @@ class AccountService {
     }
 
     return account.copyWith(
-      permissions: UserPermissionsExtensions.fromSession(session),
+      permissions: UserPermissionsExtensions.fromPlan(account.subscriptionPlan),
     );
   }
 
@@ -50,7 +50,7 @@ class AccountService {
     );
 
     return savedAccount.copyWith(
-      permissions: UserPermissionsExtensions.fromSession(session),
+      permissions: UserPermissionsExtensions.fromPlan(savedAccount.subscriptionPlan),
     );
   }
 

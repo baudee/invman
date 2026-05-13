@@ -66,7 +66,7 @@ class InvestmentFormComponent extends StatelessWidget {
                 final count = getIt<InvestmentCountManager>().count.watch(context);
                 if (count != null && count >= userPermissions!.investmentsLimit!) {
                   return PlanGuard(
-                    requiredScopes: {UserScopeType.premium.name},
+                    allowedPlans: const {SubscriptionPlan.premium},
                     child: saveButton,
                   );
                 }

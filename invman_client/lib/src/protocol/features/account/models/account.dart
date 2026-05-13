@@ -11,11 +11,12 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
+import '../../../features/account/models/subscription_plan.dart' as _i2;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
-    as _i2;
-import '../../../features/currency/models/currency.dart' as _i3;
-import '../../../features/auth/models/user_permissions.dart' as _i4;
-import 'package:invman_client/src/protocol/protocol.dart' as _i5;
+    as _i3;
+import '../../../features/currency/models/currency.dart' as _i4;
+import '../../../features/auth/models/user_permissions.dart' as _i5;
+import 'package:invman_client/src/protocol/protocol.dart' as _i6;
 
 abstract class Account implements _i1.SerializableModel {
   Account._({
@@ -24,16 +25,18 @@ abstract class Account implements _i1.SerializableModel {
     this.user,
     this.currencyId,
     this.currency,
+    _i2.SubscriptionPlan? subscriptionPlan,
     this.permissions,
-  });
+  }) : subscriptionPlan = subscriptionPlan ?? _i2.SubscriptionPlan.free;
 
   factory Account({
     int? id,
     required _i1.UuidValue userId,
-    _i2.AuthUser? user,
+    _i3.AuthUser? user,
     int? currencyId,
-    _i3.Currency? currency,
-    _i4.UserPermissions? permissions,
+    _i4.Currency? currency,
+    _i2.SubscriptionPlan? subscriptionPlan,
+    _i5.UserPermissions? permissions,
   }) = _AccountImpl;
 
   factory Account.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -42,16 +45,21 @@ abstract class Account implements _i1.SerializableModel {
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
-          : _i5.Protocol().deserialize<_i2.AuthUser>(jsonSerialization['user']),
+          : _i6.Protocol().deserialize<_i3.AuthUser>(jsonSerialization['user']),
       currencyId: jsonSerialization['currencyId'] as int?,
       currency: jsonSerialization['currency'] == null
           ? null
-          : _i5.Protocol().deserialize<_i3.Currency>(
+          : _i6.Protocol().deserialize<_i4.Currency>(
               jsonSerialization['currency'],
+            ),
+      subscriptionPlan: jsonSerialization['subscriptionPlan'] == null
+          ? null
+          : _i2.SubscriptionPlan.fromJson(
+              (jsonSerialization['subscriptionPlan'] as String),
             ),
       permissions: jsonSerialization['permissions'] == null
           ? null
-          : _i5.Protocol().deserialize<_i4.UserPermissions>(
+          : _i6.Protocol().deserialize<_i5.UserPermissions>(
               jsonSerialization['permissions'],
             ),
     );
@@ -64,13 +72,15 @@ abstract class Account implements _i1.SerializableModel {
 
   _i1.UuidValue userId;
 
-  _i2.AuthUser? user;
+  _i3.AuthUser? user;
 
   int? currencyId;
 
-  _i3.Currency? currency;
+  _i4.Currency? currency;
 
-  _i4.UserPermissions? permissions;
+  _i2.SubscriptionPlan subscriptionPlan;
+
+  _i5.UserPermissions? permissions;
 
   /// Returns a shallow copy of this [Account]
   /// with some or all fields replaced by the given arguments.
@@ -78,10 +88,11 @@ abstract class Account implements _i1.SerializableModel {
   Account copyWith({
     int? id,
     _i1.UuidValue? userId,
-    _i2.AuthUser? user,
+    _i3.AuthUser? user,
     int? currencyId,
-    _i3.Currency? currency,
-    _i4.UserPermissions? permissions,
+    _i4.Currency? currency,
+    _i2.SubscriptionPlan? subscriptionPlan,
+    _i5.UserPermissions? permissions,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -92,6 +103,7 @@ abstract class Account implements _i1.SerializableModel {
       if (user != null) 'user': user?.toJson(),
       if (currencyId != null) 'currencyId': currencyId,
       if (currency != null) 'currency': currency?.toJson(),
+      'subscriptionPlan': subscriptionPlan.toJson(),
       if (permissions != null) 'permissions': permissions?.toJson(),
     };
   }
@@ -108,16 +120,18 @@ class _AccountImpl extends Account {
   _AccountImpl({
     int? id,
     required _i1.UuidValue userId,
-    _i2.AuthUser? user,
+    _i3.AuthUser? user,
     int? currencyId,
-    _i3.Currency? currency,
-    _i4.UserPermissions? permissions,
+    _i4.Currency? currency,
+    _i2.SubscriptionPlan? subscriptionPlan,
+    _i5.UserPermissions? permissions,
   }) : super._(
          id: id,
          userId: userId,
          user: user,
          currencyId: currencyId,
          currency: currency,
+         subscriptionPlan: subscriptionPlan,
          permissions: permissions,
        );
 
@@ -131,17 +145,19 @@ class _AccountImpl extends Account {
     Object? user = _Undefined,
     Object? currencyId = _Undefined,
     Object? currency = _Undefined,
+    _i2.SubscriptionPlan? subscriptionPlan,
     Object? permissions = _Undefined,
   }) {
     return Account(
       id: id is int? ? id : this.id,
       userId: userId ?? this.userId,
-      user: user is _i2.AuthUser? ? user : this.user?.copyWith(),
+      user: user is _i3.AuthUser? ? user : this.user?.copyWith(),
       currencyId: currencyId is int? ? currencyId : this.currencyId,
-      currency: currency is _i3.Currency?
+      currency: currency is _i4.Currency?
           ? currency
           : this.currency?.copyWith(),
-      permissions: permissions is _i4.UserPermissions?
+      subscriptionPlan: subscriptionPlan ?? this.subscriptionPlan,
+      permissions: permissions is _i5.UserPermissions?
           ? permissions
           : this.permissions?.copyWith(),
     );

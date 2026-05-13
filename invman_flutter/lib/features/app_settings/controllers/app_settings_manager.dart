@@ -14,8 +14,14 @@ class AppSettingsManager {
   final Signal<AppSettingsStatus> status = signal(AppSettingsStatus.loading);
   final Signal<String?> storeUrl = signal(null);
 
-  AppSettingsManager(this._repository) {
-    check();
+  AppSettingsManager(this._repository);
+
+  @preResolve
+  @factoryMethod
+  static Future<AppSettingsManager> create(AppSettingsRepository repository) async {
+    final manager = AppSettingsManager(repository);
+    await manager.check();
+    return manager;
   }
 
   Future<void> check() async {

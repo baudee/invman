@@ -1,27 +1,36 @@
 import 'package:invman_server/src/core/helpers/helpers.dart';
 import 'package:invman_server/src/di.dart';
-import 'package:invman_server/src/features/auth/models/user_scopes.dart';
 import 'package:invman_server/src/features/transfer/transfer.dart';
+import 'package:invman_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
+import 'package:serverpod_auth_idp_server/core.dart';
 
 class DataTransferEndpoint extends Endpoint with EndpointMiddleware {
   @override
   bool get requireLogin => true;
 
-  @override
-  Set<Scope> get requiredScopes => {UserScope.premium};
-
   Future<String> exportCsv(Session session) async {
-    return withMiddleware(
-      session,
-      () => getIt<TransferCsvService>().exportCsv(session),
-    );
+    return withMiddleware(session, () async {
+      await _requirePremium(session);
+      return getIt<TransferCsvService>().exportCsv(session);
+    });
   }
 
   Future<List<String>> importCsv(Session session, String csvContent) async {
-    return withMiddleware(
+    return withMiddleware(session, () async {
+      await _requirePremium(session);
+      return getIt<TransferCsvService>().importCsv(session, csvContent);
+    });
+  }
+
+  Future<void> _requirePremium(Session session) async {
+    final authUserId = (session.authenticated)!.authUserId;
+    final account = await Account.db.findFirstRow(
       session,
-      () => getIt<TransferCsvService>().importCsv(session, csvContent),
+      where: (a) => a.userId.equals(authUserId),
     );
+    if (account == null || account.subscriptionPlan == SubscriptionPlan.free) {
+      throw ServerException(errorCode: ErrorCode.forbidden);
+    }
   }
 }

@@ -12,16 +12,19 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
-enum UserScopeType implements _i1.SerializableModel {
+enum SubscriptionPlan implements _i1.SerializableModel {
+  free,
   premium;
 
-  static UserScopeType fromJson(String name) {
+  static SubscriptionPlan fromJson(String name) {
     switch (name) {
+      case 'free':
+        return SubscriptionPlan.free;
       case 'premium':
-        return UserScopeType.premium;
+        return SubscriptionPlan.premium;
       default:
         throw ArgumentError(
-          'Value "$name" cannot be converted to "UserScopeType"',
+          'Value "$name" cannot be converted to "SubscriptionPlan"',
         );
     }
   }

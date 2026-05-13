@@ -70,7 +70,7 @@ class AccountRootComponent extends StatelessWidget {
       ),
       _buildCurrencyTile(context, authManager),
       PlanGuard(
-        requiredScopes: {UserScopeType.premium.name},
+        allowedPlans: const {SubscriptionPlan.premium},
         child: ListTile(
           title: Text(S.of(context).account_exportTransfers),
           subtitle: Text(S.of(context).account_exportTransfersSubtitle),
@@ -79,7 +79,7 @@ class AccountRootComponent extends StatelessWidget {
         ),
       ),
       PlanGuard(
-        requiredScopes: {UserScopeType.premium.name},
+        allowedPlans: const {SubscriptionPlan.premium},
         child: ListTile(
           title: Text(S.of(context).account_importTransfers),
           subtitle: Text(S.of(context).account_importTransfersSubtitle),

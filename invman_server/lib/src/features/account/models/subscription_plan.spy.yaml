@@ -1,0 +1,5 @@
+enum: SubscriptionPlan
+serialized: byName
+values:
+  - free
+  - premium

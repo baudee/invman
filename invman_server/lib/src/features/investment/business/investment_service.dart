@@ -37,7 +37,13 @@ class InvestmentService {
   }) async {
     final sessionUserId = (session.authenticated)!.authUserId;
 
-    final userPermissions = UserPermissionsExtensions.fromSession(session);
+    final account = await Account.db.findFirstRow(
+      session,
+      where: (a) => a.userId.equals(sessionUserId),
+    );
+    final userPermissions = UserPermissionsExtensions.fromPlan(
+      account?.subscriptionPlan ?? SubscriptionPlan.free,
+    );
     limit = userPermissions.investmentsLimit != null ? min(limit, userPermissions.investmentsLimit!) : limit;
 
     List<Investment> investments = await Investment.db.find(
@@ -151,7 +157,7 @@ class InvestmentService {
           );
           if (account == null) throw ServerException(errorCode: ErrorCode.notFound);
 
-          final userPermissions = UserPermissionsExtensions.fromSession(session);
+          final userPermissions = UserPermissionsExtensions.fromPlan(account.subscriptionPlan);
           if (userPermissions.investmentsLimit != null) {
             final count = await Investment.db.count(
               session,
