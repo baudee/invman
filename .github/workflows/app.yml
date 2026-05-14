@@ -250,6 +250,7 @@ jobs:
           track: ${{ steps.track.outputs.track }}
           status: completed
           whatsNewDirectory: invman_flutter/distribution/whatsnew
+          debug: true
 
   release-ios:
     if: startsWith(github.ref, 'refs/tags/v')
