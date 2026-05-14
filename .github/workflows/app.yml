@@ -108,11 +108,7 @@ jobs:
           VERSION_RAW=${GITHUB_REF#refs/tags/v}
           VERSION=${VERSION_RAW%%-*}
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
-          IFS='.' read -ra PARTS <<< "$VERSION"
-          MAJOR=${PARTS[0]:-0}
-          MINOR=${PARTS[1]:-0}
-          PATCH=${PARTS[2]:-0}
-          BUILD_NUMBER=$((MAJOR * 1000000 + MINOR * 1000 + PATCH))
+          BUILD_NUMBER=$((2000000 + GITHUB_RUN_NUMBER))
           echo "build_number=${BUILD_NUMBER}" >> $GITHUB_OUTPUT
 
       - name: Determine Play Store track
@@ -241,16 +237,20 @@ jobs:
           curl -sL https://sentry.io/get-cli/ | bash
           sentry-cli debug-files upload --include-sources build/debug-info
 
-      - name: Upload to Play Store
-        uses: r0adkll/upload-google-play@v1
+      - name: Set up Ruby and install fastlane
+        uses: ruby/setup-ruby@v1
         with:
-          serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
-          packageName: ch.valentinbaudin.rimawari
-          releaseFiles: invman_flutter/build/app/outputs/bundle/productionRelease/app-production-release.aab
-          track: ${{ steps.track.outputs.track }}
-          status: completed
-          whatsNewDirectory: invman_flutter/distribution/whatsnew
-          debug: true
+          ruby-version: "3.3"
+          bundler-cache: true
+          working-directory: ${{ env.WORK_DIR }}/android
+
+      - name: Upload to Play Store
+        working-directory: ${{ env.WORK_DIR }}/android
+        env:
+          SUPPLY_JSON_KEY_DATA: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
+          AAB_PATH: ${{ github.workspace }}/${{ env.WORK_DIR }}/build/app/outputs/bundle/productionRelease/app-production-release.aab
+          ANDROID_VERSION_CODE: ${{ steps.version.outputs.build_number }}
+        run: bundle exec fastlane android publish track:${{ steps.track.outputs.track }}
 
   release-ios:
     if: startsWith(github.ref, 'refs/tags/v')
@@ -277,11 +277,7 @@ jobs:
           VERSION_RAW=${GITHUB_REF#refs/tags/v}
           VERSION=${VERSION_RAW%%-*}
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
-          IFS='.' read -ra PARTS <<< "$VERSION"
-          MAJOR=${PARTS[0]:-0}
-          MINOR=${PARTS[1]:-0}
-          PATCH=${PARTS[2]:-0}
-          BUILD_NUMBER=$((MAJOR * 1000000 + MINOR * 1000 + PATCH))
+          BUILD_NUMBER=$((2000000 + GITHUB_RUN_NUMBER))
           echo "build_number=${BUILD_NUMBER}" >> $GITHUB_OUTPUT
 
       - name: Determine iOS destination

@@ -1,0 +1,31 @@
+require "fileutils"
+
+default_platform(:android)
+
+WHATS_NEW_PATH = File.expand_path("../../distribution/whatsnew/whatsnew-en-US", __dir__).freeze
+CHANGELOG = File.read(WHATS_NEW_PATH).strip.freeze
+
+platform :android do
+  desc "Upload AAB to Google Play"
+  lane :publish do |options|
+    track = options[:track] || "production"
+    aab_path = ENV.fetch("AAB_PATH")
+    version_code = ENV.fetch("ANDROID_VERSION_CODE")
+
+    changelog_dir = File.expand_path("metadata/android/en-US/changelogs", __dir__)
+    FileUtils.mkdir_p(changelog_dir)
+    File.write(File.join(changelog_dir, "#{version_code}.txt"), CHANGELOG)
+
+    upload_to_play_store(
+      package_name: "ch.valentinbaudin.rimawari",
+      aab: aab_path,
+      track: track,
+      release_status: "completed",
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: false,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+    )
+  end
+end
