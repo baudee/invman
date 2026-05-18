@@ -204,6 +204,8 @@
     "withdrawal_addRule": "Add withdrawal rule",
     "withdrawal_fees": "Fees",
     "withdrawal_selection": "Withdrawal Rule Selection",
+    "withdrawal_applyToInvestments": "Apply to investments",
+    "withdrawal_applyToInvestments_success": "Rule applied to selected investments",
     "withdrawal": "Withdrawal Rule",
     "@INVESMENT---------------------------------------------------------------": {},
     "investment_title": "Investments",

@@ -17,6 +17,12 @@ class WithdrawalRoutes {
               path: WithdrawalRuleEditScreen.pathSegment,
               builder: (_, state) => WithdrawalRuleEditScreen(id: int.tryParse(state.pathParameters['id'] ?? '') ?? 0),
             ),
+            GoRoute(
+              path: WithdrawalRuleApplyToInvestmentsScreen.pathSegment,
+              builder: (_, state) => WithdrawalRuleApplyToInvestmentsScreen(
+                ruleId: int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
+              ),
+            ),
           ],
         ),
       ],

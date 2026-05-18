@@ -153,8 +153,9 @@ class _InvestmentReturnsGraphComponentState extends State<InvestmentReturnsGraph
               theme.textTheme.labelSmall!.copyWith(color: color, fontWeight: FontWeight.bold),
               children: [
                 TextSpan(
-                  text: r.gains.toStringAsFixed(2),
+                  text: r.gains.toStringAsFixed(1),
                   style: theme.textTheme.labelSmall?.copyWith(
+                    fontSize: 8,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
                 ),

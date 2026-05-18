@@ -43,4 +43,19 @@ class WithdrawalRuleEndpoint extends Endpoint with EndpointMiddleware {
       () => getIt<WithdrawalRuleService>().delete(session, id),
     );
   }
+
+  Future<void> applyToInvestments(
+    Session session,
+    int ruleId,
+    List<int> investmentIds,
+  ) async {
+    return withMiddleware(
+      session,
+      () => getIt<WithdrawalRuleService>().applyToInvestments(
+        session,
+        ruleId,
+        investmentIds,
+      ),
+    );
+  }
 }

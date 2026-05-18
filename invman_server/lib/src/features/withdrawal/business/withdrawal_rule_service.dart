@@ -123,4 +123,44 @@ class WithdrawalRuleService {
     final withdrawal = await retrieve(session, id);
     return WithdrawalRule.db.deleteRow(session, withdrawal);
   }
+
+  Future<void> applyToInvestments(
+    Session session,
+    int ruleId,
+    List<int> investmentIds,
+  ) async {
+    if (investmentIds.isEmpty) return;
+
+    await session.db.transaction(
+      (transaction) async {
+        await retrieve(session, ruleId, transaction: transaction);
+
+        final sessionUserId = (session.authenticated)!.authUserId;
+        final ids = investmentIds.toSet();
+
+        final investments = await Investment.db.find(
+          session,
+          where: (e) => e.id.inSet(ids) & e.userId.equals(sessionUserId),
+          transaction: transaction,
+        );
+
+        if (investments.length != ids.length) {
+          throw ServerException(errorCode: ErrorCode.forbidden);
+        }
+
+        final updated = investments
+            .map((i) => i.copyWith(withdrawalRuleId: ruleId, updatedAt: DateTime.now()))
+            .toList();
+
+        await Investment.db.update(
+          session,
+          updated,
+          transaction: transaction,
+        );
+      },
+      settings: TransactionSettings(
+        isolationLevel: IsolationLevel.serializable,
+      ),
+    );
+  }
 }

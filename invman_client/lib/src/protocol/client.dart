@@ -613,6 +613,18 @@ class EndpointWithdrawalRule extends _i1.EndpointRef {
         'delete',
         {'id': id},
       );
+
+  _i2.Future<void> applyToInvestments(
+    int ruleId,
+    List<int> investmentIds,
+  ) => caller.callServerEndpoint<void>(
+    'withdrawalRule',
+    'applyToInvestments',
+    {
+      'ruleId': ruleId,
+      'investmentIds': investmentIds,
+    },
+  );
 }
 
 class Modules {

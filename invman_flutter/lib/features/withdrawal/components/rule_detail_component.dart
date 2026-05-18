@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:invman_client/invman_client.dart';
 import 'package:invman_flutter/config/generated/l10n.dart';
 import 'package:invman_flutter/core/core.dart';
+import 'package:invman_flutter/core/navigation/navigation.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
 class WithdrawalRuleDetailComponent extends StatelessWidget {
@@ -15,38 +16,58 @@ class WithdrawalRuleDetailComponent extends StatelessWidget {
     return Column(
       crossAxisAlignment: .start,
       children: [
-        SectionHeaderComponent(title: S.of(context).withdrawal_currency_percentage),
-        const SizedBox(height: UIConstants.spacingSm),
-        Text(
-          "${rule.currencyChangePercentage}%",
-          style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.primary),
-        ),
-        const SizedBox(height: UIConstants.spacingLg),
-        SectionHeaderComponent(title: S.of(context).withdrawal_fees),
-        const SizedBox(height: UIConstants.spacingMd),
-        Builder(
-          builder: (_) {
-            final fees = rule.fees ?? [];
-            if (fees.isEmpty) {
-              return Text(
-                S.of(context).core_noItemsFound,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: .start,
+              children: [
+                SectionHeaderComponent(title: S.of(context).withdrawal_currency_percentage),
+                const SizedBox(height: UIConstants.spacingSm),
+                Text(
+                  "${rule.currencyChangePercentage}%",
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.primary,
+                  ),
                 ),
-                textAlign: TextAlign.center,
-              );
-            } else {
-              return Column(
-                children: fees.map((fee) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: UIConstants.spacingSm),
-                    child: WithdrawalFeeTileComponent(fee: fee),
-                  );
-                }).toList(),
-              );
-            }
-          },
+                const SizedBox(height: UIConstants.spacingLg),
+                SectionHeaderComponent(title: S.of(context).withdrawal_fees),
+                const SizedBox(height: UIConstants.spacingMd),
+                Builder(
+                  builder: (_) {
+                    final fees = rule.fees ?? [];
+                    if (fees.isEmpty) {
+                      return Text(
+                        S.of(context).core_noItemsFound,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                        ),
+                        textAlign: TextAlign.center,
+                      );
+                    } else {
+                      return Column(
+                        children: fees.map((fee) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: UIConstants.spacingSm),
+                            child: WithdrawalFeeTileComponent(fee: fee),
+                          );
+                        }).toList(),
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
         ),
+        if (rule.id != null) ...[
+          const SizedBox(height: UIConstants.spacingMd),
+          ActionButton(
+            child: Text(S.of(context).withdrawal_applyToInvestments),
+            onPressed: () => router.push(WithdrawalRuleApplyToInvestmentsScreen.route(rule.id!)),
+          ),
+          const SizedBox(height: UIConstants.spacingMd),
+        ],
       ],
     );
   }

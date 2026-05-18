@@ -3,6 +3,6 @@ extension DoubleExtension on double? {
     if (this == null) {
       return '-';
     }
-    return "${this!.toStringAsFixed(2)} ${currencyCode ?? '-'}";
+    return "${this!.toStringAsFixed(1)} ${currencyCode ?? '-'}";
   }
 }
