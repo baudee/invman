@@ -52,11 +52,4 @@ class TransferRepository {
       return right(csv);
     });
   }
-
-  Future<Either<String, List<String>>> importCsv(String csvContent) async {
-    return safeCall(() async {
-      final errors = await client.dataTransfer.importCsv(csvContent);
-      return right(errors);
-    });
-  }
 }

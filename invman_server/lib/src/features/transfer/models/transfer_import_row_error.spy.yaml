@@ -1,0 +1,14 @@
+enum: TransferImportRowError
+serialized: byName
+values:
+  - idAndNameMissing
+  - invalidExistingInvestmentId
+  - existingInvestmentNotFound
+  - newInvestmentNameRequired
+  - assetRequired
+  - symbolRequired
+  - noAssetForSymbol
+  - multipleAssetsForSymbol
+  - invalidQuantity
+  - invalidAmount
+  - invalidDate

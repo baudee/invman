@@ -36,6 +36,7 @@ class InvestmentFormComponent extends StatelessWidget {
           WithdrawalRuleSelectTileComponent(
             rule: investment.withdrawalRule,
             onRuleSelected: controller.setWithdrawalRule,
+            onRemove: controller.removeWithdrawalRule,
           ),
           SizedBox(height: UIConstants.spacingXs),
           SectionHeaderComponent(title: S.of(context).asset_selection),

@@ -75,6 +75,72 @@
     "account_importSuccess": "Transfers imported successfully",
     "account_importErrors": "Import errors",
     "account_importErrorsDescription": "The following errors were found. No transfer was imported.",
+    "transferImport_title": "Review import",
+    "transferImport_existingInvestment": "Existing investment",
+    "transferImport_newInvestment": "New investment",
+    "transferImport_pickInvestment": "Pick an investment.",
+    "transferImport_pickAsset": "Pick an asset.",
+    "transferImport_nameRequired": "Investment name is required.",
+    "transferImport_quantityRequired": "Quantity is required.",
+    "transferImport_amountRequired": "Amount is required.",
+    "transferImport_dateRequired": "Date is required.",
+    "transferImport_investmentName": "Investment name",
+    "transferImport_withdrawalRule": "Withdrawal rule",
+    "transferImport_unresolvedBanner": "{count, plural, one{1 row needs attention} other{{count} rows need attention}}",
+    "@transferImport_unresolvedBanner": {
+      "placeholders": { "count": { "type": "int" } }
+    },
+    "transferImport_confirm": "Confirm import",
+    "transferImport_quantity": "Quantity",
+    "transferImport_amount": "Amount",
+    "transferImport_date": "Date",
+    "transferImport_useExisting": "Use existing",
+    "transferImport_createNew": "Create new",
+    "transferImport_lineNumber": "Line {n}",
+    "@transferImport_lineNumber": {
+      "placeholders": { "n": { "type": "int" } }
+    },
+    "transferImport_emptyPreview": "No rows to import.",
+    "transferImport_pickCandidate": "Pick a matching asset",
+    "transferImport_searchAllAssets": "Search all assets",
+    "transferImport_globalError_fileEmpty": "The file is empty.",
+    "transferImport_globalError_noDataRows": "No data to import.",
+    "transferImport_globalError_missingColumns": "Missing required columns: {columns}.",
+    "@transferImport_globalError_missingColumns": {
+      "placeholders": { "columns": { "type": "String" } }
+    },
+    "transferImport_rowError_idAndNameMissing": "Provide either existingInvestmentId or newInvestmentName.",
+    "transferImport_rowError_invalidExistingInvestmentId": "Invalid investment id \"{value}\".",
+    "@transferImport_rowError_invalidExistingInvestmentId": {
+      "placeholders": { "value": { "type": "String" } }
+    },
+    "transferImport_rowError_existingInvestmentNotFound": "Investment {value} not found.",
+    "@transferImport_rowError_existingInvestmentNotFound": {
+      "placeholders": { "value": { "type": "String" } }
+    },
+    "transferImport_rowError_newInvestmentNameRequired": "Investment name is required.",
+    "transferImport_rowError_assetRequired": "Pick an asset.",
+    "transferImport_rowError_symbolRequired": "Symbol is required for new investments.",
+    "transferImport_rowError_noAssetForSymbol": "No asset found for symbol \"{value}\". Search and pick one.",
+    "@transferImport_rowError_noAssetForSymbol": {
+      "placeholders": { "value": { "type": "String" } }
+    },
+    "transferImport_rowError_multipleAssetsForSymbol": "Multiple assets match symbol \"{value}\". Pick one.",
+    "@transferImport_rowError_multipleAssetsForSymbol": {
+      "placeholders": { "value": { "type": "String" } }
+    },
+    "transferImport_rowError_invalidQuantity": "Invalid quantity \"{value}\".",
+    "@transferImport_rowError_invalidQuantity": {
+      "placeholders": { "value": { "type": "String" } }
+    },
+    "transferImport_rowError_invalidAmount": "Invalid amount \"{value}\".",
+    "@transferImport_rowError_invalidAmount": {
+      "placeholders": { "value": { "type": "String" } }
+    },
+    "transferImport_rowError_invalidDate": "Invalid date \"{value}\" (expected YYYY-MM-DD or MM/DD/YYYY).",
+    "@transferImport_rowError_invalidDate": {
+      "placeholders": { "value": { "type": "String" } }
+    },
     "account_deleteAccount": "Delete account",
     "account_deleteAccount_title": "Delete your account?",
     "account_deleteAccount_description": "This action is permanent and cannot be undone. All your data will be deleted, including your investments, transfers, withdrawal rules and asset preferences.",

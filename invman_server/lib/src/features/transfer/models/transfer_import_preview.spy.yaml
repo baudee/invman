@@ -1,0 +1,6 @@
+class: TransferImportPreview
+
+fields:
+    rows: List<TransferImportRow>
+    globalErrorKey: TransferImportGlobalError?
+    globalErrorContext: String?

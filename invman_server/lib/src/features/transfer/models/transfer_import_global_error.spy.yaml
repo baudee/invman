@@ -1,0 +1,6 @@
+enum: TransferImportGlobalError
+serialized: byName
+values:
+  - fileEmpty
+  - missingColumns
+  - noDataRows

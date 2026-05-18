@@ -1,0 +1,20 @@
+class: TransferImportRow
+
+fields:
+    lineNumber: int
+    groupId: String
+    status: TransferImportRowStatus
+    resolution: TransferImportRowResolution
+    existingInvestmentId: int?
+    existingInvestmentName: String?
+    newInvestmentName: String?
+    newInvestmentWithdrawalRuleId: int?
+    asset: Asset?
+    assetCandidates: List<Asset>?
+    quantity: double?
+    amount: double?
+    date: DateTime?
+    investmentErrorKey: TransferImportRowError?
+    investmentErrorContext: String?
+    rowErrorKey: TransferImportRowError?
+    rowErrorContext: String?

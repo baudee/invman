@@ -52,6 +52,12 @@ class InvestmentEditController extends Disposable {
     }
   }
 
+  void removeWithdrawalRule() {
+    if (_state.value case AsyncData(value: final investment)) {
+      _state.value = AsyncState.data(investment.copyWith(withdrawalRule: null, withdrawalRuleId: null));
+    }
+  }
+
   void setAsset(Asset asset) {
     if (_state.value case AsyncData(value: final investment)) {
       _state.value = AsyncState.data(investment.copyWith(asset: asset, assetId: asset.id));

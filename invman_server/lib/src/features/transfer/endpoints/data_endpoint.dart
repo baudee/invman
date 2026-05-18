@@ -16,10 +16,24 @@ class DataTransferEndpoint extends Endpoint with EndpointMiddleware {
     });
   }
 
-  Future<List<String>> importCsv(Session session, String csvContent) async {
+  Future<TransferImportPreview> parseImportPreview(Session session, String csvContent) async {
     return withMiddleware(session, () async {
       await _requirePremium(session);
-      return getIt<TransferCsvService>().importCsv(session, csvContent);
+      return getIt<TransferCsvService>().parseImportPreview(session, csvContent);
+    });
+  }
+
+  Future<void> confirmImport(Session session, List<TransferImportRow> rows) async {
+    return withMiddleware(session, () async {
+      await _requirePremium(session);
+      return getIt<TransferCsvService>().confirmImport(session, rows);
+    });
+  }
+
+  Future<String> downloadTemplate(Session session) async {
+    return withMiddleware(session, () async {
+      await _requirePremium(session);
+      return getIt<TransferCsvService>().template();
     });
   }
 

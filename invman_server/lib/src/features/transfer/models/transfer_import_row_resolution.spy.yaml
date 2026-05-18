@@ -1,0 +1,5 @@
+enum: TransferImportRowResolution
+serialized: byName
+values:
+  - existingInvestment
+  - newInvestment

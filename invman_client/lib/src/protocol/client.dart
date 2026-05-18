@@ -40,11 +40,15 @@ import 'package:invman_client/src/protocol/features/investment/models/return.dar
     as _i15;
 import 'package:invman_client/src/protocol/features/investment/models/return_interval.dart'
     as _i16;
-import 'package:invman_client/src/protocol/features/transfer/models/transfer.dart'
+import 'package:invman_client/src/protocol/features/transfer/models/transfer_import_preview.dart'
     as _i17;
-import 'package:invman_client/src/protocol/features/withdrawal/models/withdrawal_rule.dart'
+import 'package:invman_client/src/protocol/features/transfer/models/transfer_import_row.dart'
     as _i18;
-import 'protocol.dart' as _i19;
+import 'package:invman_client/src/protocol/features/transfer/models/transfer.dart'
+    as _i19;
+import 'package:invman_client/src/protocol/features/withdrawal/models/withdrawal_rule.dart'
+    as _i20;
+import 'protocol.dart' as _i21;
 
 /// {@category Endpoint}
 class EndpointAccount extends _i1.EndpointRef {
@@ -505,12 +509,26 @@ class EndpointDataTransfer extends _i1.EndpointRef {
     {},
   );
 
-  _i2.Future<List<String>> importCsv(String csvContent) =>
-      caller.callServerEndpoint<List<String>>(
+  _i2.Future<_i17.TransferImportPreview> parseImportPreview(
+    String csvContent,
+  ) => caller.callServerEndpoint<_i17.TransferImportPreview>(
+    'dataTransfer',
+    'parseImportPreview',
+    {'csvContent': csvContent},
+  );
+
+  _i2.Future<void> confirmImport(List<_i18.TransferImportRow> rows) =>
+      caller.callServerEndpoint<void>(
         'dataTransfer',
-        'importCsv',
-        {'csvContent': csvContent},
+        'confirmImport',
+        {'rows': rows},
       );
+
+  _i2.Future<String> downloadTemplate() => caller.callServerEndpoint<String>(
+    'dataTransfer',
+    'downloadTemplate',
+    {},
+  );
 }
 
 /// {@category Endpoint}
@@ -520,32 +538,32 @@ class EndpointTransfer extends _i1.EndpointRef {
   @override
   String get name => 'transfer';
 
-  _i2.Future<_i17.Transfer> retrieve(int id) =>
-      caller.callServerEndpoint<_i17.Transfer>(
+  _i2.Future<_i19.Transfer> retrieve(int id) =>
+      caller.callServerEndpoint<_i19.Transfer>(
         'transfer',
         'retrieve',
         {'id': id},
       );
 
-  _i2.Future<_i17.Transfer> save(_i17.Transfer transfer) =>
-      caller.callServerEndpoint<_i17.Transfer>(
+  _i2.Future<_i19.Transfer> save(_i19.Transfer transfer) =>
+      caller.callServerEndpoint<_i19.Transfer>(
         'transfer',
         'save',
         {'transfer': transfer},
       );
 
-  _i2.Future<_i17.Transfer> delete(int id) =>
-      caller.callServerEndpoint<_i17.Transfer>(
+  _i2.Future<_i19.Transfer> delete(int id) =>
+      caller.callServerEndpoint<_i19.Transfer>(
         'transfer',
         'delete',
         {'id': id},
       );
 
-  _i2.Future<List<_i17.Transfer>> list(
+  _i2.Future<List<_i19.Transfer>> list(
     int investmentId, {
     required int limit,
     required int page,
-  }) => caller.callServerEndpoint<List<_i17.Transfer>>(
+  }) => caller.callServerEndpoint<List<_i19.Transfer>>(
     'transfer',
     'list',
     {
@@ -563,10 +581,10 @@ class EndpointWithdrawalRule extends _i1.EndpointRef {
   @override
   String get name => 'withdrawalRule';
 
-  _i2.Future<List<_i18.WithdrawalRule>> list({
+  _i2.Future<List<_i20.WithdrawalRule>> list({
     required int limit,
     required int page,
-  }) => caller.callServerEndpoint<List<_i18.WithdrawalRule>>(
+  }) => caller.callServerEndpoint<List<_i20.WithdrawalRule>>(
     'withdrawalRule',
     'list',
     {
@@ -575,22 +593,22 @@ class EndpointWithdrawalRule extends _i1.EndpointRef {
     },
   );
 
-  _i2.Future<_i18.WithdrawalRule> retrieve(int id) =>
-      caller.callServerEndpoint<_i18.WithdrawalRule>(
+  _i2.Future<_i20.WithdrawalRule> retrieve(int id) =>
+      caller.callServerEndpoint<_i20.WithdrawalRule>(
         'withdrawalRule',
         'retrieve',
         {'id': id},
       );
 
-  _i2.Future<_i18.WithdrawalRule> save(_i18.WithdrawalRule transfer) =>
-      caller.callServerEndpoint<_i18.WithdrawalRule>(
+  _i2.Future<_i20.WithdrawalRule> save(_i20.WithdrawalRule transfer) =>
+      caller.callServerEndpoint<_i20.WithdrawalRule>(
         'withdrawalRule',
         'save',
         {'transfer': transfer},
       );
 
-  _i2.Future<_i18.WithdrawalRule> delete(int id) =>
-      caller.callServerEndpoint<_i18.WithdrawalRule>(
+  _i2.Future<_i20.WithdrawalRule> delete(int id) =>
+      caller.callServerEndpoint<_i20.WithdrawalRule>(
         'withdrawalRule',
         'delete',
         {'id': id},
@@ -628,7 +646,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i19.Protocol(),
+         _i21.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,

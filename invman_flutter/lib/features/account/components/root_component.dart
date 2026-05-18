@@ -7,6 +7,7 @@ import 'package:invman_flutter/core/core.dart';
 import 'package:invman_flutter/di.dart';
 import 'package:invman_flutter/features/account/account.dart';
 import 'package:invman_flutter/features/auth/auth.dart';
+import 'package:invman_flutter/features/transfer/transfer.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -87,7 +88,7 @@ class AccountRootComponent extends StatelessWidget {
           trailing: IconButton(
             icon: Icon(Icons.description_outlined),
             tooltip: S.of(context).account_downloadTemplate,
-            onPressed: () => controller.shareTemplate(),
+            onPressed: () => _onShareTemplate(context),
           ),
           onTap: () => _onImport(context),
         ),
@@ -169,44 +170,27 @@ class AccountRootComponent extends StatelessWidget {
   }
 
   Future<void> _onImport(BuildContext context) async {
-    final result = await controller.importCsv();
+    final result = await controller.pickAndParseImport();
     if (!context.mounted) return;
+    result.fold(
+      (error) => ToastUtils.message(error, success: false),
+      (preview) {
+        if (preview == null) return;
+        if (preview.globalErrorKey != null && preview.rows.isEmpty) {
+          final message = translateGlobalError(preview.globalErrorKey, preview.globalErrorContext);
+          ToastUtils.message(message ?? S.of(context).error_code(ErrorCode.unknown), success: false);
+          return;
+        }
+        getIt<TransferImportController>().init(preview);
+        router.push(TransferImportPreviewScreen.route());
+      },
+    );
+  }
 
-    if (result.cancelled) return;
-
-    if (result.error != null) {
-      ToastUtils.message(result.error!, success: false);
-    } else if (result.validationErrors.isEmpty) {
-      ToastUtils.message(S.of(context).account_importSuccess);
-    } else {
-      showDialog<void>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text(S.of(context).account_importErrors),
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(S.of(context).account_importErrorsDescription),
-                const SizedBox(height: 12),
-                ...result.validationErrors.map(
-                  (e) => Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    child: Text('• $e', style: const TextStyle(fontSize: 13)),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            FilledButton(
-              onPressed: () => ctx.pop(),
-              child: Text(S.of(context).core_cancel),
-            ),
-          ],
-        ),
-      );
+  Future<void> _onShareTemplate(BuildContext context) async {
+    final error = await controller.shareTemplate();
+    if (error != null && context.mounted) {
+      ToastUtils.message(error, success: false);
     }
   }
 

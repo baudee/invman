@@ -27,8 +27,10 @@ import 'package:invman_server/src/generated/features/dividend/models/total_divid
 import 'package:invman_server/src/generated/features/investment/models/investment.dart' as _i14;
 import 'package:invman_server/src/generated/features/investment/models/return.dart' as _i15;
 import 'package:invman_server/src/generated/features/investment/models/return_interval.dart' as _i16;
-import 'package:invman_server/src/generated/features/transfer/models/transfer.dart' as _i17;
-import 'package:invman_server/src/generated/features/withdrawal/models/withdrawal_rule.dart' as _i18;
+import 'package:invman_server/src/generated/features/transfer/models/transfer_import_preview.dart' as _i17;
+import 'package:invman_server/src/generated/features/transfer/models/transfer_import_row.dart' as _i18;
+import 'package:invman_server/src/generated/features/transfer/models/transfer.dart' as _i19;
+import 'package:invman_server/src/generated/features/withdrawal/models/withdrawal_rule.dart' as _i20;
 import 'package:invman_server/src/generated/protocol.dart';
 import 'package:invman_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -1274,20 +1276,20 @@ class _DataTransferEndpoint {
     });
   }
 
-  _i3.Future<List<String>> importCsv(
+  _i3.Future<_i17.TransferImportPreview> parseImportPreview(
     _i1.TestSessionBuilder sessionBuilder,
     String csvContent,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
         endpoint: 'dataTransfer',
-        method: 'importCsv',
+        method: 'parseImportPreview',
       );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
           endpointPath: 'dataTransfer',
-          methodName: 'importCsv',
+          methodName: 'parseImportPreview',
           parameters: _i1.testObjectToJson({'csvContent': csvContent}),
           serializationManager: _serializationManager,
         );
@@ -1296,7 +1298,66 @@ class _DataTransferEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<List<String>>);
+                as _i3.Future<_i17.TransferImportPreview>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<void> confirmImport(
+    _i1.TestSessionBuilder sessionBuilder,
+    List<_i18.TransferImportRow> rows,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'dataTransfer',
+        method: 'confirmImport',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'dataTransfer',
+          methodName: 'confirmImport',
+          parameters: _i1.testObjectToJson({'rows': rows}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<void>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<String> downloadTemplate(
+    _i1.TestSessionBuilder sessionBuilder,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'dataTransfer',
+        method: 'downloadTemplate',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'dataTransfer',
+          methodName: 'downloadTemplate',
+          parameters: _i1.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<String>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1315,7 +1376,7 @@ class _TransferEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i17.Transfer> retrieve(
+  _i3.Future<_i19.Transfer> retrieve(
     _i1.TestSessionBuilder sessionBuilder,
     int id,
   ) async {
@@ -1337,7 +1398,7 @@ class _TransferEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i17.Transfer>);
+                as _i3.Future<_i19.Transfer>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1345,9 +1406,9 @@ class _TransferEndpoint {
     });
   }
 
-  _i3.Future<_i17.Transfer> save(
+  _i3.Future<_i19.Transfer> save(
     _i1.TestSessionBuilder sessionBuilder,
-    _i17.Transfer transfer,
+    _i19.Transfer transfer,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
@@ -1367,7 +1428,7 @@ class _TransferEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i17.Transfer>);
+                as _i3.Future<_i19.Transfer>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1375,7 +1436,7 @@ class _TransferEndpoint {
     });
   }
 
-  _i3.Future<_i17.Transfer> delete(
+  _i3.Future<_i19.Transfer> delete(
     _i1.TestSessionBuilder sessionBuilder,
     int id,
   ) async {
@@ -1397,7 +1458,7 @@ class _TransferEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i17.Transfer>);
+                as _i3.Future<_i19.Transfer>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1405,7 +1466,7 @@ class _TransferEndpoint {
     });
   }
 
-  _i3.Future<List<_i17.Transfer>> list(
+  _i3.Future<List<_i19.Transfer>> list(
     _i1.TestSessionBuilder sessionBuilder,
     int investmentId, {
     required int limit,
@@ -1433,7 +1494,7 @@ class _TransferEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<List<_i17.Transfer>>);
+                as _i3.Future<List<_i19.Transfer>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1452,7 +1513,7 @@ class _WithdrawalRuleEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<List<_i18.WithdrawalRule>> list(
+  _i3.Future<List<_i20.WithdrawalRule>> list(
     _i1.TestSessionBuilder sessionBuilder, {
     required int limit,
     required int page,
@@ -1478,7 +1539,7 @@ class _WithdrawalRuleEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<List<_i18.WithdrawalRule>>);
+                as _i3.Future<List<_i20.WithdrawalRule>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1486,7 +1547,7 @@ class _WithdrawalRuleEndpoint {
     });
   }
 
-  _i3.Future<_i18.WithdrawalRule> retrieve(
+  _i3.Future<_i20.WithdrawalRule> retrieve(
     _i1.TestSessionBuilder sessionBuilder,
     int id,
   ) async {
@@ -1508,7 +1569,7 @@ class _WithdrawalRuleEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i18.WithdrawalRule>);
+                as _i3.Future<_i20.WithdrawalRule>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1516,9 +1577,9 @@ class _WithdrawalRuleEndpoint {
     });
   }
 
-  _i3.Future<_i18.WithdrawalRule> save(
+  _i3.Future<_i20.WithdrawalRule> save(
     _i1.TestSessionBuilder sessionBuilder,
-    _i18.WithdrawalRule transfer,
+    _i20.WithdrawalRule transfer,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
@@ -1538,7 +1599,7 @@ class _WithdrawalRuleEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i18.WithdrawalRule>);
+                as _i3.Future<_i20.WithdrawalRule>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1546,7 +1607,7 @@ class _WithdrawalRuleEndpoint {
     });
   }
 
-  _i3.Future<_i18.WithdrawalRule> delete(
+  _i3.Future<_i20.WithdrawalRule> delete(
     _i1.TestSessionBuilder sessionBuilder,
     int id,
   ) async {
@@ -1568,7 +1629,7 @@ class _WithdrawalRuleEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i18.WithdrawalRule>);
+                as _i3.Future<_i20.WithdrawalRule>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

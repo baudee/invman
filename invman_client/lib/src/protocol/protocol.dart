@@ -33,30 +33,38 @@ import 'features/investment/models/investment.dart' as _i20;
 import 'features/investment/models/return.dart' as _i21;
 import 'features/investment/models/return_interval.dart' as _i22;
 import 'features/transfer/models/transfer.dart' as _i23;
-import 'features/withdrawal/models/withdrawal_fee.dart' as _i24;
-import 'features/withdrawal/models/withdrawal_rule.dart' as _i25;
+import 'features/transfer/models/transfer_import_global_error.dart' as _i24;
+import 'features/transfer/models/transfer_import_preview.dart' as _i25;
+import 'features/transfer/models/transfer_import_row.dart' as _i26;
+import 'features/transfer/models/transfer_import_row_error.dart' as _i27;
+import 'features/transfer/models/transfer_import_row_resolution.dart' as _i28;
+import 'features/transfer/models/transfer_import_row_status.dart' as _i29;
+import 'features/withdrawal/models/withdrawal_fee.dart' as _i30;
+import 'features/withdrawal/models/withdrawal_rule.dart' as _i31;
 import 'package:invman_client/src/protocol/features/asset/models/asset.dart'
-    as _i26;
-import 'package:invman_client/src/protocol/features/asset/models/asset_value.dart'
-    as _i27;
-import 'package:invman_client/src/protocol/features/currency/models/currency.dart'
-    as _i28;
-import 'package:invman_client/src/protocol/features/dividend/models/computed_dividend_value.dart'
-    as _i29;
-import 'package:invman_client/src/protocol/features/dividend/models/total_dividend_year.dart'
-    as _i30;
-import 'package:invman_client/src/protocol/features/investment/models/investment.dart'
-    as _i31;
-import 'package:invman_client/src/protocol/features/investment/models/return.dart'
     as _i32;
-import 'package:invman_client/src/protocol/features/transfer/models/transfer.dart'
+import 'package:invman_client/src/protocol/features/asset/models/asset_value.dart'
     as _i33;
-import 'package:invman_client/src/protocol/features/withdrawal/models/withdrawal_rule.dart'
+import 'package:invman_client/src/protocol/features/currency/models/currency.dart'
     as _i34;
-import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
+import 'package:invman_client/src/protocol/features/dividend/models/computed_dividend_value.dart'
     as _i35;
-import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+import 'package:invman_client/src/protocol/features/dividend/models/total_dividend_year.dart'
     as _i36;
+import 'package:invman_client/src/protocol/features/investment/models/investment.dart'
+    as _i37;
+import 'package:invman_client/src/protocol/features/investment/models/return.dart'
+    as _i38;
+import 'package:invman_client/src/protocol/features/transfer/models/transfer_import_row.dart'
+    as _i39;
+import 'package:invman_client/src/protocol/features/transfer/models/transfer.dart'
+    as _i40;
+import 'package:invman_client/src/protocol/features/withdrawal/models/withdrawal_rule.dart'
+    as _i41;
+import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
+    as _i42;
+import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+    as _i43;
 export 'core/exceptions/error_code.dart';
 export 'core/exceptions/server_exception.dart';
 export 'features/account/models/account.dart';
@@ -79,6 +87,12 @@ export 'features/investment/models/investment.dart';
 export 'features/investment/models/return.dart';
 export 'features/investment/models/return_interval.dart';
 export 'features/transfer/models/transfer.dart';
+export 'features/transfer/models/transfer_import_global_error.dart';
+export 'features/transfer/models/transfer_import_preview.dart';
+export 'features/transfer/models/transfer_import_row.dart';
+export 'features/transfer/models/transfer_import_row_error.dart';
+export 'features/transfer/models/transfer_import_row_resolution.dart';
+export 'features/transfer/models/transfer_import_row_status.dart';
 export 'features/withdrawal/models/withdrawal_fee.dart';
 export 'features/withdrawal/models/withdrawal_rule.dart';
 export 'client.dart';
@@ -183,11 +197,29 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i23.Transfer) {
       return _i23.Transfer.fromJson(data) as T;
     }
-    if (t == _i24.WithdrawalFee) {
-      return _i24.WithdrawalFee.fromJson(data) as T;
+    if (t == _i24.TransferImportGlobalError) {
+      return _i24.TransferImportGlobalError.fromJson(data) as T;
     }
-    if (t == _i25.WithdrawalRule) {
-      return _i25.WithdrawalRule.fromJson(data) as T;
+    if (t == _i25.TransferImportPreview) {
+      return _i25.TransferImportPreview.fromJson(data) as T;
+    }
+    if (t == _i26.TransferImportRow) {
+      return _i26.TransferImportRow.fromJson(data) as T;
+    }
+    if (t == _i27.TransferImportRowError) {
+      return _i27.TransferImportRowError.fromJson(data) as T;
+    }
+    if (t == _i28.TransferImportRowResolution) {
+      return _i28.TransferImportRowResolution.fromJson(data) as T;
+    }
+    if (t == _i29.TransferImportRowStatus) {
+      return _i29.TransferImportRowStatus.fromJson(data) as T;
+    }
+    if (t == _i30.WithdrawalFee) {
+      return _i30.WithdrawalFee.fromJson(data) as T;
+    }
+    if (t == _i31.WithdrawalRule) {
+      return _i31.WithdrawalRule.fromJson(data) as T;
     }
     if (t == _i1.getType<_i2.ErrorCode?>()) {
       return (data != null ? _i2.ErrorCode.fromJson(data) : null) as T;
@@ -260,11 +292,38 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i23.Transfer?>()) {
       return (data != null ? _i23.Transfer.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i24.WithdrawalFee?>()) {
-      return (data != null ? _i24.WithdrawalFee.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i24.TransferImportGlobalError?>()) {
+      return (data != null
+              ? _i24.TransferImportGlobalError.fromJson(data)
+              : null)
+          as T;
     }
-    if (t == _i1.getType<_i25.WithdrawalRule?>()) {
-      return (data != null ? _i25.WithdrawalRule.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i25.TransferImportPreview?>()) {
+      return (data != null ? _i25.TransferImportPreview.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i26.TransferImportRow?>()) {
+      return (data != null ? _i26.TransferImportRow.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i27.TransferImportRowError?>()) {
+      return (data != null ? _i27.TransferImportRowError.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i28.TransferImportRowResolution?>()) {
+      return (data != null
+              ? _i28.TransferImportRowResolution.fromJson(data)
+              : null)
+          as T;
+    }
+    if (t == _i1.getType<_i29.TransferImportRowStatus?>()) {
+      return (data != null ? _i29.TransferImportRowStatus.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i30.WithdrawalFee?>()) {
+      return (data != null ? _i30.WithdrawalFee.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i31.WithdrawalRule?>()) {
+      return (data != null ? _i31.WithdrawalRule.fromJson(data) : null) as T;
     }
     if (t == List<_i9.AssetLike>) {
       return (data as List).map((e) => deserialize<_i9.AssetLike>(e)).toList()
@@ -308,72 +367,90 @@ class Protocol extends _i1.SerializationManager {
               : null)
           as T;
     }
-    if (t == List<_i24.WithdrawalFee>) {
+    if (t == List<_i26.TransferImportRow>) {
       return (data as List)
-              .map((e) => deserialize<_i24.WithdrawalFee>(e))
+              .map((e) => deserialize<_i26.TransferImportRow>(e))
               .toList()
           as T;
     }
-    if (t == _i1.getType<List<_i24.WithdrawalFee>?>()) {
+    if (t == List<_i7.Asset>) {
+      return (data as List).map((e) => deserialize<_i7.Asset>(e)).toList() as T;
+    }
+    if (t == _i1.getType<List<_i7.Asset>?>()) {
+      return (data != null
+              ? (data as List).map((e) => deserialize<_i7.Asset>(e)).toList()
+              : null)
+          as T;
+    }
+    if (t == List<_i30.WithdrawalFee>) {
+      return (data as List)
+              .map((e) => deserialize<_i30.WithdrawalFee>(e))
+              .toList()
+          as T;
+    }
+    if (t == _i1.getType<List<_i30.WithdrawalFee>?>()) {
       return (data != null
               ? (data as List)
-                    .map((e) => deserialize<_i24.WithdrawalFee>(e))
+                    .map((e) => deserialize<_i30.WithdrawalFee>(e))
                     .toList()
               : null)
           as T;
     }
-    if (t == List<_i26.Asset>) {
-      return (data as List).map((e) => deserialize<_i26.Asset>(e)).toList()
+    if (t == List<_i32.Asset>) {
+      return (data as List).map((e) => deserialize<_i32.Asset>(e)).toList()
           as T;
     }
-    if (t == List<_i27.AssetValue>) {
-      return (data as List).map((e) => deserialize<_i27.AssetValue>(e)).toList()
+    if (t == List<_i33.AssetValue>) {
+      return (data as List).map((e) => deserialize<_i33.AssetValue>(e)).toList()
           as T;
     }
-    if (t == List<_i28.Currency>) {
-      return (data as List).map((e) => deserialize<_i28.Currency>(e)).toList()
+    if (t == List<_i34.Currency>) {
+      return (data as List).map((e) => deserialize<_i34.Currency>(e)).toList()
           as T;
     }
-    if (t == List<_i29.ComputedDividendValue>) {
+    if (t == List<_i35.ComputedDividendValue>) {
       return (data as List)
-              .map((e) => deserialize<_i29.ComputedDividendValue>(e))
+              .map((e) => deserialize<_i35.ComputedDividendValue>(e))
               .toList()
           as T;
     }
-    if (t == List<_i30.TotalDividendYear>) {
+    if (t == List<_i36.TotalDividendYear>) {
       return (data as List)
-              .map((e) => deserialize<_i30.TotalDividendYear>(e))
+              .map((e) => deserialize<_i36.TotalDividendYear>(e))
               .toList()
           as T;
     }
-    if (t == List<_i31.Investment>) {
-      return (data as List).map((e) => deserialize<_i31.Investment>(e)).toList()
+    if (t == List<_i37.Investment>) {
+      return (data as List).map((e) => deserialize<_i37.Investment>(e)).toList()
           as T;
     }
-    if (t == List<_i32.InvestmentReturn>) {
+    if (t == List<_i38.InvestmentReturn>) {
       return (data as List)
-              .map((e) => deserialize<_i32.InvestmentReturn>(e))
+              .map((e) => deserialize<_i38.InvestmentReturn>(e))
               .toList()
           as T;
     }
-    if (t == List<String>) {
-      return (data as List).map((e) => deserialize<String>(e)).toList() as T;
-    }
-    if (t == List<_i33.Transfer>) {
-      return (data as List).map((e) => deserialize<_i33.Transfer>(e)).toList()
+    if (t == List<_i39.TransferImportRow>) {
+      return (data as List)
+              .map((e) => deserialize<_i39.TransferImportRow>(e))
+              .toList()
           as T;
     }
-    if (t == List<_i34.WithdrawalRule>) {
+    if (t == List<_i40.Transfer>) {
+      return (data as List).map((e) => deserialize<_i40.Transfer>(e)).toList()
+          as T;
+    }
+    if (t == List<_i41.WithdrawalRule>) {
       return (data as List)
-              .map((e) => deserialize<_i34.WithdrawalRule>(e))
+              .map((e) => deserialize<_i41.WithdrawalRule>(e))
               .toList()
           as T;
     }
     try {
-      return _i35.Protocol().deserialize<T>(data, t);
+      return _i42.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     try {
-      return _i36.Protocol().deserialize<T>(data, t);
+      return _i43.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -402,8 +479,14 @@ class Protocol extends _i1.SerializationManager {
       _i21.InvestmentReturn => 'InvestmentReturn',
       _i22.InvestmentReturnInterval => 'InvestmentReturnInterval',
       _i23.Transfer => 'Transfer',
-      _i24.WithdrawalFee => 'WithdrawalFee',
-      _i25.WithdrawalRule => 'WithdrawalRule',
+      _i24.TransferImportGlobalError => 'TransferImportGlobalError',
+      _i25.TransferImportPreview => 'TransferImportPreview',
+      _i26.TransferImportRow => 'TransferImportRow',
+      _i27.TransferImportRowError => 'TransferImportRowError',
+      _i28.TransferImportRowResolution => 'TransferImportRowResolution',
+      _i29.TransferImportRowStatus => 'TransferImportRowStatus',
+      _i30.WithdrawalFee => 'WithdrawalFee',
+      _i31.WithdrawalRule => 'WithdrawalRule',
       _ => null,
     };
   }
@@ -462,16 +545,28 @@ class Protocol extends _i1.SerializationManager {
         return 'InvestmentReturnInterval';
       case _i23.Transfer():
         return 'Transfer';
-      case _i24.WithdrawalFee():
+      case _i24.TransferImportGlobalError():
+        return 'TransferImportGlobalError';
+      case _i25.TransferImportPreview():
+        return 'TransferImportPreview';
+      case _i26.TransferImportRow():
+        return 'TransferImportRow';
+      case _i27.TransferImportRowError():
+        return 'TransferImportRowError';
+      case _i28.TransferImportRowResolution():
+        return 'TransferImportRowResolution';
+      case _i29.TransferImportRowStatus():
+        return 'TransferImportRowStatus';
+      case _i30.WithdrawalFee():
         return 'WithdrawalFee';
-      case _i25.WithdrawalRule():
+      case _i31.WithdrawalRule():
         return 'WithdrawalRule';
     }
-    className = _i35.Protocol().getClassNameForObject(data);
+    className = _i42.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_idp.$className';
     }
-    className = _i36.Protocol().getClassNameForObject(data);
+    className = _i43.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_core.$className';
     }
@@ -550,19 +645,37 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'Transfer') {
       return deserialize<_i23.Transfer>(data['data']);
     }
+    if (dataClassName == 'TransferImportGlobalError') {
+      return deserialize<_i24.TransferImportGlobalError>(data['data']);
+    }
+    if (dataClassName == 'TransferImportPreview') {
+      return deserialize<_i25.TransferImportPreview>(data['data']);
+    }
+    if (dataClassName == 'TransferImportRow') {
+      return deserialize<_i26.TransferImportRow>(data['data']);
+    }
+    if (dataClassName == 'TransferImportRowError') {
+      return deserialize<_i27.TransferImportRowError>(data['data']);
+    }
+    if (dataClassName == 'TransferImportRowResolution') {
+      return deserialize<_i28.TransferImportRowResolution>(data['data']);
+    }
+    if (dataClassName == 'TransferImportRowStatus') {
+      return deserialize<_i29.TransferImportRowStatus>(data['data']);
+    }
     if (dataClassName == 'WithdrawalFee') {
-      return deserialize<_i24.WithdrawalFee>(data['data']);
+      return deserialize<_i30.WithdrawalFee>(data['data']);
     }
     if (dataClassName == 'WithdrawalRule') {
-      return deserialize<_i25.WithdrawalRule>(data['data']);
+      return deserialize<_i31.WithdrawalRule>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
-      return _i35.Protocol().deserializeByClassName(data);
+      return _i42.Protocol().deserializeByClassName(data);
     }
     if (dataClassName.startsWith('serverpod_auth_core.')) {
       data['className'] = dataClassName.substring(20);
-      return _i36.Protocol().deserializeByClassName(data);
+      return _i43.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }
@@ -577,10 +690,10 @@ class Protocol extends _i1.SerializationManager {
       return null;
     }
     try {
-      return _i35.Protocol().mapRecordToJson(record);
+      return _i42.Protocol().mapRecordToJson(record);
     } catch (_) {}
     try {
-      return _i36.Protocol().mapRecordToJson(record);
+      return _i43.Protocol().mapRecordToJson(record);
     } catch (_) {}
     throw Exception('Unsupported record type ${record.runtimeType}');
   }

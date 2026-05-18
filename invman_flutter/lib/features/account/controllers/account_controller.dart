@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:invman_client/invman_client.dart';
@@ -11,8 +13,6 @@ import 'package:invman_flutter/features/auth/auth.dart';
 import 'package:invman_flutter/features/investment/repositories/repositories.dart';
 import 'package:invman_flutter/features/onboarding/onboarding.dart';
 import 'package:invman_flutter/features/transfer/transfer.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 @injectable
@@ -21,6 +21,7 @@ class AccountController implements Disposable {
   final CurrencyRepository _currencyRepository;
   final InvestmentRepository _investmentRepository;
   final TransferRepository _transferRepository;
+  final TransferImportRepository _transferImportRepository;
   final AuthManager _authManager;
 
   AccountController(
@@ -28,6 +29,7 @@ class AccountController implements Disposable {
     this._currencyRepository,
     this._investmentRepository,
     this._transferRepository,
+    this._transferImportRepository,
     this._authManager,
   ) {
     _load();
@@ -83,43 +85,49 @@ class AccountController implements Disposable {
     return result.fold(
       (error) => error,
       (csv) async {
-        final dir = await getTemporaryDirectory();
-        final file = File('${dir.path}/transfers_export.csv');
-        await file.writeAsString(csv);
-        await Share.shareXFiles([XFile(file.path)]);
+        await _saveCsvToUserLocation(csv, 'transfers_export.csv');
         return null;
       },
     );
   }
 
-  /// Picks a CSV file and imports its content.
-  /// Returns null on success, an error message on failure, or a non-empty
-  /// list of validation errors if the file has invalid rows.
-  Future<({String? error, List<String> validationErrors, bool cancelled})> importCsv() async {
+  /// Picks a CSV file and parses it into a preview.
+  /// Returns Right(preview) on success, Left(error) on failure, or Right(null) if cancelled.
+  Future<Either<String, TransferImportPreview?>> pickAndParseImport() async {
     final pickerResult = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['csv'],
     );
 
     if (pickerResult == null || pickerResult.files.single.path == null) {
-      return (error: null, validationErrors: <String>[], cancelled: true);
+      return right(null);
     }
 
     final csvContent = await File(pickerResult.files.single.path!).readAsString();
-    final result = await _transferRepository.importCsv(csvContent);
-
-    return result.fold(
-      (error) => (error: error, validationErrors: <String>[], cancelled: false),
-      (errors) => (error: null, validationErrors: errors, cancelled: false),
-    );
+    final result = await _transferImportRepository.parsePreview(csvContent);
+    return result.map((preview) => preview);
   }
 
-  Future<void> shareTemplate() async {
-    const template = 'investmentId,quantity,amount,date\n1,10.5,1050.00,2025-03-15\n2,5.0,500.00,03/15/2025\n';
-    final dir = await getTemporaryDirectory();
-    final file = File('${dir.path}/transfers_template.csv');
-    await file.writeAsString(template);
-    await Share.shareXFiles([XFile(file.path)]);
+  Future<String?> shareTemplate() async {
+    final result = await _transferImportRepository.downloadTemplate();
+    return result.fold((error) => error, (csv) async {
+      await _saveCsvToUserLocation(csv, 'transfers_template.csv');
+      return null;
+    });
+  }
+
+  Future<void> _saveCsvToUserLocation(String csv, String fileName) async {
+    final bytes = utf8.encode(csv);
+    final savedPath = await FilePicker.platform.saveFile(
+      fileName: fileName,
+      type: FileType.custom,
+      allowedExtensions: ['csv'],
+      bytes: bytes,
+    );
+    // On desktop, file_picker returns the chosen path without writing; on mobile it already wrote the bytes.
+    if (savedPath != null && !Platform.isAndroid && !Platform.isIOS) {
+      await File(savedPath).writeAsBytes(bytes);
+    }
   }
 
   @override

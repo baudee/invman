@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:invman_flutter/features/account/account.dart';
+import 'package:invman_flutter/features/transfer/transfer.dart';
 import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 
 class AccountRoutes {
@@ -13,7 +14,13 @@ class AccountRoutes {
       GoRoute(
         path: AccountRootScreen.route(),
         builder: (_, _) => AccountRootScreen(),
-        routes: [...WithdrawalRoutes.routes],
+        routes: [
+          ...WithdrawalRoutes.routes,
+          GoRoute(
+            path: TransferImportPreviewScreen.pathSegment,
+            builder: (_, _) => const TransferImportPreviewScreen(),
+          ),
+        ],
       ),
     ],
   );

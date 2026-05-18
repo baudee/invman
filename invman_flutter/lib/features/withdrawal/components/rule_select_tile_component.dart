@@ -7,32 +7,41 @@ import 'package:invman_flutter/features/withdrawal/withdrawal.dart';
 class WithdrawalRuleSelectTileComponent extends StatelessWidget {
   final WithdrawalRule? rule;
   final void Function(WithdrawalRule) onRuleSelected;
-  const WithdrawalRuleSelectTileComponent({super.key, this.rule, required this.onRuleSelected});
+  final VoidCallback? onRemove;
+  const WithdrawalRuleSelectTileComponent({
+    super.key,
+    this.rule,
+    required this.onRuleSelected,
+    this.onRemove,
+  });
+
+  Future<void> _pick() async {
+    final object = await router.push(WithdrawalRuleSelectScreen.route());
+    if (object is WithdrawalRule) {
+      onRuleSelected(object);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     if (rule == null) {
       return ListTile(
         title: Text(S.of(context).withdrawal_addRule),
-        trailing: Icon(Icons.arrow_forward_ios),
-        onTap: () async {
-          final object = await router.push(WithdrawalRuleSelectScreen.route());
-          if (object is WithdrawalRule) {
-            onRuleSelected(object);
-          }
-        },
-      );
-    } else {
-      return WithdrawalRuleTileComponent(
-        trailing: Icon(Icons.arrow_forward_ios),
-        rule: rule!,
-        onTap: () async {
-          final object = await router.push(WithdrawalRuleSelectScreen.route());
-          if (object is WithdrawalRule) {
-            onRuleSelected(object);
-          }
-        },
+        trailing: const Icon(Icons.arrow_forward_ios),
+        onTap: _pick,
       );
     }
+    final trailing = onRemove != null
+        ? IconButton(
+            icon: const Icon(Icons.close),
+            tooltip: S.of(context).core_delete,
+            onPressed: onRemove,
+          )
+        : const Icon(Icons.arrow_forward_ios);
+    return WithdrawalRuleTileComponent(
+      trailing: trailing,
+      rule: rule!,
+      onTap: _pick,
+    );
   }
 }
